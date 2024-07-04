@@ -15,7 +15,7 @@ const Body = styled.div`
     rgba(230, 230, 250, 0.1)
   );
   width: 39.25rem;
-  height: 4rem;
+  height: 3rem;
   border-radius: 1rem;
   display: flex;
   align-items: center;
@@ -27,7 +27,7 @@ const Body = styled.div`
 
 const Title = styled.div`
   color: #a4a4a4;
-  font-size: 1.25rem;
+  font-size: 1rem;
 `;
 
 const PersonIcon = styled(PersonOutlineIcon)`
