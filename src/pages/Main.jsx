@@ -3,6 +3,7 @@ import AuthInput from '../components/AuthInput';
 import Authframe from '../components/Authframe';
 import styled from 'styled-components';
 import LongCover from '../components/LongCover';
+import Navbar from '../components/Navbar';
 
 const Backlayout = styled.div`
   background-color: black;
@@ -19,7 +20,7 @@ function Main() {
   const albumCoverArray = [
     {
       pic: 'https://i.ibb.co/Jn12dqF/unnamed.jpg',
-      title: 'Viego',
+      title: 'viego',
       uploader: 'Clid',
       view: '1210',
       options:
@@ -39,6 +40,7 @@ function Main() {
 
   return (
     <Backlayout>
+      <Navbar></Navbar>
       <AuthInput
         title="Username"
         type="text"
