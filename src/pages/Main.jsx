@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import AuthInput from '../components/AuthInput';
+import React from 'react';
+// import AuthInput from '../components/AuthInput';
 import styled from 'styled-components';
 import LongCover from '../components/LongCover';
 
@@ -14,7 +14,7 @@ const Backlayout = styled.div`
 `;
 
 function Main() {
-  const [username, setUsername] = useState('');
+  // const [username, setUsername] = useState('');
   const albumCoverArray = [
     {
       pic: 'https://i.ibb.co/Jn12dqF/unnamed.jpg',
@@ -38,13 +38,13 @@ function Main() {
 
   return (
     <Backlayout>
-      <AuthInput
+      {/* <AuthInput
         title="Username"
         type="text"
         onChange={setUsername}
         value={username}
         placeholder="아이디를 입력해 주세요"
-      />
+      /> */}
       {albumCoverArray.map((album, index) => (
         <LongCover
           key={index}
