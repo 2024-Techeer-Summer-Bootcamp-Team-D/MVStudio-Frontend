@@ -3,7 +3,6 @@ import AuthInput from '../components/AuthInput';
 import Authframe from '../components/Authframe';
 import styled from 'styled-components';
 import LongCover from '../components/LongCover';
-import Sidebar from '../components/Sidebar'; // Ensure the path is correct
 
 const Backlayout = styled.div`
   background-color: black;
@@ -40,7 +39,6 @@ function Main() {
 
   return (
     <Backlayout>
-      <Sidebar />
       <AuthInput
         title="Username"
         type="text"

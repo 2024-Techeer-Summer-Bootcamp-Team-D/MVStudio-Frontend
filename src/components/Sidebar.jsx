@@ -13,12 +13,11 @@ const Container = styled.div`
 
 const SidebarContainer = styled.div`
   background-color: #000000;
-  position: fixed;
-  top: 10%;
+  position: relative;
   bottom: 0;
   left: 0;
-  color: #ffffff;
-  height: 90%;
+  color: #fafafa;
+  height: 100%;
   z-index: 99;
   width: 15rem;
   transform: translateX(${({ xPosition }) => -xPosition}px);
@@ -27,7 +26,7 @@ const SidebarContainer = styled.div`
 const HomeItem = styled.div`
   display: flex;
   align-items: center;
-  padding: 10px 20px;
+  padding: 1.25rem 1.25rem;
   cursor: pointer;
   &:hover {
     background-color: #333333;
@@ -37,7 +36,7 @@ const HomeItem = styled.div`
 const CreateItem = styled.div`
   display: flex;
   align-items: center;
-  padding: 10px 20px;
+  padding: 1.25rem 1.25rem;
   cursor: pointer;
   &:hover {
     background-color: #333333;
@@ -46,41 +45,44 @@ const CreateItem = styled.div`
 
 const Divider = styled.div`
   width: 100%;
-  height: 1px;
+  height: 0.01rem;
   background-color: #ffffff;
-  margin: 10px 0;
+  margin: 0.625rem 0;
 `;
 
 const NavigationItem = styled.div`
   display: flex;
   align-items: center;
-  padding: 10px 20px;
+  padding: 1.25rem 1.25rem;
   cursor: pointer;
   &:hover {
     background-color: #333333;
   }
 `;
 
-const Myitem = styled.div`
+const Myitem = styled.p`
   display: flex;
   align-items: center;
-  padding: 10px 20px;
+  padding: 1.25rem 1.25rem;
+  font-weight: 500;
 `;
 
-const NavigationText = styled.span`
-  margin-left: 10px;
+const NavigationText = styled.p`
+  margin-left: 0.625rem;
+  font-weight: 500;
 `;
 
-const TrendingText = styled.span`
-  margin-left: 10px;
-  padding-right: 5rem;
+const TrendingText = styled.p`
+  margin-left: 0.625rem;
+  padding-right: 4.5rem;
+  font-weight: 500;
 `;
 
 const ExpandButton = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 10px;
+  padding: 1.25rem;
   cursor: pointer;
 `;
 
@@ -90,17 +92,20 @@ const ExpandIcon = styled(ArrowForwardIosIcon)`
 `;
 
 const Content = styled.div`
-  padding: 20px;
+  padding: 1.25rem;
 `;
 
 const NavigationMyText = styled.span`
   margin-right: 1rem;
+  font-weight: 500;
 `;
 
 const ExpandContainer = styled.div`
   visibility: ${({ isOpen }) => (isOpen ? 'visible' : 'hidden')};
-  padding: 20px;
-  display: flex;
+  padding: 1.25rem;
+  display: flex; /* Always use flex to manage space */
+  flex-direction: column; /* Items will be in column direction */
+  gap: 1rem; /* Adjust spacing between items */
 `;
 
 const Thumbnail = styled.img`
@@ -111,9 +116,8 @@ const Thumbnail = styled.img`
 
 const ThumbnailContainer = styled.div`
   display: flex;
-  margin-left: 1.2rem;
-  flex-direction: column;
-  width: 100%;
+  align-items: center;
+  gap: 1rem; /* Adjust spacing between image and text */
 `;
 
 const ImageTitle = styled.div`
@@ -121,7 +125,7 @@ const ImageTitle = styled.div`
 `;
 
 const Uploader = styled.div`
-  font-size: 12px;
+  font-size: 0.75rem;
   color: #a4a4a4;
 `;
 
@@ -180,13 +184,33 @@ function Sidebar({ children }) {
           </ExpandButton>
         </NavigationItem>
         <ExpandContainer isOpen={isExpandOpen}>
-          <Thumbnail
-            src="https://i.ibb.co/Jn12dqF/unnamed.jpg"
-            alt="Thumbnail"
-          />
           <ThumbnailContainer>
-            <ImageTitle>Image Title</ImageTitle>
-            <Uploader>Uploader</Uploader>
+            <Thumbnail src="https://i.ibb.co/Jn12dqF/unnamed.jpg" alt="alt" />
+            <div>
+              <ImageTitle>Title</ImageTitle>
+              <Uploader>Uploader</Uploader>
+            </div>
+          </ThumbnailContainer>
+          <ThumbnailContainer>
+            <Thumbnail src="https://i.ibb.co/Jn12dqF/unnamed.jpg" alt="alt" />
+            <div>
+              <ImageTitle>Title</ImageTitle>
+              <Uploader>Uploader</Uploader>
+            </div>
+          </ThumbnailContainer>
+          <ThumbnailContainer>
+            <Thumbnail src="https://i.ibb.co/Jn12dqF/unnamed.jpg" alt="alt" />
+            <div>
+              <ImageTitle>Title</ImageTitle>
+              <Uploader>Uploader</Uploader>
+            </div>
+          </ThumbnailContainer>
+          <ThumbnailContainer>
+            <Thumbnail src="https://i.ibb.co/Jn12dqF/unnamed.jpg" alt="alt" />
+            <div>
+              <ImageTitle>Title</ImageTitle>
+              <Uploader>Uploader</Uploader>
+            </div>
           </ThumbnailContainer>
         </ExpandContainer>
       </SidebarContainer>
