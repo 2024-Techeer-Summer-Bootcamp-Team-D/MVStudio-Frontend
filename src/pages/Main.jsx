@@ -18,14 +18,15 @@ function Main() {
 
   return (
     <Backlayout>
-      <AuthInput
-        title="Usename"
-        type="text"
-        onChange={setUsername}
-        value={username}
-        placeholder="아이디를 입력해 주세요"
-      />
-      <Authframe></Authframe>
+      <Authframe>
+        <AuthInput
+          title="Usename"
+          type="text"
+          onChange={setUsername}
+          value={username}
+          placeholder="아이디를 입력해 주세요"
+        />
+      </Authframe>
     </Backlayout>
   );
 }
