@@ -19,63 +19,52 @@ const SidebarContainer = styled.div`
   color: #fafafa;
   height: 100%;
   z-index: 99;
-  width: 15rem;
+  width: 20rem;
   transform: translateX(${({ xPosition }) => -xPosition}px);
 `;
 
 const HomeItem = styled.div`
   display: flex;
   align-items: center;
-  padding: 1.25rem 1.25rem;
+  padding: 1rem 1.25rem;
   cursor: pointer;
   &:hover {
     background-color: #333333;
+    border-radius: 1.2rem; /* Adjust as needed */
   }
 `;
 
 const CreateItem = styled.div`
   display: flex;
   align-items: center;
-  padding: 1.25rem 1.25rem;
+  padding: 1rem 1.25rem;
   cursor: pointer;
   &:hover {
     background-color: #333333;
   }
-`;
-
-const Divider = styled.div`
-  width: 100%;
-  height: 0.01rem;
-  background-color: #ffffff;
-  margin: 0.625rem 0;
 `;
 
 const NavigationItem = styled.div`
   display: flex;
   align-items: center;
-  padding: 1.25rem 1.25rem;
+  padding: 1rem 1.25rem;
   cursor: pointer;
   &:hover {
     background-color: #333333;
   }
 `;
 
-const Myitem = styled.p`
-  display: flex;
-  align-items: center;
-  padding: 1.25rem 1.25rem;
-  font-weight: 500;
-`;
-
 const NavigationText = styled.p`
   margin-left: 0.625rem;
   font-weight: 500;
+  font-size: 1.5rem;
 `;
 
 const TrendingText = styled.p`
   margin-left: 0.625rem;
-  padding-right: 4.5rem;
+  padding-right: 2.5rem;
   font-weight: 500;
+  font-size: 1.5rem;
 `;
 
 const ExpandButton = styled.div`
@@ -95,17 +84,18 @@ const Content = styled.div`
   padding: 1.25rem;
 `;
 
-const NavigationMyText = styled.span`
-  margin-right: 1rem;
-  font-weight: 500;
-`;
-
 const ExpandContainer = styled.div`
   visibility: ${({ isOpen }) => (isOpen ? 'visible' : 'hidden')};
   padding: 1.25rem;
-  display: flex; /* Always use flex to manage space */
-  flex-direction: column; /* Items will be in column direction */
-  gap: 1rem; /* Adjust spacing between items */
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  max-height: ${({ isOpen }) => (isOpen ? '1000px' : '0')};
+  opacity: ${({ isOpen }) => (isOpen ? '1' : '0')};
+  overflow: hidden;
+  transition:
+    max-height 0.5s ease,
+    opacity 0.5s ease;
 `;
 
 const Thumbnail = styled.img`
@@ -114,14 +104,20 @@ const Thumbnail = styled.img`
   border-radius: 50%;
 `;
 
+const InfoContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+
 const ThumbnailContainer = styled.div`
   display: flex;
-  align-items: center;
+  align-items: column;
   gap: 1rem; /* Adjust spacing between image and text */
 `;
 
 const ImageTitle = styled.div`
   font-weight: bold;
+  font-size: 1.2rem;
 `;
 
 const Uploader = styled.div`
@@ -130,12 +126,11 @@ const Uploader = styled.div`
 `;
 
 function Sidebar({ children }) {
-  const [xPosition, setX] = useState(0); // xPosition 상태를 0으로 초기화 (열린 상태)
-  const [isExpandOpen, setExpandOpen] = useState(false); // ExpandContainer의 열림 상태를 관리
+  const [xPosition, setX] = useState(0);
+  const [isExpandOpen, setExpandOpen] = useState(false);
 
   const side = useRef();
 
-  // 사이드바 외부 클릭 시 닫히는 함수
   const handleClose = (e) => {
     let sideArea = side.current;
     let sideChildren = side.current.contains(e.target);
@@ -144,7 +139,6 @@ function Sidebar({ children }) {
     }
   };
 
-  // Expand 버튼 클릭 시 ExpandContainer 열고 닫기
   const toggleExpand = () => {
     setExpandOpen(!isExpandOpen);
   };
@@ -167,11 +161,6 @@ function Sidebar({ children }) {
           <AddIcon />
           <NavigationText>Create</NavigationText>
         </CreateItem>
-        <Divider />
-        <Myitem>
-          <NavigationMyText>나</NavigationMyText>
-          <ArrowForwardIosIcon />
-        </Myitem>
         <NavigationItem>
           <PersonOutlineIcon />
           <NavigationText>Person</NavigationText>
@@ -186,31 +175,31 @@ function Sidebar({ children }) {
         <ExpandContainer isOpen={isExpandOpen}>
           <ThumbnailContainer>
             <Thumbnail src="https://i.ibb.co/Jn12dqF/unnamed.jpg" alt="alt" />
-            <div>
+            <InfoContainer>
               <ImageTitle>Title</ImageTitle>
               <Uploader>Uploader</Uploader>
-            </div>
+            </InfoContainer>
           </ThumbnailContainer>
           <ThumbnailContainer>
             <Thumbnail src="https://i.ibb.co/Jn12dqF/unnamed.jpg" alt="alt" />
-            <div>
+            <InfoContainer>
               <ImageTitle>Title</ImageTitle>
               <Uploader>Uploader</Uploader>
-            </div>
+            </InfoContainer>
           </ThumbnailContainer>
           <ThumbnailContainer>
             <Thumbnail src="https://i.ibb.co/Jn12dqF/unnamed.jpg" alt="alt" />
-            <div>
+            <InfoContainer>
               <ImageTitle>Title</ImageTitle>
               <Uploader>Uploader</Uploader>
-            </div>
+            </InfoContainer>
           </ThumbnailContainer>
           <ThumbnailContainer>
             <Thumbnail src="https://i.ibb.co/Jn12dqF/unnamed.jpg" alt="alt" />
-            <div>
+            <InfoContainer>
               <ImageTitle>Title</ImageTitle>
               <Uploader>Uploader</Uploader>
-            </div>
+            </InfoContainer>
           </ThumbnailContainer>
         </ExpandContainer>
       </SidebarContainer>
