@@ -13,7 +13,8 @@ const Container = styled.div`
 `;
 
 const SidebarContainer = styled.div`
-  background-color: #000000;
+  background-image: url(https://i.ibb.co/3TyNxtw/background.png);
+  background-size: 500em 500rem;
   position: relative;
   bottom: 0;
   left: 0;

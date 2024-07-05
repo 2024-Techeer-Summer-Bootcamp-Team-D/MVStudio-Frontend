@@ -5,9 +5,8 @@ import styled from 'styled-components';
 import LongCover from '../components/LongCover';
 
 const Backlayout = styled.div`
-  background-color: black;
   width: 100%;
-  /* height: 100vh; */
+  height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -37,37 +36,7 @@ function Main() {
     },
   ];
 
-  return (
-    <Backlayout>
-      <AuthInput
-        title="Username"
-        type="text"
-        onChange={setUsername}
-        value={username}
-        placeholder="아이디를 입력해 주세요"
-      />
-      {albumCoverArray.map((album, index) => (
-        <LongCover
-          key={index}
-          owner={album.owner}
-          pic={album.pic}
-          title={album.title}
-          uploader={album.uploader}
-          view={album.view}
-          options={album.options}
-        />
-      ))}
-      <Authframe>
-        <AuthInput
-          title="Usename"
-          type="text"
-          onChange={setUsername}
-          value={username}
-          placeholder="아이디를 입력해 주세요"
-        />
-      </Authframe>
-    </Backlayout>
-  );
+  return <Backlayout></Backlayout>;
 }
 
 export default Main;
