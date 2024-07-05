@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import SearchIcon from '@mui/icons-material/Search';
+import ignorePath from '../util/igonerePath';
 
 const Bar = styled.div`
   width: 100%;
@@ -47,6 +48,11 @@ const Icon = styled(SearchIcon)`
 `;
 
 function Navbar() {
+  const isIgnoredPath = ignorePath().includes(location.pathname);
+
+  if (isIgnoredPath) {
+    return null;
+  }
   return (
     <Bar>
       <Logo>MVStudio</Logo>
