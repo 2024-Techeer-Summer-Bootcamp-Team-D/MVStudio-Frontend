@@ -3,6 +3,7 @@ import './index.css';
 import styled from 'styled-components';
 import Sidebar from './components/Sidebar';
 import AppRouter from './pages/AppRouter';
+import Navbar from './components/Navbar';
 
 const Backlayout = styled.div`
   width: 100%;
@@ -20,6 +21,7 @@ const ContentArea = styled.div`
 function App() {
   return (
     <Backlayout>
+      <Navbar />
       <ContentArea>
         <Sidebar />
         <AppRouter />

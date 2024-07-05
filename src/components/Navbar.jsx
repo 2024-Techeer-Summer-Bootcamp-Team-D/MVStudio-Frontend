@@ -13,7 +13,7 @@ const Bar = styled.div`
 `;
 
 const Searchbar = styled.div`
-  width: 18rem;
+  width: 60%;
   height: 60%;
   background-color: #ffffff;
   border-radius: 2rem;
@@ -21,6 +21,15 @@ const Searchbar = styled.div`
   align-items: center; /* 수직 중앙 정렬 */
   justify-content: flex-start; /* 수평 오른쪽 정렬 */
   padding-left: 0.5rem; /* 패딩 추가하여 오른쪽 정렬 시 입력상자와 가장자리 간격 확보 */
+`;
+
+const Logo = styled.div`
+  position: absolute;
+  left: 1rem; /* Bar의 왼쪽에 위치하도록 설정 */
+  font-family: 'SUIT', sans-serif;
+  font-size: 2.5rem;
+  font-weight: bold; /* Bold체로 설정 */
+  color: #ffffff;
 `;
 
 const SearchInput = styled.input`
@@ -40,6 +49,7 @@ const Icon = styled(SearchIcon)`
 function Navbar() {
   return (
     <Bar>
+      <Logo>MVStudio</Logo>
       <Searchbar>
         <Icon></Icon>
         <SearchInput placeholder="Search..." />

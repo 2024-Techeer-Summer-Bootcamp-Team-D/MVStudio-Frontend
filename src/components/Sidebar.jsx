@@ -27,7 +27,7 @@ const SidebarContainer = styled.div`
 const HomeItem = styled.div`
   display: flex;
   align-items: center;
-  padding: 2rem 1.25rem;
+  padding: 1rem 1.25rem;
   cursor: pointer;
   &:hover {
     background-color: #333333;
@@ -38,20 +38,22 @@ const HomeItem = styled.div`
 const CreateItem = styled.div`
   display: flex;
   align-items: center;
-  padding: 2rem 1.25rem;
+  padding: 1rem 1.25rem;
   cursor: pointer;
   &:hover {
     background-color: #333333;
+    border-radius: 1.2rem;
   }
 `;
 
 const NavigationItem = styled.div`
   display: flex;
   align-items: center;
-  padding: 2rem 1.25rem;
+  padding: 1rem 1.25rem;
   cursor: pointer;
   &:hover {
     background-color: #333333;
+    border-radius: 1.2rem;
   }
 `;
 
