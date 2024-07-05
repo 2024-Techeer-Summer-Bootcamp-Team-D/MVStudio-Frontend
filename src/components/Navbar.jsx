@@ -10,7 +10,7 @@ const Bar = styled.div`
   color: #0e0717;
   background-color: #0e0717;
   display: flex;
-  justify-content: center;
+  justify-content: start;
   align-items: center; /* 수직 중앙 정렬 */
 `;
 
@@ -26,12 +26,13 @@ const Searchbar = styled.div`
 `;
 
 const Logo = styled.div`
-  position: absolute;
+  position: relative;
   left: 1rem;
   font-family: 'SUIT', sans-serif;
   font-size: 2.5rem;
   font-weight: bold;
   color: #ffffff;
+  margin-right: 17rem;
 `;
 
 const SearchInput = styled.input`
