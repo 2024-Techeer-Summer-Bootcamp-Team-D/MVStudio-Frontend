@@ -6,6 +6,7 @@ import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import HomeIcon from '@mui/icons-material/Home';
 import WhatshotIcon from '@mui/icons-material/Whatshot';
 import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
+import ignorePath from '../util/igonerePath';
 
 const Container = styled.div`
   background-color: #e3ecf1;
@@ -26,7 +27,7 @@ const SidebarContainer = styled.div`
 const HomeItem = styled.div`
   display: flex;
   align-items: center;
-  padding: 1rem 1.25rem;
+  padding: 2rem 1.25rem;
   cursor: pointer;
   &:hover {
     background-color: #333333;
@@ -37,7 +38,7 @@ const HomeItem = styled.div`
 const CreateItem = styled.div`
   display: flex;
   align-items: center;
-  padding: 1rem 1.25rem;
+  padding: 2rem 1.25rem;
   cursor: pointer;
   &:hover {
     background-color: #333333;
@@ -47,7 +48,7 @@ const CreateItem = styled.div`
 const NavigationItem = styled.div`
   display: flex;
   align-items: center;
-  padding: 1rem 1.25rem;
+  padding: 2rem 1.25rem;
   cursor: pointer;
   &:hover {
     background-color: #333333;
@@ -149,6 +150,12 @@ function Sidebar({ children }) {
       window.removeEventListener('click', handleClose);
     };
   }, []);
+
+  const isIgnoredPath = ignorePath().includes(location.pathname);
+
+  if (isIgnoredPath) {
+    return null;
+  }
 
   return (
     <Container>
