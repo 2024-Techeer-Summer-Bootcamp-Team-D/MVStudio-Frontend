@@ -2,6 +2,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import LongCover from '../components/LongCover';
+import { useLocation } from 'react-router-dom';
 
 const BigContainer = styled.div`
   display: flex;
@@ -126,10 +127,14 @@ const mockItems = [
 ];
 
 function Search() {
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+  const keyword = searchParams.get('keyword');
+
   return (
     <BigContainer>
       <SearchResult>Search Result</SearchResult>
-      <SearchTerm>'검색 단어' 검색 결과</SearchTerm>
+      <SearchTerm>{`'${keyword}' 검색 결과`}</SearchTerm>
       {mockItems.map((item, index) => (
         <LongCover key={index} {...item} />
       ))}
