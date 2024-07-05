@@ -3,7 +3,6 @@ import AuthInput from '../components/AuthInput';
 import Authframe from '../components/Authframe';
 import styled from 'styled-components';
 import LongCover from '../components/LongCover';
-import Navbar from '../components/Navbar';
 
 const Backlayout = styled.div`
   background-color: black;
@@ -40,7 +39,6 @@ function Main() {
 
   return (
     <Backlayout>
-      <Navbar></Navbar>
       <AuthInput
         title="Username"
         type="text"
