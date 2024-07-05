@@ -7,19 +7,18 @@ import { useLocation } from 'react-router-dom';
 const BigContainer = styled.div`
   display: flex;
   flex-direction: column;
-  padding: 0.5rem 1rem 1rem 5rem; /* Adjusted padding */
+  padding-left: 11rem;
 `;
 
 const SearchResult = styled.p`
   font-size: 2rem;
   font-weight: bold;
-  margin-bottom: 1rem;
+  margin-bottom: 0.1rem;
   color: #ffffff;
 `;
 
 const SearchTerm = styled.p`
   font-size: 1.5rem;
-  margin-bottom: 1rem;
   color: #ffffff;
   font-family: 'SUIT', sans-serif;
 `;

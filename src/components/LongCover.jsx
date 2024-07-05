@@ -10,18 +10,19 @@ import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 const BigContainer = styled.div`
   display: flex;
   width: 60rem;
-  height: 12.82rem;
+  height: 10.82rem;
   position: relative;
   flex-direction: row;
   margin-bottom: 1.5rem;
   align-items: center;
   padding: 1rem;
+  margin-bottom: 2rem;
 `;
 
 const ReaderContainer = styled.div`
   position: relative;
-  width: 11.875rem;
-  height: 11.875rem;
+  width: 10.875rem;
+  height: 10.875rem;
   z-index: 2; /* Ensure this is above the InfoContainer */
 
   &:hover .reader-pic {
@@ -35,8 +36,8 @@ const ReaderContainer = styled.div`
 
 const ReaderPic = styled.img`
   position: absolute;
-  width: 11.875rem;
-  height: 11.875rem;
+  width: 10.875rem;
+  height: 10.875rem;
   border-radius: 20%;
   object-fit: cover;
   transition: filter 0.3s ease;
@@ -45,7 +46,7 @@ const ReaderPic = styled.img`
 
 const PlayIcon = styled(PlayArrowIcon)`
   position: absolute;
-  padding: 5rem;
+  padding: 4.5rem;
   color: white;
   opacity: 0;
   transition: opacity 0.3s ease;
@@ -134,7 +135,7 @@ const ExtraInfo = styled.div`
   align-items: flex-end;
   z-index: 2;
   width: 5rem;
-  height: 12.82rem;
+  height: 10.82rem;
   padding: 1rem;
 `;
 
