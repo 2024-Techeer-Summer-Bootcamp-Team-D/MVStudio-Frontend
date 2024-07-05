@@ -8,10 +8,10 @@ function AppRouter() {
     <Router>
       <Routes>
         <Route path="/" element={<Main />} />
-        <Route path="/Search" element={<Search />} />
+        <Route path="/search" element={<Search />} />
       </Routes>
     </Router>
   );
 }
-
+// /search?keyword=far 이런식으로 여기가면 콘솔 나오게
 export default AppRouter;

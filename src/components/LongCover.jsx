@@ -14,15 +14,19 @@ const BigContainer = styled.div`
   position: relative;
   flex-direction: row;
   margin-bottom: 1.5rem;
+  align-items: center;
+  padding: 1rem;
 `;
 
 const ReaderContainer = styled.div`
-  position: absolute;
-  top: 0.5rem;
-  left: 0.5rem;
-  width: 10.875rem;
+  position: relative;
+  width: 11.875rem;
   height: 11.875rem;
   z-index: 2; /* Ensure this is above the InfoContainer */
+
+  &:hover .reader-pic {
+    filter: brightness(0.8);
+  }
 
   &:hover .play-icon {
     opacity: 1;
@@ -30,23 +34,18 @@ const ReaderContainer = styled.div`
 `;
 
 const ReaderPic = styled.img`
-  width: 100%;
-  height: 100%;
+  position: absolute;
+  width: 11.875rem;
+  height: 11.875rem;
   border-radius: 20%;
   object-fit: cover;
   transition: filter 0.3s ease;
   filter: brightness(90%);
-
-  &:hover {
-    filter: brightness(0.8);
-  }
 `;
 
 const PlayIcon = styled(PlayArrowIcon)`
   position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  padding: 5rem;
   color: white;
   opacity: 0;
   transition: opacity 0.3s ease;
@@ -73,9 +72,9 @@ const Overlay = styled.div`
   display: flex;
   flex-direction: column;
   width: calc(100% - 12.375rem);
-  margin-left: 13.375rem; /* Consider the margin and ReaderContainer width */
-  margin-top: 0.5rem;
-  padding-right: 2rem;
+  margin-left: 3rem;
+  margin-top: -1.2rem;
+  margin-bottom: 1rem;
 `;
 
 const UploaderContainer = styled.div`
@@ -90,7 +89,8 @@ const UploaderIcon = styled(PersonOutlineIcon)`
 `;
 
 const Title = styled.p`
-  font-size: 1.5rem;
+  font-size: 2rem;
+  font-weight: 550;
   color: #ffffff;
   margin-bottom: 0.5rem;
 `;
@@ -127,15 +127,14 @@ const Options = styled.p`
 `;
 
 const ExtraInfo = styled.div`
-  position: absolute;
+  position: relative;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   align-items: flex-end;
-  top: -1.4rem;
-  right: -0.2rem;
-  width: 10rem;
-  height: 93%;
+  z-index: 2;
+  width: 5rem;
+  height: 12.82rem;
   padding: 1rem;
 `;
 
@@ -147,14 +146,17 @@ const DeleteIcon = styled(DeleteOutlineIcon)`
 const ShareIcon = styled(IosShareIcon)`
   visibility: ${(props) => (props.owner ? 'hidden' : 'visible')};
   color: #ffffff;
-  margin-top: 1rem;
 `;
 
 function LongCover({ pic, title, uploader, view, options, owner }) {
   return (
     <BigContainer>
       <ReaderContainer>
-        <ReaderPic src="https://i.ibb.co/Jn12dqF/unnamed.jpg" alt="Reader" />
+        <ReaderPic
+          className="reader-pic"
+          src="https://i.ibb.co/Jn12dqF/unnamed.jpg"
+          alt="Reader"
+        />
         <PlayIcon fontSize="large" className="play-icon" />
       </ReaderContainer>
       <InfoContainer src={pic} />
@@ -169,11 +171,11 @@ function LongCover({ pic, title, uploader, view, options, owner }) {
           <View>{view}</View>
         </ViewContainer>
         <Options>{options}</Options>
-        <ExtraInfo>
-          <ShareIcon owner={owner} fontSize="medium" />
-          <DeleteIcon owner={owner} fontSize="medium" />
-        </ExtraInfo>
       </Overlay>
+      <ExtraInfo>
+        <ShareIcon owner={owner} fontSize="medium" />
+        <DeleteIcon owner={owner} fontSize="medium" />
+      </ExtraInfo>
     </BigContainer>
   );
 }
