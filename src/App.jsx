@@ -1,25 +1,29 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Main from './pages/Main';
-import { GlobalStyles } from './GlobalStyles';
 import './index.css';
 import styled from 'styled-components';
+import Sidebar from './components/Sidebar';
+import AppRouter from './pages/AppRouter';
 
 const Backlayout = styled.div`
   width: 100%;
   height: 100%;
   min-height: 100vh;
   display: flex;
+  flex-direction: column;
 `;
+
+const ContentArea = styled.div`
+  display: flex;
+  flex-direction: row;
+`;
+
 function App() {
   return (
     <Backlayout>
-      <Router>
-        <GlobalStyles />
-        <Routes>
-          <Route path="/" element={<Main />} />
-        </Routes>
-      </Router>
+      <ContentArea>
+        <Sidebar />
+        <AppRouter />
+      </ContentArea>
     </Backlayout>
   );
 }
