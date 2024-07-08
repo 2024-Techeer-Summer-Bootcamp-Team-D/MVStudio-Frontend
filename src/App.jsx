@@ -1,29 +1,36 @@
+/* eslint-disable react/prop-types */
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Main from './pages/Main';
-import { GlobalStyles } from './GlobalStyles';
 import './index.css';
 import styled from 'styled-components';
-import MainPage from './pages/MainPage';
+import Sidebar from './components/Sidebar';
+import Navbar from './components/Navbar';
 
-const Backlayout = styled.div`
-  background-color: black;
+const BackLayout = styled.div`
+  background-image: url(https://i.ibb.co/3TyNxtw/background.png);
+  background-size: 500em 500rem;
+  background-repeat: no-repeat;
+
   width: 100%;
   height: 100%;
   min-height: 100vh;
   display: flex;
+  flex-direction: column;
 `;
-function App() {
+
+const ContentArea = styled.div`
+  display: flex;
+  flex-direction: row;
+`;
+
+function App({ children }) {
   return (
-    <Backlayout>
-      <Router>
-        <GlobalStyles />
-        <Routes>
-          <Route path="/" element={<Main />} />
-          <Route path="/Main" element={<MainPage />} />
-        </Routes>
-      </Router>
-    </Backlayout>
+    <BackLayout>
+      <Navbar />
+      <ContentArea>
+        <Sidebar />
+        {children}
+      </ContentArea>
+    </BackLayout>
   );
 }
 
