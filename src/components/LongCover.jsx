@@ -140,12 +140,12 @@ const ExtraInfo = styled.div`
 `;
 
 const DeleteIcon = styled(DeleteOutlineIcon)`
-  visibility: ${(props) => (props.owner ? 'hidden' : 'visible')};
+  visibility: ${(props) => (props.owner ? 'visible' : 'hidden')};
   color: #ffffff;
 `;
 
 const ShareIcon = styled(IosShareIcon)`
-  visibility: ${(props) => (props.owner ? 'hidden' : 'visible')};
+  visibility: ${(props) => (props.owner ? 'visible' : 'hidden')};
   color: #ffffff;
 `;
 
@@ -153,11 +153,7 @@ function LongCover({ pic, title, uploader, view, options, owner }) {
   return (
     <BigContainer>
       <ReaderContainer>
-        <ReaderPic
-          className="reader-pic"
-          src="https://i.ibb.co/Jn12dqF/unnamed.jpg"
-          alt="Reader"
-        />
+        <ReaderPic className="reader-pic" src={pic} alt="Reader" />
         <PlayIcon fontSize="large" className="play-icon" />
       </ReaderContainer>
       <InfoContainer src={pic} />
