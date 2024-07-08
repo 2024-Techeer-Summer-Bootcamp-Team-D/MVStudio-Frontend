@@ -62,14 +62,20 @@ const CommnetText = styled.p`
   margin-top: 0;
 `;
 const CommnetEdit = styled.input`
+  padding: 1rem;
   outline: none;
   border: none;
   background-color: rgba(156, 63, 228, 0.7);
   border-radius: 1.4rem;
-  height: 3rem;
+  height: 1rem;
   margin-top: -1.2rem;
   color: #ffffff;
   width: 20rem;
+  ::placeholder {
+    color: #a4a4a4;
+    font-size: 1.3rem;
+    font-family: 'SUIT', sans-serif;
+  }
 `;
 
 const ExtraContainer = styled.div`
