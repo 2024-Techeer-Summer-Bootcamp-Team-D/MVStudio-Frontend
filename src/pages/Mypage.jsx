@@ -112,7 +112,7 @@ const Button = styled.button`
 `;
 
 const Youtube = styled.div`
-  margin-top: 10rem;
+  margin-top: 8rem;
   font-size: 1.2rem;
   color: #a4a4a4;
   display: flex;
