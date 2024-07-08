@@ -33,15 +33,15 @@ function LyricsSelect() {
       <Tilte>Select Lyrics</Tilte>
       <OtherContainer>
         <LyricsContainer>
-          <Square>dddddddddddddddddddddddddddddd,ddddddddddddddddd</Square>
+          <Square>Verse 1</Square>
           <MainButton>Select</MainButton>
         </LyricsContainer>
         <LyricsContainer>
-          <Square>Verse1</Square>
+          <Square>Verse2</Square>
           <MainButton>Select</MainButton>
         </LyricsContainer>
         <LyricsContainer>
-          <Square>Verse1</Square>
+          <Square>Verse3</Square>
           <MainButton>Select</MainButton>
         </LyricsContainer>
       </OtherContainer>
