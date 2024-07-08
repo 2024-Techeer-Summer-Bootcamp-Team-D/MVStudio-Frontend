@@ -5,7 +5,7 @@ import Sidebar from './components/Sidebar';
 import AppRouter from './pages/AppRouter';
 import Navbar from './components/Navbar';
 
-const Backlayout = styled.div`
+const BackLayout = styled.div`
   background-image: url(https://i.ibb.co/3TyNxtw/background.png);
   background-size: 500em 500rem;
   background-repeat: no-repeat;
@@ -23,13 +23,13 @@ const ContentArea = styled.div`
 
 function App() {
   return (
-    <Backlayout>
+    <BackLayout>
       <Navbar />
       <ContentArea>
         <Sidebar />
         <AppRouter />
       </ContentArea>
-    </Backlayout>
+    </BackLayout>
   );
 }
 
