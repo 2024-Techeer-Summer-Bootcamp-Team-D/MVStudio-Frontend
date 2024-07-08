@@ -5,7 +5,7 @@ import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
 import styled from 'styled-components';
 import VpnKeyIcon from '@mui/icons-material/VpnKey';
 
-const Backlayout = styled.div`
+const BackLayout = styled.div`
   display: flex;
   flex-direction: column;
 `;
@@ -15,7 +15,7 @@ const Body = styled.div`
     rgba(250, 242, 255, 0.15),
     rgba(230, 230, 250, 0.1)
   );
-  width: 39.25rem;
+  width: 35rem;
   height: 3rem;
   border-radius: 1rem;
   display: flex;
@@ -23,7 +23,7 @@ const Body = styled.div`
   padding-left: 1rem;
   box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.1);
   border: 1px solid #a4a4a4;
-  margin-bottom: 2rem;
+  margin-bottom: 5rem;
 `;
 
 const Title = styled.div`
@@ -54,7 +54,7 @@ const Input = styled.input`
 
 function AuthInput({ title, type, placeholder, onChange, value }) {
   return (
-    <Backlayout>
+    <BackLayout>
       <Title>{title}</Title>
       <Body>
         {type === 'text' ? (
@@ -70,7 +70,7 @@ function AuthInput({ title, type, placeholder, onChange, value }) {
           value={value}
         />
       </Body>
-    </Backlayout>
+    </BackLayout>
   );
 }
 

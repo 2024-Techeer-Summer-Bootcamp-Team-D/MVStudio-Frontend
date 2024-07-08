@@ -5,10 +5,11 @@ import styled from 'styled-components';
 import Sidebar from './components/Sidebar';
 import Navbar from './components/Navbar';
 
-const Backlayout = styled.div`
+const BackLayout = styled.div`
   background-image: url(https://i.ibb.co/3TyNxtw/background.png);
   background-size: 500em 500rem;
   background-repeat: no-repeat;
+
   width: 100%;
   height: 100%;
   min-height: 100vh;
@@ -23,13 +24,13 @@ const ContentArea = styled.div`
 
 function App({ children }) {
   return (
-    <Backlayout>
+    <BackLayout>
       <Navbar />
       <ContentArea>
         <Sidebar />
         {children}
       </ContentArea>
-    </Backlayout>
+    </BackLayout>
   );
 }
 
