@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 
-const HeadPhoneImage = styled.img`
+const HeadphoneImage = styled.img`
   float: left;
   margin-top: -2rem;
   margin-left: 20rem;
@@ -201,7 +201,7 @@ const MainPage = () => {
   return (
     <PagePart>
       <Part>
-        <HeadPhoneImage src="https://i.ibb.co/F5pG38h/qwdascscwec-removebg-preview.png" />
+        <HeadphoneImage src="https://i.ibb.co/F5pG38h/qwdascscwec-removebg-preview.png" />
         <MainText>
           단
           <br />
