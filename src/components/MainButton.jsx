@@ -12,6 +12,7 @@ const Button = styled.button`
   color: white;
   text-transform: none;
   margin-top: 1.5rem;
+  font-family: 'SUIT', sans-serif;
 `;
 
 const MainButton = ({ onClick, children }) => {
