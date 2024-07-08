@@ -153,11 +153,7 @@ function LongCover({ pic, title, uploader, view, options, owner }) {
   return (
     <BigContainer>
       <ReaderContainer>
-        <ReaderPic
-          className="reader-pic"
-          src="https://i.ibb.co/Jn12dqF/unnamed.jpg"
-          alt="Reader"
-        />
+        <ReaderPic className="reader-pic" src={pic} alt="Reader" />
         <PlayIcon fontSize="large" className="play-icon" />
       </ReaderContainer>
       <InfoContainer src={pic} />
