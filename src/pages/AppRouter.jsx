@@ -1,20 +1,17 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Login from './Login';
-import Mypage from './Mypage';
-import Search from './Search';
-import App from '../App';
+import Main from './Main';
+import MainPage from './MainPage';
+import OnBoardingPage from './OnBoardingPage';
 
 function AppRouter() {
   return (
     <Router>
-      <App>
-        <Routes>
-          <Route path="/" element={<Mypage />} />
-          <Route path="/search" element={<Search />} />
-          <Route path="/login" element={<Login />} />
-        </Routes>
-      </App>
+      <Routes>
+        <Route path="/" element={<Main />} />
+        <Route path="/MainPage" element={<MainPage />} />
+        <Route path="/OnBoarding" element={<OnBoardingPage />} />
+      </Routes>
     </Router>
   );
 }
