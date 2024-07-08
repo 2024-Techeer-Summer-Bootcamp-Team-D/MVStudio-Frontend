@@ -31,6 +31,7 @@ const TitleContainer = styled.div`
 const AlbumContainer = styled.div`
   display: flex;
   flex-direction: column;
+  padding-left: 4rem;
 `;
 
 const Profile = styled.p`
@@ -136,6 +137,40 @@ const YouTubeIconEdit = styled(YouTubeIcon)`
 `;
 
 function Mypage() {
+  const Myvideos = [
+    {
+      pic: 'https://i.ibb.co/sQ0Ts7X/x4jy1m2x5d-As-ZHfb-FK-Xwu-O3g-Rbr-Rq-m2jd-VYSlm7-A9-D6j9e-YFrm-Gk6-Zl-Ndhdz-CXT-o-Wk4-NGex-WLPheet-Q.jpg',
+      title: '사랑인가봐',
+      uploader: '권혁진',
+      view: '0707',
+      options: '흔들리는 내맘, 설렘, 첫만남',
+      owner: true,
+    },
+    {
+      pic: 'https://i.ibb.co/sQ0Ts7X/x4jy1m2x5d-As-ZHfb-FK-Xwu-O3g-Rbr-Rq-m2jd-VYSlm7-A9-D6j9e-YFrm-Gk6-Zl-Ndhdz-CXT-o-Wk4-NGex-WLPheet-Q.jpg',
+      title: '사랑인가봐',
+      uploader: '권혁진',
+      view: '0707',
+      options: '흔들리는 내맘, 설렘, 첫만남',
+      owner: true,
+    },
+    {
+      pic: 'https://i.ibb.co/sQ0Ts7X/x4jy1m2x5d-As-ZHfb-FK-Xwu-O3g-Rbr-Rq-m2jd-VYSlm7-A9-D6j9e-YFrm-Gk6-Zl-Ndhdz-CXT-o-Wk4-NGex-WLPheet-Q.jpg',
+      title: '사랑인가봐',
+      uploader: '권혁진',
+      view: '0707',
+      options: '흔들리는 내맘, 설렘, 첫만남',
+      owner: true,
+    },
+    {
+      pic: 'https://i.ibb.co/sQ0Ts7X/x4jy1m2x5d-As-ZHfb-FK-Xwu-O3g-Rbr-Rq-m2jd-VYSlm7-A9-D6j9e-YFrm-Gk6-Zl-Ndhdz-CXT-o-Wk4-NGex-WLPheet-Q.jpg',
+      title: '사랑인가봐',
+      uploader: '권혁진',
+      view: '0707',
+      options: '흔들리는 내맘, 설렘, 첫만남',
+      owner: true,
+    },
+  ];
   return (
     <BigContainer>
       <TitleContainer>
@@ -159,9 +194,7 @@ function Mypage() {
           </ProText>
         </InfoContainer>
         <ExtraFunction>
-          <Button onClick={() => console.log('Edit button clicked')}>
-            Edit
-          </Button>
+          <Button onClick={() => console.log('Edit button click')}>Edit</Button>
           <Youtube>
             <YouTubeIconEdit />
             https://www.youtube.com
@@ -174,30 +207,9 @@ function Mypage() {
       </MyContainer>
       <Divider />
       <AlbumContainer>
-        <LongCover
-          pic="https://i.ibb.co/sQ0Ts7X/x4jy1m2x5d-As-ZHfb-FK-Xwu-O3g-Rbr-Rq-m2jd-VYSlm7-A9-D6j9e-YFrm-Gk6-Zl-Ndhdz-CXT-o-Wk4-NGex-WLPheet-Q.jpg"
-          title="사랑인가봐"
-          uploader="권혁진"
-          view="0707"
-          options="흔들리는 내맘, 설렘, 첫만남"
-          owner="false"
-        />
-        <LongCover
-          pic="https://i.ibb.co/sQ0Ts7X/x4jy1m2x5d-As-ZHfb-FK-Xwu-O3g-Rbr-Rq-m2jd-VYSlm7-A9-D6j9e-YFrm-Gk6-Zl-Ndhdz-CXT-o-Wk4-NGex-WLPheet-Q.jpg"
-          title="사랑인가봐"
-          uploader="권혁진"
-          view="0707"
-          options="흔들리는 내맘, 설렘, 첫만남"
-          owner="false"
-        />
-        <LongCover
-          pic="https://i.ibb.co/sQ0Ts7X/x4jy1m2x5d-As-ZHfb-FK-Xwu-O3g-Rbr-Rq-m2jd-VYSlm7-A9-D6j9e-YFrm-Gk6-Zl-Ndhdz-CXT-o-Wk4-NGex-WLPheet-Q.jpg"
-          title="사랑인가봐"
-          uploader="권혁진"
-          view="0707"
-          options="흔들리는 내맘, 설렘, 첫만남"
-          owner="false"
-        />
+        {Myvideos.map((item, index) => (
+          <LongCover key={index} {...item} />
+        ))}
       </AlbumContainer>
     </BigContainer>
   );
