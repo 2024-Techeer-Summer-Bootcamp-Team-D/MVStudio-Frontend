@@ -34,7 +34,7 @@ const Image1 = styled.img`
   width: 18rem;
   height: 18rem;
   margin-top: -7rem;
-  margin-left: rem;
+  margin-left: 8rem;
 `;
 
 const Image2 = styled.img`
