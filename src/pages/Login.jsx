@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import AuthFrame from '../components/AuthFrame';
+import Authframe from '../components/Authframe';
 import AuthInput from '../components/AuthInput';
 import MainButton from '../components/MainButton';
 
@@ -112,7 +112,7 @@ function Login() {
         />
       </MainBox1>
       <MainBox2>
-        <AuthFrame>
+        <Authframe>
           <TextContainer>
             <Title>Welcome Back!</Title>
             <Subtitle>welcome back we missed you</Subtitle>
@@ -125,7 +125,7 @@ function Login() {
               If you don’t have account <BlueText>Register</BlueText>
             </RegisterText>
           </TextBox>
-        </AuthFrame>
+        </Authframe>
       </MainBox2>
     </BackLayout>
   );

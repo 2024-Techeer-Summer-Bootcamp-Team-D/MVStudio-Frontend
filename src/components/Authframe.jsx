@@ -12,8 +12,8 @@ const Frame = styled.div`
   align-items: center;
   margin-top: 5rem;
 `;
-function AuthFrame({ children }) {
+function Authframe({ children }) {
   return <Frame>{children}</Frame>;
 }
 
-export default AuthFrame;
+export default Authframe;
