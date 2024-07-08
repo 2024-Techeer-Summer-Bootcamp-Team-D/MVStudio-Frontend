@@ -1,8 +1,8 @@
+/* eslint-disable react/prop-types */
 import React from 'react';
 import './index.css';
 import styled from 'styled-components';
 import Sidebar from './components/Sidebar';
-import AppRouter from './pages/AppRouter';
 import Navbar from './components/Navbar';
 
 const Backlayout = styled.div`
@@ -21,13 +21,13 @@ const ContentArea = styled.div`
   flex-direction: row;
 `;
 
-function App() {
+function App({ children }) {
   return (
     <Backlayout>
       <Navbar />
       <ContentArea>
         <Sidebar />
-        <AppRouter />
+        {children}
       </ContentArea>
     </Backlayout>
   );

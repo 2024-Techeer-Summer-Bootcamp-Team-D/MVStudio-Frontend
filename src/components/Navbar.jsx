@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import SearchIcon from '@mui/icons-material/Search';
 import ignorePath from '../util/igonerePath';
@@ -9,7 +10,7 @@ const Bar = styled.div`
   color: #0e0717;
   background-color: #0e0717;
   display: flex;
-  justify-content: center;
+  justify-content: start;
   align-items: center; /* 수직 중앙 정렬 */
 `;
 
@@ -25,22 +26,22 @@ const Searchbar = styled.div`
 `;
 
 const Logo = styled.div`
-  position: absolute;
-  left: 1rem; /* Bar의 왼쪽에 위치하도록 설정 */
+  position: relative;
+  left: 1rem;
   font-family: 'SUIT', sans-serif;
   font-size: 2.5rem;
-  font-weight: bold; /* Bold체로 설정 */
+  font-weight: bold;
   color: #ffffff;
+  margin-right: 17rem;
 `;
 
 const SearchInput = styled.input`
-  color: black;
   font-size: 1rem;
-  border: none;
   border-radius: 2rem;
   width: 100%;
-  height: 90%;
-  max-width: 18rem; /* 최대 너비 설정 */
+  height: 85%;
+  outline: none;
+  border: none;
 `;
 
 const Icon = styled(SearchIcon)`
@@ -48,17 +49,32 @@ const Icon = styled(SearchIcon)`
 `;
 
 function Navbar() {
-  const isIgnoredPath = ignorePath().includes(location.pathname);
+  const navigate = useNavigate();
+
+  const handleSearch = (event) => {
+    if (event.key === 'Enter') {
+      const keyword = event.target.value.trim();
+      if (keyword) {
+        navigate(`/search?keyword=${keyword}`); // 검색어와 함께 URL 이동
+      }
+    }
+  };
+
+  const isIgnoredPath = ignorePath().includes(window.location.pathname);
 
   if (isIgnoredPath) {
     return null;
   }
+
   return (
     <Bar>
       <Logo>MVStudio</Logo>
       <Searchbar>
-        <Icon></Icon>
-        <SearchInput placeholder="Search..." />
+        <Icon />
+        <SearchInput
+          placeholder="Search..."
+          onKeyDown={handleSearch} // 검색어 입력 시 이벤트 핸들러 추가
+        />
       </Searchbar>
     </Bar>
   );
