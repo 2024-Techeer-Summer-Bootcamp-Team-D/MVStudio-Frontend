@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 
-const Backlayout = styled.div`
+const BackLayout = styled.div`
   width: 100%;
   height: 100vh;
   display: flex;
@@ -11,7 +11,7 @@ const Backlayout = styled.div`
 `;
 
 function Main() {
-  return <Backlayout></Backlayout>;
+  return <BackLayout></BackLayout>;
 }
 
 export default Main;
