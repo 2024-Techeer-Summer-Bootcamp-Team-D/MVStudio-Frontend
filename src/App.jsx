@@ -4,8 +4,10 @@ import Main from './pages/Main';
 import { GlobalStyles } from './GlobalStyles';
 import './index.css';
 import styled from 'styled-components';
+import MainPage from './pages/MainPage';
 
 const Backlayout = styled.div`
+  background-color: black;
   width: 100%;
   height: 100%;
   min-height: 100vh;
@@ -18,6 +20,7 @@ function App() {
         <GlobalStyles />
         <Routes>
           <Route path="/" element={<Main />} />
+          <Route path="/Main" element={<MainPage />} />
         </Routes>
       </Router>
     </Backlayout>
