@@ -29,11 +29,11 @@ const LeftContainer = styled.div`
   display: flex;
   flex-direction: column;
   width: 40%;
-  padding-left: 10%;
+  padding-left: 5%;
 `;
 
 const RightContainer = styled.div`
-  width: 50%;
+  width: 55%;
   display: flex;
   flex-direction: column;
   padding-left: 5%;
@@ -117,15 +117,15 @@ const ChooseOption = styled.div`
 
 const CoverBox = styled.div`
   transition: transform 0.5s ease-in-out;
-  width: 20%;
-  flex: 0 0 20%;
+  width: 16.7%;
+  flex: 0 0 16.7%;
 `;
 const RoundCover = styled.button`
   background-image: url(${(props) => props.src});
   background-size: cover;
   background-position: center;
   border-radius: 50%;
-  width: 80%;
+  width: 86%;
   height: 80%;
   display: flex;
   align-items: center;
@@ -156,7 +156,7 @@ const CardList = styled.div`
   width: 100%;
   height: 8rem;
   transition: transform 0.5s ease-in-out;
-  transform: ${({ currentIndex }) => `translateX(-${currentIndex * 20}%)`};
+  transform: ${({ currentIndex }) => `translateX(-${currentIndex * 16.7}%)`};
   position: relative;
 `;
 
@@ -179,10 +179,20 @@ const GenreContainer = styled.div`
 `;
 
 const ViewContainer = styled.div`
-  width: 90%;
+  width: 95%;
   display: flex;
   overflow: hidden;
   padding-left: 1rem;
+`;
+
+const InstrumentList = styled.div`
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  height: 8rem;
+  transition: transform 0.5s ease-in-out;
+  transform: ${({ optionIndex }) => `translateX(-${optionIndex * 20}%)`};
+  position: relative;
 `;
 
 function Create() {
@@ -308,13 +318,13 @@ function Create() {
               disabled={optionIndex === 0}
             />
             <ViewContainer>
-              <CardList optionIndex={optionIndex}>
+              <InstrumentList optionIndex={optionIndex}>
                 {instrumentArray.map((cover, index) => (
                   <CoverBox key={index}>
                     <RoundCover src={cover.src} label={cover.label} />
                   </CoverBox>
                 ))}
-              </CardList>
+              </InstrumentList>
             </ViewContainer>
             <ArrowFunction
               onClick={moreOption}
