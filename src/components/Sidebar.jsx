@@ -13,62 +13,68 @@ const Container = styled.div`
 `;
 
 const SidebarContainer = styled.div`
-  background-image: url(https://i.ibb.co/3TyNxtw/background.png);
-  background-size: 500em 500rem;
+  background-color: #05000a;
   position: relative;
-  bottom: 0;
-  left: 0;
   color: #fafafa;
   height: 100%;
   z-index: 99;
-  width: 20rem;
+  width: 13rem;
   transform: translateX(${({ xPosition }) => -xPosition}px);
 `;
 
 const HomeItem = styled.div`
   display: flex;
+  height: 2rem;
   align-items: center;
-  padding: 1rem 1.25rem;
+  margin-left: 1rem;
+  margin-right: 1rem;
+  padding-left: 0.25rem;
   cursor: pointer;
   &:hover {
     background-color: #333333;
-    border-radius: 1.2rem; /* Adjust as needed */
+    border-radius: 0.5rem; /* Adjust as needed */
   }
 `;
 
 const CreateItem = styled.div`
   display: flex;
+  height: 2rem;
   align-items: center;
-  padding: 1rem 1.25rem;
+  margin-left: 1rem;
+  margin-right: 1rem;
+  padding-left: 0.25rem;
   cursor: pointer;
   &:hover {
     background-color: #333333;
-    border-radius: 1.2rem;
+    border-radius: 0.5rem;
   }
 `;
 
 const NavigationItem = styled.div`
   display: flex;
+  height: 2rem;
   align-items: center;
-  padding: 1rem 1.25rem;
+  margin-left: 1rem;
+  margin-right: 1rem;
+  padding-left: 0.25rem;
   cursor: pointer;
   &:hover {
     background-color: #333333;
-    border-radius: 1.2rem;
+    border-radius: 0.5rem;
   }
 `;
 
 const NavigationText = styled.p`
   margin-left: 0.625rem;
   font-weight: 500;
-  font-size: 1.5rem;
+  font-size: 0.875rem;
 `;
 
 const TrendingText = styled.p`
   margin-left: 0.625rem;
   padding-right: 2.5rem;
   font-weight: 500;
-  font-size: 1.5rem;
+  font-size: 0.875rem;
 `;
 
 const ExpandButton = styled.div`
@@ -82,10 +88,6 @@ const ExpandButton = styled.div`
 const ExpandIcon = styled(ArrowForwardIosIcon)`
   transform: ${({ isOpen }) => (isOpen ? 'rotate(90deg)' : 'rotate(0deg)')};
   transition: transform 0.3s ease;
-`;
-
-const Content = styled.div`
-  padding: 1.25rem;
 `;
 
 const ExpandContainer = styled.div`
@@ -129,7 +131,7 @@ const Uploader = styled.div`
   color: #a4a4a4;
 `;
 
-function Sidebar({ children }) {
+function Sidebar() {
   const [xPosition, setX] = useState(0);
   const [isExpandOpen, setExpandOpen] = useState(false);
 
@@ -164,22 +166,22 @@ function Sidebar({ children }) {
     <Container>
       <SidebarContainer ref={side} xPosition={xPosition}>
         <HomeItem>
-          <HomeIcon />
+          <HomeIcon fontSize="small" />
           <NavigationText>Home</NavigationText>
         </HomeItem>
         <CreateItem>
-          <AddIcon />
+          <AddIcon fontSize="small" />
           <NavigationText>Create</NavigationText>
         </CreateItem>
         <NavigationItem>
-          <PersonOutlineIcon />
+          <PersonOutlineIcon fontSize="small" />
           <NavigationText>Person</NavigationText>
         </NavigationItem>
         <NavigationItem>
-          <WhatshotIcon />
+          <WhatshotIcon fontSize="small" />
           <TrendingText>Trending </TrendingText>
           <ExpandButton onClick={toggleExpand}>
-            <ExpandIcon isOpen={isExpandOpen} />
+            <ExpandIcon isOpen={isExpandOpen} fontSize="inherit" />
           </ExpandButton>
         </NavigationItem>
         <ExpandContainer isOpen={isExpandOpen}>
@@ -213,7 +215,6 @@ function Sidebar({ children }) {
           </ThumbnailContainer>
         </ExpandContainer>
       </SidebarContainer>
-      <Content>{children}</Content>
     </Container>
   );
 }

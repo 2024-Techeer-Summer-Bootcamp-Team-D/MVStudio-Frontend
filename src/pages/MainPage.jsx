@@ -3,8 +3,7 @@ import styled from 'styled-components';
 
 const HeadphoneImage = styled.img`
   float: left;
-  margin-top: -2rem;
-  margin-left: 20rem;
+  margin-left: 10rem;
   width: 19rem;
   height: 17rem;
   position: relative;
@@ -49,9 +48,9 @@ const Overlay = styled.div`
 
 const MainText = styled.div`
   color: white;
-  margin-top: 7rem;
-  margin-left: 42rem;
-  font-size: 2rem;
+  margin-top: 2rem;
+  margin-left: 35rem;
+  font-size: 3rem;
   position: relative;
   font-weight: 700;
   font-family: 'suit';
@@ -64,7 +63,7 @@ const MostViewText = styled.div`
   font-weight: 700;
   font-family: 'suit';
   margin-top: 5rem;
-  margin-left: 16rem;
+  margin-left: 4rem;
 `;
 
 const RecentUploadedText = styled.div`
@@ -74,7 +73,7 @@ const RecentUploadedText = styled.div`
   font-weight: 700;
   font-family: 'suit';
   margin-top: 3rem;
-  margin-left: 16rem;
+  margin-left: 4rem;
 `;
 
 const RecentViewText = styled.div`
@@ -84,7 +83,7 @@ const RecentViewText = styled.div`
   font-weight: 700;
   font-family: 'suit';
   margin-top: 3rem;
-  margin-left: 16rem;
+  margin-left: 4rem;
 `;
 
 const MyCountyText = styled.div`
@@ -94,7 +93,7 @@ const MyCountyText = styled.div`
   font-weight: 700;
   font-family: 'suit';
   margin-top: 3rem;
-  margin-left: 16rem;
+  margin-left: 4rem;
 `;
 
 const TitleText1 = styled.div`
@@ -167,34 +166,33 @@ const TitleSmallText = styled.div`
 
 const TextBox = styled.div`
   display: flex;
+  margin-left: -12rem;
 `;
 
-const PagePart = styled.div``;
+const PagePart = styled.div`
+  overflow-x: hidden;
+`;
 
 const Part = styled.div``;
 
 const MostView = styled.div`
   display: flex;
-  margin-top: -3rem;
-  margin-left: 12rem;
+  margin-top: -4rem;
 `;
 
 const RecentUploaded = styled.div`
   display: flex;
   margin-top: -4rem;
-  margin-left: 12rem;
 `;
 
 const RecentView = styled.div`
   display: flex;
   margin-top: -4rem;
-  margin-left: 12rem;
 `;
 
 const MyCountyTrend = styled.div`
   display: flex;
   margin-top: -4rem;
-  margin-left: 12rem;
 `;
 
 const MainPage = () => {

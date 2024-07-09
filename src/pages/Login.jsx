@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import Authframe from '../components/Authframe';
 import AuthInput from '../components/AuthInput';
@@ -25,7 +25,7 @@ const Logo = styled.div`
   width: 18rem;
   height: 18rem;
   margin-top: 5rem;
-  margin-left: 8rem;
+  margin-left: 6rem;
   font-weight: bold; /* Bold체로 설정 */
   color: #ffffff;
 `;
@@ -98,6 +98,18 @@ const BlueText = styled.span`
 `;
 
 function Login() {
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+
+  const handleUsernameChange = (e) => {
+    console.log('username: ', username);
+    setUsername(e.target.value);
+  };
+
+  const handlePasswordChange = (e) => {
+    setPassword(e.target.value);
+  };
+
   return (
     <BackLayout>
       <MainBox1>
@@ -117,8 +129,20 @@ function Login() {
             <Title>Welcome Back!</Title>
             <Subtitle>welcome back we missed you</Subtitle>
           </TextContainer>
-          <AuthInput title="username" type="text" />
-          <AuthInput title="password" type="password" />
+          <AuthInput
+            title="Username"
+            type="text"
+            placeholder="이름을 입력하세요"
+            value={username}
+            onChange={handleUsernameChange}
+          />
+          <AuthInput
+            title="Password"
+            type="password"
+            placeholder="비밀번호를 입력하세요"
+            value={password}
+            onChange={handlePasswordChange}
+          />
           <MainButton>Sign In</MainButton>
           <TextBox>
             <RegisterText>
