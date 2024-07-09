@@ -10,7 +10,7 @@ const BigContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: start;
-  margin-left: 5rem;
+  padding-left: 15rem;
   width: 100%;
 `;
 const MyContainer = styled.div`
@@ -31,13 +31,14 @@ const TitleContainer = styled.div`
 const AlbumContainer = styled.div`
   display: flex;
   flex-direction: column;
-  padding-left: 4rem;
+  padding-left: 2.7rem;
 `;
 
 const Profile = styled.p`
   font-size: 2rem;
   color: #ffffff;
   margin-right: 2rem;
+  text-decoration: underline;
 `;
 
 const Statistics = styled.p`
@@ -72,7 +73,7 @@ const InfoContainer = styled.div`
 `;
 
 const ProText = styled.div`
-  font-size: 1.6rem;
+  font-size: 1.4rem;
   color: #a4a4a4;
   display: flex;
   flex-direction: row;
@@ -82,18 +83,18 @@ const ProText = styled.div`
 
 const Divider = styled.div`
   height: 0.1rem;
-  width: 71rem;
+  width: 70.5rem;
   background-color: #9f9e9e;
-  margin-bottom: 3rem;
+  margin-bottom: 2rem;
   padding: 0;
 `;
 
 const ExtraFunction = styled.div`
   display: flex;
   flex-direction: column;
-  padding-left: 24rem;
-  width: 10rem;
-  margin: 0;
+  padding-left: 27rem;
+  width: 15rem;
+  height: 100%;
   padding-bottom: 0;
 `;
 
@@ -105,14 +106,13 @@ const Button = styled.button`
   font-size: 1.2rem;
   color: white;
   text-transform: none;
-  margin-top: 1.5rem;
   font-family: 'SUIT';
   font-weight: 350;
-  margin-left: 10rem;
+  margin-left: 9.5rem;
 `;
 
 const Youtube = styled.div`
-  margin-top: 8rem;
+  margin-top: 9rem;
   font-size: 1.2rem;
   color: #a4a4a4;
   display: flex;
@@ -134,6 +134,13 @@ const InstagramIconEdit = styled(InstagramIcon)`
 
 const YouTubeIconEdit = styled(YouTubeIcon)`
   margin-right: 1rem;
+`;
+
+const MyVideos = styled.p`
+  font-size: 2rem;
+  color: #ffffff;
+  padding-left: 1rem;
+  margin-top: 0;
 `;
 
 function Mypage() {
@@ -206,6 +213,7 @@ function Mypage() {
         </ExtraFunction>
       </MyContainer>
       <Divider />
+      <MyVideos>MyVideos</MyVideos>
       <AlbumContainer>
         {Myvideos.map((item, index) => (
           <LongCover key={index} {...item} />

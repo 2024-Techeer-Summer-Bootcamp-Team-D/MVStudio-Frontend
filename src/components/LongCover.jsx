@@ -9,7 +9,7 @@ import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 
 const BigContainer = styled.div`
   display: flex;
-  width: 60rem;
+  width: 63rem;
   height: 10.82rem;
   position: relative;
   flex-direction: row;

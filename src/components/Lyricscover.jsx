@@ -22,7 +22,7 @@ const SquareBox = styled.div`
   &::after {
     content: ' ';
     display: block;
-    margin: 10px;
+    margin: 0.625rem;
   }
 `;
 
