@@ -4,6 +4,7 @@ import Login from './Login';
 import Mypage from './Mypage';
 import Search from './Search';
 import App from '../App';
+import Create from './Create';
 
 function AppRouter() {
   return (
@@ -13,6 +14,7 @@ function AppRouter() {
           <Route path="/" element={<Mypage />} />
           <Route path="/search" element={<Search />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/create" element={<Create />} />
         </Routes>
       </App>
     </Router>
