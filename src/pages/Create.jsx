@@ -7,13 +7,13 @@ const BigContainer = styled.div`
   height: 100%;
   display: flex;
   flex-direction: row;
-  padding-left: 10rem;
 `;
 
 const LeftContainer = styled.div`
   display: flex;
   flex-direction: column;
   width: 40%;
+  padding-left: 10rem;
 `;
 
 const RightContainer = styled.div`
@@ -26,9 +26,11 @@ const RightContainer = styled.div`
 
 const TitleStyle = styled.p`
   font-family: 'SUIT', sans-serif;
-  font-size: 2rem;
+  font-size: 1.4rem;
   color: #ffffff;
   margin-bottom: 0.5rem;
+  margin-top: 0.5rem;
+  font-weight: 700;
 `;
 
 const Button = styled.button`
@@ -51,8 +53,8 @@ const Button = styled.button`
 const TitleInput = styled.input`
   background: linear-gradient(
     45deg,
-    rgba(183, 93, 223, 0.8) 30%,
-    rgba(255, 169, 169, 0.8) 90%
+    rgba(156, 106, 99, 0.8) 30%,
+    rgba(111, 59, 151, 0.8) 90%
   );
   width: 18.87rem;
   height: 1.12rem;
@@ -63,7 +65,8 @@ const TitleInput = styled.input`
   color: #ffffff;
   font-family: 'SUIT', sans-serif;
   font-weight: 600;
-  font-size: 1.5rem;
+  font-size: 1.2rem;
+  margin-bottom: 3rem;
   ::placeholder {
     color: #000000;
     font-size: 1.1rem;
@@ -74,8 +77,8 @@ const TitleInput = styled.input`
 const ChooseOption = styled.div`
   display: flex;
   flex-direction: row;
-  gap: 0.875rem;
-  margin-bottom: 4rem;
+  gap: 0.4rem;
+  margin-bottom: 3rem;
 `;
 
 const CoverBox = styled.div`
