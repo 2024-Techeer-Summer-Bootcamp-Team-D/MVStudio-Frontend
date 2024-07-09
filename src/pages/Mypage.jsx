@@ -5,6 +5,15 @@ import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
 import ChatOutlinedIcon from '@mui/icons-material/ChatOutlined';
 import YouTubeIcon from '@mui/icons-material/YouTube';
 import InstagramIcon from '@mui/icons-material/Instagram';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+
+const theme = createTheme({
+  palette: {
+    gradient: {
+      main: 'linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%)',
+    },
+  },
+});
 
 const BigContainer = styled.div`
   display: flex;
@@ -207,7 +216,9 @@ function Mypage() {
             https://www.youtube.com
           </Youtube>
           <Instagram>
-            <InstagramIconEdit />
+            <ThemeProvider theme={theme}>
+              <InstagramIconEdit color="gradient" />
+            </ThemeProvider>
             https://www.instagram.com
           </Instagram>
         </ExtraFunction>
