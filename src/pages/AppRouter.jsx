@@ -5,6 +5,7 @@ import Mypage from './Mypage';
 import Search from './Search';
 import App from '../App';
 import Join from './Join';
+import Play from './Play';
 
 function AppRouter() {
   return (
@@ -15,6 +16,7 @@ function AppRouter() {
           <Route path="/search" element={<Search />} />
           <Route path="/login" element={<Login />} />
           <Route path="/join" element={<Join />} />
+          <Route path="/play" element={<Play />} />
         </Routes>
       </App>
     </Router>

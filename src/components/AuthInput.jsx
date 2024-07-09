@@ -66,7 +66,7 @@ function AuthInput({ title, type, placeholder, onChange, value }) {
         <Input
           type={type}
           placeholder={placeholder}
-          onChange={(e) => onChange(e.target.value)}
+          onChange={onChange}
           value={value}
         />
       </Body>
