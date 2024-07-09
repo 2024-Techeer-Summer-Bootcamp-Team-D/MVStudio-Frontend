@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import Authframe from '../components/Authframe';
 import AuthInput from '../components/AuthInput';
@@ -21,19 +21,21 @@ const BackLayout = styled.div`
   justify-content: center;
   position: relative;
 `;
+
 const MainBox1 = styled.div`
   flex-direction: column;
   width: 40%;
   height: 100%;
   display: flex;
 `;
+
 const Logo = styled.div`
   font-family: 'SUIT', sans-serif;
   font-size: 6rem;
   width: 18rem;
   height: 18rem;
   margin-top: 5rem;
-  margin-left: 8rem;
+  margin-left: 6rem;
   font-weight: bold; /* Bold체로 설정 */
   color: #ffffff;
 `;
@@ -57,6 +59,7 @@ const MainBox2 = styled.div`
   height: 100%;
   display: flex;
 `;
+
 const TextContainer = styled.div`
   display: flex;
   flex-direction: column;
@@ -123,75 +126,122 @@ const Birthday = styled.div`
 `;
 
 function Join() {
-  const [age, setAge] = React.useState('');
+  const [username, setUsername] = useState('');
+  const [nickname, setNickname] = useState('');
+  const [password, setPassword] = useState('');
+  const [passwordCheck, setPasswordCheck] = useState('');
+  const [country, setCountry] = useState('');
+  const [gender, setGender] = useState('');
 
-  const handleChange = (event) => {
-    setAge(event.target.value);
+  const handleUsernameChange = (e) => {
+    console.log('username: ', username);
+    setUsername(e.target.value);
   };
+
+  const handleNicknameChange = (e) => {
+    setNickname(e.target.value);
+  };
+
+  const handlePasswordChange = (e) => {
+    setPassword(e.target.value);
+  };
+
+  const handlePasswordCheckChange = (e) => {
+    setPasswordCheck(e.target.value);
+  };
+
+  const handleCountryChange = (e) => {
+    setCountry(e.target.value);
+  };
+
+  const handleGenderChange = (e) => {
+    setGender(e.target.value);
+  };
+
   return (
     <BackLayout>
       <MainBox1>
         <Logo>MVStudio</Logo>
         <Image1
           src="https://i.ibb.co/4YXMVtN/qwdascav-removebg-preview.png"
-          alt=" Image "
+          alt="Logo Image"
         />
         <Image2
           src="https://i.ibb.co/9cGcVbX/qwasvzdv-removebg-preview.png"
-          alt=" Image "
+          alt="Other Image"
         />
       </MainBox1>
       <MainBox2>
         <Authframe>
           <TextContainer>
-            <Title>Welcome !</Title>
-            <Subtitle>we are waiting for you</Subtitle>
+            <Title>Welcome!</Title>
+            <Subtitle>We are waiting for you</Subtitle>
           </TextContainer>
-          <AuthInput title="Username" type="text" />
-          <AuthInput title="Nickname" type="text" />
-          <AuthInput title="Password" type="password" />
-          <AuthInput title="Passwordcheck" type="password" />
+          <AuthInput
+            title="Username"
+            type="text"
+            placeholder="이름을 입력하세요"
+            value={username}
+            onChange={handleUsernameChange}
+          />
+          <AuthInput
+            title="Nickname"
+            type="text"
+            placeholder="닉네임을 입력하세요"
+            value={nickname}
+            onChange={handleNicknameChange}
+          />
+          <AuthInput
+            title="Password"
+            type="password"
+            placeholder="비밀번호를 입력하세요"
+            value={password}
+            onChange={handlePasswordChange}
+          />
+          <AuthInput
+            title="Password Check"
+            type="password"
+            placeholder="비밀번호를 다시 입력하세요"
+            value={passwordCheck}
+            onChange={handlePasswordCheckChange}
+          />
           <Wrapper>
             <Body>
               <FormControl sx={{ m: -2, minWidth: 260 }}>
-                <InputLabel id="demo-simple-select-autowidth-label">
-                  Country
-                </InputLabel>
+                <InputLabel id="country-label">Country</InputLabel>
                 <Select
-                  labelId="demo-simple-select-autowidth-label"
-                  id="demo-simple-select-autowidth"
-                  value={age}
-                  onChange={handleChange}
+                  labelId="country-label"
+                  id="country"
+                  value={country}
+                  onChange={handleCountryChange}
                   autoWidth
                   label="Country"
                 >
                   <MenuItem value="">
                     <em>None</em>
                   </MenuItem>
-                  <MenuItem value={20}>Korea</MenuItem>
-                  <MenuItem value={21}>Japan</MenuItem>
-                  <MenuItem value={22}>USA</MenuItem>
+                  <MenuItem value="Korea">Korea</MenuItem>
+                  <MenuItem value="Japan">Japan</MenuItem>
+                  <MenuItem value="USA">USA</MenuItem>
                 </Select>
               </FormControl>
             </Body>
             <Body>
               <FormControl sx={{ m: -2, minWidth: 260 }}>
-                <InputLabel id="demo-simple-select-autowidth-label">
-                  Gender
-                </InputLabel>
+                <InputLabel id="gender-label">Gender</InputLabel>
                 <Select
-                  labelId="demo-simple-select-autowidth-label"
-                  id="demo-simple-select-autowidth"
-                  value={age}
-                  onChange={handleChange}
+                  labelId="gender-label"
+                  id="gender"
+                  value={gender}
+                  onChange={handleGenderChange}
                   autoWidth
                   label="Gender"
                 >
                   <MenuItem value="">
                     <em>None</em>
                   </MenuItem>
-                  <MenuItem value={20}>Woman</MenuItem>
-                  <MenuItem value={21}>Man</MenuItem>
+                  <MenuItem value="Woman">Woman</MenuItem>
+                  <MenuItem value="Man">Man</MenuItem>
                 </Select>
               </FormControl>
             </Body>
@@ -199,7 +249,7 @@ function Join() {
           <Birthday>
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DemoContainer components={['DatePicker']}>
-                <DatePicker label="Basic date picker" />
+                <DatePicker label="Select Your Birthday" />
               </DemoContainer>
             </LocalizationProvider>
           </Birthday>
