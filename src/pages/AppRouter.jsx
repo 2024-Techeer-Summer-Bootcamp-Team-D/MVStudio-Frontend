@@ -4,6 +4,7 @@ import Login from './Login';
 import Mypage from './Mypage';
 import Search from './Search';
 import App from '../App';
+import LyricsSelect from './LyricsSelect';
 import Join from './Join';
 import MainPage from './MainPage';
 import OnBoardingPage from './OnBoardingPage';
@@ -18,6 +19,7 @@ function AppRouter() {
           <Route path="/MainPage" element={<MainPage />} />
           <Route path="/Test" element={<MainPageTest />} />
           <Route path="/search" element={<Search />} />
+          <Route path="/lyricsselect" element={<LyricsSelect />} />
           <Route path="/login" element={<Login />} />
           <Route path="/join" element={<Join />} />
           <Route path="/Onboarding" element={<OnBoardingPage />} />
