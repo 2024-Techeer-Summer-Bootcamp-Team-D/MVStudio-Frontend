@@ -7,6 +7,7 @@ import App from '../App';
 import Join from './Join';
 import MainPage from './MainPage';
 import OnBoardingPage from './OnBoardingPage';
+import MainPageTest from './MainPageTest';
 
 function AppRouter() {
   return (
@@ -15,6 +16,7 @@ function AppRouter() {
         <Routes>
           <Route path="/" element={<Mypage />} />
           <Route path="/MainPage" element={<MainPage />} />
+          <Route path="/Test" element={<MainPageTest />} />
           <Route path="/search" element={<Search />} />
           <Route path="/login" element={<Login />} />
           <Route path="/join" element={<Join />} />

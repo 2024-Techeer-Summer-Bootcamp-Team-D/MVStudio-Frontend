@@ -3,9 +3,10 @@ import styled from 'styled-components';
 
 const HeadphoneImage = styled.img`
   float: left;
-  margin-left: 10rem;
-  width: 19rem;
-  height: 17rem;
+  margin-left: 15rem;
+  margin-top: -1rem;
+  width: 15rem;
+  height: 13rem;
   position: relative;
 `;
 
@@ -13,16 +14,15 @@ const ImageContainer = styled.div`
   position: relative;
   display: inline-block;
   margin-top: 5rem;
-  margin-left: 3rem;
-
+  margin-left: 2rem;
   &:hover .overlay {
     opacity: 1;
   }
 `;
 
 const Image = styled.img`
-  width: 12rem;
-  height: 12.5rem;
+  width: 10rem;
+  height: 10rem;
   border-radius: 1.5rem;
   position: relative;
 `;
@@ -50,50 +50,50 @@ const MainText = styled.div`
   color: white;
   margin-top: 2rem;
   margin-left: 35rem;
-  font-size: 3rem;
+  font-size: 2rem;
   position: relative;
-  font-weight: 700;
+  font-weight: 500;
   font-family: 'suit';
 `;
 
 const MostViewText = styled.div`
   color: white;
-  font-size: 2rem;
+  font-size: 1.3rem;
   position: relative;
   font-weight: 700;
   font-family: 'suit';
   margin-top: 5rem;
-  margin-left: 4rem;
+  margin-left: 2.7rem;
 `;
 
 const RecentUploadedText = styled.div`
   color: white;
-  font-size: 2rem;
+  font-size: 1.3rem;
   position: relative;
   font-weight: 700;
   font-family: 'suit';
   margin-top: 3rem;
-  margin-left: 4rem;
+  margin-left: 2.7rem;
 `;
 
 const RecentViewText = styled.div`
   color: white;
-  font-size: 2rem;
+  font-size: 1.3rem;
   position: relative;
   font-weight: 700;
   font-family: 'suit';
   margin-top: 3rem;
-  margin-left: 4rem;
+  margin-left: 2.7rem;
 `;
 
 const MyCountyText = styled.div`
   color: white;
-  font-size: 2rem;
+  font-size: 1.3rem;
   position: relative;
   font-weight: 700;
   font-family: 'suit';
   margin-top: 3rem;
-  margin-left: 4rem;
+  margin-left: 2.7rem;
 `;
 
 const TitleText1 = styled.div`
@@ -103,7 +103,7 @@ const TitleText1 = styled.div`
   font-weight: 700;
   font-family: 'suit';
   margin-top: 0.5rem;
-  margin-left: 15.5rem;
+  margin-left: 15rem;
 `;
 
 const TitleText2 = styled.div`
@@ -113,7 +113,7 @@ const TitleText2 = styled.div`
   font-weight: 700;
   font-family: 'suit';
   margin-top: 0.5rem;
-  margin-left: 13rem;
+  margin-left: 10rem;
 `;
 
 const TitleText3 = styled.div`
@@ -123,7 +123,7 @@ const TitleText3 = styled.div`
   font-weight: 700;
   font-family: 'suit';
   margin-top: 0.5rem;
-  margin-left: 13rem;
+  margin-left: 10rem;
 `;
 
 const TitleText4 = styled.div`
@@ -133,7 +133,7 @@ const TitleText4 = styled.div`
   font-weight: 700;
   font-family: 'suit';
   margin-top: 0.5rem;
-  margin-left: 13rem;
+  margin-left: 10rem;
 `;
 
 const TitleText5 = styled.div`
@@ -143,7 +143,7 @@ const TitleText5 = styled.div`
   font-weight: 700;
   font-family: 'suit';
   margin-top: 0.5rem;
-  margin-left: 13rem;
+  margin-left: 10rem;
 `;
 
 const TitleText6 = styled.div`
@@ -153,7 +153,7 @@ const TitleText6 = styled.div`
   font-weight: 700;
   font-family: 'suit';
   margin-top: 0.5rem;
-  margin-left: 13rem;
+  margin-left: 10rem;
 `;
 
 const TitleSmallText = styled.div`
@@ -167,6 +167,7 @@ const TitleSmallText = styled.div`
 const TextBox = styled.div`
   display: flex;
   margin-left: -12rem;
+  margin-top: -0.5rem;
 `;
 
 const PagePart = styled.div`
@@ -211,7 +212,7 @@ const MainPage = () => {
           <br />
         </MainText>
       </Part>
-      <MostViewText>Most view</MostViewText>
+      <MostViewText>Trend</MostViewText>
       <MostView>
         <ImageContainer>
           <Image src="https://i.ibb.co/Fn93yzJ/1.webp" />
@@ -264,7 +265,7 @@ const MainPage = () => {
           <TitleSmallText>Artist</TitleSmallText>
         </TitleText6>
       </TextBox>
-      <RecentUploadedText>Recent uploaded</RecentUploadedText>
+      <RecentUploadedText>Most View</RecentUploadedText>
       <RecentUploaded>
         <ImageContainer>
           <Image src="https://i.ibb.co/Fn93yzJ/1.webp" />
@@ -317,7 +318,7 @@ const MainPage = () => {
           <TitleSmallText>Artist</TitleSmallText>
         </TitleText6>
       </TextBox>
-      <RecentViewText>Recent view</RecentViewText>
+      <RecentViewText>Recent uploaded</RecentViewText>
       <RecentView>
         <ImageContainer>
           <Image src="https://i.ibb.co/Fn93yzJ/1.webp" />
