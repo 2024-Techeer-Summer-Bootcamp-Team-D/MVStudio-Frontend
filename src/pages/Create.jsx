@@ -2,6 +2,22 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 
+const PageTitle = styled.div`
+  padding: 2rem;
+  font-size: 1.8rem;
+  font-weight: 600;
+  font-family: 'SUIT' sans-serif;
+  color: #ffffff;
+  margin-left: 2rem;
+`;
+
+const CreateContainer = styled.div`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+`;
+
 const BigContainer = styled.div`
   width: 100%;
   height: 100%;
@@ -13,15 +29,15 @@ const LeftContainer = styled.div`
   display: flex;
   flex-direction: column;
   width: 40%;
-  padding-left: 10rem;
+  padding-left: 10%;
 `;
 
 const RightContainer = styled.div`
-  width: 60%;
+  width: 50%;
   display: flex;
   flex-direction: column;
   padding-left: 5%;
-  padding-right: 5%;
+  padding-right: 10%;
 `;
 
 const TitleStyle = styled.p`
@@ -48,6 +64,24 @@ const Button = styled.button`
   border: none;
   outline: none;
   margin-right: 1rem;
+`;
+
+const SubmitButton = styled.button`
+  background: linear-gradient(
+    45deg,
+    rgba(156, 106, 99, 0.8) 30%,
+    rgba(111, 59, 151, 0.8) 90%
+  );
+  border-radius: 1rem;
+  width: 20%;
+  height: 3rem;
+  font-size: 1.1rem;
+  color: white;
+  font-weight: 500;
+  border: none;
+  outline: none;
+  margin-top: 5rem;
+  margin-left: 35%;
 `;
 
 const TitleInput = styled.input`
@@ -141,6 +175,7 @@ const GenreContainer = styled.div`
   flex-direction: row;
   overflow: hidden;
   width: 100%;
+  padding-bottom: 5rem;
 `;
 
 const ViewContainer = styled.div`
@@ -215,79 +250,83 @@ function Create() {
   };
 
   return (
-    <BigContainer>
-      <LeftContainer>
-        <TitleStyle>Title</TitleStyle>
-        <TitleInput placeholder="Please enter a title" />
-        <TitleStyle>Voice</TitleStyle>
-        <ChooseOption>
-          <Button>Female</Button>
-          <Button>Male</Button>
-        </ChooseOption>
-        <TitleStyle>Language</TitleStyle>
-        <ChooseOption>
-          <Button>English</Button>
-          <Button>한국어</Button>
-          <Button>日本語</Button>
-        </ChooseOption>
-        <TitleStyle>Tempo</TitleStyle>
-        <ChooseOption>
-          <Button>Slow</Button>
-          <Button>Normal</Button>
-          <Button>Fast</Button>
-        </ChooseOption>
-      </LeftContainer>
-      <RightContainer>
-        <TitleStyle>Genre</TitleStyle>
-        <GenreContainer>
-          <ArrowFunction
-            onClick={handlePrev}
-            isPrev={false}
-            fontSize="large"
-            disabled={currentIndex === 0}
-          />
-          <ViewContainer>
-            <CardList currentIndex={currentIndex}>
-              {newCoverArray.map((cover, index) => (
-                <CoverBox key={index}>
-                  <RoundCover src={cover.src} label={cover.label} />
-                </CoverBox>
-              ))}
-            </CardList>
-          </ViewContainer>
-          <ArrowFunction
-            onClick={handleNext}
-            isPrev={true}
-            fontSize="large"
-            disabled={currentIndex === newCoverArray.length - 5}
-          />
-        </GenreContainer>
-        <TitleStyle>Instrument</TitleStyle>
-        <GenreContainer>
-          <ArrowFunction
-            onClick={prevOption}
-            isPrev={false}
-            fontSize="large"
-            disabled={optionIndex === 0}
-          />
-          <ViewContainer>
-            <CardList optionIndex={optionIndex}>
-              {instrumentArray.map((cover, index) => (
-                <CoverBox key={index}>
-                  <RoundCover src={cover.src} label={cover.label} />
-                </CoverBox>
-              ))}
-            </CardList>
-          </ViewContainer>
-          <ArrowFunction
-            onClick={moreOption}
-            isPrev={true}
-            fontSize="large"
-            disabled={optionIndex === newCoverArray.length - 5}
-          />
-        </GenreContainer>
-      </RightContainer>
-    </BigContainer>
+    <CreateContainer>
+      <PageTitle>Create</PageTitle>
+      <BigContainer>
+        <LeftContainer>
+          <TitleStyle>Title</TitleStyle>
+          <TitleInput placeholder="Please enter a title" />
+          <TitleStyle>Voice</TitleStyle>
+          <ChooseOption>
+            <Button>Female</Button>
+            <Button>Male</Button>
+          </ChooseOption>
+          <TitleStyle>Language</TitleStyle>
+          <ChooseOption>
+            <Button>English</Button>
+            <Button>한국어</Button>
+            <Button>日本語</Button>
+          </ChooseOption>
+          <TitleStyle>Tempo</TitleStyle>
+          <ChooseOption>
+            <Button>Slow</Button>
+            <Button>Normal</Button>
+            <Button>Fast</Button>
+          </ChooseOption>
+        </LeftContainer>
+        <RightContainer>
+          <TitleStyle>Genre</TitleStyle>
+          <GenreContainer>
+            <ArrowFunction
+              onClick={handlePrev}
+              isPrev={false}
+              fontSize="large"
+              disabled={currentIndex === 0}
+            />
+            <ViewContainer>
+              <CardList currentIndex={currentIndex}>
+                {newCoverArray.map((cover, index) => (
+                  <CoverBox key={index}>
+                    <RoundCover src={cover.src} label={cover.label} />
+                  </CoverBox>
+                ))}
+              </CardList>
+            </ViewContainer>
+            <ArrowFunction
+              onClick={handleNext}
+              isPrev={true}
+              fontSize="large"
+              disabled={currentIndex === newCoverArray.length - 5}
+            />
+          </GenreContainer>
+          <TitleStyle>Instrument</TitleStyle>
+          <GenreContainer>
+            <ArrowFunction
+              onClick={prevOption}
+              isPrev={false}
+              fontSize="large"
+              disabled={optionIndex === 0}
+            />
+            <ViewContainer>
+              <CardList optionIndex={optionIndex}>
+                {instrumentArray.map((cover, index) => (
+                  <CoverBox key={index}>
+                    <RoundCover src={cover.src} label={cover.label} />
+                  </CoverBox>
+                ))}
+              </CardList>
+            </ViewContainer>
+            <ArrowFunction
+              onClick={moreOption}
+              isPrev={true}
+              fontSize="large"
+              disabled={optionIndex === newCoverArray.length - 5}
+            />
+          </GenreContainer>
+        </RightContainer>
+      </BigContainer>
+      <SubmitButton>Create</SubmitButton>
+    </CreateContainer>
   );
 }
 
