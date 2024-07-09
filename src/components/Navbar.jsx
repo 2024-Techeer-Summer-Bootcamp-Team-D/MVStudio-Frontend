@@ -7,8 +7,7 @@ import ignorePath from '../util/igonerePath';
 const Bar = styled.div`
   width: 100%;
   height: 5rem;
-  color: #0e0717;
-  background-color: #0e0717;
+  background-color: #05000a;
   display: flex;
   justify-content: start;
   align-items: center; /* 수직 중앙 정렬 */

@@ -1,3 +1,4 @@
+/* OnBoardingPage.js */
 import React from 'react';
 import styled, { keyframes } from 'styled-components';
 
@@ -12,17 +13,11 @@ const slideIn = keyframes`
   }
 `;
 
-const Background = styled.div`
-  background-image: url('https://i.ibb.co/3TyNxtw/background.png');
-  background-size: cover;
-  background-repeat: no-repeat;
-  position: relative;
-  min-height: 500vh;
-`;
-
 const Container = styled.div`
   height: 500vh;
-  overflow: hidden; /* 페이지 넘어갈 때 보이지 않는 부분을 숨기기 위해 overflow: hidden 설정 */
+  overflow-x: hidden; /* 가로 스크롤 숨기기 */
+  overflow-y: auto; /* 세로 스크롤은 허용 */
+  width: 100vw; /* 전체 뷰포트 너비 */
 `;
 
 const Section = styled.div`
@@ -214,81 +209,70 @@ const handleClick = () => {};
 const OnBoardingPage = () => {
   return (
     <Container>
-      <Background>
-        <Section>
-          <CircleGlass src="https://i.ibb.co/f2gnqxw/image.png" />
-          <FirstLeftGlass src="https://i.ibb.co/BzSg1mg/image.png" />
-          <Title>MVStudio</Title>
-          <FirstText>
-            <GreyText>
-              단
-              <br />
-              하나뿐인,
-              <br />
-            </GreyText>
-            나만의
+      <Section>
+        <CircleGlass src="https://i.ibb.co/f2gnqxw/image.png" />
+        <FirstLeftGlass src="https://i.ibb.co/BzSg1mg/image.png" />
+        <Title>MVStudio</Title>
+        <FirstText>
+          <GreyText>
+            단
             <br />
-            뮤직비디오
+            하나뿐인,
             <br />
-          </FirstText>
-          <MainGlass src="https://i.ibb.co/qsF0KL8/image.png" />
-        </Section>
-        <Section>
-          <SecondCircleGlass1 src="https://i.ibb.co/f2gnqxw/image.png" />
-          <SecondText>
-            <GreyText>당신의 아이디어,</GreyText>
-            모두 여기에.
-          </SecondText>
-          <Mac1 src="https://i.ibb.co/7NqqQkk/Second-Page-Mac-removebg-preview.png" />
-          <SecondCircleGlass2 src="https://i.ibb.co/f2gnqxw/image.png" />
-        </Section>
-        <Section>
-          <TwistGlass src="https://i.ibb.co/wLPMNtf/image.png" />
-          <Mac2 src="https://i.ibb.co/h9R1pCh/qwdwqdqwd-removebg-preview.png" />
-          <ThirdText>
-            <GreyText>
-              힙합부터
-              <br />
-              재즈까지,
-            </GreyText>
-            <Connect>
-              <PurpleText>유니크한</PurpleText>&nbsp;뮤직비디오
-            </Connect>
-          </ThirdText>
-          <TearGlass1 src="https://i.ibb.co/jL01sDq/image.png" />
-        </Section>
-        <Section>
-          <FourthText>
-            <Connect>
-              <GreyText>나만의 뮤직비디오</GreyText>를
-            </Connect>
-            <Connect>
-              <PurpleText>소셜 계정</PurpleText>에
-            </Connect>
-            손쉽게 공유
-          </FourthText>
-          <Insta src="https://i.ibb.co/WcQcFpM/qqefmqklem-removebg-preview.png" />
-          <ReactGlass src="https://i.ibb.co/9rb8mGv/image.png" />
-        </Section>
-        <Section>
-          <FifthText>
-            모든 기능이 준비되어 있으니,
-            <br /> 지금 한번 시도해 보세요.
-          </FifthText>
-          <StyledButton onClick={handleClick}>무료로 시작</StyledButton>
-        </Section>
-      </Background>
+          </GreyText>
+          나만의
+          <br />
+          뮤직비디오
+          <br />
+        </FirstText>
+        <MainGlass src="https://i.ibb.co/qsF0KL8/image.png" />
+      </Section>
+      <Section>
+        <SecondCircleGlass1 src="https://i.ibb.co/f2gnqxw/image.png" />
+        <SecondText>
+          <GreyText>당신의 아이디어,</GreyText>
+          모두 여기에.
+        </SecondText>
+        <Mac1 src="https://i.ibb.co/7NqqQkk/Second-Page-Mac-removebg-preview.png" />
+        <SecondCircleGlass2 src="https://i.ibb.co/f2gnqxw/image.png" />
+      </Section>
+      <Section>
+        <TwistGlass src="https://i.ibb.co/wLPMNtf/image.png" />
+        <Mac2 src="https://i.ibb.co/h9R1pCh/qwdwqdqwd-removebg-preview.png" />
+        <ThirdText>
+          <GreyText>
+            힙합부터
+            <br />
+            재즈까지,
+          </GreyText>
+          <Connect>
+            <PurpleText>유니크한</PurpleText>&nbsp;뮤직비디오
+          </Connect>
+        </ThirdText>
+        <TearGlass1 src="https://i.ibb.co/jL01sDq/image.png" />
+      </Section>
+      <Section>
+        <FourthText>
+          <Connect>
+            <GreyText>나만의 뮤직비디오</GreyText>를
+          </Connect>
+          <Connect>
+            <PurpleText>소셜 계정</PurpleText>에
+          </Connect>
+          손쉽게 공유
+        </FourthText>
+        <Insta src="https://i.ibb.co/WcQcFpM/qqefmqklem-removebg-preview.png" />
+        <ReactGlass src="https://i.ibb.co/9rb8mGv/image.png" />
+      </Section>
+      <Section>
+        <FifthText>
+          모든 기능이 준비되어 있으니,
+          <br /> 지금 한번 시도해 보세요.
+        </FifthText>
+        <StyledButton onClick={handleClick}>무료로 시작</StyledButton>
+      </Section>
     </Container>
   );
 };
 
 export default OnBoardingPage;
-
-/*https://i.ibb.co/f2gnqxw/image.png //동그라미
-https://i.ibb.co/BzSg1mg/image.png //안꼬인거
-https://i.ibb.co/wLPMNtf/image.png //꼬인거
-https://i.ibb.co/F8RxfcK/image.png //파스타
-https://i.ibb.co/jL01sDq/image.png //방울
-https://i.ibb.co/gtfsnGP/image.png //위로안꼬인거
-https://i.ibb.co/9rb8mGv/image.png //리액트
-https://i.ibb.co/qsF0KL8/image.png //메인*/
