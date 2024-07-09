@@ -117,8 +117,8 @@ function Login() {
             <Title>Welcome Back!</Title>
             <Subtitle>welcome back we missed you</Subtitle>
           </TextContainer>
-          <AuthInput title="username" type="text" />
-          <AuthInput title="password" type="password" />
+          <AuthInput title="Username" type="text" />
+          <AuthInput title="Password" type="password" />
           <MainButton>Sign In</MainButton>
           <TextBox>
             <RegisterText>
