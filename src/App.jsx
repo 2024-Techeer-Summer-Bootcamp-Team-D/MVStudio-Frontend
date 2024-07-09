@@ -6,10 +6,7 @@ import Sidebar from './components/Sidebar';
 import Navbar from './components/Navbar';
 
 const BackLayout = styled.div`
-  background-image: url(https://i.ibb.co/3TyNxtw/background.png);
-  background-size: 500em 500rem;
-  background-repeat: no-repeat;
-
+  background-color: #05000a;
   width: 100%;
   height: 100%;
   min-height: 100vh;

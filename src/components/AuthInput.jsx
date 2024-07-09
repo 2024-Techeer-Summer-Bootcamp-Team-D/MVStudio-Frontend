@@ -23,7 +23,7 @@ const Body = styled.div`
   padding-left: 1rem;
   box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.1);
   border: 1px solid #a4a4a4;
-  margin-bottom: 5rem;
+  margin-bottom: 2rem;
 `;
 
 const Title = styled.div`
@@ -66,7 +66,7 @@ function AuthInput({ title, type, placeholder, onChange, value }) {
         <Input
           type={type}
           placeholder={placeholder}
-          onChange={(e) => onChange(e.target.value)}
+          onChange={onChange}
           value={value}
         />
       </Body>
