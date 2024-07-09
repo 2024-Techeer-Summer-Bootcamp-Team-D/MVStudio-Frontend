@@ -38,7 +38,7 @@ const Button = styled.button`
     rgba(111, 59, 151, 0.8) 90%
   );
   border-radius: 1rem;
-  width: 6rem;
+  width: 7rem;
   height: 3rem;
   font-size: 1.1rem;
   color: white;
@@ -74,7 +74,7 @@ const TitleInput = styled.input`
 const ChooseOption = styled.div`
   display: flex;
   flex-direction: row;
-  gap: 1.2rem;
+  gap: 0.875rem;
   margin-bottom: 4rem;
 `;
 
