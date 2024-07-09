@@ -7,6 +7,7 @@ import App from '../App';
 import Join from './Join';
 import MainPage from './MainPage';
 import OnBoardingPage from './OnBoardingPage';
+import Play from './Play';
 
 function AppRouter() {
   return (
@@ -19,6 +20,7 @@ function AppRouter() {
           <Route path="/login" element={<Login />} />
           <Route path="/join" element={<Join />} />
           <Route path="/Onboarding" element={<OnBoardingPage />} />
+          <Route path="/play" element={<Play />} />
         </Routes>
       </App>
     </Router>
