@@ -25,7 +25,7 @@ const Logo = styled.div`
   width: 18rem;
   height: 18rem;
   margin-top: 5rem;
-  margin-left: 8rem;
+  margin-left: 6rem;
   font-weight: bold; /* Bold체로 설정 */
   color: #ffffff;
 `;
@@ -117,8 +117,16 @@ function Login() {
             <Title>Welcome Back!</Title>
             <Subtitle>welcome back we missed you</Subtitle>
           </TextContainer>
-          <AuthInput title="Username" type="text" />
-          <AuthInput title="Password" type="password" />
+          <AuthInput
+            title="Username"
+            type="text"
+            placeholder="이름을 입력하세요"
+          />
+          <AuthInput
+            title="Password"
+            type="password"
+            placeholder="비밀번호를 입력하세요"
+          />
           <MainButton>Sign In</MainButton>
           <TextBox>
             <RegisterText>

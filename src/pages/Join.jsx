@@ -33,7 +33,7 @@ const Logo = styled.div`
   width: 18rem;
   height: 18rem;
   margin-top: 5rem;
-  margin-left: 8rem;
+  margin-left: 6rem;
   font-weight: bold; /* Bold체로 설정 */
   color: #ffffff;
 `;
@@ -147,10 +147,26 @@ function Join() {
             <Title>Welcome !</Title>
             <Subtitle>we are waiting for you</Subtitle>
           </TextContainer>
-          <AuthInput title="Username" type="text" />
-          <AuthInput title="Nickname" type="text" />
-          <AuthInput title="Password" type="password" />
-          <AuthInput title="Passwordcheck" type="password" />
+          <AuthInput
+            title="Username"
+            type="text"
+            placeholder="이름을 입력하세요"
+          />
+          <AuthInput
+            title="Nickname"
+            type="text"
+            placeholder="닉네임을 입력하세요"
+          />
+          <AuthInput
+            title="Password"
+            type="password"
+            placeholder="비밀번호를 입력하세요"
+          />
+          <AuthInput
+            title="Passwordcheck"
+            type="password"
+            placeholder="비밀번호를 입력하세요"
+          />
           <Wrapper>
             <Body>
               <FormControl sx={{ m: -2, minWidth: 260 }}>
