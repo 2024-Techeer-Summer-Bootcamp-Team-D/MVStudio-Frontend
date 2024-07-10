@@ -11,12 +11,14 @@ const Bar = styled.div`
   display: flex;
   justify-content: start;
   align-items: center; /* 수직 중앙 정렬 */
+  border-bottom: 1px solid #17032d;
 `;
 
 const Searchbar = styled.div`
-  width: 60%;
-  height: 60%;
-  background-color: #ffffff;
+  width: 40%;
+  height: 40%;
+  margin-top: -1rem;
+  background-color: #b8b8b8;
   border-radius: 2rem;
   display: flex;
   align-items: center; /* 수직 중앙 정렬 */
@@ -35,6 +37,7 @@ const Logo = styled.div`
 `;
 
 const SearchInput = styled.input`
+  background-color: #b8b8b8;
   font-size: 1rem;
   border-radius: 2rem;
   width: 100%;
