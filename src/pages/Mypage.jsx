@@ -23,18 +23,20 @@ const BigContainer = styled.div`
   width: 100%;
 `;
 const MyContainer = styled.div`
-  border: 0.1rem solid rgba(255, 255, 255, 0.3);
+  border: 0.2rem solid #17032d;
+  /* border: 0.1rem solid rgba(255, 255, 255, 0.3); */
   border-radius: 1rem;
   display: flex;
   flex-direction: row;
   width: 77.5rem;
-  height: 20rem;
+  height: 14rem;
   padding-right: 2rem;
   margin-left: 10rem;
   padding-left: 1rem;
   margin-top: 2rem;
   /* background-color: #ffffff; */
   align-items: center;
+  margin-bottom: 3rem;
 `;
 
 const TitleContainer = styled.div`
@@ -70,7 +72,6 @@ const ProImg = styled.img`
   height: 10rem;
   border-radius: 50%;
   flex-shrink: 0;
-  margin-bottom: 7rem;
 `;
 
 const ProName = styled.div`
@@ -79,6 +80,7 @@ const ProName = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
+  height: 4rem;
 `;
 const VideoCount = styled.div`
   font-size: 1.1rem;
@@ -89,7 +91,6 @@ const InfoContainer = styled.div`
   display: flex;
   flex-direction: column;
   padding-left: 3rem;
-  margin-bottom: 10rem;
 `;
 
 const ProText = styled.div`
@@ -104,13 +105,10 @@ const ProText = styled.div`
 const ExtraFunction = styled.div`
   display: flex;
   flex-direction: row;
-  justify-content: end;
-  padding-left: 40rem;
-  width: 10rem;
   height: 100%;
   padding-bottom: 0;
-  margin-top: 18rem;
-  margin-left: 5rem;
+  margin-left: 60rem;
+  margin-top: 2rem;
 `;
 
 const Button = styled.button`
@@ -128,10 +126,12 @@ const Button = styled.button`
 
 const InstagramIconEdit = styled(InstagramIcon)`
   margin-right: 1rem;
+  color: #a4a4a4;
 `;
 
 const YouTubeIconEdit = styled(YouTubeIcon)`
   margin-right: 1rem;
+  color: #a4a4a4;
 `;
 
 const MyVideos = styled.p`
@@ -204,13 +204,13 @@ function Mypage() {
             <ChatOutlinedIcon />
             사랑, 그놈...{' '}
           </ProText>
+          <ExtraFunction>
+            <YouTubeIconEdit fontSize="large" />
+            <ThemeProvider theme={theme}>
+              <InstagramIconEdit color="gradient" fontSize="large" />
+            </ThemeProvider>
+          </ExtraFunction>
         </InfoContainer>
-        <ExtraFunction>
-          <YouTubeIconEdit fontSize="large" />
-          <ThemeProvider theme={theme}>
-            <InstagramIconEdit color="gradient" fontSize="large" />
-          </ThemeProvider>
-        </ExtraFunction>
       </MyContainer>
       <MyVideos>MyVideos</MyVideos>
       <AlbumContainer>

@@ -169,11 +169,11 @@ function LongCover({ pic, title, uploader, view, options, owner }) {
           </Icons>
         </ExtraInfo>
         <UploaderContainer>
-          <UploaderIcon fontSize="small" />
+          <UploaderIcon fontSize="medium" />
           <Uploader>{uploader}</Uploader>
         </UploaderContainer>
         <ViewContainer>
-          <ViewIcon fontSize="small" />
+          <ViewIcon fontSize="medium" />
           <View>{view}</View>
         </ViewContainer>
         <Options>{options}</Options>
