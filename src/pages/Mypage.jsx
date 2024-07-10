@@ -41,7 +41,7 @@ const TitleContainer = styled.div`
 const AlbumContainer = styled.div`
   display: flex;
   flex-direction: column;
-  padding-left: 2rem;
+  padding-left: 10rem;
 `;
 
 const Profile = styled.p`
@@ -102,8 +102,9 @@ const Divider = styled.div`
 const ExtraFunction = styled.div`
   display: flex;
   flex-direction: column;
-  padding-left: 27rem;
-  width: 15rem;
+  justify-content: end;
+  padding-left: 40rem;
+  width: 10rem;
   height: 100%;
   padding-bottom: 0;
 `;
