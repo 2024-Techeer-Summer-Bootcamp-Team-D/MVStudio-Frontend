@@ -23,11 +23,18 @@ const BigContainer = styled.div`
   width: 100%;
 `;
 const MyContainer = styled.div`
+  border: 0.1rem solid rgba(255, 255, 255, 0.3);
+  border-radius: 1rem;
   display: flex;
   flex-direction: row;
-  padding-top: 4rem;
-  padding-left: 9rem;
-  padding-bottom: 1rem;
+  width: 77.5rem;
+  height: 20rem;
+  padding-right: 2rem;
+  margin-left: 10rem;
+  padding-left: 1rem;
+  margin-top: 2rem;
+  /* background-color: #ffffff; */
+  align-items: center;
 `;
 
 const TitleContainer = styled.div`
@@ -62,6 +69,8 @@ const ProImg = styled.img`
   width: 10rem;
   height: 10rem;
   border-radius: 50%;
+  flex-shrink: 0;
+  margin-bottom: 7rem;
 `;
 
 const ProName = styled.div`
@@ -80,6 +89,7 @@ const InfoContainer = styled.div`
   display: flex;
   flex-direction: column;
   padding-left: 3rem;
+  margin-bottom: 10rem;
 `;
 
 const ProText = styled.div`
@@ -91,22 +101,16 @@ const ProText = styled.div`
   padding-top: 1rem;
 `;
 
-const Divider = styled.div`
-  height: 0.1rem;
-  width: 85rem;
-  background-color: #9f9e9e;
-  margin-bottom: 2rem;
-  padding: 0;
-`;
-
 const ExtraFunction = styled.div`
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   justify-content: end;
   padding-left: 40rem;
   width: 10rem;
   height: 100%;
   padding-bottom: 0;
+  margin-top: 18rem;
+  margin-left: 5rem;
 `;
 
 const Button = styled.button`
@@ -119,23 +123,7 @@ const Button = styled.button`
   text-transform: none;
   font-family: 'SUIT';
   font-weight: 350;
-`;
-
-const Youtube = styled.div`
-  margin-top: 9rem;
-  font-size: 1.2rem;
-  color: #a4a4a4;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-`;
-
-const Instagram = styled.div`
-  font-size: 1.2rem;
-  color: #a4a4a4;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
+  margin-left: 44.5rem;
 `;
 
 const InstagramIconEdit = styled(InstagramIcon)`
@@ -151,6 +139,10 @@ const MyVideos = styled.p`
   color: #ffffff;
   padding-left: 1rem;
   margin-top: 0;
+`;
+const ProfileName = styled.p`
+  font-size: 2rem;
+  width: 10rem;
 `;
 
 function Mypage() {
@@ -202,7 +194,10 @@ function Mypage() {
         <InfoContainer>
           <ProName>
             <PersonOutlineIcon fontSize="3rem" />
-            권혁진
+            <ProfileName>권혁진</ProfileName>
+            <Button onClick={() => console.log('Edit button click')}>
+              Edit
+            </Button>
           </ProName>
           <VideoCount>동영상 24개</VideoCount>
           <ProText>
@@ -211,20 +206,12 @@ function Mypage() {
           </ProText>
         </InfoContainer>
         <ExtraFunction>
-          <Button onClick={() => console.log('Edit button click')}>Edit</Button>
-          <Youtube>
-            <YouTubeIconEdit />
-            https://www.youtube.com
-          </Youtube>
-          <Instagram>
-            <ThemeProvider theme={theme}>
-              <InstagramIconEdit color="gradient" />
-            </ThemeProvider>
-            https://www.instagram.com
-          </Instagram>
+          <YouTubeIconEdit fontSize="large" />
+          <ThemeProvider theme={theme}>
+            <InstagramIconEdit color="gradient" fontSize="large" />
+          </ThemeProvider>
         </ExtraFunction>
       </MyContainer>
-      <Divider />
       <MyVideos>MyVideos</MyVideos>
       <AlbumContainer>
         {Myvideos.map((item, index) => (
