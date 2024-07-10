@@ -19,6 +19,7 @@ const SidebarContainer = styled.div`
   height: 100%;
   z-index: 99;
   width: 13rem;
+  border-right: 1px solid #17032d;
   transform: translateX(${({ xPosition }) => -xPosition}px);
 `;
 
@@ -83,6 +84,7 @@ const ExpandButton = styled.div`
   justify-content: center;
   padding: 1.25rem;
   cursor: pointer;
+  margin-left: -1.2rem;
 `;
 
 const ExpandIcon = styled(ArrowForwardIosIcon)`
@@ -175,11 +177,11 @@ function Sidebar() {
         </CreateItem>
         <NavigationItem>
           <PersonOutlineIcon fontSize="small" />
-          <NavigationText>Person</NavigationText>
+          <NavigationText>My Studio</NavigationText>
         </NavigationItem>
         <NavigationItem>
           <WhatshotIcon fontSize="small" />
-          <TrendingText>Trending </TrendingText>
+          <TrendingText>Recent&nbsp;View </TrendingText>
           <ExpandButton onClick={toggleExpand}>
             <ExpandIcon isOpen={isExpandOpen} fontSize="inherit" />
           </ExpandButton>

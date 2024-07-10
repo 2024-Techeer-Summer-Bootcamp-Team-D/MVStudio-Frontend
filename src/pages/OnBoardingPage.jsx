@@ -15,9 +15,9 @@ const slideIn = keyframes`
 
 const Container = styled.div`
   height: 500vh;
-  overflow-x: hidden; /* 가로 스크롤 숨기기 */
-  overflow-y: auto; /* 세로 스크롤은 허용 */
-  width: 100vw; /* 전체 뷰포트 너비 */
+  overflow-x: hidden;
+  overflow-y: auto;
+  width: 100vw;
 `;
 
 const Section = styled.div`
@@ -29,21 +29,21 @@ const Section = styled.div`
 
 const Title = styled.div`
   color: white;
-  font-size: 6rem;
+  font-size: 5.5rem;
   position: relative;
   font-weight: 700;
   font-family: 'suit';
-  margin-left: 6rem;
-  margin-top: -25rem;
+  margin-left: 10rem;
+  margin-top: -20rem;
 `;
 
 const FirstText = styled.div`
   color: white;
-  font-size: 3.5rem;
+  font-size: 3rem;
   position: relative;
   font-weight: 700;
   font-family: 'suit';
-  margin-left: 6rem;
+  margin-left: 10rem;
   margin-top: 2rem;
 `;
 
@@ -64,11 +64,11 @@ const Mac1 = styled.img`
 
 const SecondText = styled.div`
   color: white;
-  font-size: 3.5rem;
+  font-size: 2.5rem;
   position: relative;
   font-weight: 700;
   font-family: 'suit';
-  margin-left: 10rem;
+  margin-left: 18rem;
 `;
 
 const Mac2 = styled.img`
@@ -80,7 +80,7 @@ const Mac2 = styled.img`
 
 const ThirdText = styled.div`
   color: white;
-  font-size: 3.5rem;
+  font-size: 2.5rem;
   position: relative;
   font-weight: 700;
   font-family: 'suit';
@@ -100,20 +100,20 @@ const Insta = styled.img`
 
 const FourthText = styled.div`
   color: white;
-  font-size: 3.5rem;
+  font-size: 2.5rem;
   position: relative;
   font-weight: 700;
   font-family: 'suit';
-  margin-left: 15rem;
+  margin-left: 18rem;
 `;
 
 const FifthText = styled.div`
   color: white;
-  font-size: 4rem;
+  font-size: 3rem;
   position: relative;
   font-weight: 700;
   font-family: 'suit';
-  margin-left: 24rem;
+  margin-left: 30rem;
   margin-bottom: 5rem;
   text-align: center;
 `;
@@ -191,17 +191,17 @@ const MainGlass = styled.img`
 
 const StyledButton = styled.button`
   background-color: #3d0758;
-  width: 20rem;
+  width: 13rem;
+  height: 2.5rem;
   color: #ffffff;
-  font-size: 1.8rem;
+  font-size: 1rem;
   font-weight: 700;
   font-family: 'suit';
-  padding: 1rem;
   border: none;
   border-radius: 2rem;
   cursor: pointer;
-  margin-top: 15rem;
-  margin-left: -34rem;
+  margin-top: 10rem;
+  margin-left: -25.5rem;
 `;
 
 const handleClick = () => {};
@@ -269,7 +269,7 @@ const OnBoardingPage = () => {
           모든 기능이 준비되어 있으니,
           <br /> 지금 한번 시도해 보세요.
         </FifthText>
-        <StyledButton onClick={handleClick}>무료로 시작</StyledButton>
+        <StyledButton onClick={handleClick}>Start</StyledButton>
       </Section>
     </Container>
   );
