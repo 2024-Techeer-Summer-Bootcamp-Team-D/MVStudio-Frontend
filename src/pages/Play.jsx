@@ -5,7 +5,7 @@ import InstagramIcon from '@mui/icons-material/Instagram';
 import ShareIcon from '@mui/icons-material/Share';
 import DownloadIcon from '@mui/icons-material/Download';
 import LyricsCover from '../components/LyricsCover';
-import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
+import PersonIcon from '@mui/icons-material/Person';
 import { useTheme } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Slider from '@mui/material/Slider';
@@ -19,6 +19,9 @@ import FastRewindRounded from '@mui/icons-material/FastRewindRounded';
 const IconBox = styled.div`
   display: flex;
   flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
 `;
 
 const TinyText = styled(Typography)`
@@ -44,7 +47,6 @@ function MusicPlayerSlider() {
     <Box sx={{ width: '100%', overflow: 'hidden' }}>
       <Box
         sx={{
-          padding: 2,
           borderRadius: 2,
           backgroundColor: theme.palette.background.black,
         }}
@@ -75,7 +77,7 @@ function MusicPlayerSlider() {
                 }`,
               },
               '&.Mui-active': {
-                width: 20,
+                width: 15,
                 height: 20,
               },
             },
@@ -100,19 +102,8 @@ function MusicPlayerSlider() {
   );
 }
 
-// PlayBox styled-component
-const PageBox = styled.div`
-  margin-left: 5rem;
-  width: 100%;
-  color: #ffffff;
-  font-size: 1.8rem;
-  display: flex;
-  justify-content: flex-start;
-  font-family: suit;
-`;
-
 const PlayBox = styled.div`
-  width: 60%;
+  width: 70%;
   height: 100%;
   display: flex;
   flex-direction: column; /* PlayBox를 세로로 정렬 */
@@ -121,19 +112,17 @@ const PlayBox = styled.div`
 
 // ShareBox styled-component
 const ShareBox = styled.div`
-  width: 100%;
-  height: 6rem;
+  width: 50%;
   display: flex;
   justify-content: flex-end;
-  align-items: center; /* 아이콘 세로 가운데 정렬 */
-  padding-right: 2rem; /* 우측 여백 추가 */
-  margin-top: 1rem;
 `;
 
 const TextBox = styled.div`
-  text-align: left; /* 왼쪽 정렬 */
   color: #ffffff;
-  margin-right: 27rem; /* 글자 색상 */
+  display: flex;
+  flex-direction: column;
+  width: 50%;
+  align-items: start;
 `;
 
 const Title = styled.div`
@@ -144,11 +133,14 @@ const Title = styled.div`
 const Subtitle = styled.div`
   font-size: 0.8rem; /* 글자 크기 */
   font-weight: normal; /* 일반체 */
+  align-items: center;
+  display: flex;
 `;
 
 const ButtonBox = styled.div`
   display: flex;
   flex-direction: row;
+  gap: 1rem;
 `;
 
 const Button = styled.button`
@@ -160,7 +152,6 @@ const Button = styled.button`
   justify-content: center;
   background-color: #552e72;
   position: relative; /* Tooltip을 위해 추가 */
-  margin-right: 1rem; /* 각 버튼 사이 간격 1rem 추가 */
   border: none; /* 테두리 제거 */
 
   &:hover span {
@@ -204,42 +195,52 @@ const Tooltip = styled.span`
 
 // YouTube 아이콘을 스타일링한 컴포넌트
 const StyledYouTubeIcon = styled(YouTubeIcon)`
-  font-size: 0.7rem;
   color: white; /* 아이콘 색상 */
 `;
 
 // Instagram 아이콘을 스타일링한 컴포넌트
 const StyledInstagramIcon = styled(InstagramIcon)`
-  font-size: 0.7rem;
   color: white; /* 아이콘 색상 */
 `;
 
 const StyledShareIcon = styled(ShareIcon)`
-  font-size: 0.7rem;
-  color: white; /* 아이콘 색상 */
-`;
-
-const StyledDownloadIcon = styled(DownloadIcon)`
-  font-size: 0.7rem;
   color: white; /* 아이콘 색상 */
 `;
 
 const VideoContainer = styled.div`
   width: 100%;
-  margin-top: 5rem;
   display: flex;
   align-items: center;
   justify-content: center;
+  margin-top: 3rem;
+`;
+const UserInfo = styled.div`
+  display: flex;
+  flex-direction: row;
 `;
 
 // LyricsBox styled-component
 const LyricsBox = styled.div`
-  width: 40%;
+  width: 30%;
   height: 100%;
   display: flex;
-  margin-top: 2rem;
-  flex-direction: column; /* PlayBox를 세로로 정렬 */
-  align-items: center; /* 가운데 정렬 */
+  justify-content: start;
+  align-items: start;
+`;
+
+const StyledDownloadIcon = styled(DownloadIcon)`
+  color: white; /* 아이콘 색상 */
+`;
+const StyledVideo = styled.video`
+  width: 100%;
+`;
+
+const StyledRow = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  margin-top: 0.25rem;
+  margin-bottom: 0.25rem;
 `;
 
 function Play() {
@@ -249,9 +250,8 @@ function Play() {
   return (
     <>
       <PlayBox>
-        <PageBox>PlayPage</PageBox>
         <VideoContainer>
-          <video controls width="650">
+          <StyledVideo controls>
             <source src="/media/cc0-videos/flower.webm" type="video/webm" />
             <source src="/media/cc0-videos/flower.mp4" type="video/mp4" />
             Download the
@@ -259,9 +259,39 @@ function Play() {
             or
             <a href="/media/cc0-videos/flower.mp4">MP4</a>
             video.
-          </video>
+          </StyledVideo>
         </VideoContainer>
+        <StyledRow>
+          <TextBox>
+            <Title>Ocean Song</Title>
+            <UserInfo>
+              <PersonIcon sx={{ color: 'white', fontSize: '1rem' }} />
+              <Subtitle>King Jinwoo</Subtitle>
+            </UserInfo>
+          </TextBox>
+          <ShareBox>
+            <ButtonBox>
+              <Button>
+                <StyledDownloadIcon fontSize="small" />
+                <Tooltip>Download</Tooltip>
+              </Button>
+              <Button>
+                <StyledShareIcon fontSize="small" />
+                <Tooltip>Share</Tooltip>
+              </Button>
+              <Button>
+                <StyledYouTubeIcon fontSize="small" />
+                <Tooltip>YouTube</Tooltip>
+              </Button>
+              <Button>
+                <StyledInstagramIcon fontSize="small" />
+                <Tooltip>Instagram</Tooltip>
+              </Button>
+            </ButtonBox>
+          </ShareBox>
+        </StyledRow>
         <MusicPlayerSlider />
+
         <IconBox>
           <IconButton aria-label="previous song">
             <FastRewindRounded fontSize="large" htmlColor={mainIconColor} />
@@ -286,40 +316,6 @@ function Play() {
             <FastForwardRounded fontSize="large" htmlColor={mainIconColor} />
           </IconButton>
         </IconBox>
-        <ShareBox>
-          <TextBox>
-            <Title>Ocean Song</Title>
-            <Subtitle>
-              <Box
-                component={PersonOutlineIcon}
-                sx={{
-                  width: '1rem',
-                  height: '1rem',
-                  color: 'white',
-                }}
-              />
-              King Jinwoo
-            </Subtitle>
-          </TextBox>
-          <ButtonBox>
-            <Button>
-              <StyledDownloadIcon />
-              <Tooltip>Download</Tooltip>
-            </Button>
-            <Button>
-              <StyledShareIcon />
-              <Tooltip>Share</Tooltip>
-            </Button>
-            <Button>
-              <StyledYouTubeIcon />
-              <Tooltip>YouTube</Tooltip>
-            </Button>
-            <Button>
-              <StyledInstagramIcon />
-              <Tooltip>Instagram</Tooltip>
-            </Button>
-          </ButtonBox>
-        </ShareBox>
       </PlayBox>
       <LyricsBox>
         <LyricsCover>가사가사가사가사</LyricsCover>
