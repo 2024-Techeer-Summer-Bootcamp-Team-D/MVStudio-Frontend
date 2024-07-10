@@ -5,19 +5,28 @@ import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
 import ChatOutlinedIcon from '@mui/icons-material/ChatOutlined';
 import YouTubeIcon from '@mui/icons-material/YouTube';
 import InstagramIcon from '@mui/icons-material/Instagram';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+
+const theme = createTheme({
+  palette: {
+    gradient: {
+      main: 'linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%)',
+    },
+  },
+});
 
 const BigContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: start;
-  margin-left: 5rem;
+  padding-left: 5rem;
   width: 100%;
 `;
 const MyContainer = styled.div`
   display: flex;
   flex-direction: row;
   padding-top: 4rem;
-  padding-left: 4rem;
+  padding-left: 9rem;
   padding-bottom: 1rem;
 `;
 
@@ -26,18 +35,20 @@ const TitleContainer = styled.div`
   flex-direction: row;
   font-size: 2rem;
   padding-left: 1rem;
+  width: 100%;
 `;
 
 const AlbumContainer = styled.div`
   display: flex;
   flex-direction: column;
-  padding-left: 4rem;
+  padding-left: 2rem;
 `;
 
 const Profile = styled.p`
   font-size: 2rem;
   color: #ffffff;
   margin-right: 2rem;
+  text-decoration: underline;
 `;
 
 const Statistics = styled.p`
@@ -72,7 +83,7 @@ const InfoContainer = styled.div`
 `;
 
 const ProText = styled.div`
-  font-size: 1.6rem;
+  font-size: 1.4rem;
   color: #a4a4a4;
   display: flex;
   flex-direction: row;
@@ -82,18 +93,18 @@ const ProText = styled.div`
 
 const Divider = styled.div`
   height: 0.1rem;
-  width: 71rem;
+  width: 85rem;
   background-color: #9f9e9e;
-  margin-bottom: 3rem;
+  margin-bottom: 2rem;
   padding: 0;
 `;
 
 const ExtraFunction = styled.div`
   display: flex;
   flex-direction: column;
-  padding-left: 24rem;
-  width: 10rem;
-  margin: 0;
+  padding-left: 27rem;
+  width: 15rem;
+  height: 100%;
   padding-bottom: 0;
 `;
 
@@ -105,14 +116,12 @@ const Button = styled.button`
   font-size: 1.2rem;
   color: white;
   text-transform: none;
-  margin-top: 1.5rem;
   font-family: 'SUIT';
   font-weight: 350;
-  margin-left: 10rem;
 `;
 
 const Youtube = styled.div`
-  margin-top: 8rem;
+  margin-top: 9rem;
   font-size: 1.2rem;
   color: #a4a4a4;
   display: flex;
@@ -134,6 +143,13 @@ const InstagramIconEdit = styled(InstagramIcon)`
 
 const YouTubeIconEdit = styled(YouTubeIcon)`
   margin-right: 1rem;
+`;
+
+const MyVideos = styled.p`
+  font-size: 2rem;
+  color: #ffffff;
+  padding-left: 1rem;
+  margin-top: 0;
 `;
 
 function Mypage() {
@@ -200,12 +216,15 @@ function Mypage() {
             https://www.youtube.com
           </Youtube>
           <Instagram>
-            <InstagramIconEdit />
+            <ThemeProvider theme={theme}>
+              <InstagramIconEdit color="gradient" />
+            </ThemeProvider>
             https://www.instagram.com
           </Instagram>
         </ExtraFunction>
       </MyContainer>
       <Divider />
+      <MyVideos>MyVideos</MyVideos>
       <AlbumContainer>
         {Myvideos.map((item, index) => (
           <LongCover key={index} {...item} />

@@ -5,9 +5,9 @@ import Mypage from './Mypage';
 import Search from './Search';
 import App from '../App';
 import Create from './Create';
-// import Join from './Join';
-import LyricsSelect from './LyricsSelect';
 import Join from './Join';
+import LyricsSelect from './LyricsSelect';
+// import Join from './Join';
 import MainPage from './MainPage';
 import OnBoardingPage from './OnBoardingPage';
 
