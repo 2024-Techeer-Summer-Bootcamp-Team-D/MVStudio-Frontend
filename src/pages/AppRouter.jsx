@@ -10,6 +10,7 @@ import LyricsSelect from './LyricsSelect';
 // import Join from './Join';
 import MainPage from './MainPage';
 import OnBoardingPage from './OnBoardingPage';
+import Play from './Play';
 
 function AppRouter() {
   return (
@@ -24,6 +25,7 @@ function AppRouter() {
           <Route path="/create" element={<Create />} />
           <Route path="/join" element={<Join />} />
           <Route path="/Onboarding" element={<OnBoardingPage />} />
+          <Route path="/play" element={<Play />} />
         </Routes>
       </App>
     </Router>
