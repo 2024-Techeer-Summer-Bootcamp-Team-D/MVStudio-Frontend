@@ -9,21 +9,28 @@ import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 
 const BigContainer = styled.div`
   display: flex;
-  width: 63rem;
-  height: 10.82rem;
+  width: 78rem;
+  height: 17.5rem;
   position: relative;
   flex-direction: row;
-  margin-bottom: 1.5rem;
-  align-items: center;
-  padding: 1rem;
+  align-items: start;
   margin-bottom: 2rem;
+  padding: 1rem;
+  /* background-color: rgba(54, 48, 48, 0.6); */
+  background-color: #212121;
+  border: 0.1rem solid rgba(255, 255, 255, 0.3);
+
+  border-radius: 2rem;
 `;
 
 const ReaderContainer = styled.div`
   position: relative;
-  width: 10.875rem;
-  height: 10.875rem;
+  width: 30rem;
+  height: 100%;
   z-index: 2; /* Ensure this is above the InfoContainer */
+  display: flex;
+  align-items: center;
+  justify-content: center; /* Center children horizontally and vertically */
 
   &:hover .reader-pic {
     filter: brightness(0.8);
@@ -35,10 +42,9 @@ const ReaderContainer = styled.div`
 `;
 
 const ReaderPic = styled.img`
-  position: absolute;
-  width: 10.875rem;
-  height: 10.875rem;
-  border-radius: 20%;
+  border-radius: 1rem;
+  width: 100%; /* Adjusted to maintain aspect ratio */
+  height: 100%;
   object-fit: cover;
   transition: filter 0.3s ease;
   filter: brightness(90%);
@@ -46,25 +52,11 @@ const ReaderPic = styled.img`
 
 const PlayIcon = styled(PlayArrowIcon)`
   position: absolute;
-  padding: 4.5rem;
   color: white;
   opacity: 0;
   transition: opacity 0.3s ease;
   cursor: pointer;
-`;
-
-const InfoContainer = styled.div`
-  width: 100%;
-  height: 100%;
-  background-image: url(${(props) => props.src});
-  background-size: cover;
-  background-position: center;
-  filter: blur(3px) brightness(50%);
-  position: absolute;
-  top: 0;
-  left: 0;
-  z-index: 1;
-  border-radius: 2rem;
+  z-index: 3;
 `;
 
 const Overlay = styled.div`
@@ -73,8 +65,9 @@ const Overlay = styled.div`
   display: flex;
   flex-direction: column;
   width: calc(100% - 12.375rem);
-  margin-left: 3rem;
-  margin-top: -1.2rem;
+  height: 100%;
+  margin-left: 2rem;
+  margin-top: 1rem;
   margin-bottom: 1rem;
 `;
 
@@ -94,6 +87,7 @@ const Title = styled.p`
   font-weight: 550;
   color: #ffffff;
   margin-bottom: 0.5rem;
+  margin-top: 0rem;
 `;
 
 const ViewContainer = styled.div`
@@ -124,19 +118,23 @@ const Options = styled.p`
   color: #c0bdbd;
   margin: 0;
   word-wrap: break-word;
-  margin-top: 0.2rem;
+  width: 93.5%;
+  background-color: rgba(86, 82, 82, 0.5);
+
+  height: 40%;
+  padding: 1rem;
+  border-radius: 1rem;
 `;
 
 const ExtraInfo = styled.div`
   position: relative;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   justify-content: space-between;
-  align-items: flex-end;
+  align-items: center;
   z-index: 2;
-  width: 5rem;
-  height: 10.82rem;
-  padding: 1rem;
+  width: 98%;
+  gap: 1rem;
 `;
 
 const DeleteIcon = styled(DeleteOutlineIcon)`
@@ -149,6 +147,12 @@ const ShareIcon = styled(IosShareIcon)`
   color: #ffffff;
 `;
 
+const Icons = styled.div`
+  display: flex;
+  flex-direction: row;
+  gap: 2rem;
+`;
+
 function LongCover({ pic, title, uploader, view, options, owner }) {
   return (
     <BigContainer>
@@ -156,9 +160,14 @@ function LongCover({ pic, title, uploader, view, options, owner }) {
         <ReaderPic className="reader-pic" src={pic} alt="Reader" />
         <PlayIcon fontSize="large" className="play-icon" />
       </ReaderContainer>
-      <InfoContainer src={pic} />
       <Overlay>
-        <Title>{title}</Title>
+        <ExtraInfo>
+          <Title>{title}</Title>
+          <Icons>
+            <ShareIcon owner={owner} fontSize="medium" />
+            <DeleteIcon owner={owner} fontSize="medium" />
+          </Icons>
+        </ExtraInfo>
         <UploaderContainer>
           <UploaderIcon fontSize="small" />
           <Uploader>{uploader}</Uploader>
@@ -169,10 +178,6 @@ function LongCover({ pic, title, uploader, view, options, owner }) {
         </ViewContainer>
         <Options>{options}</Options>
       </Overlay>
-      <ExtraInfo>
-        <ShareIcon owner={owner} fontSize="medium" />
-        <DeleteIcon owner={owner} fontSize="medium" />
-      </ExtraInfo>
     </BigContainer>
   );
 }
