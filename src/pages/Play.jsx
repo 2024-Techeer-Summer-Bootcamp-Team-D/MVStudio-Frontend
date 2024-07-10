@@ -227,6 +227,11 @@ const LyricsBox = styled.div`
   justify-content: start;
   align-items: start;
 `;
+const StyledLyricsCover = styled(LyricsCover)`
+  width: 80%;
+  height: 100%;
+  margin-bottom: 5rem;
+`;
 
 const StyledDownloadIcon = styled(DownloadIcon)`
   color: white; /* 아이콘 색상 */
@@ -318,7 +323,7 @@ function Play() {
         </IconBox>
       </PlayBox>
       <LyricsBox>
-        <LyricsCover>가사가사가사가사</LyricsCover>
+        <StyledLyricsCover>가사가사가사가사</StyledLyricsCover>
       </LyricsBox>
     </>
   );

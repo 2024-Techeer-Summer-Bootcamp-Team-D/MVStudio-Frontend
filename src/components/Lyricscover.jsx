@@ -5,7 +5,7 @@ import styled from 'styled-components';
 
 const SquareBox = styled.div`
   width: 20rem;
-  height: 38rem;
+  height: 40rem;
   background-image: url(https://i.ibb.co/QbPDtwP/l-removebg-preview.png); /* 이미지 경로 */
   background-size: cover; /* 이미지 크기 조정 */
   background-position: center; /* 이미지 위치 조정 */
