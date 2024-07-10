@@ -19,14 +19,14 @@ const BigContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: start;
-  padding-left: 15rem;
+  padding-left: 5rem;
   width: 100%;
 `;
 const MyContainer = styled.div`
   display: flex;
   flex-direction: row;
   padding-top: 4rem;
-  padding-left: 4rem;
+  padding-left: 9rem;
   padding-bottom: 1rem;
 `;
 
@@ -35,12 +35,13 @@ const TitleContainer = styled.div`
   flex-direction: row;
   font-size: 2rem;
   padding-left: 1rem;
+  width: 100%;
 `;
 
 const AlbumContainer = styled.div`
   display: flex;
   flex-direction: column;
-  padding-left: 2.7rem;
+  padding-left: 2rem;
 `;
 
 const Profile = styled.p`
@@ -92,7 +93,7 @@ const ProText = styled.div`
 
 const Divider = styled.div`
   height: 0.1rem;
-  width: 70.5rem;
+  width: 85rem;
   background-color: #9f9e9e;
   margin-bottom: 2rem;
   padding: 0;
@@ -117,7 +118,6 @@ const Button = styled.button`
   text-transform: none;
   font-family: 'SUIT';
   font-weight: 350;
-  margin-left: 9.5rem;
 `;
 
 const Youtube = styled.div`
