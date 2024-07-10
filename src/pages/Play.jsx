@@ -16,6 +16,10 @@ import PlayArrowRounded from '@mui/icons-material/PlayArrowRounded';
 import FastForwardRounded from '@mui/icons-material/FastForwardRounded';
 import FastRewindRounded from '@mui/icons-material/FastRewindRounded';
 
+const BackLayout = styled.div`
+  width: 100%;
+`;
+
 const IconBox = styled.div`
   display: flex;
   flex-direction: row;
@@ -222,15 +226,11 @@ const UserInfo = styled.div`
 // LyricsBox styled-component
 const LyricsBox = styled.div`
   width: 30%;
-  height: 100%;
   display: flex;
   justify-content: start;
   align-items: start;
-`;
-const StyledLyricsCover = styled(LyricsCover)`
-  width: 80%;
-  height: 100%;
-  margin-bottom: 5rem;
+  margin: 2rem;
+  padding-bottom: 10rem;
 `;
 
 const StyledDownloadIcon = styled(DownloadIcon)`
@@ -253,7 +253,7 @@ function Play() {
   const [paused, setPaused] = React.useState(false);
   const mainIconColor = (theme.palette.mode = '#fff');
   return (
-    <>
+    <BackLayout>
       <PlayBox>
         <VideoContainer>
           <StyledVideo controls>
@@ -323,9 +323,9 @@ function Play() {
         </IconBox>
       </PlayBox>
       <LyricsBox>
-        <StyledLyricsCover>가사가사가사가사</StyledLyricsCover>
+        <LyricsCover>가사가사가사가사</LyricsCover>
       </LyricsBox>
-    </>
+    </BackLayout>
   );
 }
 
