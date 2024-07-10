@@ -1,2 +1,8 @@
-const ignorePath = () => ['/Register', '/Onboarding', '/login', '/join'];
+const ignorePath = () => [
+  '/Register',
+  '/Onboarding',
+  '/login',
+  '/join',
+  '/auth',
+];
 export default ignorePath;

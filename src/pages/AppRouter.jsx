@@ -9,12 +9,14 @@ import Join from './Join';
 import MainPage from './MainPage';
 import OnBoardingPage from './OnBoardingPage';
 import MainPageTest from './MainPageTest';
+import Auth from './Auth';
 
 function AppRouter() {
   return (
     <Router>
       <App>
         <Routes>
+          <Route path="/auth" element={<Auth />} />
           <Route path="/" element={<Mypage />} />
           <Route path="/MainPage" element={<MainPage />} />
           <Route path="/Test" element={<MainPageTest />} />
