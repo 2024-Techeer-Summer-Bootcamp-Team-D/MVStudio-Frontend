@@ -1,5 +1,12 @@
 import React, { useState } from 'react';
 import styled, { createGlobalStyle } from 'styled-components';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Select from '@mui/material/Select';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 
 const GlobalStyle = createGlobalStyle`
   * {
@@ -15,7 +22,7 @@ const BackLayout = styled.div`
   align-items: center;
 `;
 
-const BoldFont1 = styled.h1`
+const ShadowFont = styled.h1`
   font-family: 'suit';
   font-size: 3rem;
   font-weight: bold;
@@ -45,7 +52,7 @@ const BoldFont1 = styled.h1`
   }
 `;
 
-const BoldFont2 = styled.h2`
+const BoldFont = styled.h2`
   font-family: 'suit';
   font-size: 3rem;
   font-weight: bold;
@@ -107,7 +114,7 @@ const StyledButton = styled.button`
 `;
 
 const Container = styled.div`
-  background-color: rgba(29, 5, 37, 0.9);
+  background-color: #dfd4df;
   border-radius: 10px;
   box-shadow:
     0 14px 28px rgba(0, 0, 0, 0.25),
@@ -174,17 +181,19 @@ const OverlayContainer = styled.div`
 `;
 
 const StyledInput = styled.input`
-  background-color: rgba(250, 250, 250, 0.889);
-  border-radius: 1rem;
+  background-color: #fbfafb;
+  border-radius: 0.25rem;
   border: none;
   padding: 0.75rem 1rem;
   margin: 0.5rem 0;
   width: 90%;
+  height: 3.125rem;
   font-size: 1rem;
 `;
 
 const Overlay = styled.div`
-  background-color: rgba(37, 6, 46, 0.9);
+  /* background-color: rgba(37, 6, 46, 1); */
+  background-image: url('https://i.ibb.co/72bmVLd/Group-1457.png');
   background-repeat: no-repeat;
   background-size: cover;
   background-position: 0 0;
@@ -225,64 +234,126 @@ const OverlayRight = styled(OverlayPanel)`
     rightPanelActive ? 'translateX(20%)' : 'translateX(0)'};
 `;
 
+const LogoImage = styled.img`
+  width: 20rem;
+  height: 20rem;
+  margin-bottom: 1rem;
+`;
+
 const SignUpForm = () => {
   const [idValue, setIdValue] = useState('');
   const [nicknameValue, setNicknameValue] = useState('');
   const [passwordValue, setPasswordValue] = useState('');
   const [passwordCheckValue, setPasswordCheckValue] = useState('');
+  const [country, setCountry] = useState('');
+  const [gender, setGender] = useState('');
 
-  const handleIdChange = (e) => {
-    const value = e.target.value;
-    setIdValue(value);
-    console.log('ID value:', value);
-  };
-
-  const handleNicknameChange = (e) => {
-    const value = e.target.value;
-    setNicknameValue(value);
-    console.log('Nickname value:', value);
-  };
-
-  const handlePasswordChange = (e) => {
-    const value = e.target.value;
-    setPasswordValue(value);
-    console.log('Password value:', value);
-  };
-
-  const handlePasswordCheckChange = (e) => {
-    const value = e.target.value;
-    setPasswordCheckValue(value);
-    console.log('PasswordCheck value:', value);
-  };
   return (
     <StyledForm action="#">
-      <BoldFont2>Create Account</BoldFont2>
+      <BoldFont>Create Account</BoldFont>
       <Description>or use your ID for registration</Description>
       <StyledInput
         type="text"
         placeholder="Enter your ID"
         value={idValue}
-        onChange={handleIdChange}
+        onChange={(e) => setIdValue(e.target.value)}
       />
       <StyledInput
         type="text"
         placeholder="Enter your Nickname"
         value={nicknameValue}
-        onChange={handleNicknameChange}
+        onChange={(e) => setNicknameValue(e.target.value)}
       />
       <StyledInput
         type="password"
         placeholder="Password"
         value={passwordValue}
-        onChange={handlePasswordChange}
+        onChange={(e) => setPasswordValue(e.target.value)}
       />
       <StyledInput
         type="password"
         placeholder="Confirm Password"
         value={passwordCheckValue}
-        onChange={handlePasswordCheckChange}
+        onChange={(e) => setPasswordCheckValue(e.target.value)}
       />
+      <div
+        style={{
+          width: '90%',
+          display: 'flex',
+          flexDirection: 'row',
+          justifyContent: 'center',
+          gap: '3%',
+        }}
+      >
+        {/* 나라 선택 */}
+        <FormControl
+          sx={{
+            m: -2,
+            minWidth: '37%',
+            margin: '0.5rem 0rem',
+            bgcolor: '#fbfafb',
+            border: 'none',
+            borderRadius: '0.5rem',
+            fontSize: '1rem',
+          }}
+        >
+          <InputLabel id="country-label">Country</InputLabel>
+          <Select
+            labelId="country-label"
+            id="country"
+            value={country}
+            onChange={(e) => setCountry(e.target.value)}
+            autoWidth
+            label="Country"
+            sx={{ border: 'none' }}
+          >
+            <MenuItem value="Korea">Korea</MenuItem>
+            <MenuItem value="Japan">Japan</MenuItem>
+            <MenuItem value="USA">USA</MenuItem>
+          </Select>
+        </FormControl>
 
+        {/* 생일 날짜 선택 */}
+        <LocalizationProvider dateAdapter={AdapterDayjs}>
+          <DatePicker
+            sx={{
+              m: -2,
+              minWidth: '37%',
+              margin: '0.5rem 0rem',
+              bgcolor: '#fbfafb',
+              border: 'none',
+              borderRadius: '0.5rem',
+              fontSize: '1rem',
+            }}
+            label="Birthday"
+          />
+        </LocalizationProvider>
+
+        {/* 성별 선택 */}
+        <FormControl
+          sx={{
+            m: -2,
+            minWidth: '20%',
+            margin: '0.5rem 0rem',
+            bgcolor: '#fbfafb',
+            borderRadius: '0.5rem',
+            fontSize: '1rem',
+          }}
+        >
+          <InputLabel id="country-label">Gender</InputLabel>
+          <Select
+            labelId="gender-label"
+            id="gender"
+            value={gender}
+            onChange={(e) => setGender(e.target.value)}
+            autoWidth
+            label="gender"
+          >
+            <MenuItem value="Korea">Male</MenuItem>
+            <MenuItem value="Japan">Famale</MenuItem>
+          </Select>
+        </FormControl>
+      </div>
       <StyledButton color="purple">Sign Up</StyledButton>
     </StyledForm>
   );
@@ -306,7 +377,7 @@ const SignInForm = () => {
 
   return (
     <StyledForm action="#">
-      <BoldFont2>LogIn</BoldFont2>
+      <BoldFont>LogIn</BoldFont>
       <Description>or use your account</Description>
       <StyledInput
         type="text"
@@ -391,8 +462,11 @@ const App = () => {
         <OverlayContainer rightPanelActive={rightPanelActive}>
           <Overlay rightPanelActive={rightPanelActive}>
             <OverlayLeft rightPanelActive={rightPanelActive}>
-              <BoldFont1>Welcome !</BoldFont1>
-              <MarginFont>we are waiting for you</MarginFont>
+              <ShadowFont>MVStudio</ShadowFont>
+              <MarginFont>당신만의 음악을 만들어보세요</MarginFont>
+              <LogoImage src="https://i.ibb.co/0q0D1Ch/HEADPHONES-5.png" />
+              <MarginFont>계정이 있으신가요?</MarginFont>
+              <div style={{ marginBottom: '-2.5rem' }} />
               <StyledButton
                 color="white"
                 onClick={() => setRightPanelActive(false)}
@@ -401,8 +475,11 @@ const App = () => {
               </StyledButton>
             </OverlayLeft>
             <OverlayRight rightPanelActive={rightPanelActive}>
-              <BoldFont1>Welcome Back!</BoldFont1>
-              <MarginFont>welcomeback we missed you</MarginFont>
+              <ShadowFont>MVStudio</ShadowFont>
+              <MarginFont>당신만의 음악을 만들어보세요</MarginFont>
+              <LogoImage src="https://i.ibb.co/0q0D1Ch/HEADPHONES-5.png" />
+              <MarginFont>계정이 없으신가요?</MarginFont>
+              <div style={{ marginBottom: '-2.5rem' }} />
               <StyledButton
                 color="white"
                 onClick={() => setRightPanelActive(true)}

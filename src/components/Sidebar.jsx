@@ -11,6 +11,7 @@ import MovieIcon from '@mui/icons-material/Movie';
 
 const Container = styled.div`
   background-color: #e3ecf1;
+  height: 100%;
 `;
 
 const SidebarContainer = styled.div`
