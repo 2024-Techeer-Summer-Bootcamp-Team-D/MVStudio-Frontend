@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import Square from '../components/Lyricscover';
+import Square from '../components/LyricsCover';
 import MainButton from '../components/MainButton';
 
 const BigContianer = styled.div`

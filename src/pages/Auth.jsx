@@ -15,26 +15,60 @@ const BackLayout = styled.div`
   align-items: center;
 `;
 
-const BoldFont = styled.h1`
+const BoldFont1 = styled.h1`
+  font-family: 'suit';
+  font-size: 3rem;
+  font-weight: bold;
+  margin: 0;
+  color: #ffffff;
+  text-shadow:
+    0 0 5px #ffffff30,
+    0 0 10px #ffffff30,
+    0 0 20px #ffffff30,
+    0 0 40px #ffffff30;
+
+  @keyframes neon {
+    from {
+      text-shadow:
+        0 0 5px #ffffff50,
+        0 0 10px #ffffff50,
+        0 0 20px #ffffff50,
+        0 0 40px #ffffff50;
+    }
+    to {
+      text-shadow:
+        0 0 10px #ffffff50,
+        0 0 20px #ffffff50,
+        0 0 30px #ffffff50,
+        0 0 50px #ffffff50;
+    }
+  }
+`;
+
+const BoldFont2 = styled.h2`
+  font-family: 'suit';
   font-size: 3rem;
   font-weight: bold;
   margin: 0;
 `;
 
 const MarginFont = styled.p`
+  font-family: 'suit';
   font-size: 0.875rem;
   font-weight: 100;
   line-height: 20px;
   letter-spacing: 0.5px;
-  margin: 1.25rem 0 1.875rem;
+  margin: 0.5rem 0 0.5rem;
 `;
 
 const Description = styled.p`
+  font-family: 'suit';
   font-size: 1rem;
+  margin: 0.5rem 0 0.5rem;
 `;
 
 const StyledForm = styled.form`
-  background-color: #dbd7e6; // 배경 색
+  background-color: #dfd4df;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -45,13 +79,13 @@ const StyledForm = styled.form`
 `;
 
 const StyledButton = styled.button`
+  margin-top: 3rem;
   border-radius: 1.25rem;
   border: none;
   cursor: pointer;
-  /* background-color: #170630; */
   background-color: ${(props) =>
     props.color === 'purple'
-      ? '#170630'
+      ? '#0f0110'
       : props.color === 'white'
         ? '#fff'
         : 'transparent'};
@@ -73,7 +107,7 @@ const StyledButton = styled.button`
 `;
 
 const Container = styled.div`
-  background-color: #dbd7e6; // 배경색
+  background-color: rgba(29, 5, 37, 0.9);
   border-radius: 10px;
   box-shadow:
     0 14px 28px rgba(0, 0, 0, 0.25),
@@ -81,8 +115,8 @@ const Container = styled.div`
   position: relative;
   overflow: hidden;
   width: 75%;
-  min-width: 55rem;
-  height: 60%;
+  min-width: 60rem;
+  height: 80%;
   min-height: 30rem;
 `;
 
@@ -140,15 +174,17 @@ const OverlayContainer = styled.div`
 `;
 
 const StyledInput = styled.input`
-  background-color: #ffffff;
+  background-color: rgba(250, 250, 250, 0.889);
+  border-radius: 1rem;
   border: none;
   padding: 0.75rem 1rem;
   margin: 0.5rem 0;
-  width: 100%;
+  width: 90%;
+  font-size: 1rem;
 `;
 
 const Overlay = styled.div`
-  background-color: #1a0e3b;
+  background-color: rgba(37, 6, 46, 0.9);
   background-repeat: no-repeat;
   background-size: cover;
   background-position: 0 0;
@@ -189,32 +225,161 @@ const OverlayRight = styled(OverlayPanel)`
     rightPanelActive ? 'translateX(20%)' : 'translateX(0)'};
 `;
 
-const SignUpForm = () => (
-  <StyledForm action="#">
-    <BoldFont>Create Account</BoldFont>
-    <Description>or use your ID for registration</Description>
-    <StyledInput type="text" placeholder="Name" />
-    <StyledInput type="id" placeholder="ID" />
-    <StyledInput type="password" placeholder="Password" />
-    <StyledButton color="purple">Sign Up</StyledButton>
-  </StyledForm>
-);
+const SignUpForm = () => {
+  const [idValue, setIdValue] = useState('');
+  const [nicknameValue, setNicknameValue] = useState('');
+  const [passwordValue, setPasswordValue] = useState('');
+  const [passwordCheckValue, setPasswordCheckValue] = useState('');
 
-const SignInForm = () => (
-  <StyledForm action="#">
-    <BoldFont>LogIn</BoldFont>
-    <Description>or use your account</Description>
-    <StyledInput type="id" placeholder="ID" />
-    <StyledInput type="password" placeholder="Password" />
-    <StyledButton color="purple">LogIn</StyledButton>
-  </StyledForm>
-);
+  const handleIdChange = (e) => {
+    const value = e.target.value;
+    setIdValue(value);
+    console.log('ID value:', value);
+  };
+
+  const handleNicknameChange = (e) => {
+    const value = e.target.value;
+    setNicknameValue(value);
+    console.log('Nickname value:', value);
+  };
+
+  const handlePasswordChange = (e) => {
+    const value = e.target.value;
+    setPasswordValue(value);
+    console.log('Password value:', value);
+  };
+
+  const handlePasswordCheckChange = (e) => {
+    const value = e.target.value;
+    setPasswordCheckValue(value);
+    console.log('PasswordCheck value:', value);
+  };
+  return (
+    <StyledForm action="#">
+      <BoldFont2>Create Account</BoldFont2>
+      <Description>or use your ID for registration</Description>
+      <StyledInput
+        type="text"
+        placeholder="Enter your ID"
+        value={idValue}
+        onChange={handleIdChange}
+      />
+      <StyledInput
+        type="text"
+        placeholder="Enter your Nickname"
+        value={nicknameValue}
+        onChange={handleNicknameChange}
+      />
+      <StyledInput
+        type="password"
+        placeholder="Password"
+        value={passwordValue}
+        onChange={handlePasswordChange}
+      />
+      <StyledInput
+        type="password"
+        placeholder="Confirm Password"
+        value={passwordCheckValue}
+        onChange={handlePasswordCheckChange}
+      />
+
+      <StyledButton color="purple">Sign Up</StyledButton>
+    </StyledForm>
+  );
+};
+
+const SignInForm = () => {
+  const [idValue, setIdValue] = useState('');
+  const [passwordValue, setPasswordValue] = useState('');
+
+  const handleIdChange = (e) => {
+    const value = e.target.value;
+    setIdValue(value);
+    console.log('ID value:', value);
+  };
+
+  const handlePasswordChange = (e) => {
+    const value = e.target.value;
+    setPasswordValue(value);
+    console.log('Password value:', value);
+  };
+
+  return (
+    <StyledForm action="#">
+      <BoldFont2>LogIn</BoldFont2>
+      <Description>or use your account</Description>
+      <StyledInput
+        type="text"
+        placeholder="Enter your ID"
+        value={idValue}
+        onChange={handleIdChange}
+      />
+      <StyledInput
+        type="password"
+        placeholder="Enter your Password"
+        value={passwordValue}
+        onChange={handlePasswordChange}
+      />
+      <StyledButton color="purple">LogIn</StyledButton>
+    </StyledForm>
+  );
+};
+
+const CircleGlass = styled.img`
+  width: 10rem;
+  height: 10rem;
+  position: relative;
+  margin-left: -4rem;
+  margin-top: -45rem;
+  filter: blur(2px);
+`;
+
+const SecondCircleGlass1 = styled.img`
+  width: 8rem;
+  height: 8rem;
+  position: absolute;
+  margin-left: 20rem;
+  margin-top: -40rem;
+  filter: blur(2px);
+`;
+
+const TwistGlass = styled.img`
+  width: 12rem;
+  height: 12rem;
+  position: absolute;
+  margin-left: -5rem;
+  margin-top: 52rem;
+  filter: blur(2px);
+`;
+
+const TearGlass1 = styled.img`
+  width: 5rem;
+  height: 5rem;
+  position: absolute;
+  margin-left: 80rem;
+  margin-top: 40rem;
+  filter: blur(2px);
+`;
+
+const TearGlass2 = styled.img`
+  width: 5rem;
+  height: 5rem;
+  position: absolute;
+  margin-left: -80rem;
+  margin-top: 40rem;
+  filter: blur(2px);
+`;
 
 const App = () => {
   const [rightPanelActive, setRightPanelActive] = useState(false);
 
   return (
     <BackLayout>
+      <CircleGlass src="https://i.ibb.co/f2gnqxw/image.png" />
+      <SecondCircleGlass1 src="https://i.ibb.co/f2gnqxw/image.png" />
+      <TwistGlass src="https://i.ibb.co/wLPMNtf/image.png" />
+      <TearGlass1 src="https://i.ibb.co/jL01sDq/image.png" />
+      <TearGlass2 src="https://i.ibb.co/jL01sDq/image.png" />
       <GlobalStyle />
       <Container>
         <SignUpContainer rightPanelActive={rightPanelActive}>
@@ -226,10 +391,8 @@ const App = () => {
         <OverlayContainer rightPanelActive={rightPanelActive}>
           <Overlay rightPanelActive={rightPanelActive}>
             <OverlayLeft rightPanelActive={rightPanelActive}>
-              <BoldFont>Welcome Back!</BoldFont>
-              <MarginFont>
-                To keep connected with us please login with your personal info
-              </MarginFont>
+              <BoldFont1>Welcome !</BoldFont1>
+              <MarginFont>we are waiting for you</MarginFont>
               <StyledButton
                 color="white"
                 onClick={() => setRightPanelActive(false)}
@@ -238,10 +401,8 @@ const App = () => {
               </StyledButton>
             </OverlayLeft>
             <OverlayRight rightPanelActive={rightPanelActive}>
-              <BoldFont>Hello, Friend!</BoldFont>
-              <MarginFont>
-                Enter your personal details and start journey with us
-              </MarginFont>
+              <BoldFont1>Welcome Back!</BoldFont1>
+              <MarginFont>welcomeback we missed you</MarginFont>
               <StyledButton
                 color="white"
                 onClick={() => setRightPanelActive(true)}

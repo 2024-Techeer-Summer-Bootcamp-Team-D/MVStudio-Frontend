@@ -6,7 +6,7 @@ import Sidebar from './components/Sidebar';
 import Navbar from './components/Navbar';
 
 const BackLayout = styled.div`
-  background-color: #05000a;
+  background-color: #0f0e0f;
   width: 100%;
   height: 100%;
   min-height: 100vh;
