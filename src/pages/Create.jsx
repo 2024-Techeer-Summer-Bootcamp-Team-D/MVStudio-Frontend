@@ -457,7 +457,7 @@ function Create() {
           </GenreContainer>
         </RightContainer>
       </BigContainer>
-      <JellyButton>create</JellyButton>
+      <JellyButton>Create</JellyButton>
     </CreateContainer>
   );
 }
