@@ -33,8 +33,8 @@ const Title = styled.div`
   position: relative;
   font-weight: 700;
   font-family: 'suit';
-  margin-left: 10rem;
-  margin-top: -20rem;
+  margin-left: 20%;
+  margin-bottom: 20%;
 `;
 
 const FirstText = styled.div`
@@ -43,8 +43,8 @@ const FirstText = styled.div`
   position: relative;
   font-weight: 700;
   font-family: 'suit';
-  margin-left: 10rem;
-  margin-top: 2rem;
+  margin-left: 10%;
+  margin-top: 5%;
 `;
 
 const GreyText = styled.div`
@@ -56,10 +56,10 @@ const PurpleText = styled.div`
 `;
 
 const Mac1 = styled.img`
-  width: 42rem;
-  height: 28rem;
+  width: 45%;
+  height: 50%;
   position: relative;
-  margin-left: 10rem;
+  margin-left: 10%;
 `;
 
 const SecondText = styled.div`
@@ -68,14 +68,14 @@ const SecondText = styled.div`
   position: relative;
   font-weight: 700;
   font-family: 'suit';
-  margin-left: 18rem;
+  margin-left: 20%;
 `;
 
 const Mac2 = styled.img`
-  width: 42rem;
-  height: 28rem;
+  width: 40%;
+  height: 50%;
   position: relative;
-  margin-left: 8rem;
+  margin-left: 12%;
 `;
 
 const ThirdText = styled.div`
@@ -84,7 +84,7 @@ const ThirdText = styled.div`
   position: relative;
   font-weight: 700;
   font-family: 'suit';
-  margin-left: 7rem;
+  margin-left: 10%;
 `;
 
 const Connect = styled.div`
@@ -92,10 +92,10 @@ const Connect = styled.div`
 `;
 
 const Insta = styled.img`
-  width: 35rem;
-  height: 38rem;
+  width: 35%;
+  height: 70%;
   position: relative;
-  margin-left: 5rem;
+  margin-left: 12%;
 `;
 
 const FourthText = styled.div`
@@ -104,35 +104,38 @@ const FourthText = styled.div`
   position: relative;
   font-weight: 700;
   font-family: 'suit';
-  margin-left: 18rem;
+  margin-left: 25rem;
 `;
 
 const FifthText = styled.div`
   color: white;
   font-size: 3rem;
-  position: relative;
   font-weight: 700;
   font-family: 'suit';
-  margin-left: 30rem;
-  margin-bottom: 5rem;
   text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
 `;
 
 const CircleGlass = styled.img`
   width: 10rem;
   height: 10rem;
-  position: relative;
   margin-left: -4rem;
-  margin-top: -45rem;
+  margin-top: -55rem;
   filter: blur(2px);
+  position: absolute;
 `;
 
 const SecondCircleGlass1 = styled.img`
   width: 8rem;
   height: 8rem;
   position: absolute;
-  margin-left: 20rem;
-  margin-top: -40rem;
+  margin-left: 80rem;
+  margin-top: -50rem;
   filter: blur(2px);
 `;
 
@@ -140,17 +143,17 @@ const SecondCircleGlass2 = styled.img`
   width: 8rem;
   height: 8rem;
   position: absolute;
-  margin-left: 85rem;
-  margin-top: 45rem;
+  margin-left: 114rem;
+  margin-top: 60rem;
   filter: blur(2px);
 `;
 
 const FirstLeftGlass = styled.img`
   width: 20rem;
   height: 20rem;
-  position: relative;
-  margin-left: -16rem;
-  margin-top: 25rem;
+  position: absolute;
+  margin-left: -10rem;
+  margin-top: 50rem;
   filter: blur(2px);
 `;
 
@@ -158,7 +161,7 @@ const TwistGlass = styled.img`
   width: 15rem;
   height: 15rem;
   position: absolute;
-  margin-left: -5rem;
+  margin-left: -6.5rem;
   margin-top: 50rem;
   filter: blur(2px);
 `;
@@ -167,8 +170,8 @@ const TearGlass1 = styled.img`
   width: 5rem;
   height: 5rem;
   position: absolute;
-  margin-left: 80rem;
-  margin-top: 40rem;
+  margin-left: 110rem;
+  margin-top: 50rem;
   filter: blur(2px);
 `;
 
@@ -176,32 +179,53 @@ const ReactGlass = styled.img`
   width: 15rem;
   height: 15rem;
   position: absolute;
-  margin-left: 90rem;
-  margin-top: 35rem;
+  margin-left: 85%;
+  margin-top: 39%;
   filter: blur(2px);
 `;
 
 const MainGlass = styled.img`
-  width: 50rem;
-  height: 50rem;
+  width: 50%;
+  height: 100%;
   position: absolute;
-  margin-left: 73rem;
+  margin-left: 95rem;
   filter: blur(2px);
 `;
 
-const StyledButton = styled.button`
-  background-color: #3d0758;
-  width: 13rem;
-  height: 2.5rem;
-  color: #ffffff;
-  font-size: 1rem;
-  font-weight: 700;
-  font-family: 'suit';
-  border: none;
-  border-radius: 2rem;
+const ButtonContainer = styled.div`
+  margin: 2%;
+  text-align: center;
+`;
+
+const Button = styled.button`
+  width: 12.5rem;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #fff;
   cursor: pointer;
-  margin-top: 10rem;
-  margin-left: -25.5rem;
+  height: 3.2rem;
+  text-align: center;
+  border: none;
+  background-size: 300% 100%;
+  border-radius: 3rem;
+  transition: all 0.4s ease-in-out;
+  background-image: linear-gradient(
+    to right,
+    #20004e,
+    #37006e,
+    #4600be,
+    #32005a
+  );
+  box-shadow: 0 4px 15px 0 rgba(81, 39, 139, 0.75);
+
+  &:hover {
+    background-position: 100% 0;
+    transition: all 0.4s ease-in-out;
+  }
+
+  &:focus {
+    outline: none;
+  }
 `;
 
 const handleClick = () => {};
@@ -268,8 +292,10 @@ const OnBoardingPage = () => {
         <FifthText>
           모든 기능이 준비되어 있으니,
           <br /> 지금 한번 시도해 보세요.
+          <ButtonContainer>
+            <Button onClick={handleClick}>Start</Button>
+          </ButtonContainer>
         </FifthText>
-        <StyledButton onClick={handleClick}>Start</StyledButton>
       </Section>
     </Container>
   );
