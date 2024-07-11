@@ -15,7 +15,7 @@ const CreateContainer = styled.div`
 
 const TitleStyle = styled.p`
   font-family: 'SUIT', sans-serif;
-  font-size: 1rem;
+  font-size: 1.5rem;
   color: #ffffff;
   font-weight: 700;
   margin-left: 3.2rem;
@@ -146,6 +146,7 @@ const Container = styled.div`
 const TrendViewContainer = styled.div`
   width: 70rem;
   height: 15rem;
+  gap: 2rem;
   display: flex;
   overflow: hidden;
   /* margin-left: -1rem; */
