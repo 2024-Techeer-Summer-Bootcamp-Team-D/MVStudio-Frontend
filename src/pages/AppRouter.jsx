@@ -6,21 +6,28 @@ import App from '../App';
 import LyricsSelect from './LyricsSelect';
 import MainPage from './MainPage';
 import OnBoardingPage from './OnBoardingPage';
-import MainPageTest from './MainPageTest';
 import Auth from './Auth';
+import Create from './Create';
+import Play from './Play';
+import ViewChart from './ViewChart';
+import Main from './Main';
 
 function AppRouter() {
   return (
     <Router>
       <App>
         <Routes>
+          <Route path="/" element={<OnBoardingPage />} />
           <Route path="/auth" element={<Auth />} />
-          <Route path="/" element={<Mypage />} />
-          <Route path="/MainPage" element={<MainPage />} />
-          <Route path="/Test" element={<MainPageTest />} />
+          <Route path="/test" element={<Main />} />
+          <Route path="/mypage" element={<Mypage />} />
+          <Route path="/mainpage" element={<MainPage />} />
           <Route path="/search" element={<Search />} />
           <Route path="/lyricsselect" element={<LyricsSelect />} />
-          <Route path="/Onboarding" element={<OnBoardingPage />} />
+          <Route path="/onboarding" element={<OnBoardingPage />} />
+          <Route path="/create" element={<Create />} />
+          <Route path="/play" element={<Play />} />
+          <Route path="/chart" element={<ViewChart />} />
         </Routes>
       </App>
     </Router>
