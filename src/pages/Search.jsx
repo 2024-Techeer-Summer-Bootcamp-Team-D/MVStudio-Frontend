@@ -7,7 +7,7 @@ import { useLocation } from 'react-router-dom';
 const BigContainer = styled.div`
   display: flex;
   flex-direction: column;
-  padding-left: 7rem;
+  padding-left: 18rem;
 `;
 
 const SearchResult = styled.p`
