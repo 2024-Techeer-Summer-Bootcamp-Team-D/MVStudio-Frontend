@@ -11,12 +11,14 @@ import MainPage from './MainPage';
 import OnBoardingPage from './OnBoardingPage';
 import Play from './Play';
 import ViewChart from './ViewChart';
+import Main from './Main';
 
 function AppRouter() {
   return (
     <Router>
       <App>
         <Routes>
+          <Route path="/test" element={<Main />} />
           <Route path="/MyPage" element={<Mypage />} />
           <Route path="/MainPage" element={<MainPage />} />
           <Route path="/search" element={<Search />} />
