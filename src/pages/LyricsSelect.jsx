@@ -29,7 +29,7 @@ const LyricsContainer = styled.div`
 
 const styles = {
   blockquote: {
-    width: '15rem',
+    width: '13rem',
     height: '27rem',
     marginLeft: '15%',
     marginRight: '15%',
