@@ -192,7 +192,7 @@ const Array3List = styled.div`
 const TrendImageOverlay = styled.div`
   position: absolute;
   bottom: 0;
-  width: 21.9%;
+  width: 22%;
   height: 50%;
   background-color: rgba(0, 0, 0, 0.5);
   backdrop-filter: blur(4px);
@@ -200,7 +200,7 @@ const TrendImageOverlay = styled.div`
   border-bottom-right-radius: 1.2rem;
   color: white;
   font-size: 0.8rem;
-  top: 10.9rem;
+  top: 11rem;
 `;
 
 const FontMargin = styled.div`
