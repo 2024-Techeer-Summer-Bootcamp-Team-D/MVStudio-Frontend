@@ -20,7 +20,7 @@ const SidebarContainer = styled.div`
   height: 100%;
   z-index: 99;
   width: 18rem;
-  border-right: 1px solid #17032d;
+  border-right: 1px solid #380272;
   transform: translateX(${({ xPosition }) => -xPosition}px);
 `;
 

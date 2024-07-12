@@ -15,33 +15,105 @@ const Statistics = styled.button`
   cursor: pointer;
 `;
 
-const WhiteLine = styled.div`
-  width: 70rem;
-  height: 0.1rem;
-  background-color: #8b8b8bb2;
-  position: relative;
-  margin-top: 1rem;
-`;
-
 const GoContainer = styled.div`
-  margin-top: 0.5rem;
-  margin-left: 2rem;
+  margin-top: 2rem;
+  display: flex;
+  flex-direction: column;
   position: relative;
   & > button {
-    margin-right: 1.5rem;
   }
 `;
 
-const MoveButton = styled.button`
-  width: 6rem;
-  font-size: 1rem;
-  color: #ffffff;
-  background-color: rgba(255, 255, 255, 0);
-  border: none;
-  position: relative;
+const ViewButton = styled.button`
+  width: 4rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  border-top-right-radius: 1rem;
+  border-bottom-color: #9c9c9cc0;
+  border-left: none;
+  border-top: none;
+  border-right: none;
+  color: #fff;
   cursor: pointer;
-  border-bottom: ${(props) =>
-    props.active ? '0.2rem solid rgba(139, 139, 139, 0.7)' : 'none'};
+  height: 3.2rem;
+  text-align: center;
+  background-size: 300% 100%;
+  transition: all 0.4s ease-in-out;
+  background-image: ${({ active }) =>
+    active
+      ? 'linear-gradient(to right, #4600be, #32005a)'
+      : 'linear-gradient(to right, #20004e, #37006e, #4600be, #32005a)'};
+  box-shadow: ${({ active }) =>
+    active ? '0 4px 15px 0 rgba(81, 39, 139, 0.75)' : 'none'};
+
+  &:hover {
+    background-position: 100% 0;
+    transition: all 0.4s ease-in-out;
+  }
+
+  &:focus {
+    outline: none;
+  }
+`;
+
+const AgeButton = styled.button`
+  width: 4rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #fff;
+  cursor: pointer;
+  height: 3.2rem;
+  text-align: center;
+  border: none;
+  background-size: 300% 100%;
+  transition: all 0.4s ease-in-out;
+  background-image: ${({ active }) =>
+    active
+      ? 'linear-gradient(to right, #4600be, #32005a)'
+      : 'linear-gradient(to right, #20004e, #37006e, #4600be, #32005a)'};
+  box-shadow: ${({ active }) =>
+    active ? '0 4px 15px 0 rgba(81, 39, 139, 0.75)' : 'none'};
+
+  &:hover {
+    background-position: 100% 0;
+    transition: all 0.4s ease-in-out;
+  }
+
+  &:focus {
+    outline: none;
+  }
+`;
+
+const CountryButton = styled.button`
+  width: 4rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  border-bottom-right-radius: 1rem;
+  border-top-color: #454545c7;
+  border-right: none;
+  border-left: none;
+  border-bottom: none;
+  color: #fff;
+  cursor: pointer;
+  height: 3.2rem;
+  text-align: center;
+  background-size: 300% 100%;
+  transition: all 0.4s ease-in-out;
+  background-image: ${({ active }) =>
+    active
+      ? 'linear-gradient(to right, #4600be, #32005a)'
+      : 'linear-gradient(to right, #20004e, #37006e, #4600be, #32005a)'};
+  box-shadow: ${({ active }) =>
+    active ? '0 4px 15px 0 rgba(81, 39, 139, 0.75)' : 'none'};
+
+  &:hover {
+    background-position: 100% 0;
+    transition: all 0.4s ease-in-out;
+  }
+
+  &:focus {
+    outline: none;
+  }
 `;
 
 const ChartContainer = styled.div`
@@ -51,8 +123,8 @@ const ChartContainer = styled.div`
 `;
 
 const ChartandStatContainer = styled.div`
-  width: 100%;
-  height: 100%;
+  width: 60rem;
+  height: 32rem;
   margin-top: 4rem;
   margin-left: 6rem;
   position: relative;
@@ -61,11 +133,12 @@ const ChartandStatContainer = styled.div`
 `;
 
 const StatSquare = styled.div`
-  width: 40rem;
-  height: 25rem;
+  width: 25rem;
+  height: 32rem;
   background-color: #36045c;
   position: relative;
   border-radius: 1rem;
+  margin-left: 2rem;
 `;
 
 const UserNickname = styled.p`
@@ -119,14 +192,27 @@ const TotalVideoDB = styled.p`
   position: relative;
 `;
 
+const ThisWeakDB = styled.p`
+  color: white;
+  font-size: 1rem;
+  margin-top: -0.5rem;
+  position: relative;
+`;
+
+const ThisWeak = styled.p`
+  color: white;
+  font-size: 1rem;
+  margin-top: 3rem;
+  position: relative;
+`;
+
 const AlbumContainer = styled.div`
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 1rem;
   width: 80%;
-  padding-left: 1rem;
-  padding-right: 1rem;
-  margin-top: 1rem;
+  margin: auto;
+  margin-top: -13rem;
   transition: 0.3s;
 `;
 
@@ -150,28 +236,31 @@ const ViewChart = () => {
 
   const viewChartData = [
     {
-      pic: 'https://i.ibb.co/Fn93yzJ/1.webp',
-      nickname: 'ViewChart',
+      pic: 'https://i.ibb.co/DkwwmCn/qwdqwd.webp',
+      nickname: 'View Chart',
       totalView: '1,000,000',
       totalVideo: '50',
+      thisWeak: '5,000',
     },
   ];
 
   const ageChartData = [
     {
-      pic: 'https://i.ibb.co/cxwzVrb/cat.jpg',
-      nickname: 'AgeChart',
+      pic: 'https://i.ibb.co/DkwwmCn/qwdqwd.webp',
+      nickname: 'Age Chart',
       totalView: '2,000,000',
       totalVideo: '70',
+      thisWeak: '5,000',
     },
   ];
 
   const countryChartData = [
     {
-      pic: 'https://i.ibb.co/99cZ04Y/4.webp',
-      nickname: 'CountryChart',
+      pic: 'https://i.ibb.co/k5SgySn/image.png',
+      nickname: 'Country Chart',
       totalView: '3,000,000',
       totalVideo: '90',
+      thisWeak: '5,000',
     },
   ];
 
@@ -191,26 +280,26 @@ const ViewChart = () => {
   return (
     <ChartContainer>
       <Statistics onClick={handleClick}>My&nbsp;Statistics</Statistics>
-      <WhiteLine></WhiteLine>
+
       <GoContainer>
-        <MoveButton
+        <ViewButton
           active={activeTab === 'ViewChart'}
           onClick={() => setActiveTab('ViewChart')}
         >
-          View&nbsp;chart
-        </MoveButton>
-        <MoveButton
+          View
+        </ViewButton>
+        <AgeButton
           active={activeTab === 'AgeChart'}
           onClick={() => setActiveTab('AgeChart')}
         >
-          Age&nbsp;chart
-        </MoveButton>
-        <MoveButton
+          Age
+        </AgeButton>
+        <CountryButton
           active={activeTab === 'CountryChart'}
           onClick={() => setActiveTab('CountryChart')}
         >
-          Country&nbsp;chart
-        </MoveButton>
+          Country
+        </CountryButton>
       </GoContainer>
       <AlbumContainer>
         {getActiveData().map((item, index) => (
@@ -224,6 +313,8 @@ const ViewChart = () => {
                 <TotalViewDB>{item.totalView}</TotalViewDB>
                 <TotalVideo>Total Video</TotalVideo>
                 <TotalVideoDB>{item.totalVideo}</TotalVideoDB>
+                <ThisWeak>Weak View</ThisWeak>
+                <ThisWeakDB>{item.thisWeak}</ThisWeakDB>
               </TotalBox>
             </StatSquare>
           </ChartandStatContainer>
