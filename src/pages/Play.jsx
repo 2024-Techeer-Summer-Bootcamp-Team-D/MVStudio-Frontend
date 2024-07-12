@@ -1,10 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import YouTubeIcon from '@mui/icons-material/YouTube';
 import InstagramIcon from '@mui/icons-material/Instagram';
 import ShareIcon from '@mui/icons-material/Share';
 import DownloadIcon from '@mui/icons-material/Download';
-import LyricsCover from '../components/LyricsCover';
 import PersonIcon from '@mui/icons-material/Person';
 import { useTheme } from '@mui/material/styles';
 import Box from '@mui/material/Box';
@@ -18,6 +17,8 @@ import FastRewindRounded from '@mui/icons-material/FastRewindRounded';
 
 const BackLayout = styled.div`
   width: 100%;
+  display: flex;
+  flex-direction: row;
 `;
 
 const IconBox = styled.div`
@@ -39,7 +40,7 @@ const TinyText = styled(Typography)`
 function MusicPlayerSlider() {
   const theme = useTheme();
   const duration = 200; // seconds
-  const [position, setPosition] = React.useState(32);
+  const [position, setPosition] = useState(32);
 
   function formatDuration(value) {
     const minute = Math.floor(value / 60);
@@ -49,72 +50,64 @@ function MusicPlayerSlider() {
 
   return (
     <Box sx={{ width: '100%', overflow: 'hidden' }}>
+      <Slider
+        aria-label="time-indicator"
+        size="small"
+        value={position}
+        min={0}
+        step={1}
+        max={duration}
+        onChange={(_, value) => setPosition(value)}
+        sx={{
+          color: 'rgba(97, 11, 108, 0.87)',
+          height: 4,
+          '& .MuiSlider-thumb': {
+            width: 8,
+            height: 8,
+            transition: '0.3s cubic-bezier(.47,1.64,.41,.8)',
+            '&::before': {
+              boxShadow: '0 2px 12px 0 rgba(0,0,0,0.4)',
+            },
+            '&:hover, &.Mui-focusVisible': {
+              boxShadow: `0px 0px 0px 8px ${
+                theme.palette.mode === 'dark'
+                  ? 'rgb(255 255 255 / 16%)'
+                  : 'rgb(0 0 0 / 16%)'
+              }`,
+            },
+            '&.Mui-active': {
+              width: 15,
+              height: 20,
+            },
+          },
+          '& .MuiSlider-rail': {
+            opacity: 0.28,
+          },
+        }}
+      />
       <Box
         sx={{
-          borderRadius: 2,
-          backgroundColor: theme.palette.background.black,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          mt: -2,
         }}
       >
-        <Slider
-          aria-label="time-indicator"
-          size="small"
-          value={position}
-          min={0}
-          step={1}
-          max={duration}
-          onChange={(_, value) => setPosition(value)}
-          sx={{
-            color: (theme.palette.mode = 'rgba(97, 11, 108, 0.87)'),
-            height: 4,
-            '& .MuiSlider-thumb': {
-              width: 8,
-              height: 8,
-              transition: '0.3s cubic-bezier(.47,1.64,.41,.8)',
-              '&::before': {
-                boxShadow: '0 2px 12px 0 rgba(0,0,0,0.4)',
-              },
-              '&:hover, &.Mui-focusVisible': {
-                boxShadow: `0px 0px 0px 8px ${
-                  theme.palette.mode === 'dark'
-                    ? 'rgb(255 255 255 / 16%)'
-                    : 'rgb(0 0 0 / 16%)'
-                }`,
-              },
-              '&.Mui-active': {
-                width: 15,
-                height: 20,
-              },
-            },
-            '& .MuiSlider-rail': {
-              opacity: 0.28,
-            },
-          }}
-        />
-        <Box
-          sx={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            mt: -2,
-          }}
-        >
-          <TinyText>{formatDuration(position)}</TinyText>
-          <TinyText>-{formatDuration(duration - position)}</TinyText>
-        </Box>
+        <TinyText>{formatDuration(position)}</TinyText>
+        <TinyText>-{formatDuration(duration - position)}</TinyText>
       </Box>
     </Box>
   );
 }
 
 const PlayBox = styled.div`
-  width: 70%;
+  width: ${({ expanded }) => (expanded ? '83%' : '70%')};
   height: 100%;
   display: flex;
-  flex-direction: column; /* PlayBox를 세로로 정렬 */
-  align-items: center; /* 가운데 정렬 */
+  flex-direction: column;
+  align-items: center;
 `;
 
-// ShareBox styled-component
 const ShareBox = styled.div`
   width: 50%;
   display: flex;
@@ -130,13 +123,13 @@ const TextBox = styled.div`
 `;
 
 const Title = styled.div`
-  font-size: 1rem; /* 글자 크기 */
-  font-weight: bold; /* 글자 두껍게 */
+  font-size: 1rem;
+  font-weight: bold;
 `;
 
 const Subtitle = styled.div`
-  font-size: 0.8rem; /* 글자 크기 */
-  font-weight: normal; /* 일반체 */
+  font-size: 0.8rem;
+  font-weight: normal;
   align-items: center;
   display: flex;
 `;
@@ -155,17 +148,16 @@ const Button = styled.button`
   align-items: center;
   justify-content: center;
   background-color: #552e72;
-  position: relative; /* Tooltip을 위해 추가 */
-  border: none; /* 테두리 제거 */
-
+  position: relative;
+  border: none;
+  cursor: pointer;
   &:hover span {
     visibility: visible;
     opacity: 1;
-    bottom: -1.5rem; /* 호버 시 텍스트 위치 조정 */
+    bottom: -1.5rem;
   }
 `;
 
-// Tooltip styled-component
 const Tooltip = styled.span`
   visibility: hidden;
   width: 6rem;
@@ -176,19 +168,18 @@ const Tooltip = styled.span`
   padding: 0.5rem;
   position: absolute;
   z-index: 1;
-  top: 125%; /* Tooltip 위치 */
+  top: 125%;
   left: 50%;
-  margin-left: -3rem; /* Tooltip 중앙 정렬 */
+  margin-left: -3rem;
   opacity: 0;
   transition:
     opacity 0.3s,
-    bottom 0.3s; /* 투명도 및 위치 전환 트랜지션 */
+    bottom 0.3s;
   font-size: 1rem;
-
   &::after {
     content: '';
     position: absolute;
-    bottom: 100%; /* Tooltip 위 삼각형 위치 */
+    bottom: 100%;
     left: 50%;
     margin-left: -0.5rem;
     border-width: 0.5rem;
@@ -197,18 +188,16 @@ const Tooltip = styled.span`
   }
 `;
 
-// YouTube 아이콘을 스타일링한 컴포넌트
 const StyledYouTubeIcon = styled(YouTubeIcon)`
-  color: white; /* 아이콘 색상 */
+  color: white;
 `;
 
-// Instagram 아이콘을 스타일링한 컴포넌트
 const StyledInstagramIcon = styled(InstagramIcon)`
-  color: white; /* 아이콘 색상 */
+  color: white;
 `;
 
 const StyledShareIcon = styled(ShareIcon)`
-  color: white; /* 아이콘 색상 */
+  color: white;
 `;
 
 const VideoContainer = styled.div`
@@ -218,24 +207,30 @@ const VideoContainer = styled.div`
   justify-content: center;
   margin-top: 3rem;
 `;
+
 const UserInfo = styled.div`
   display: flex;
   flex-direction: row;
 `;
 
-// LyricsBox styled-component
 const LyricsBox = styled.div`
-  width: 30%;
+  width: ${({ expanded }) => (expanded ? '30%' : '0%')};
   display: flex;
   justify-content: start;
   align-items: start;
-  margin: 2rem;
-  padding-bottom: 10rem;
+  margin-left: 2rem;
+  transition: width 0.5s ease-in-out;
+
+  & > div {
+    display: ${({ expanded }) => (expanded ? 'block' : 'none')};
+    transition: display 0.5s ease-in-out;
+  }
 `;
 
 const StyledDownloadIcon = styled(DownloadIcon)`
-  color: white; /* 아이콘 색상 */
+  color: white;
 `;
+
 const StyledVideo = styled.video`
   width: 100%;
 `;
@@ -248,13 +243,76 @@ const StyledRow = styled.div`
   margin-bottom: 0.25rem;
 `;
 
+const styles = {
+  blockquote: {
+    margin: '2.5rem',
+    width: '20rem', // 'Width'에서 'width'로 수정
+    height: '33rem', // 'Height'에서 'height'로 수정
+    fontFamily: 'suit',
+    color: '#ffffff',
+  },
+  style1: {
+    position: 'relative',
+    background: '#350650',
+    boxShadow: '0 0 .5rem rgba(0,0,0,.2) inset',
+  },
+  style1Before: {
+    content: '""',
+    position: 'absolute',
+    bottom: 0,
+    right: 0,
+    width: '1rem',
+    height: '1rem',
+    borderTop: '1rem solid #60478f',
+    borderRight: '1rem solid #000000',
+    boxShadow: '-.2rem -.2rem .25rem rgba(0,0,0,.1)',
+  },
+  style1After: {
+    content: '""',
+    position: 'absolute',
+    bottom: 0,
+    right: 0,
+    width: '1rem',
+    height: '1rem',
+    borderBottom: '1rem solid #000000',
+    borderLeft: '1rem solid  #60478f',
+  },
+};
+
+const StyledButton = styled.button`
+  width: 4rem;
+  height: 4rem;
+  border-radius: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #3b0547;
+  position: relative;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-right: 2rem;
+  font-size: 0.5rem;
+  color: #ffffff;
+
+  &:hover {
+    background-color: #7e4394;
+  }
+`;
+
 function Play() {
-  const theme = useTheme();
-  const [paused, setPaused] = React.useState(false);
-  const mainIconColor = (theme.palette.mode = '#fff');
+  const [paused, setPaused] = useState(false);
+  const [lyricsVisible, setLyricsVisible] = useState(true);
+
+  const toggleLyrics = () => {
+    setLyricsVisible(!lyricsVisible);
+  };
+
+  const mainIconColor = '#fff';
+
   return (
     <BackLayout>
-      <PlayBox>
+      <PlayBox expanded={lyricsVisible}>
         <VideoContainer>
           <StyledVideo controls>
             <source src="/media/cc0-videos/flower.webm" type="video/webm" />
@@ -322,9 +380,24 @@ function Play() {
           </IconButton>
         </IconBox>
       </PlayBox>
-      <LyricsBox>
-        <LyricsCover>가사가사가사가사</LyricsCover>
+      <LyricsBox expanded={lyricsVisible}>
+        <div>
+          <blockquote style={{ ...styles.blockquote, ...styles.style1 }}>
+            <br />
+            <br />
+            <br />
+            <br />
+            <br />
+            <br />
+            느낌적인 느낌느낌
+            <div style={styles.style1Before}></div>
+            <div style={styles.style1After}></div>
+          </blockquote>
+        </div>
       </LyricsBox>
+      <StyledButton onClick={toggleLyrics}>
+        {lyricsVisible ? 'Hide Lyrics' : 'Show Lyrics'}
+      </StyledButton>
     </BackLayout>
   );
 }
