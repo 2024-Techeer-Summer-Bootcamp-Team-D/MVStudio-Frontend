@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Mypage from './Mypage';
 import Search from './Search';
 import App from '../App';
+// import EditProfile from './EditProfile';
 import LyricsSelect from './LyricsSelect';
 import MainPage from './MainPage';
 import OnBoardingPage from './OnBoardingPage';
