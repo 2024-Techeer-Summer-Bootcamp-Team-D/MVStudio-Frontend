@@ -110,10 +110,10 @@ const CustomButton = styled.button`
   font-weight: 600;
   cursor: pointer;
   position: relative;
-  box-shadow:
+  /* box-shadow:
     inset 2px 2px 2px 0px rgba(255, 255, 255, 0.5),
     7px 7px 20px 0px rgba(0, 0, 0, 0.1),
-    4px 4px 5px 0px rgba(0, 0, 0, 0.1);
+    4px 4px 5px 0px rgba(0, 0, 0, 0.1); */
   outline: none;
   background: linear-gradient(
     45deg,
@@ -143,10 +143,6 @@ const TitleInput = styled.input`
   height: 1.12rem;
   padding: 1rem;
   border-radius: 1.3rem;
-  box-shadow:
-    inset 2px 2px 2px 0px rgba(255, 255, 255, 0.5),
-    7px 7px 20px 0px rgba(0, 0, 0, 0.1),
-    4px 4px 5px 0px rgba(0, 0, 0, 0.1);
   outline: none;
   border: none;
   color: #ffffff;

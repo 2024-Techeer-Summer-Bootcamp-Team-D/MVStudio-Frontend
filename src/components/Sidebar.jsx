@@ -1,10 +1,10 @@
 /* eslint-disable react/prop-types */
-import React, { useEffect, useRef, useState } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import AddIcon from '@mui/icons-material/Add';
 import HomeIcon from '@mui/icons-material/Home';
 import WhatshotIcon from '@mui/icons-material/Whatshot';
-import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
+// import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
 import ignorePath from '../util/igonerePath';
 import EqualizerIcon from '@mui/icons-material/Equalizer';
 import MovieIcon from '@mui/icons-material/Movie';
@@ -122,8 +122,8 @@ const ExpandContainer = styled.div`
 `;
 
 const Thumbnail = styled.img`
-  width: 3rem;
-  height: 3rem;
+  width: 2.5rem;
+  height: 2.5rem;
   border-radius: 50%;
 `;
 
@@ -149,11 +149,11 @@ const Uploader = styled.div`
 `;
 
 const MyChannelContainer = styled.div`
-  visibility: ${({ isOpen }) => (isOpen ? 'visible' : 'hidden')};
+  /* visibility: ${({ isOpen }) => (isOpen ? 'visible' : 'hidden')}; */
   display: flex;
   flex-direction: column;
-  max-height: ${({ isOpen }) => (isOpen ? '1000px' : '0')};
-  opacity: ${({ isOpen }) => (isOpen ? '1' : '0')};
+  /* max-height: ${({ isOpen }) => (isOpen ? '1000px' : '0')};
+  opacity: ${({ isOpen }) => (isOpen ? '1' : '0')}; */
   overflow: hidden;
   transition:
     max-height 0.5s ease,
@@ -169,29 +169,29 @@ const EditEqualizerIcon = styled(EqualizerIcon)`
 `;
 
 function Sidebar() {
-  const [xPosition, setX] = useState(0);
-  const [isExpandOpen, setExpandOpen] = useState(false);
+  // const [xPosition, setX] = useState(0);
+  // const [isExpandOpen, setExpandOpen] = useState(false);
 
-  const side = useRef();
+  // const side = useRef();
 
-  const handleClose = (e) => {
-    let sideArea = side.current;
-    let sideChildren = side.current.contains(e.target);
-    if (sideArea && !sideChildren) {
-      setX(0);
-    }
-  };
+  // const handleClose = (e) => {
+  //   let sideArea = side.current;
+  //   let sideChildren = side.current.contains(e.target);
+  //   if (sideArea && !sideChildren) {
+  //     setX(0);
+  //   }
+  // };
 
-  const toggleExpand = () => {
-    setExpandOpen(!isExpandOpen);
-  };
+  // const toggleExpand = () => {
+  //   setExpandOpen(!isExpandOpen);
+  // };
 
-  useEffect(() => {
-    window.addEventListener('click', handleClose);
-    return () => {
-      window.removeEventListener('click', handleClose);
-    };
-  }, []);
+  // useEffect(() => {
+  //   window.addEventListener('click', handleClose);
+  //   return () => {
+  //     window.removeEventListener('click', handleClose);
+  //   };
+  // }, []);
 
   const isIgnoredPath = ignorePath().includes(location.pathname);
 
@@ -201,7 +201,7 @@ function Sidebar() {
 
   return (
     <Container>
-      <SidebarContainer ref={side} xPosition={xPosition}>
+      <SidebarContainer>
         <HomeItem>
           <HomeIcon fontSize="small" />
           <NavigationText>Home</NavigationText>
@@ -210,11 +210,11 @@ function Sidebar() {
           <AddIcon fontSize="small" />
           <NavigationText>Create</NavigationText>
         </CreateItem>
-        <NavigationItem onClick={toggleExpand}>
+        {/* <NavigationItem onClick={toggleExpand}>
           <PersonOutlineIcon fontSize="small" />
           <NavigationText>You</NavigationText>
-        </NavigationItem>
-        <MyChannelContainer isOpen={isExpandOpen}>
+        </NavigationItem> */}
+        <MyChannelContainer>
           <MyStudio>
             <NavigationText>
               <EditMovieIcon fontSize="small" />
@@ -233,20 +233,6 @@ function Sidebar() {
           <TrendingText>Trending </TrendingText>
         </NavigationItem>
         <ExpandContainer>
-          <ThumbnailContainer>
-            <Thumbnail src="https://i.ibb.co/Jn12dqF/unnamed.jpg" alt="alt" />
-            <InfoContainer>
-              <ImageTitle>Title</ImageTitle>
-              <Uploader>Uploader</Uploader>
-            </InfoContainer>
-          </ThumbnailContainer>
-          <ThumbnailContainer>
-            <Thumbnail src="https://i.ibb.co/Jn12dqF/unnamed.jpg" alt="alt" />
-            <InfoContainer>
-              <ImageTitle>Title</ImageTitle>
-              <Uploader>Uploader</Uploader>
-            </InfoContainer>
-          </ThumbnailContainer>
           <ThumbnailContainer>
             <Thumbnail src="https://i.ibb.co/Jn12dqF/unnamed.jpg" alt="alt" />
             <InfoContainer>
