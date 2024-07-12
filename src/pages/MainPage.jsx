@@ -216,14 +216,14 @@ const ViewNumber = styled.div`
   font-size: 0.7rem;
   text-align: right;
   margin-right: 1rem;
-  margin-top: -1.1rem;
+  margin-top: -0.9rem;
 `;
 
 const ViewIcon = styled(VisibilityIcon)`
   color: #ffffff;
   margin-right: 0.3rem;
   margin-left: 11.3rem;
-  margin-top: 0.5rem;
+  margin-top: 0.6rem;
 `;
 
 const TitleText1 = styled.div`
