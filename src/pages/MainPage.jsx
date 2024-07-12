@@ -111,7 +111,7 @@ const RoundCover = styled.button`
 const TrendArrowFunction = styled(ArrowForwardIosIcon)`
   display: flex;
   width: 3rem;
-  margin-top: 8.5%;
+  margin-top: 7.8%;
   cursor: pointer;
   color: ${(props) => (props.disabled ? 'transparent' : '#7b7b7b')};
   transform: ${(props) => (props.isPrev ? 'rotate(0deg)' : 'rotate(180deg)')};
