@@ -11,7 +11,7 @@ const Bar = styled.div`
   display: flex;
   justify-content: start;
   align-items: center; /* 수직 중앙 정렬 */
-  border-bottom: 1px solid #17032d;
+  border-bottom: 1px solid #380272;
 `;
 
 const Searchbar = styled.div`
