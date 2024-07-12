@@ -160,7 +160,8 @@ const OverlayText = styled.p`
   margin: 0.5rem 0;
   display: flex;
   align-items: center;
-  font-size: 1rem;
+  font-size: 1.3rem;
+  font-weight: 550;
   gap: 0.5rem;
 `;
 
@@ -168,7 +169,7 @@ const AlbumCover = ({ pic, title, view }) => (
   <AlbumCoverContainer>
     <AlbumCoverImage src={pic} alt={title} />
     <Overlay className="overlay">
-      <OverlayText>Title : {title}</OverlayText>
+      <OverlayText>{title}</OverlayText>
       <OverlayText>
         <VisibilityIcon /> {view}
       </OverlayText>
@@ -179,7 +180,7 @@ const AlbumCover = ({ pic, title, view }) => (
 const MyContainer = styled.div`
   display: flex;
   flex-direction: row;
-  width: 75%;
+  width: 72.5%;
   height: 14rem;
   padding-right: 2rem;
   padding-left: 5rem;
@@ -196,7 +197,7 @@ const ProfileName = styled.p`
 
 const Button15 = styled.button`
   width: 6rem;
-  background: #b621fe;
+  background: #6a069c;
   border: none;
   z-index: 1;
   position: relative;
@@ -205,8 +206,9 @@ const Button15 = styled.button`
   font-size: 1rem;
   cursor: pointer;
   overflow: hidden;
-  border-radius: 5px;
+  border-radius: 1rem;
   outline: none;
+  font-family: 'SUIT', sans-serif;
 
   &:hover {
     color: #fff;
@@ -308,9 +310,9 @@ function Mypage() {
             사랑, 그놈...
           </ProText>
           <ExtraFunction>
-            <YouTubeIconEdit fontSize="large" />
+            <YouTubeIconEdit fontSize="medium" />
             <ThemeProvider theme={theme}>
-              <InstagramIconEdit color="gradient" fontSize="large" />
+              <InstagramIconEdit color="gradient" fontSize="medium" />
             </ThemeProvider>
           </ExtraFunction>
         </InfoContainer>

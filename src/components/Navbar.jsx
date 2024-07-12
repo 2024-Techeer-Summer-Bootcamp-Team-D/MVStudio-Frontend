@@ -9,9 +9,9 @@ const Bar = styled.div`
   height: 5rem;
   background-color: #05000a;
   display: flex;
-  justify-content: start;
+  justify-content: center;
   align-items: center; /* 수직 중앙 정렬 */
-  border-bottom: 1px solid #17032d;
+  border-bottom: 1px solid #380272;
 `;
 
 const Searchbar = styled.div`
@@ -20,6 +20,7 @@ const Searchbar = styled.div`
   margin-top: -1rem;
   background-color: #b8b8b8;
   border-radius: 2rem;
+  margin-left: 10%;
   display: flex;
   align-items: center; /* 수직 중앙 정렬 */
   justify-content: flex-start; /* 수평 오른쪽 정렬 */
@@ -27,7 +28,7 @@ const Searchbar = styled.div`
 `;
 
 const Logo = styled.div`
-  position: relative;
+  position: absolute;
   left: 1rem;
   font-family: 'SUIT', sans-serif;
   font-size: 2.5rem;

@@ -111,7 +111,7 @@ const RoundCover = styled.button`
 const TrendArrowFunction = styled(ArrowForwardIosIcon)`
   display: flex;
   width: 3rem;
-  margin-top: 8.5%;
+  margin-top: 7.8%;
   cursor: pointer;
   color: ${(props) => (props.disabled ? 'transparent' : '#7b7b7b')};
   transform: ${(props) => (props.isPrev ? 'rotate(0deg)' : 'rotate(180deg)')};
@@ -192,7 +192,7 @@ const Array3List = styled.div`
 const TrendImageOverlay = styled.div`
   position: absolute;
   bottom: 0;
-  width: 21.9%;
+  width: 22%;
   height: 50%;
   background-color: rgba(0, 0, 0, 0.5);
   backdrop-filter: blur(4px);
@@ -200,7 +200,7 @@ const TrendImageOverlay = styled.div`
   border-bottom-right-radius: 1.2rem;
   color: white;
   font-size: 0.8rem;
-  top: 10.9rem;
+  top: 11rem;
 `;
 
 const FontMargin = styled.div`
@@ -216,14 +216,14 @@ const ViewNumber = styled.div`
   font-size: 0.7rem;
   text-align: right;
   margin-right: 1rem;
-  margin-top: -1.1rem;
+  margin-top: -0.9rem;
 `;
 
 const ViewIcon = styled(VisibilityIcon)`
   color: #ffffff;
   margin-right: 0.3rem;
   margin-left: 11.3rem;
-  margin-top: 0.5rem;
+  margin-top: 0.6rem;
 `;
 
 const TitleText1 = styled.div`
