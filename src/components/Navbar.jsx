@@ -7,18 +7,20 @@ import ignorePath from '../util/igonerePath';
 const Bar = styled.div`
   width: 100%;
   height: 5rem;
-  color: #0e0717;
-  background-color: #0e0717;
+  background-color: #05000a;
   display: flex;
-  justify-content: start;
+  justify-content: center;
   align-items: center; /* 수직 중앙 정렬 */
+  border-bottom: 1px solid #380272;
 `;
 
 const Searchbar = styled.div`
-  width: 60%;
-  height: 60%;
-  background-color: #ffffff;
+  width: 40%;
+  height: 40%;
+  margin-top: -1rem;
+  background-color: #b8b8b8;
   border-radius: 2rem;
+  margin-left: 10%;
   display: flex;
   align-items: center; /* 수직 중앙 정렬 */
   justify-content: flex-start; /* 수평 오른쪽 정렬 */
@@ -26,7 +28,7 @@ const Searchbar = styled.div`
 `;
 
 const Logo = styled.div`
-  position: relative;
+  position: absolute;
   left: 1rem;
   font-family: 'SUIT', sans-serif;
   font-size: 2.5rem;
@@ -36,6 +38,7 @@ const Logo = styled.div`
 `;
 
 const SearchInput = styled.input`
+  background-color: #b8b8b8;
   font-size: 1rem;
   border-radius: 2rem;
   width: 100%;

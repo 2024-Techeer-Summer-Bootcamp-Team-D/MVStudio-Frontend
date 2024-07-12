@@ -6,12 +6,13 @@ import styled from 'styled-components';
 const Button = styled.button`
   background: linear-gradient(45deg, #b75dfd 30%, #ffa9a9 90%);
   border-radius: 1rem;
-  width: 20rem;
+  width: 16rem;
   height: 3rem;
   font-size: 1rem;
   color: white;
   text-transform: none;
-  margin-top: 7rem;
+  margin-top: 1.5rem;
+  font-family: 'SUIT', sans-serif;
 `;
 
 const MainButton = ({ onClick, children }) => {

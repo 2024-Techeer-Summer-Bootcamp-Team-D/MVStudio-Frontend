@@ -1,110 +1,129 @@
 /* eslint-disable react/prop-types */
-import React, { useEffect, useRef, useState } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import AddIcon from '@mui/icons-material/Add';
-import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import HomeIcon from '@mui/icons-material/Home';
 import WhatshotIcon from '@mui/icons-material/Whatshot';
-import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
+// import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
 import ignorePath from '../util/igonerePath';
+import EqualizerIcon from '@mui/icons-material/Equalizer';
+import MovieIcon from '@mui/icons-material/Movie';
 
 const Container = styled.div`
   background-color: #e3ecf1;
+  height: 100%;
 `;
 
 const SidebarContainer = styled.div`
-  background-image: url(https://i.ibb.co/3TyNxtw/background.png);
-  background-size: 500em 500rem;
+  background-color: #05000a;
   position: relative;
-  bottom: 0;
-  left: 0;
   color: #fafafa;
   height: 100%;
   z-index: 99;
-  width: 20rem;
+  width: 18rem;
+  border-right: 1px solid #380272;
   transform: translateX(${({ xPosition }) => -xPosition}px);
 `;
 
 const HomeItem = styled.div`
   display: flex;
+  height: 3rem;
   align-items: center;
-  padding: 1rem 1.25rem;
+  margin-left: 1rem;
+  margin-right: 1rem;
+  padding-left: 0.25rem;
   cursor: pointer;
   &:hover {
     background-color: #333333;
-    border-radius: 1.2rem; /* Adjust as needed */
+    border-radius: 0.5rem; /* Adjust as needed */
   }
 `;
 
 const CreateItem = styled.div`
   display: flex;
+  height: 3rem;
   align-items: center;
-  padding: 1rem 1.25rem;
+  margin-left: 1rem;
+  margin-right: 1rem;
+  padding-left: 0.25rem;
   cursor: pointer;
   &:hover {
     background-color: #333333;
-    border-radius: 1.2rem;
+    border-radius: 0.5rem;
   }
 `;
 
 const NavigationItem = styled.div`
   display: flex;
+  height: 3rem;
   align-items: center;
-  padding: 1rem 1.25rem;
+  margin-left: 1rem;
+  margin-right: 1rem;
+  padding-left: 0.25rem;
   cursor: pointer;
   &:hover {
     background-color: #333333;
-    border-radius: 1.2rem;
+    border-radius: 0.5rem;
   }
 `;
 
-const NavigationText = styled.p`
+const MyStudio = styled.div`
+  display: flex;
+  height: 3rem;
+  align-items: center;
+  margin-left: 0.4rem;
+  margin-right: 1rem;
+  padding-left: 0.25rem;
+  gap: 0.5rem;
+  cursor: pointer;
+  &:hover {
+    background-color: #333333;
+    border-radius: 0.5rem;
+  }
+`;
+
+const Statics = styled.div`
+  display: flex;
+  height: 3rem;
+  align-items: center;
+  margin-left: 0.4rem;
+  margin-right: 1rem;
+  padding-left: 0.25rem;
+  gap: 0.5rem;
+  cursor: pointer;
+  &:hover {
+    background-color: #333333;
+    border-radius: 0.5rem;
+  }
+`;
+
+const NavigationText = styled.div`
   margin-left: 0.625rem;
   font-weight: 500;
-  font-size: 1.5rem;
+  font-size: 1.2rem;
+  gap: 0.5rem;
 `;
 
 const TrendingText = styled.p`
   margin-left: 0.625rem;
   padding-right: 2.5rem;
   font-weight: 500;
-  font-size: 1.5rem;
-`;
-
-const ExpandButton = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 1.25rem;
-  cursor: pointer;
-`;
-
-const ExpandIcon = styled(ArrowForwardIosIcon)`
-  transform: ${({ isOpen }) => (isOpen ? 'rotate(90deg)' : 'rotate(0deg)')};
-  transition: transform 0.3s ease;
-`;
-
-const Content = styled.div`
-  padding: 1.25rem;
+  font-size: 1.2rem;
 `;
 
 const ExpandContainer = styled.div`
-  visibility: ${({ isOpen }) => (isOpen ? 'visible' : 'hidden')};
   padding: 1.25rem;
   display: flex;
   flex-direction: column;
-  gap: 1rem;
-  max-height: ${({ isOpen }) => (isOpen ? '1000px' : '0')};
-  opacity: ${({ isOpen }) => (isOpen ? '1' : '0')};
-  overflow: hidden;
+  gap: 1.5rem;
   transition:
     max-height 0.5s ease,
     opacity 0.5s ease;
 `;
 
 const Thumbnail = styled.img`
-  width: 3rem;
-  height: 3rem;
+  width: 2.5rem;
+  height: 2.5rem;
   border-radius: 50%;
 `;
 
@@ -121,38 +140,58 @@ const ThumbnailContainer = styled.div`
 
 const ImageTitle = styled.div`
   font-weight: bold;
-  font-size: 1.2rem;
+  font-size: 1.1rem;
 `;
 
 const Uploader = styled.div`
-  font-size: 0.75rem;
+  font-size: 0.7rem;
   color: #a4a4a4;
 `;
 
-function Sidebar({ children }) {
-  const [xPosition, setX] = useState(0);
-  const [isExpandOpen, setExpandOpen] = useState(false);
+const MyChannelContainer = styled.div`
+  /* visibility: ${({ isOpen }) => (isOpen ? 'visible' : 'hidden')}; */
+  display: flex;
+  flex-direction: column;
+  /* max-height: ${({ isOpen }) => (isOpen ? '1000px' : '0')};
+  opacity: ${({ isOpen }) => (isOpen ? '1' : '0')}; */
+  overflow: hidden;
+  transition:
+    max-height 0.5s ease,
+    opacity 0.5s ease;
+`;
 
-  const side = useRef();
+const EditMovieIcon = styled(MovieIcon)`
+  margin-right: 0.6rem;
+`;
 
-  const handleClose = (e) => {
-    let sideArea = side.current;
-    let sideChildren = side.current.contains(e.target);
-    if (sideArea && !sideChildren) {
-      setX(0);
-    }
-  };
+const EditEqualizerIcon = styled(EqualizerIcon)`
+  margin-right: 0.6rem;
+`;
 
-  const toggleExpand = () => {
-    setExpandOpen(!isExpandOpen);
-  };
+function Sidebar() {
+  // const [xPosition, setX] = useState(0);
+  // const [isExpandOpen, setExpandOpen] = useState(false);
 
-  useEffect(() => {
-    window.addEventListener('click', handleClose);
-    return () => {
-      window.removeEventListener('click', handleClose);
-    };
-  }, []);
+  // const side = useRef();
+
+  // const handleClose = (e) => {
+  //   let sideArea = side.current;
+  //   let sideChildren = side.current.contains(e.target);
+  //   if (sideArea && !sideChildren) {
+  //     setX(0);
+  //   }
+  // };
+
+  // const toggleExpand = () => {
+  //   setExpandOpen(!isExpandOpen);
+  // };
+
+  // useEffect(() => {
+  //   window.addEventListener('click', handleClose);
+  //   return () => {
+  //     window.removeEventListener('click', handleClose);
+  //   };
+  // }, []);
 
   const isIgnoredPath = ignorePath().includes(location.pathname);
 
@@ -162,27 +201,59 @@ function Sidebar({ children }) {
 
   return (
     <Container>
-      <SidebarContainer ref={side} xPosition={xPosition}>
+      <SidebarContainer>
         <HomeItem>
-          <HomeIcon />
+          <HomeIcon fontSize="small" />
           <NavigationText>Home</NavigationText>
         </HomeItem>
         <CreateItem>
-          <AddIcon />
+          <AddIcon fontSize="small" />
           <NavigationText>Create</NavigationText>
         </CreateItem>
+        {/* <NavigationItem onClick={toggleExpand}>
+          <PersonOutlineIcon fontSize="small" />
+          <NavigationText>You</NavigationText>
+        </NavigationItem> */}
+        <MyChannelContainer>
+          <MyStudio>
+            <NavigationText>
+              <EditMovieIcon fontSize="small" />
+              My Studio
+            </NavigationText>
+          </MyStudio>
+          <Statics>
+            <NavigationText>
+              <EditEqualizerIcon fontSize="small" />
+              Statics
+            </NavigationText>
+          </Statics>
+        </MyChannelContainer>
         <NavigationItem>
-          <PersonOutlineIcon />
-          <NavigationText>Person</NavigationText>
-        </NavigationItem>
-        <NavigationItem>
-          <WhatshotIcon />
+          <WhatshotIcon fontSize="small" />
           <TrendingText>Trending </TrendingText>
-          <ExpandButton onClick={toggleExpand}>
-            <ExpandIcon isOpen={isExpandOpen} />
-          </ExpandButton>
         </NavigationItem>
-        <ExpandContainer isOpen={isExpandOpen}>
+        <ExpandContainer>
+          <ThumbnailContainer>
+            <Thumbnail src="https://i.ibb.co/Jn12dqF/unnamed.jpg" alt="alt" />
+            <InfoContainer>
+              <ImageTitle>Title</ImageTitle>
+              <Uploader>Uploader</Uploader>
+            </InfoContainer>
+          </ThumbnailContainer>
+          <ThumbnailContainer>
+            <Thumbnail src="https://i.ibb.co/Jn12dqF/unnamed.jpg" alt="alt" />
+            <InfoContainer>
+              <ImageTitle>Title</ImageTitle>
+              <Uploader>Uploader</Uploader>
+            </InfoContainer>
+          </ThumbnailContainer>
+          <ThumbnailContainer>
+            <Thumbnail src="https://i.ibb.co/Jn12dqF/unnamed.jpg" alt="alt" />
+            <InfoContainer>
+              <ImageTitle>Title</ImageTitle>
+              <Uploader>Uploader</Uploader>
+            </InfoContainer>
+          </ThumbnailContainer>
           <ThumbnailContainer>
             <Thumbnail src="https://i.ibb.co/Jn12dqF/unnamed.jpg" alt="alt" />
             <InfoContainer>
@@ -213,7 +284,6 @@ function Sidebar({ children }) {
           </ThumbnailContainer>
         </ExpandContainer>
       </SidebarContainer>
-      <Content>{children}</Content>
     </Container>
   );
 }

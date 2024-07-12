@@ -1,15 +1,13 @@
 /* eslint-disable react/prop-types */
 import React from 'react';
-import './index.css';
+import './styles/index.css';
 import styled from 'styled-components';
 import Sidebar from './components/Sidebar';
 import Navbar from './components/Navbar';
+import GlobalStyles from './styles/GlobalStyles';
 
 const BackLayout = styled.div`
-  background-image: url(https://i.ibb.co/3TyNxtw/background.png);
-  background-size: 500em 500rem;
-  background-repeat: no-repeat;
-
+  background-color: #05000a;
   width: 100%;
   height: 100%;
   min-height: 100vh;
@@ -25,6 +23,7 @@ const ContentArea = styled.div`
 function App({ children }) {
   return (
     <BackLayout>
+      <GlobalStyles />
       <Navbar />
       <ContentArea>
         <Sidebar />
