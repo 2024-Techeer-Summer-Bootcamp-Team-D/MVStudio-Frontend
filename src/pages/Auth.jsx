@@ -7,6 +7,8 @@ import Select from '@mui/material/Select';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import dayjs from 'dayjs';
+import { postRegister } from '../api/member';
 
 const GlobalStyle = createGlobalStyle`
   * {
@@ -240,13 +242,31 @@ const LogoImage = styled.img`
   margin-bottom: 1rem;
 `;
 
+const successLogin = (id) => {
+  console.log('id:', id);
+};
+
+const failLogin = (data) => {
+  console.log('data:', data);
+};
+
 const SignUpForm = () => {
   const [idValue, setIdValue] = useState('');
   const [nicknameValue, setNicknameValue] = useState('');
   const [passwordValue, setPasswordValue] = useState('');
   const [passwordCheckValue, setPasswordCheckValue] = useState('');
-  const [country, setCountry] = useState('');
+  const [country, setCountry] = useState();
   const [gender, setGender] = useState('');
+  const [birthday, setBirthday] = useState(dayjs());
+
+  // const signUp = (id, password, nickname, birthday, gender, country) => {
+  //   console.log('ID:', id);
+  //   console.log('Password:', password);
+  //   console.log('Nickname:', nickname);
+  //   console.log('Birthday:', birthday.format('YYYY-MM-DD'));
+  //   console.log('Gender:', gender);
+  //   console.log('Country:', country);
+  // };
 
   return (
     <StyledForm action="#">
@@ -276,6 +296,7 @@ const SignUpForm = () => {
         value={passwordCheckValue}
         onChange={(e) => setPasswordCheckValue(e.target.value)}
       />
+      {/* 페이지 넘어가게 , 비밀번호 확인 , 길이제한 , 성별넣어주세요, 로컬스톨지 넣기, 닉네임 영어 넣기, 하잇 */}
       <div
         style={{
           width: '90%',
@@ -307,9 +328,9 @@ const SignUpForm = () => {
             label="Country"
             sx={{ border: 'none' }}
           >
-            <MenuItem value="Korea">Korea</MenuItem>
-            <MenuItem value="Japan">Japan</MenuItem>
-            <MenuItem value="USA">USA</MenuItem>
+            <MenuItem value={1}>Korea</MenuItem>
+            <MenuItem value={2}>Japan</MenuItem>
+            <MenuItem value={3}>USA</MenuItem>
           </Select>
         </FormControl>
 
@@ -325,7 +346,9 @@ const SignUpForm = () => {
               borderRadius: '0.5rem',
               fontSize: '1rem',
             }}
+            value={birthday}
             label="Birthday"
+            onChange={(e) => setBirthday(e.target.value)}
           />
         </LocalizationProvider>
 
@@ -349,12 +372,36 @@ const SignUpForm = () => {
             autoWidth
             label="gender"
           >
-            <MenuItem value="Korea">Male</MenuItem>
-            <MenuItem value="Japan">Famale</MenuItem>
+            <MenuItem value="M">Male</MenuItem>
+            <MenuItem value="F">Famale</MenuItem>
           </Select>
         </FormControl>
       </div>
-      <StyledButton color="purple">Sign Up</StyledButton>
+      <StyledButton
+        color="purple"
+        onClick={() =>
+          postRegister(
+            idValue,
+            passwordValue,
+            nicknameValue,
+            birthday.format('YYYY-MM-DD'),
+            gender,
+            parseInt(country, 10),
+          )
+            .then((data) => {
+              if ((data.status === '201') & (data.code === 'A001')) {
+                successLogin(data.id);
+              } else {
+                failLogin(data);
+              }
+            })
+            .catch((err) => {
+              failLogin(err);
+            })
+        }
+      >
+        Sign Up
+      </StyledButton>
     </StyledForm>
   );
 };
@@ -441,9 +488,8 @@ const TearGlass2 = styled.img`
   filter: blur(2px);
 `;
 
-const App = () => {
+const Auth = () => {
   const [rightPanelActive, setRightPanelActive] = useState(false);
-
   return (
     <BackLayout>
       <CircleGlass src="https://i.ibb.co/f2gnqxw/image.png" />
@@ -494,4 +540,4 @@ const App = () => {
   );
 };
 
-export default App;
+export default Auth;
