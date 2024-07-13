@@ -244,10 +244,8 @@ const LogoImage = styled.img`
 
 const successLogin = (id) => {
   console.log('id:', id);
-};
-
-const failLogin = (data) => {
-  console.log('data:', data);
+  localStorage.setItem('memberId', id);
+  window.location.href = 'http://localhost:4173/mainpage';
 };
 
 const SignUpForm = () => {
@@ -258,15 +256,11 @@ const SignUpForm = () => {
   const [country, setCountry] = useState();
   const [gender, setGender] = useState('');
   const [birthday, setBirthday] = useState(dayjs());
+  const [loginError, setLoginError] = useState('');
 
-  // const signUp = (id, password, nickname, birthday, gender, country) => {
-  //   console.log('ID:', id);
-  //   console.log('Password:', password);
-  //   console.log('Nickname:', nickname);
-  //   console.log('Birthday:', birthday.format('YYYY-MM-DD'));
-  //   console.log('Gender:', gender);
-  //   console.log('Country:', country);
-  // };
+  const duplicationLogin = () => {
+    setLoginError('id가 중복입니다!');
+  };
 
   return (
     <StyledForm action="#">
@@ -296,7 +290,7 @@ const SignUpForm = () => {
         value={passwordCheckValue}
         onChange={(e) => setPasswordCheckValue(e.target.value)}
       />
-      {/* 페이지 넘어가게 , 비밀번호 확인 , 길이제한 , 성별넣어주세요, 로컬스톨지 넣기, 닉네임 영어 넣기, 하잇 */}
+      {/* 페이지 넘어가게(완) , 비밀번호 확인 , 길이제한 , 성별넣어주세요, 로컬스톨지 넣기(완), 닉네임 영어 넣기, 하잇 */}
       <div
         style={{
           width: '90%',
@@ -363,7 +357,7 @@ const SignUpForm = () => {
             fontSize: '1rem',
           }}
         >
-          <InputLabel id="country-label">Gender</InputLabel>
+          <InputLabel id="gender-label">Gender</InputLabel>
           <Select
             labelId="gender-label"
             id="gender"
@@ -373,32 +367,65 @@ const SignUpForm = () => {
             label="gender"
           >
             <MenuItem value="M">Male</MenuItem>
-            <MenuItem value="F">Famale</MenuItem>
+            <MenuItem value="F">Female</MenuItem>
           </Select>
         </FormControl>
       </div>
+
+      {/* Error Message Display */}
+      {loginError && <div style={{ color: 'red' }}>{loginError}</div>}
+
       <StyledButton
         color="purple"
-        onClick={() =>
-          postRegister(
-            idValue,
-            passwordValue,
-            nicknameValue,
-            birthday.format('YYYY-MM-DD'),
-            gender,
-            parseInt(country, 10),
-          )
-            .then((data) => {
-              if ((data.status === '201') & (data.code === 'A001')) {
-                successLogin(data.id);
-              } else {
-                failLogin(data);
-              }
-            })
-            .catch((err) => {
-              failLogin(err);
-            })
-        }
+        onClick={() => {
+          const validateInputs = () => {
+            if (
+              !idValue ||
+              !nicknameValue ||
+              !passwordValue ||
+              !passwordCheckValue ||
+              !gender ||
+              !country
+            ) {
+              setLoginError('입력하지 않은 칸이 있어요!');
+              return false;
+            }
+
+            if (passwordValue !== passwordCheckValue) {
+              setLoginError('비밀번호가 일치하지 않습니다.');
+              return false;
+            }
+
+            if (nicknameValue.length > 10) {
+              setLoginError('nickname의 길이가 10글자 이내로 해주세요!');
+              return false;
+            }
+
+            setLoginError(''); // Clear any existing error messages
+            return true;
+          };
+
+          if (validateInputs()) {
+            postRegister(
+              idValue,
+              passwordValue,
+              nicknameValue,
+              birthday.format('YYYY-MM-DD'),
+              gender,
+              parseInt(country, 10),
+            )
+              .then((resp) => {
+                if (resp.status === 201 && resp.code === 'A001') {
+                  successLogin(resp.id);
+                } else if (resp.status === 200) {
+                  duplicationLogin();
+                }
+              })
+              .catch((err) => {
+                console.log(err);
+              });
+          }
+        }}
       >
         Sign Up
       </StyledButton>
