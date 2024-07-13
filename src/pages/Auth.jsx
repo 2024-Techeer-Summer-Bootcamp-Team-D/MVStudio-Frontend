@@ -8,7 +8,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import dayjs from 'dayjs';
-import { postRegister } from '../api/member';
+import { postLogin, postRegister } from '../api/member';
 
 const GlobalStyle = createGlobalStyle`
   * {
@@ -257,11 +257,6 @@ const SignUpForm = () => {
   const [gender, setGender] = useState('');
   const [birthday, setBirthday] = useState(dayjs());
   const [loginError, setLoginError] = useState('');
-
-  const duplicationLogin = () => {
-    setLoginError('id가 중복입니다!');
-  };
-
   return (
     <StyledForm action="#">
       <BoldFont>Create Account</BoldFont>
@@ -436,17 +431,16 @@ const SignUpForm = () => {
 const SignInForm = () => {
   const [idValue, setIdValue] = useState('');
   const [passwordValue, setPasswordValue] = useState('');
+  const [loginError, setLoginError] = useState('');
 
   const handleIdChange = (e) => {
     const value = e.target.value;
     setIdValue(value);
-    console.log('ID value:', value);
   };
 
   const handlePasswordChange = (e) => {
     const value = e.target.value;
     setPasswordValue(value);
-    console.log('Password value:', value);
   };
 
   return (
@@ -465,7 +459,26 @@ const SignInForm = () => {
         value={passwordValue}
         onChange={handlePasswordChange}
       />
-      <StyledButton color="purple">LogIn</StyledButton>
+      {/* Error Message Display */}
+      {loginError && <div style={{ color: 'red' }}>{loginError}</div>}
+      <StyledButton
+        color="purple"
+        onClick={() =>
+          postLogin(idValue, passwordValue)
+            .then((resp) => {
+              if ((resp.status === 201) & (resp.code === 'A002')) {
+                successLogin(resp.id);
+              } else {
+                setLoginError('아이디와 비밀번호를 다시한번 확인해주세요!');
+              }
+            })
+            .catch(() => {
+              setLoginError('아이디와 비밀번호를 다시한번 확인해주세요!');
+            })
+        }
+      >
+        LogIn
+      </StyledButton>
     </StyledForm>
   );
 };
