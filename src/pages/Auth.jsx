@@ -88,7 +88,7 @@ const StyledForm = styled.form`
 `;
 
 const StyledButton = styled.button`
-  margin-top: 3rem;
+  margin-top: 2rem;
   border-radius: 1.25rem;
   border: none;
   cursor: pointer;
@@ -208,6 +208,13 @@ const Overlay = styled.div`
   transition: transform 0.6s ease-in-out;
   transform: ${({ rightPanelActive }) =>
     rightPanelActive ? 'translateX(50%)' : 'translateX(0)'};
+`;
+
+const ErrorContainer = styled.div`
+  margin-top: 2rem;
+  color: red;
+  font-size: 1rem;
+  font-weight: 550;
 `;
 
 const OverlayPanel = styled.div`
@@ -366,9 +373,7 @@ const SignUpForm = () => {
           </Select>
         </FormControl>
       </div>
-
-      {/* Error Message Display */}
-      {loginError && <div style={{ color: 'red' }}>{loginError}</div>}
+      {loginError && <ErrorContainer>{loginError}</ErrorContainer>}
 
       <StyledButton
         color="purple"
@@ -459,8 +464,7 @@ const SignInForm = () => {
         value={passwordValue}
         onChange={handlePasswordChange}
       />
-      {/* Error Message Display */}
-      {loginError && <div style={{ color: 'red' }}>{loginError}</div>}
+      {loginError && <ErrorContainer>{loginError}</ErrorContainer>}
       <StyledButton
         color="purple"
         onClick={() =>
