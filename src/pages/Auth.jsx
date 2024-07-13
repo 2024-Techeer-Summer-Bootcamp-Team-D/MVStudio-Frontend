@@ -418,7 +418,7 @@ const SignUpForm = () => {
                 if (resp.status === 201 && resp.code === 'A001') {
                   successLogin(resp.id);
                 } else if (resp.status === 200) {
-                  duplicationLogin();
+                  setLoginError('입력하신 id가 이미 있어요!');
                 }
               })
               .catch((err) => {
