@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled, { createGlobalStyle } from 'styled-components';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
@@ -11,6 +11,7 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import dayjs from 'dayjs';
 import { postLogin, postRegister } from '../api/member';
 import { useNavigate } from 'react-router-dom';
+import { getCountries } from '../api/member';
 
 const GlobalStyle = createGlobalStyle`
   * {
@@ -248,7 +249,8 @@ const LogoImage = styled.img`
   margin-bottom: 1rem;
 `;
 
-const SignUpForm = (successLogin) => {
+const SignUpForm = ({ successLogin }) => {
+  const [countryList, setCountryList] = useState();
   const [idValue, setIdValue] = useState('');
   const [nicknameValue, setNicknameValue] = useState('');
   const [passwordValue, setPasswordValue] = useState('');
@@ -257,6 +259,21 @@ const SignUpForm = (successLogin) => {
   const [gender, setGender] = useState('');
   const [birthday, setBirthday] = useState(dayjs());
   const [loginError, setLoginError] = useState('');
+
+  const englishAndNumbersRegex = /^[A-Za-z0-9]+$/;
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await getCountries();
+        setCountryList(response.data);
+      } catch {
+        console.error('나라 데이터 조회 오류,,');
+      }
+    };
+    fetchData();
+  }, []);
+
   return (
     <StyledForm>
       <BoldFont>Create Account</BoldFont>
@@ -317,9 +334,11 @@ const SignUpForm = (successLogin) => {
             label="Country"
             sx={{ border: 'none' }}
           >
-            <MenuItem value={1}>Korea</MenuItem>
-            <MenuItem value={2}>Japan</MenuItem>
-            <MenuItem value={3}>USA</MenuItem>
+            {countryList?.map((data) => (
+              <MenuItem key={data.id} value={data.id}>
+                {data.name}
+              </MenuItem>
+            ))}
           </Select>
         </FormControl>
 
@@ -369,6 +388,7 @@ const SignUpForm = (successLogin) => {
       {loginError && <ErrorContainer>{loginError}</ErrorContainer>}
 
       <StyledButton
+        type="button"
         color="purple"
         onClick={() => {
           const validateInputs = () => {
@@ -384,13 +404,18 @@ const SignUpForm = (successLogin) => {
               return false;
             }
 
+            if (!englishAndNumbersRegex.test(idValue)) {
+              setLoginError('ID는 영어로만 입력해 주세요!');
+              return false;
+            }
+
             if (passwordValue !== passwordCheckValue) {
               setLoginError('비밀번호가 일치하지 않습니다.');
               return false;
             }
 
             if (nicknameValue.length > 10) {
-              setLoginError('nickname의 길이가 10글자 이내로 해주세요!');
+              setLoginError('닉네임의 길이를 10글자 이내로 해주세요!');
               return false;
             }
 
@@ -459,6 +484,7 @@ const SignInForm = ({ successLogin }) => {
       />
       {loginError && <ErrorContainer>{loginError}</ErrorContainer>}
       <StyledButton
+        type="button"
         color="purple"
         onClick={() =>
           postLogin(idValue, passwordValue)

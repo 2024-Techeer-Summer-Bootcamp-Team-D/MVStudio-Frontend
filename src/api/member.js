@@ -42,3 +42,13 @@ export const postRegister = async (
     console.error('errorcode:', error);
   }
 };
+
+export const getCountries = async () => {
+  try {
+    const response = await jsonAxios.get('/members/countries/');
+    console.log('response:', response.data);
+    return response.data;
+  } catch (error) {
+    console.error('errorcode:', error);
+  }
+};
