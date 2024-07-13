@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import React, { useState } from 'react';
 import styled, { createGlobalStyle } from 'styled-components';
 import InputLabel from '@mui/material/InputLabel';
@@ -9,6 +10,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import dayjs from 'dayjs';
 import { postLogin, postRegister } from '../api/member';
+import { useNavigate } from 'react-router-dom';
 
 const GlobalStyle = createGlobalStyle`
   * {
@@ -110,7 +112,7 @@ const StyledButton = styled.button`
   letter-spacing: 1px;
   text-transform: uppercase;
   transition: transform 80ms ease-in;
-  &:active {
+  &:props.active {
     transform: scale(0.95);
   }
 `;
@@ -140,19 +142,18 @@ const SignInContainer = styled(FormContainer)`
   left: 0;
   width: 50%;
   z-index: 2;
-  transform: ${({ rightPanelActive }) =>
-    rightPanelActive ? 'translateX(100%)' : 'translateX(0)'};
+  transform: ${(props) =>
+    props.active ? 'translateX(100%)' : 'translateX(0)'};
 `;
 
 const SignUpContainer = styled(FormContainer)`
   left: 0;
   width: 50%;
-  opacity: ${({ rightPanelActive }) => (rightPanelActive ? 1 : 0)};
-  z-index: ${({ rightPanelActive }) => (rightPanelActive ? 5 : 1)};
-  transform: ${({ rightPanelActive }) =>
-    rightPanelActive ? 'translateX(100%)' : 'translateX(0)'};
-  animation: ${({ rightPanelActive }) =>
-    rightPanelActive ? 'show 0.6s' : 'none'};
+  opacity: ${(props) => (props.active ? 1 : 0)};
+  z-index: ${(props) => (props.active ? 5 : 1)};
+  transform: ${(props) =>
+    props.active ? 'translateX(100%)' : 'translateX(0)'};
+  animation: ${(props) => (props.active ? 'show 0.6s' : 'none')};
 
   @keyframes show {
     0%,
@@ -178,8 +179,8 @@ const OverlayContainer = styled.div`
   overflow: hidden;
   transition: transform 0.6s ease-in-out;
   z-index: 100;
-  transform: ${({ rightPanelActive }) =>
-    rightPanelActive ? 'translateX(-100%)' : 'translateX(0)'};
+  transform: ${(props) =>
+    props.active ? 'translateX(-100%)' : 'translateX(0)'};
 `;
 
 const StyledInput = styled.input`
@@ -206,8 +207,7 @@ const Overlay = styled.div`
   width: 200%;
   transform: translateX(0);
   transition: transform 0.6s ease-in-out;
-  transform: ${({ rightPanelActive }) =>
-    rightPanelActive ? 'translateX(50%)' : 'translateX(0)'};
+  transform: ${(props) => (props.active ? 'translateX(50%)' : 'translateX(0)')};
 `;
 
 const ErrorContainer = styled.div`
@@ -233,14 +233,13 @@ const OverlayPanel = styled.div`
 `;
 
 const OverlayLeft = styled(OverlayPanel)`
-  transform: ${({ rightPanelActive }) =>
-    rightPanelActive ? 'translateX(0)' : 'translateX(-20%)'};
+  transform: ${(props) =>
+    props.active ? 'translateX(0)' : 'translateX(-20%)'};
 `;
 
 const OverlayRight = styled(OverlayPanel)`
   right: 0;
-  transform: ${({ rightPanelActive }) =>
-    rightPanelActive ? 'translateX(20%)' : 'translateX(0)'};
+  transform: ${(props) => (props.active ? 'translateX(20%)' : 'translateX(0)')};
 `;
 
 const LogoImage = styled.img`
@@ -249,13 +248,7 @@ const LogoImage = styled.img`
   margin-bottom: 1rem;
 `;
 
-const successLogin = (id) => {
-  console.log('id:', id);
-  localStorage.setItem('memberId', id);
-  window.location.href = 'http://localhost:4173/mainpage';
-};
-
-const SignUpForm = () => {
+const SignUpForm = (successLogin) => {
   const [idValue, setIdValue] = useState('');
   const [nicknameValue, setNicknameValue] = useState('');
   const [passwordValue, setPasswordValue] = useState('');
@@ -265,7 +258,7 @@ const SignUpForm = () => {
   const [birthday, setBirthday] = useState(dayjs());
   const [loginError, setLoginError] = useState('');
   return (
-    <StyledForm action="#">
+    <StyledForm>
       <BoldFont>Create Account</BoldFont>
       <Description>or use your ID for registration</Description>
       <StyledInput
@@ -433,7 +426,7 @@ const SignUpForm = () => {
   );
 };
 
-const SignInForm = () => {
+const SignInForm = ({ successLogin }) => {
   const [idValue, setIdValue] = useState('');
   const [passwordValue, setPasswordValue] = useState('');
   const [loginError, setLoginError] = useState('');
@@ -449,7 +442,7 @@ const SignInForm = () => {
   };
 
   return (
-    <StyledForm action="#">
+    <StyledForm>
       <BoldFont>LogIn</BoldFont>
       <Description>or use your account</Description>
       <StyledInput
@@ -477,7 +470,7 @@ const SignInForm = () => {
               }
             })
             .catch(() => {
-              setLoginError('아이디와 비밀번호를 다시한번 확인해주세요!');
+              setLoginError('서버 오류입니다.');
             })
         }
       >
@@ -533,7 +526,16 @@ const TearGlass2 = styled.img`
 `;
 
 const Auth = () => {
-  const [rightPanelActive, setRightPanelActive] = useState(false);
+  const [panelActive, setPanelActive] = useState('');
+  const navigate = useNavigate();
+  const successLogin = (id) => {
+    console.log('함수 실행됌');
+    console.log('id:', id);
+    localStorage.setItem('memberId', id);
+    // window.location.href = 'http://localhost:4173/mainpage';
+    navigate(`/mainpage`);
+  };
+
   return (
     <BackLayout>
       <CircleGlass src="https://i.ibb.co/f2gnqxw/image.png" />
@@ -543,28 +545,25 @@ const Auth = () => {
       <TearGlass2 src="https://i.ibb.co/jL01sDq/image.png" />
       <GlobalStyle />
       <Container>
-        <SignUpContainer rightPanelActive={rightPanelActive}>
-          <SignUpForm />
+        <SignUpContainer active={panelActive}>
+          <SignUpForm successLogin={successLogin} />
         </SignUpContainer>
-        <SignInContainer rightPanelActive={rightPanelActive}>
-          <SignInForm />
+        <SignInContainer active={panelActive}>
+          <SignInForm successLogin={successLogin} />
         </SignInContainer>
-        <OverlayContainer rightPanelActive={rightPanelActive}>
-          <Overlay rightPanelActive={rightPanelActive}>
-            <OverlayLeft rightPanelActive={rightPanelActive}>
+        <OverlayContainer active={panelActive}>
+          <Overlay active={panelActive}>
+            <OverlayLeft active={panelActive}>
               <ShadowFont>MVStudio</ShadowFont>
               <MarginFont>당신만의 음악을 만들어보세요</MarginFont>
               <LogoImage src="https://i.ibb.co/0q0D1Ch/HEADPHONES-5.png" />
               <MarginFont>계정이 있으신가요?</MarginFont>
               <div style={{ marginBottom: '-2.5rem' }} />
-              <StyledButton
-                color="white"
-                onClick={() => setRightPanelActive(false)}
-              >
+              <StyledButton color="white" onClick={() => setPanelActive('')}>
                 LogIn
               </StyledButton>
             </OverlayLeft>
-            <OverlayRight rightPanelActive={rightPanelActive}>
+            <OverlayRight active={panelActive}>
               <ShadowFont>MVStudio</ShadowFont>
               <MarginFont>당신만의 음악을 만들어보세요</MarginFont>
               <LogoImage src="https://i.ibb.co/0q0D1Ch/HEADPHONES-5.png" />
@@ -572,7 +571,7 @@ const Auth = () => {
               <div style={{ marginBottom: '-2.5rem' }} />
               <StyledButton
                 color="white"
-                onClick={() => setRightPanelActive(true)}
+                onClick={() => setPanelActive('true')}
               >
                 Sign Up
               </StyledButton>
