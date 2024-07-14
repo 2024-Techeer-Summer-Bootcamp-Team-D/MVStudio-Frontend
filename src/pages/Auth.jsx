@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+/* eslint-disable react/prop-types */
+import React, { useState, useEffect } from 'react';
 import styled, { createGlobalStyle } from 'styled-components';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
@@ -7,6 +8,10 @@ import Select from '@mui/material/Select';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import dayjs from 'dayjs';
+import { postLogin, postRegister } from '../api/member';
+import { useNavigate } from 'react-router-dom';
+import { getCountries } from '../api/member';
 
 const GlobalStyle = createGlobalStyle`
   * {
@@ -86,7 +91,7 @@ const StyledForm = styled.form`
 `;
 
 const StyledButton = styled.button`
-  margin-top: 3rem;
+  margin-top: 2rem;
   border-radius: 1.25rem;
   border: none;
   cursor: pointer;
@@ -108,7 +113,7 @@ const StyledButton = styled.button`
   letter-spacing: 1px;
   text-transform: uppercase;
   transition: transform 80ms ease-in;
-  &:active {
+  &:props.active {
     transform: scale(0.95);
   }
 `;
@@ -138,19 +143,18 @@ const SignInContainer = styled(FormContainer)`
   left: 0;
   width: 50%;
   z-index: 2;
-  transform: ${({ rightPanelActive }) =>
-    rightPanelActive ? 'translateX(100%)' : 'translateX(0)'};
+  transform: ${(props) =>
+    props.active ? 'translateX(100%)' : 'translateX(0)'};
 `;
 
 const SignUpContainer = styled(FormContainer)`
   left: 0;
   width: 50%;
-  opacity: ${({ rightPanelActive }) => (rightPanelActive ? 1 : 0)};
-  z-index: ${({ rightPanelActive }) => (rightPanelActive ? 5 : 1)};
-  transform: ${({ rightPanelActive }) =>
-    rightPanelActive ? 'translateX(100%)' : 'translateX(0)'};
-  animation: ${({ rightPanelActive }) =>
-    rightPanelActive ? 'show 0.6s' : 'none'};
+  opacity: ${(props) => (props.active ? 1 : 0)};
+  z-index: ${(props) => (props.active ? 5 : 1)};
+  transform: ${(props) =>
+    props.active ? 'translateX(100%)' : 'translateX(0)'};
+  animation: ${(props) => (props.active ? 'show 0.6s' : 'none')};
 
   @keyframes show {
     0%,
@@ -176,8 +180,8 @@ const OverlayContainer = styled.div`
   overflow: hidden;
   transition: transform 0.6s ease-in-out;
   z-index: 100;
-  transform: ${({ rightPanelActive }) =>
-    rightPanelActive ? 'translateX(-100%)' : 'translateX(0)'};
+  transform: ${(props) =>
+    props.active ? 'translateX(-100%)' : 'translateX(0)'};
 `;
 
 const StyledInput = styled.input`
@@ -204,8 +208,14 @@ const Overlay = styled.div`
   width: 200%;
   transform: translateX(0);
   transition: transform 0.6s ease-in-out;
-  transform: ${({ rightPanelActive }) =>
-    rightPanelActive ? 'translateX(50%)' : 'translateX(0)'};
+  transform: ${(props) => (props.active ? 'translateX(50%)' : 'translateX(0)')};
+`;
+
+const ErrorContainer = styled.div`
+  margin-top: 2rem;
+  color: red;
+  font-size: 1rem;
+  font-weight: 550;
 `;
 
 const OverlayPanel = styled.div`
@@ -224,14 +234,13 @@ const OverlayPanel = styled.div`
 `;
 
 const OverlayLeft = styled(OverlayPanel)`
-  transform: ${({ rightPanelActive }) =>
-    rightPanelActive ? 'translateX(0)' : 'translateX(-20%)'};
+  transform: ${(props) =>
+    props.active ? 'translateX(0)' : 'translateX(-20%)'};
 `;
 
 const OverlayRight = styled(OverlayPanel)`
   right: 0;
-  transform: ${({ rightPanelActive }) =>
-    rightPanelActive ? 'translateX(20%)' : 'translateX(0)'};
+  transform: ${(props) => (props.active ? 'translateX(20%)' : 'translateX(0)')};
 `;
 
 const LogoImage = styled.img`
@@ -240,16 +249,33 @@ const LogoImage = styled.img`
   margin-bottom: 1rem;
 `;
 
-const SignUpForm = () => {
+const SignUpForm = ({ successLogin }) => {
+  const [countryList, setCountryList] = useState();
   const [idValue, setIdValue] = useState('');
   const [nicknameValue, setNicknameValue] = useState('');
   const [passwordValue, setPasswordValue] = useState('');
   const [passwordCheckValue, setPasswordCheckValue] = useState('');
-  const [country, setCountry] = useState('');
+  const [country, setCountry] = useState();
   const [gender, setGender] = useState('');
+  const [birthday, setBirthday] = useState(dayjs());
+  const [loginError, setLoginError] = useState('');
+
+  const englishAndNumbersRegex = /^[A-Za-z0-9]+$/;
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await getCountries();
+        setCountryList(response.data);
+      } catch {
+        console.error('나라 데이터 조회 오류,,');
+      }
+    };
+    fetchData();
+  }, []);
 
   return (
-    <StyledForm action="#">
+    <StyledForm>
       <BoldFont>Create Account</BoldFont>
       <Description>or use your ID for registration</Description>
       <StyledInput
@@ -276,6 +302,7 @@ const SignUpForm = () => {
         value={passwordCheckValue}
         onChange={(e) => setPasswordCheckValue(e.target.value)}
       />
+      {/* 페이지 넘어가게(완) , 비밀번호 확인 , 길이제한 , 성별넣어주세요, 로컬스톨지 넣기(완), 닉네임 영어 넣기, 하잇 */}
       <div
         style={{
           width: '90%',
@@ -307,9 +334,11 @@ const SignUpForm = () => {
             label="Country"
             sx={{ border: 'none' }}
           >
-            <MenuItem value="Korea">Korea</MenuItem>
-            <MenuItem value="Japan">Japan</MenuItem>
-            <MenuItem value="USA">USA</MenuItem>
+            {countryList?.map((data) => (
+              <MenuItem key={data.id} value={data.id}>
+                {data.name}
+              </MenuItem>
+            ))}
           </Select>
         </FormControl>
 
@@ -325,7 +354,9 @@ const SignUpForm = () => {
               borderRadius: '0.5rem',
               fontSize: '1rem',
             }}
+            value={birthday}
             label="Birthday"
+            onChange={(e) => setBirthday(e.target.value)}
           />
         </LocalizationProvider>
 
@@ -340,7 +371,7 @@ const SignUpForm = () => {
             fontSize: '1rem',
           }}
         >
-          <InputLabel id="country-label">Gender</InputLabel>
+          <InputLabel id="gender-label">Gender</InputLabel>
           <Select
             labelId="gender-label"
             id="gender"
@@ -349,34 +380,94 @@ const SignUpForm = () => {
             autoWidth
             label="gender"
           >
-            <MenuItem value="Korea">Male</MenuItem>
-            <MenuItem value="Japan">Famale</MenuItem>
+            <MenuItem value="M">Male</MenuItem>
+            <MenuItem value="F">Female</MenuItem>
           </Select>
         </FormControl>
       </div>
-      <StyledButton color="purple">Sign Up</StyledButton>
+      {loginError && <ErrorContainer>{loginError}</ErrorContainer>}
+
+      <StyledButton
+        type="button"
+        color="purple"
+        onClick={() => {
+          const validateInputs = () => {
+            if (
+              !idValue ||
+              !nicknameValue ||
+              !passwordValue ||
+              !passwordCheckValue ||
+              !gender ||
+              !country
+            ) {
+              setLoginError('입력하지 않은 칸이 있어요!');
+              return false;
+            }
+
+            if (!englishAndNumbersRegex.test(idValue)) {
+              setLoginError('ID는 영어로만 입력해 주세요!');
+              return false;
+            }
+
+            if (passwordValue !== passwordCheckValue) {
+              setLoginError('비밀번호가 일치하지 않습니다.');
+              return false;
+            }
+
+            if (nicknameValue.length > 10) {
+              setLoginError('닉네임의 길이를 10글자 이내로 해주세요!');
+              return false;
+            }
+
+            setLoginError(''); // Clear any existing error messages
+            return true;
+          };
+
+          if (validateInputs()) {
+            postRegister(
+              idValue,
+              passwordValue,
+              nicknameValue,
+              birthday.format('YYYY-MM-DD'),
+              gender,
+              parseInt(country, 10),
+            )
+              .then((resp) => {
+                if (resp.status === 201 && resp.code === 'A001') {
+                  successLogin(resp.id);
+                } else if (resp.status === 200) {
+                  setLoginError('입력하신 id가 이미 있어요!');
+                }
+              })
+              .catch((err) => {
+                console.log(err);
+              });
+          }
+        }}
+      >
+        Sign Up
+      </StyledButton>
     </StyledForm>
   );
 };
 
-const SignInForm = () => {
+const SignInForm = ({ successLogin }) => {
   const [idValue, setIdValue] = useState('');
   const [passwordValue, setPasswordValue] = useState('');
+  const [loginError, setLoginError] = useState('');
 
   const handleIdChange = (e) => {
     const value = e.target.value;
     setIdValue(value);
-    console.log('ID value:', value);
   };
 
   const handlePasswordChange = (e) => {
     const value = e.target.value;
     setPasswordValue(value);
-    console.log('Password value:', value);
   };
 
   return (
-    <StyledForm action="#">
+    <StyledForm>
       <BoldFont>LogIn</BoldFont>
       <Description>or use your account</Description>
       <StyledInput
@@ -391,7 +482,26 @@ const SignInForm = () => {
         value={passwordValue}
         onChange={handlePasswordChange}
       />
-      <StyledButton color="purple">LogIn</StyledButton>
+      {loginError && <ErrorContainer>{loginError}</ErrorContainer>}
+      <StyledButton
+        type="button"
+        color="purple"
+        onClick={() =>
+          postLogin(idValue, passwordValue)
+            .then((resp) => {
+              if ((resp.status === 201) & (resp.code === 'A002')) {
+                successLogin(resp.id);
+              } else {
+                setLoginError('아이디와 비밀번호를 다시한번 확인해주세요!');
+              }
+            })
+            .catch(() => {
+              setLoginError('서버 오류입니다.');
+            })
+        }
+      >
+        LogIn
+      </StyledButton>
     </StyledForm>
   );
 };
@@ -441,8 +551,16 @@ const TearGlass2 = styled.img`
   filter: blur(2px);
 `;
 
-const App = () => {
-  const [rightPanelActive, setRightPanelActive] = useState(false);
+const Auth = () => {
+  const [panelActive, setPanelActive] = useState('');
+  const navigate = useNavigate();
+  const successLogin = (id) => {
+    console.log('함수 실행됌');
+    console.log('id:', id);
+    localStorage.setItem('memberId', id);
+    // window.location.href = 'http://localhost:4173/mainpage';
+    navigate(`/mainpage`);
+  };
 
   return (
     <BackLayout>
@@ -453,28 +571,25 @@ const App = () => {
       <TearGlass2 src="https://i.ibb.co/jL01sDq/image.png" />
       <GlobalStyle />
       <Container>
-        <SignUpContainer rightPanelActive={rightPanelActive}>
-          <SignUpForm />
+        <SignUpContainer active={panelActive}>
+          <SignUpForm successLogin={successLogin} />
         </SignUpContainer>
-        <SignInContainer rightPanelActive={rightPanelActive}>
-          <SignInForm />
+        <SignInContainer active={panelActive}>
+          <SignInForm successLogin={successLogin} />
         </SignInContainer>
-        <OverlayContainer rightPanelActive={rightPanelActive}>
-          <Overlay rightPanelActive={rightPanelActive}>
-            <OverlayLeft rightPanelActive={rightPanelActive}>
+        <OverlayContainer active={panelActive}>
+          <Overlay active={panelActive}>
+            <OverlayLeft active={panelActive}>
               <ShadowFont>MVStudio</ShadowFont>
               <MarginFont>당신만의 음악을 만들어보세요</MarginFont>
               <LogoImage src="https://i.ibb.co/0q0D1Ch/HEADPHONES-5.png" />
               <MarginFont>계정이 있으신가요?</MarginFont>
               <div style={{ marginBottom: '-2.5rem' }} />
-              <StyledButton
-                color="white"
-                onClick={() => setRightPanelActive(false)}
-              >
+              <StyledButton color="white" onClick={() => setPanelActive('')}>
                 LogIn
               </StyledButton>
             </OverlayLeft>
-            <OverlayRight rightPanelActive={rightPanelActive}>
+            <OverlayRight active={panelActive}>
               <ShadowFont>MVStudio</ShadowFont>
               <MarginFont>당신만의 음악을 만들어보세요</MarginFont>
               <LogoImage src="https://i.ibb.co/0q0D1Ch/HEADPHONES-5.png" />
@@ -482,7 +597,7 @@ const App = () => {
               <div style={{ marginBottom: '-2.5rem' }} />
               <StyledButton
                 color="white"
-                onClick={() => setRightPanelActive(true)}
+                onClick={() => setPanelActive('true')}
               >
                 Sign Up
               </StyledButton>
@@ -494,4 +609,4 @@ const App = () => {
   );
 };
 
-export default App;
+export default Auth;
