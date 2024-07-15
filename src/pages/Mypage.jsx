@@ -1,19 +1,13 @@
 /* eslint-disable react/prop-types */
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import ChatOutlinedIcon from '@mui/icons-material/ChatOutlined';
 import YouTubeIcon from '@mui/icons-material/YouTube';
 import InstagramIcon from '@mui/icons-material/Instagram';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
 import VisibilityIcon from '@mui/icons-material/Visibility';
-
-const theme = createTheme({
-  palette: {
-    gradient: {
-      main: 'linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%)',
-    },
-  },
-});
+import { getList, getHistory } from '../api/musicVideos';
+import { getMemberInfo } from '../api/member';
+// import InfiniteScroll from 'react-infinite-scroll-component';
 
 const BigContainer = styled.div`
   display: flex;
@@ -165,13 +159,13 @@ const OverlayText = styled.p`
   gap: 0.5rem;
 `;
 
-const AlbumCover = ({ pic, title, view }) => (
+const AlbumCover = ({ data }) => (
   <AlbumCoverContainer>
-    <AlbumCoverImage src={pic} alt={title} />
+    <AlbumCoverImage src={data.cover_image} alt={data.subject} />
     <Overlay className="overlay">
-      <OverlayText>{title}</OverlayText>
+      <OverlayText>{data.subject}</OverlayText>
       <OverlayText>
-        <VisibilityIcon /> {view}
+        <VisibilityIcon /> {data.views}
       </OverlayText>
     </Overlay>
   </AlbumCoverContainer>
@@ -242,52 +236,57 @@ const Button15 = styled.button`
 
 function Mypage() {
   const [activeTab, setActiveTab] = useState('My Videos');
+  const [myVideos, setMyVideos] = useState();
+  const [recentView, setRecentView] = useState();
+  const [userInfo, setUserInfo] = useState();
+  const [videoCount, setVideoCount] = useState();
+  const memberId = localStorage.getItem('memberId');
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await getList(1, 9, null, memberId);
+        setMyVideos(response.music_videos);
+        setVideoCount(response.pagination.total_items);
+      } catch {
+        console.error('뮤비 목록 조회 오류');
+      }
+    };
+    fetchData();
+  }, []);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await getMemberInfo(memberId);
+        setUserInfo(response);
+      } catch {
+        console.error('회원  조회 오류');
+      }
+    };
+    fetchData();
+  }, []);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await getHistory(memberId, 1, 9);
+        setRecentView(response.music_videos);
+      } catch {
+        console.error('기록 목록 조회 오류');
+      }
+    };
+    fetchData();
+  }, []);
 
-  const Myvideos = [
-    {
-      pic: 'https://i.ibb.co/Jn12dqF/unnamed.jpg',
-      title: '사랑인가봐',
-      view: '0707',
-    },
-    {
-      pic: 'https://i.ibb.co/r5LYBrq/Khbujpf3-Vt7-XREZy-SOLv-Ynfg-Fypr7-KHSx-q9-N5r8ezs-GZkv-Vq-CLom3-St-WLt-XJTY5mk2-VMp-ZICPA4-E-w544-h.jpg',
-      title: '사랑인가봐',
-      view: '0707',
-    },
-    {
-      pic: 'https://i.ibb.co/sQ0Ts7X/x4jy1m2x5d-As-ZHfb-FK-Xwu-O3g-Rbr-Rq-m2jd-VYSlm7-A9-D6j9e-YFrm-Gk6-Zl-Ndhdz-CXT-o-Wk4-NGex-WLPheet-Q.jpg',
-      title: '사랑인가봐',
-      view: '0707',
-    },
-    {
-      pic: 'https://i.ibb.co/sQ0Ts7X/x4jy1m2x5d-As-ZHfb-FK-Xwu-O3g-Rbr-Rq-m2jd-VYSlm7-A9-D6j9e-YFrm-Gk6-Zl-Ndhdz-CXT-o-Wk4-NGex-WLPheet-Q.jpg',
-      title: '사랑인가봐',
-      view: '0707',
-    },
-  ];
-
-  const RecentlyViewed = [
-    {
-      pic: 'https://i.ibb.co/Fn93yzJ/1.webp',
-      title: '사랑인가봐',
-      view: '0707',
-    },
-    {
-      pic: 'https://i.ibb.co/vVhY1w6/2.webp',
-      title: '사랑인가봐',
-      view: '0707',
-    },
-    {
-      pic: 'https://i.ibb.co/g6vLFDV/3.webp',
-      title: '사랑인가봐',
-      view: '0707',
-    },
-    {
-      pic: 'https://i.ibb.co/99cZ04Y/4.webp',
-      title: '사랑인가봐',
-      view: '0707',
-    },
-  ];
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     try {
+  //       const response = await getList(1, 10, 'views');
+  //       setUserInfo(response.data);
+  //     } catch {
+  //       console.error('뮤비 목록 조회 오류');
+  //     }
+  //   };
+  //   fetchData();
+  // }, []);
 
   return (
     <BigContainer>
@@ -295,25 +294,23 @@ function Mypage() {
         <Profile>Profile</Profile>
       </TitleContainer>
       <MyContainer>
-        <ProImg
-          src="https://i.ibb.co/tQJcHkm/Kakao-Talk-20221107-190554542-2.jpg"
-          alt="남자 주인공"
-        />
+        <ProImg src={userInfo?.profile_image} alt={userInfo?.login_id} />
         <InfoContainer>
           <ProName>
-            <ProfileName>권혁진</ProfileName>
+            <ProfileName>{userInfo?.nickname}</ProfileName>
             <Button15>Edit</Button15>
           </ProName>
-          <VideoCount>동영상 24개</VideoCount>
+          <VideoCount>동영상 {videoCount}개</VideoCount>
           <ProText>
             <ChatOutlinedIcon />
-            사랑, 그놈...
+            <p>
+              {userInfo?.comment ? userInfo.comment : '코멘트를 추가해보세요..'}
+            </p>
           </ProText>
           <ExtraFunction>
             <YouTubeIconEdit fontSize="medium" />
-            <ThemeProvider theme={theme}>
-              <InstagramIconEdit color="gradient" fontSize="medium" />
-            </ThemeProvider>
+
+            <InstagramIconEdit color="gradient" fontSize="medium" />
           </ExtraFunction>
         </InfoContainer>
       </MyContainer>
@@ -332,11 +329,16 @@ function Mypage() {
         </Tab>
       </TabContainer>
       <AlbumContainer>
-        {(activeTab === 'My Videos' ? Myvideos : RecentlyViewed).map(
-          (item, index) => (
-            <AlbumCover key={index} {...item} />
-          ),
-        )}
+        {activeTab === 'My Videos' &&
+          myVideos !== null && // null 체크 추가
+          myVideos?.map((item, index) => (
+            <AlbumCover key={index} data={item} />
+          ))}
+        {activeTab === 'Recently Viewed' &&
+          recentView !== null && // null 체크 추가
+          recentView?.map((item, index) => (
+            <AlbumCover key={index} data={item} />
+          ))}
       </AlbumContainer>
     </BigContainer>
   );

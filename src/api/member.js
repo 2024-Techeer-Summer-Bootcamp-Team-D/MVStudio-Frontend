@@ -46,7 +46,17 @@ export const postRegister = async (
 export const getCountries = async () => {
   try {
     const response = await jsonAxios.get('/members/countries/');
-    console.log('response:', response.data);
+    console.log('response:', response);
+    return response.data;
+  } catch (error) {
+    console.error('errorcode:', error);
+  }
+};
+
+export const getMemberInfo = async (id) => {
+  try {
+    const response = await jsonAxios.get(`/members/${id}/`);
+    console.log('겟멤버:', response.data);
     return response.data;
   } catch (error) {
     console.error('errorcode:', error);
