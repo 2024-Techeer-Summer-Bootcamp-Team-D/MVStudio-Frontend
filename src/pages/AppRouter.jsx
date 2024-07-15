@@ -22,7 +22,7 @@ function AppRouter() {
           <Route path="/" element={<OnBoardingPage />} />
           <Route path="/auth" element={<Auth />} />
           <Route path="/test" element={<Main />} />
-          <Route path="/mypage" element={<Mypage />} />
+          <Route path="/users/:id" element={<Mypage />} />
           <Route path="/mainpage" element={<MainPage />} />
           <Route path="/search" element={<Search />} />
           <Route path="/lyricsselect" element={<LyricsSelect />} />

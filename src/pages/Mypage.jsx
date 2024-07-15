@@ -7,8 +7,7 @@ import InstagramIcon from '@mui/icons-material/Instagram';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import { getList, getHistory } from '../api/musicVideos';
 import { getMemberInfo } from '../api/member';
-import { useLocation } from 'react-router-dom';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 // import InfiniteScroll from 'react-infinite-scroll-component';
 
 const BigContainer = styled.div`
@@ -237,15 +236,14 @@ const Button15 = styled.button`
 `;
 
 function Mypage() {
-  const location = useLocation();
-  const searchParams = new URLSearchParams(location.search);
-  const memberId = searchParams.get('memberId');
+  const { id: memberId } = useParams();
   const [activeTab, setActiveTab] = useState('My Videos');
   const [myVideos, setMyVideos] = useState();
   const [recentView, setRecentView] = useState();
   const [userInfo, setUserInfo] = useState();
   const [videoCount, setVideoCount] = useState();
   const myId = localStorage.getItem('memberId');
+  console.log('멤버 아이디', memberId);
   useEffect(() => {
     const fetchData = async () => {
       try {
