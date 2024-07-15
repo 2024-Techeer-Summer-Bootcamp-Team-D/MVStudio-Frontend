@@ -5,7 +5,7 @@ export const postLogin = async (id, pw) => {
   try {
     const response = await jsonAxios.post(
       //await로 함수 끝날때까지 다른거 사용 x
-      '/members/login/',
+      '/members/login',
       {
         login_id: id,
         password: pw,
@@ -45,7 +45,7 @@ export const postRegister = async (
 
 export const getCountries = async () => {
   try {
-    const response = await jsonAxios.get('/members/countries/');
+    const response = await jsonAxios.get('/members/countries');
     console.log('response:', response);
     return response.data;
   } catch (error) {
@@ -55,7 +55,7 @@ export const getCountries = async () => {
 
 export const getMemberInfo = async (id) => {
   try {
-    const response = await jsonAxios.get(`/members/${id}/`);
+    const response = await jsonAxios.get(`/members/${id}`);
     console.log('겟멤버:', response.data);
     return response.data;
   } catch (error) {

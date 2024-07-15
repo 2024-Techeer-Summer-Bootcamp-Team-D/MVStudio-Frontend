@@ -17,7 +17,7 @@ export const getList = async (page, size, sort = null, member_id = null) => {
 export const getHistory = async (member_id, page, size) => {
   try {
     const response = await jsonAxios.get(
-      `/music-videos/histories-list/${member_id}/?page=${page}&size=${size}`,
+      `/music-videos/histories-list/${member_id}?page=${page}&size=${size}`,
     );
     console.log('기록 :', response.data);
     return response.data;
