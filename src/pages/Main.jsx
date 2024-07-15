@@ -5,8 +5,10 @@ import ChatOutlinedIcon from '@mui/icons-material/ChatOutlined';
 import YouTubeIcon from '@mui/icons-material/YouTube';
 import InstagramIcon from '@mui/icons-material/Instagram';
 import VisibilityIcon from '@mui/icons-material/Visibility';
-import { getList } from '../api/musicVideos';
-import InfiniteScroll from 'react-infinite-scroll-component';
+import { getList, getHistory } from '../api/musicVideos';
+import { getMemberInfo } from '../api/member';
+import { useNavigate, useParams } from 'react-router-dom';
+import BasicTabs from '../components/BasicTaps';
 
 const BigContainer = styled.div`
   display: flex;
@@ -17,18 +19,11 @@ const BigContainer = styled.div`
   width: 60%;
 `;
 
-const TitleContainer = styled.div`
-  display: flex;
-  flex-direction: row;
-  font-size: 2rem;
-  padding-left: 1rem;
-  width: 100%;
-`;
-
 const Profile = styled.p`
-  font-size: 1.2rem;
+  font-size: 2rem;
   color: #ffffff;
   margin-right: 2rem;
+  padding-left: 1rem;
 `;
 
 const ProImg = styled.img`
@@ -83,25 +78,6 @@ const InstagramIconEdit = styled(InstagramIcon)`
 const YouTubeIconEdit = styled(YouTubeIcon)`
   margin-right: 1rem;
   color: #a4a4a4;
-`;
-
-const TabContainer = styled.div`
-  display: flex;
-  flex-direction: row;
-  width: 100%;
-  padding-left: 1rem;
-  margin-top: 1rem;
-`;
-
-const Tab = styled.div`
-  font-size: 1.2rem;
-  color: #ffffff;
-  margin-right: 2rem;
-  padding-bottom: 0.3rem;
-  cursor: pointer;
-  border-bottom: ${(props) =>
-    props.active ? '0.2rem solid rgba(139, 139, 139, 0.7)' : 'none'};
-  margin-bottom: 0.2rem;
 `;
 
 const AlbumContainer = styled.div`
@@ -233,91 +209,97 @@ const Button15 = styled.button`
 `;
 
 function Mypage() {
-  const [activeTab, setActiveTab] = useState('My Videos');
-  const [myVideos, setMyVideos] = useState([]);
-  // const [recentView, setRecentView] = useState([]);
-  const [page, setPage] = useState(1);
-  const [hasMore, setHasMore] = useState(true);
+  const { id: memberId } = useParams();
+  const [activeTab, setActiveTab] = useState(0); // 초기값을 0으로 설정하여 My Videos 탭이 선택됨
+  const [myVideos, setMyVideos] = useState();
+  const [recentView, setRecentView] = useState();
+  const [userInfo, setUserInfo] = useState();
+  const [videoCount, setVideoCount] = useState();
+  const myId = localStorage.getItem('memberId');
+  console.log('멤버 아이디', memberId);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await getList(1, 10);
-        setMyVideos(response.data);
+        const response = await getList(1, 9, null, memberId);
+        setMyVideos(response.music_videos);
+        setVideoCount(response.pagination.total_items);
       } catch {
         console.error('뮤비 목록 조회 오류');
       }
     };
     fetchData();
-  }, []);
+  }, [memberId]);
 
-  const fetchMoreVideos = async () => {
-    try {
-      const response = await getList(page, 10);
-      if (response.data.length === 0) {
-        setHasMore(false);
-      } else {
-        setMyVideos((prevVideos) => [...prevVideos, ...response.data]);
-        setPage((prevPage) => prevPage + 1);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await getMemberInfo(memberId);
+        setUserInfo(response);
+      } catch {
+        console.error('회원 조회 오류');
       }
-    } catch {
-      console.error('뮤비 목록 조회 오류');
-    }
+    };
+    fetchData();
+  }, [memberId]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await getHistory(memberId, 1, 9);
+        setRecentView(response.music_videos);
+      } catch {
+        console.error('기록 목록 조회 오류');
+      }
+    };
+    fetchData();
+  }, [memberId]);
+
+  const navigate = useNavigate();
+  const moveEdit = () => {
+    navigate(`/edit`);
+  };
+
+  const handleChange = (event, newValue) => {
+    setActiveTab(newValue);
   };
 
   return (
     <BigContainer>
-      <TitleContainer>
-        <Profile>Profile</Profile>
-      </TitleContainer>
+      <Profile>Profile</Profile>
       <MyContainer>
-        <ProImg
-          src="https://i.ibb.co/tQJcHkm/Kakao-Talk-20221107-190554542-2.jpg"
-          alt="남자 주인공"
-        />
+        <ProImg src={userInfo?.profile_image} alt={userInfo?.login_id} />
         <InfoContainer>
           <ProName>
-            <ProfileName>권혁진</ProfileName>
-            <Button15>Edit</Button15>
+            <ProfileName>{userInfo?.nickname}</ProfileName>
+            {myId === memberId && (
+              <Button15 show onClick={moveEdit}>
+                Edit
+              </Button15>
+            )}
           </ProName>
-          <VideoCount>동영상 24개</VideoCount>
+          <VideoCount>동영상 {videoCount}개</VideoCount>
           <ProText>
             <ChatOutlinedIcon />
-            사랑, 그놈...
+            <p>{userInfo?.comment || '코멘트를 추가해보세요..'}</p>
           </ProText>
           <ExtraFunction>
             <YouTubeIconEdit fontSize="medium" />
-            <InstagramIconEdit color="gradient" fontSize="medium" />
+            <InstagramIconEdit fontSize="medium" />
           </ExtraFunction>
         </InfoContainer>
       </MyContainer>
-      <TabContainer>
-        <Tab
-          active={activeTab === 'My Videos'}
-          onClick={() => setActiveTab('My Videos')}
-        >
-          My Videos
-        </Tab>
-        <Tab
-          active={activeTab === 'Recently Viewed'}
-          onClick={() => setActiveTab('Recently Viewed')}
-        >
-          Recently Viewed
-        </Tab>
-      </TabContainer>
-      <InfiniteScroll
-        dataLength={myVideos.length}
-        next={fetchMoreVideos}
-        hasMore={hasMore}
-        loader={<h4>Loading...</h4>}
-        endMessage={<p style={{ textAlign: 'center' }}>No more videos</p>}
-      >
-        <AlbumContainer>
-          {myVideos.map((item, index) => (
+      <BasicTabs value={activeTab} handleChange={handleChange} />
+      <AlbumContainer>
+        {activeTab === 0 &&
+          myVideos &&
+          myVideos.map((item, index) => <AlbumCover key={index} data={item} />)}
+        {activeTab === 1 &&
+          recentView &&
+          recentView.map((item, index) => (
             <AlbumCover key={index} data={item} />
           ))}
-        </AlbumContainer>
-      </InfiniteScroll>
+      </AlbumContainer>
     </BigContainer>
   );
 }

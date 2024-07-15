@@ -8,6 +8,7 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 import { getList, getHistory } from '../api/musicVideos';
 import { getMemberInfo } from '../api/member';
 import { useNavigate, useParams } from 'react-router-dom';
+import BasicTabs from '../components/BasicTaps';
 // import InfiniteScroll from 'react-infinite-scroll-component';
 
 const BigContainer = styled.div`
@@ -19,18 +20,11 @@ const BigContainer = styled.div`
   width: 60%;
 `;
 
-const TitleContainer = styled.div`
-  display: flex;
-  flex-direction: row;
-  font-size: 2rem;
-  padding-left: 1rem;
-  width: 100%;
-`;
-
 const Profile = styled.p`
-  font-size: 1.2rem;
+  font-size: 2rem;
   color: #ffffff;
   margin-right: 2rem;
+  padding-left: 1rem;
 `;
 
 const ProImg = styled.img`
@@ -80,31 +74,13 @@ const ExtraFunction = styled.div`
 const InstagramIconEdit = styled(InstagramIcon)`
   margin-right: 1rem;
   color: #a4a4a4;
+  cursor: pointer;
 `;
 
 const YouTubeIconEdit = styled(YouTubeIcon)`
   margin-right: 1rem;
   color: #a4a4a4;
-`;
-
-const TabContainer = styled.div`
-  display: flex;
-  flex-direction: row;
-  width: 100%;
-  padding-left: 1rem;
-  margin-top: 1rem;
-`;
-
-const Tab = styled.div`
-  font-size: 1.2rem;
-  color: #ffffff;
-  margin-right: 2rem;
-  padding-bottom: 0.3rem;
   cursor: pointer;
-  border-bottom: ${(props) =>
-    props.active ? '0.2rem solid rgba(139, 139, 139, 0.7)' : 'none'};
-  /* border-radius: 0.2rem; */
-  margin-bottom: 0.2rem;
 `;
 
 const AlbumContainer = styled.div`
@@ -112,9 +88,6 @@ const AlbumContainer = styled.div`
   grid-template-columns: repeat(3, 1fr);
   gap: 1rem;
   width: 80%;
-  padding-left: 1rem;
-  padding-right: 1rem;
-  margin-top: 1rem;
   transition: 0.3s;
 `;
 
@@ -128,8 +101,8 @@ const AlbumCoverContainer = styled.div`
 `;
 
 const AlbumCoverImage = styled.img`
-  width: 100%;
-  height: auto;
+  width: 13rem;
+  height: 13rem;
   border-radius: 0.5rem;
 `;
 
@@ -182,7 +155,6 @@ const MyContainer = styled.div`
   padding-bottom: 1rem;
   margin-top: 2rem;
   align-items: center;
-  border-bottom: 0.2rem solid rgba(139, 139, 139, 0.7);
 `;
 
 const ProfileName = styled.p`
@@ -237,17 +209,18 @@ const Button15 = styled.button`
 
 function Mypage() {
   const { id: memberId } = useParams();
-  const [activeTab, setActiveTab] = useState('My Videos');
+  const [activeTab, setActiveTab] = useState(0);
   const [myVideos, setMyVideos] = useState();
   const [recentView, setRecentView] = useState();
   const [userInfo, setUserInfo] = useState();
   const [videoCount, setVideoCount] = useState();
+
   const myId = localStorage.getItem('memberId');
   console.log('멤버 아이디', memberId);
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await getList(1, 9, null, memberId);
+        const response = await getList(1, 9, null, null);
         setMyVideos(response.music_videos);
         setVideoCount(response.pagination.total_items);
       } catch {
@@ -279,79 +252,88 @@ function Mypage() {
     fetchData();
   }, []);
   const navigate = useNavigate();
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     try {
-  //       const response = await getList(1, 10, 'views');
-  //       setUserInfo(response.data);
-  //     } catch {
-  //       console.error('뮤비 목록 조회 오류');
-  //     }
-  //   };
-  //   fetchData();
-  // }, []);
   const moveEdit = () => {
     navigate(`/edit`);
   };
+
+  const handleChange = (event, newValue) => {
+    setActiveTab(newValue);
+  };
+
+  //  버튼 디자인 수정(백만년 예정) , 탭 방식 바꾸기/완 , empty 페이지/아오 안돼 , 기본 프로필/완 , 아이콘에 링크 추가/완
+  // 사이드바 네비게이션 추가
+  const isOwner = memberId === myId;
+  const emptyPage = !memberId;
   return (
     <BigContainer>
-      <TitleContainer>
-        <Profile>Profile</Profile>
-      </TitleContainer>
-      <MyContainer>
-        <ProImg src={userInfo?.profile_image} alt={userInfo?.login_id} />
-        <InfoContainer>
-          <ProName>
-            <ProfileName>{userInfo?.nickname}</ProfileName>
-            {myId === memberId && (
-              <Button15 show onClick={moveEdit}>
-                Edit
-              </Button15>
-            )}
-          </ProName>
-          <VideoCount>동영상 {videoCount}개</VideoCount>
-          <ProText>
-            <ChatOutlinedIcon />
-            <p>
-              {userInfo?.comment ? userInfo.comment : '코멘트를 추가해보세요..'}
-            </p>
-          </ProText>
-          <ExtraFunction>
-            <YouTubeIconEdit fontSize="medium" />
+      {emptyPage && <h1>찾으시는 회원 정보가 없습니다.</h1>}
+      {!emptyPage && (
+        <>
+          <Profile>Profile</Profile>
 
-            <InstagramIconEdit color="gradient" fontSize="medium" />
-          </ExtraFunction>
-        </InfoContainer>
-      </MyContainer>
-      <TabContainer>
-        <Tab
-          active={activeTab === 'My Videos'}
-          onClick={() => setActiveTab('My Videos')}
-        >
-          {myId === memberId ? 'My Videos' : 'Videos'}
-        </Tab>
-        {myId === memberId && (
-          <Tab
-            show
-            active={activeTab === 'Recently Viewed'}
-            onClick={() => setActiveTab('Recently Viewed')}
-          >
-            Recently Viewed
-          </Tab>
-        )}
-      </TabContainer>
-      <AlbumContainer>
-        {activeTab === 'My Videos' &&
-          myVideos !== null && // null 체크 추가
-          myVideos?.map((item, index) => (
-            <AlbumCover key={index} data={item} />
-          ))}
-        {activeTab === 'Recently Viewed' &&
-          recentView !== null && // null 체크 추가
-          recentView?.map((item, index) => (
-            <AlbumCover key={index} data={item} />
-          ))}
-      </AlbumContainer>
+          <MyContainer>
+            <ProImg
+              src={
+                userInfo?.profile_image || 'https://i.ibb.co/nB2HMyf/image.png'
+              }
+              alt={userInfo?.login_id}
+            />
+            <InfoContainer>
+              <ProName>
+                <ProfileName>{userInfo?.nickname}</ProfileName>
+                {myId === memberId && (
+                  <Button15 show onClick={moveEdit}>
+                    Edit
+                  </Button15>
+                )}
+              </ProName>
+              <VideoCount>동영상 {videoCount}개</VideoCount>
+              <ProText>
+                <ChatOutlinedIcon />
+                <p>{userInfo?.comment || '코멘트를 추가해보세요..'}</p>
+              </ProText>
+              <ExtraFunction>
+                <YouTubeIconEdit
+                  fontSize="medium"
+                  onClick={() => {
+                    window.location.href =
+                      userInfo?.youtube_account ||
+                      'https://www.youtube.com/watch?v=xbiih8pzC30';
+                  }}
+                />
+
+                <InstagramIconEdit
+                  color="gradient"
+                  fontSize="medium"
+                  onClick={() => {
+                    window.location.href =
+                      userInfo?.instagram_account ||
+                      'https://www.youtube.com/watch?v=xbiih8pzC30';
+                  }}
+                />
+              </ExtraFunction>
+            </InfoContainer>
+          </MyContainer>
+          <BasicTabs
+            value={activeTab}
+            handleChange={handleChange}
+            isOwner={isOwner}
+          />
+          <AlbumContainer>
+            {activeTab === 0 &&
+              myVideos &&
+              myVideos.map((item, index) => (
+                <AlbumCover key={index} data={item} />
+              ))}
+            {isOwner &&
+              activeTab === 1 &&
+              recentView &&
+              recentView.map((item, index) => (
+                <AlbumCover key={index} data={item} />
+              ))}
+          </AlbumContainer>
+        </>
+      )}
     </BigContainer>
   );
 }
