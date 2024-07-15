@@ -328,14 +328,17 @@ function Mypage() {
           active={activeTab === 'My Videos'}
           onClick={() => setActiveTab('My Videos')}
         >
-          My Videos
+          {myId === memberId ? 'My Videos' : 'Videos'}
         </Tab>
-        <Tab
-          active={activeTab === 'Recently Viewed'}
-          onClick={() => setActiveTab('Recently Viewed')}
-        >
-          Recently Viewed
-        </Tab>
+        {myId === memberId && (
+          <Tab
+            show
+            active={activeTab === 'Recently Viewed'}
+            onClick={() => setActiveTab('Recently Viewed')}
+          >
+            Recently Viewed
+          </Tab>
+        )}
       </TabContainer>
       <AlbumContainer>
         {activeTab === 'My Videos' &&
