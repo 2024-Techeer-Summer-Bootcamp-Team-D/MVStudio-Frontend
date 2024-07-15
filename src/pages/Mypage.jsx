@@ -8,6 +8,7 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 import { getList, getHistory } from '../api/musicVideos';
 import { getMemberInfo } from '../api/member';
 import { useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 // import InfiniteScroll from 'react-infinite-scroll-component';
 
 const BigContainer = styled.div`
@@ -236,7 +237,7 @@ const Button15 = styled.button`
 `;
 
 function Mypage() {
-  const location = useLocation(); // useLocation 훅 사용
+  const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
   const memberId = searchParams.get('memberId');
   const [activeTab, setActiveTab] = useState('My Videos');
@@ -279,7 +280,7 @@ function Mypage() {
     };
     fetchData();
   }, []);
-
+  const navigate = useNavigate();
   // useEffect(() => {
   //   const fetchData = async () => {
   //     try {
@@ -291,7 +292,9 @@ function Mypage() {
   //   };
   //   fetchData();
   // }, []);
-
+  const moveEdit = () => {
+    navigate(`/edit`);
+  };
   return (
     <BigContainer>
       <TitleContainer>
@@ -302,7 +305,11 @@ function Mypage() {
         <InfoContainer>
           <ProName>
             <ProfileName>{userInfo?.nickname}</ProfileName>
-            {myId === memberId && <Button15 show>Edit</Button15>}
+            {myId === memberId && (
+              <Button15 show onClick={moveEdit}>
+                Edit
+              </Button15>
+            )}
           </ProName>
           <VideoCount>동영상 {videoCount}개</VideoCount>
           <ProText>
