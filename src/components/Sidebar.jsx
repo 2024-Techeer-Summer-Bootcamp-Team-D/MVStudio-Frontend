@@ -8,6 +8,7 @@ import WhatshotIcon from '@mui/icons-material/Whatshot';
 import ignorePath from '../util/igonerePath';
 import EqualizerIcon from '@mui/icons-material/Equalizer';
 import MovieIcon from '@mui/icons-material/Movie';
+import { useNavigate } from 'react-router-dom';
 
 const Container = styled.div`
   background-color: #e3ecf1;
@@ -192,6 +193,11 @@ function Sidebar() {
   //     window.removeEventListener('click', handleClose);
   //   };
   // }, []);
+  const myId = localStorage.getItem('memberId');
+  const navigate = useNavigate();
+  const moveEdit = () => {
+    navigate(`/users/${myId}`);
+  };
 
   const isIgnoredPath = ignorePath().includes(location.pathname);
 
@@ -215,7 +221,7 @@ function Sidebar() {
           <NavigationText>You</NavigationText>
         </NavigationItem> */}
         <MyChannelContainer>
-          <MyStudio>
+          <MyStudio onClick={moveEdit}>
             <NavigationText>
               <EditMovieIcon fontSize="small" />
               My Studio

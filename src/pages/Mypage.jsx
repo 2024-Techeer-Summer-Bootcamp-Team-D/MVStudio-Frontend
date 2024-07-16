@@ -9,6 +9,8 @@ import { getList, getHistory } from '../api/musicVideos';
 import { getMemberInfo } from '../api/member';
 import { useNavigate, useParams } from 'react-router-dom';
 import BasicTabs from '../components/BasicTaps';
+import CustomizedButtons from '../components/CustomizedButtons';
+
 // import InfiniteScroll from 'react-infinite-scroll-component';
 
 const BigContainer = styled.div`
@@ -162,51 +164,6 @@ const ProfileName = styled.p`
   width: 7rem;
 `;
 
-const Button15 = styled.button`
-  width: 6rem;
-  background: #6a069c;
-  border: none;
-  z-index: 1;
-  position: relative;
-  padding: 10px 20px;
-  color: #fff;
-  font-size: 1rem;
-  cursor: pointer;
-  overflow: hidden;
-  border-radius: 1rem;
-  outline: none;
-  font-family: 'SUIT', sans-serif;
-
-  &:hover {
-    color: #fff;
-  }
-
-  &:after {
-    content: '';
-    width: 6rem;
-    height: 100%;
-    top: 0;
-    right: 0;
-    z-index: -1;
-    background-color: #663dff;
-    border-radius: 5px;
-    box-shadow:
-      inset 2px 2px 2px 0px rgba(255, 255, 255, 0.5),
-      7px 7px 20px 0px rgba(0, 0, 0, 0.1),
-      4px 4px 5px 0px rgba(0, 0, 0, 0.1);
-    transition: all 0.3s ease;
-  }
-
-  &:hover:after {
-    left: 0;
-    width: 100%;
-  }
-
-  &:active {
-    top: 2px;
-  }
-`;
-
 function Mypage() {
   const { id: memberId } = useParams();
   const [activeTab, setActiveTab] = useState(0);
@@ -260,8 +217,8 @@ function Mypage() {
     setActiveTab(newValue);
   };
 
-  //  버튼 디자인 수정(백만년 예정) , 탭 방식 바꾸기/완 , empty 페이지/아오 안돼 , 기본 프로필/완 , 아이콘에 링크 추가/완
-  // 사이드바 네비게이션 추가
+  //  버튼 디자인 수정(백만년 예정)(일단 완) , 탭 방식 바꾸기/완 , empty 페이지/아오 안돼 , 기본 프로필/완 , 아이콘에 링크 추가/완
+  // 사이드바 네비게이션 추가(완) , 무한스크롤(하염없이 도커 널 기다려 이자리에서...)
   const isOwner = memberId === myId;
   const emptyPage = !memberId;
   return (
@@ -282,9 +239,7 @@ function Mypage() {
               <ProName>
                 <ProfileName>{userInfo?.nickname}</ProfileName>
                 {myId === memberId && (
-                  <Button15 show onClick={moveEdit}>
-                    Edit
-                  </Button15>
+                  <CustomizedButtons show onClick={moveEdit} />
                 )}
               </ProName>
               <VideoCount>동영상 {videoCount}개</VideoCount>
