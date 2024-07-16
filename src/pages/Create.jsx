@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import styled, { css, keyframes } from 'styled-components';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import { getGenre, getInstruments, postLyrics } from '../api/musicVideos';
+import { useNavigate } from 'react-router-dom';
 
 const jellyAnimation = keyframes`
   25% {
@@ -16,7 +18,8 @@ const jellyAnimation = keyframes`
     transform: scale(0.95, 1.05);
   }
 `;
-
+getGenre();
+getInstruments();
 const JellyButton = styled.button`
   margin-left: 38%;
   margin-top: 2%;
@@ -381,6 +384,22 @@ const WarningContainer = styled.div`
 `;
 
 function Create() {
+  const navigate = useNavigate();
+  const goLyrics = () => {
+    navigate('/LyricsSelect');
+  };
+  const click = () => {
+    postLyrics(
+      voice,
+      language,
+      tempo,
+      selectedGenres,
+      selectedInstruments,
+      songTitle,
+    );
+    goLyrics();
+  };
+
   const newCoverArray = [
     { src: 'https://picsum.photos/seed/1/100', label: 'POP' },
     { src: 'https://picsum.photos/seed/2/100', label: 'ROCK' },
@@ -635,7 +654,7 @@ function Create() {
                   </WarningMessage>
                 </WarningContainer>
               )}
-              <SubmitButton>Submit</SubmitButton>
+              <SubmitButton onClick={click}>Submit</SubmitButton>
             </ModalText>
           </ModalContainer>
         </>
