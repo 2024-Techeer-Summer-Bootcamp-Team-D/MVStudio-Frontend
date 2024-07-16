@@ -9,15 +9,13 @@ import { getList, getHistory } from '../api/musicVideos';
 import { getMemberInfo } from '../api/member';
 import { useNavigate, useParams } from 'react-router-dom';
 import BasicTabs from '../components/BasicTaps';
-import CustomizedButtons from '../components/CustomizedButtons';
-
-// import InfiniteScroll from 'react-infinite-scroll-component';
+import InfiniteScroll from 'react-infinite-scroll-component';
 
 const BigContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: start;
-  margin-left: 20%;
+  margin-left: 40%;
   margin-right: 20%;
   width: 60%;
 `;
@@ -90,6 +88,9 @@ const AlbumContainer = styled.div`
   grid-template-columns: repeat(3, 1fr);
   gap: 1rem;
   width: 80%;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  margin-top: 1rem;
   transition: 0.3s;
 `;
 
@@ -103,8 +104,8 @@ const AlbumCoverContainer = styled.div`
 `;
 
 const AlbumCoverImage = styled.img`
-  width: 13rem;
-  height: 13rem;
+  width: 100%;
+  height: auto;
   border-radius: 0.5rem;
 `;
 
@@ -157,6 +158,7 @@ const MyContainer = styled.div`
   padding-bottom: 1rem;
   margin-top: 2rem;
   align-items: center;
+  /* border-bottom: 0.2rem solid rgba(139, 139, 139, 0.7); */
 `;
 
 const ProfileName = styled.p`
@@ -164,131 +166,235 @@ const ProfileName = styled.p`
   width: 7rem;
 `;
 
+const Button15 = styled.button`
+  width: 6rem;
+  background: #6a069c;
+  border: none;
+  z-index: 1;
+  position: relative;
+  padding: 10px 20px;
+  color: #fff;
+  font-size: 1rem;
+  cursor: pointer;
+  overflow: hidden;
+  border-radius: 1rem;
+  outline: none;
+  font-family: 'SUIT', sans-serif;
+
+  &:hover {
+    color: #fff;
+  }
+
+  &:after {
+    content: '';
+    width: 6rem;
+    height: 100%;
+    top: 0;
+    right: 0;
+    z-index: -1;
+    background-color: #663dff;
+    border-radius: 5px;
+    box-shadow:
+      inset 2px 2px 2px 0px rgba(255, 255, 255, 0.5),
+      7px 7px 20px 0px rgba(0, 0, 0, 0.1),
+      4px 4px 5px 0px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+  }
+
+  &:hover:after {
+    left: 0;
+    width: 100%;
+  }
+
+  &:active {
+    top: 2px;
+  }
+`;
+
 function Mypage() {
   const { id: memberId } = useParams();
   const [activeTab, setActiveTab] = useState(0);
-  const [myVideos, setMyVideos] = useState();
-  const [recentView, setRecentView] = useState();
+  const [myVideos, setMyVideos] = useState([]);
+  const [recentView, setRecentView] = useState([]);
   const [userInfo, setUserInfo] = useState();
-  const [videoCount, setVideoCount] = useState();
-
+  const [videoCount, setVideoCount] = useState(0);
+  const [hasMore, setHasMore] = useState(true);
   const myId = localStorage.getItem('memberId');
-  console.log('멤버 아이디', memberId);
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await getList(1, 9, null, null);
-        setMyVideos(response.music_videos);
-        setVideoCount(response.pagination.total_items);
-      } catch {
-        console.error('뮤비 목록 조회 오류');
+  const [page, setPage] = useState(1);
+  const [fetchedVideoIds, setFetchedVideoIds] = useState([]);
+
+  // 페이지별 데이터를 가져오는 함수
+  const fetchData = async (pageNum) => {
+    try {
+      const response = await getList(pageNum, 9, null, null);
+      const newData = response.music_videos.filter(
+        (video) => !fetchedVideoIds.flat().includes(video.id),
+      );
+      if (newData.length > 0) {
+        setFetchedVideoIds((prevIds) => {
+          const newIds = [...prevIds];
+          newIds[pageNum - 1] = newData.map((video) => video.id);
+          return newIds;
+        });
+        setMyVideos((prevVideos) => {
+          // Filter out existing videos in prevVideos to avoid duplicates
+          const filteredVideos = newData.filter(
+            (video) =>
+              !prevVideos.some((prevVideo) => prevVideo.id === video.id),
+          );
+          return [...prevVideos, ...filteredVideos];
+        });
       }
-    };
-    fetchData();
-  }, []);
+      setVideoCount(response.pagination.total_items);
+      setHasMore(response.pagination.total_items > pageNum * 9);
+    } catch (error) {
+      console.error('뮤비 목록 조회 오류', error);
+    }
+  };
+
+  // 컴포넌트가 마운트될 때 초기 데이터 가져오기
   useEffect(() => {
-    const fetchData = async () => {
+    fetchData(1);
+    fetchRecent(1);
+  }, []);
+
+  // 멤버 정보 가져오기
+  useEffect(() => {
+    const fetchMemberInfo = async () => {
       try {
         const response = await getMemberInfo(memberId);
         setUserInfo(response);
-      } catch {
-        console.error('회원  조회 오류');
+      } catch (error) {
+        console.error('회원 조회 오류', error);
       }
     };
-    fetchData();
-  }, []);
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await getHistory(memberId, 1, 9);
-        setRecentView(response.music_videos);
-      } catch {
-        console.error('기록 목록 조회 오류');
+    fetchMemberInfo();
+  }, [memberId]);
+
+  const fetchRecent = async (pageNum) => {
+    try {
+      const response = await getHistory(memberId, pageNum, 9);
+      const newData = response.music_videos.filter(
+        (video) => !fetchedVideoIds.flat().includes(video.id),
+      );
+      if (newData.length > 0) {
+        setFetchedVideoIds((prevIds) => {
+          const newIds = [...prevIds];
+          newIds[pageNum - 1] = newData.map((video) => video.id);
+          return newIds;
+        });
+        setRecentView((prevVideos) => {
+          // Filter out existing videos in prevVideos to avoid duplicates
+          const filteredVideos = newData.filter(
+            (video) =>
+              !prevVideos.some((prevVideo) => prevVideo.id === video.id),
+          );
+          return [...prevVideos, ...filteredVideos];
+        });
       }
-    };
-    fetchData();
-  }, []);
-  const navigate = useNavigate();
-  const moveEdit = () => {
+      setHasMore(response.pagination.total_items > pageNum * 9);
+    } catch (error) {
+      console.error('뮤비 조회 기록 오류', error);
+    }
+  };
+
+  // useEffect(() => {
+  //   const fetchHistory = async () => {
+  //     try {
+  //       const response = await getHistory(memberId, 1, 9);
+  //       setRecentView(response.music_videos);
+  //     } catch (error) {
+  //       console.error('기록 목록 조회 오류', error);
+  //     }
+  //   };
+  //   fetchHistory();
+  // }, [memberId]);
+
+  // 페이지 변경 핸들러
+  const handleChange = (event, newValue) => {
+    setActiveTab(newValue);
+    setPage(1); // 페이지 초기화
+    setFetchedVideoIds([]);
+  };
+
+  // 프로필 수정 페이지로 이동
+  const navigateToEdit = () => {
     navigate(`/edit`);
   };
 
-  const handleChange = (event, newValue) => {
-    setActiveTab(newValue);
+  const handleIconClick = (url) => {
+    window.open(url, '_blank');
   };
 
-  //  버튼 디자인 수정(백만년 예정)(일단 완) , 탭 방식 바꾸기/완 , empty 페이지/아오 안돼 , 기본 프로필/완 , 아이콘에 링크 추가/완
-  // 사이드바 네비게이션 추가(완) , 무한스크롤(하염없이 도커 널 기다려 이자리에서...)
-  const isOwner = memberId === myId;
-  const emptyPage = !memberId;
+  const isOwner = myId === memberId;
+
+  const navigate = useNavigate();
   return (
     <BigContainer>
-      {emptyPage && <h1>찾으시는 회원 정보가 없습니다.</h1>}
-      {!emptyPage && (
-        <>
-          <Profile>Profile</Profile>
-
-          <MyContainer>
-            <ProImg
-              src={
-                userInfo?.profile_image || 'https://i.ibb.co/nB2HMyf/image.png'
+      <Profile>Profile</Profile>
+      <MyContainer>
+        <ProImg src={userInfo?.profile_image} alt={userInfo?.login_id} />
+        <InfoContainer>
+          <ProName>
+            <ProfileName>{userInfo?.nickname}</ProfileName>
+            {myId === memberId && (
+              <Button15 onClick={navigateToEdit}>Edit</Button15>
+            )}
+          </ProName>
+          <VideoCount>동영상 {videoCount}개</VideoCount>
+          <ProText>
+            <ChatOutlinedIcon />
+            <p>{userInfo?.comment || '코멘트를 추가해보세요..'}</p>
+          </ProText>
+          <ExtraFunction>
+            <YouTubeIconEdit
+              fontSize="medium"
+              onClick={() =>
+                handleIconClick(
+                  userInfo?.youtube_account ||
+                    'https://www.youtube.com/watch?v=xbiih8pzC30',
+                )
               }
-              alt={userInfo?.login_id}
             />
-            <InfoContainer>
-              <ProName>
-                <ProfileName>{userInfo?.nickname}</ProfileName>
-                {myId === memberId && (
-                  <CustomizedButtons show onClick={moveEdit} />
-                )}
-              </ProName>
-              <VideoCount>동영상 {videoCount}개</VideoCount>
-              <ProText>
-                <ChatOutlinedIcon />
-                <p>{userInfo?.comment || '코멘트를 추가해보세요..'}</p>
-              </ProText>
-              <ExtraFunction>
-                <YouTubeIconEdit
-                  fontSize="medium"
-                  onClick={() => {
-                    window.location.href =
-                      userInfo?.youtube_account ||
-                      'https://www.youtube.com/watch?v=xbiih8pzC30';
-                  }}
-                />
-
-                <InstagramIconEdit
-                  color="gradient"
-                  fontSize="medium"
-                  onClick={() => {
-                    window.location.href =
-                      userInfo?.instagram_account ||
-                      'https://www.youtube.com/watch?v=xbiih8pzC30';
-                  }}
-                />
-              </ExtraFunction>
-            </InfoContainer>
-          </MyContainer>
-          <BasicTabs
-            value={activeTab}
-            handleChange={handleChange}
-            isOwner={isOwner}
-          />
-          <AlbumContainer>
-            {activeTab === 0 &&
-              myVideos &&
-              myVideos.map((item, index) => (
-                <AlbumCover key={index} data={item} />
-              ))}
-            {isOwner &&
-              activeTab === 1 &&
-              recentView &&
-              recentView.map((item, index) => (
-                <AlbumCover key={index} data={item} />
-              ))}
-          </AlbumContainer>
-        </>
-      )}
+            <InstagramIconEdit
+              fontSize="medium"
+              onClick={() =>
+                handleIconClick(
+                  userInfo?.instagram_account ||
+                    'https://www.youtube.com/watch?v=xbiih8pzC30',
+                )
+              }
+            />
+          </ExtraFunction>
+        </InfoContainer>
+      </MyContainer>
+      <BasicTabs
+        value={activeTab}
+        handleChange={handleChange}
+        isOwner={isOwner}
+      />
+      <InfiniteScroll
+        dataLength={activeTab === 0 ? myVideos.length : recentView.length}
+        next={() => {
+          const nextPage = page + 1;
+          setPage(nextPage);
+          activeTab === 0 ? fetchData(nextPage) : fetchRecent(nextPage);
+        }}
+        hasMore={hasMore}
+        loader={<h4>Loading...</h4>}
+        endMessage={<p>No more items</p>}
+      >
+        <AlbumContainer>
+          {activeTab === 0 &&
+            myVideos.map((item, index) => (
+              <AlbumCover key={index} data={item} />
+            ))}
+          {activeTab === 1 &&
+            recentView.map((item, index) => (
+              <AlbumCover key={index} data={item} />
+            ))}
+        </AlbumContainer>
+      </InfiniteScroll>
     </BigContainer>
   );
 }

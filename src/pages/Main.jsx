@@ -9,6 +9,7 @@ import { getList, getHistory } from '../api/musicVideos';
 import { getMemberInfo } from '../api/member';
 import { useNavigate, useParams } from 'react-router-dom';
 import BasicTabs from '../components/BasicTaps';
+import InfiniteScroll from 'react-infinite-scroll-component';
 
 const BigContainer = styled.div`
   display: flex;
@@ -210,26 +211,30 @@ const Button15 = styled.button`
 
 function Mypage() {
   const { id: memberId } = useParams();
-  const [activeTab, setActiveTab] = useState(0); // 초기값을 0으로 설정하여 My Videos 탭이 선택됨
-  const [myVideos, setMyVideos] = useState();
-  const [recentView, setRecentView] = useState();
+  const [activeTab, setActiveTab] = useState(0);
+  const [myVideos, setMyVideos] = useState([]);
+  const [recentView, setRecentView] = useState([]);
   const [userInfo, setUserInfo] = useState();
-  const [videoCount, setVideoCount] = useState();
+  const [videoCount, setVideoCount] = useState(0);
+  const [hasMore, setHasMore] = useState(true);
   const myId = localStorage.getItem('memberId');
-  console.log('멤버 아이디', memberId);
+  const [page, setPage] = useState(1);
+
+  const fetchData = async (pageNum) => {
+    try {
+      const response = await getList(pageNum, 9, null, null);
+      const newData = response.music_videos;
+      setMyVideos((prevData) => [...prevData, ...newData]);
+      setVideoCount(response.pagination.total_items);
+      setHasMore(response.pagination.total_items > pageNum * 9);
+    } catch (error) {
+      console.error('뮤비 목록 조회 오류', error);
+    }
+  };
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await getList(1, 9, null, memberId);
-        setMyVideos(response.music_videos);
-        setVideoCount(response.pagination.total_items);
-      } catch {
-        console.error('뮤비 목록 조회 오류');
-      }
-    };
-    fetchData();
-  }, [memberId]);
+    fetchData(1);
+  }, []);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -262,6 +267,7 @@ function Mypage() {
 
   const handleChange = (event, newValue) => {
     setActiveTab(newValue);
+    setPage(1);
   };
 
   return (
@@ -290,16 +296,28 @@ function Mypage() {
         </InfoContainer>
       </MyContainer>
       <BasicTabs value={activeTab} handleChange={handleChange} />
-      <AlbumContainer>
-        {activeTab === 0 &&
-          myVideos &&
-          myVideos.map((item, index) => <AlbumCover key={index} data={item} />)}
-        {activeTab === 1 &&
-          recentView &&
-          recentView.map((item, index) => (
-            <AlbumCover key={index} data={item} />
-          ))}
-      </AlbumContainer>
+      <InfiniteScroll
+        dataLength={activeTab === 0 ? myVideos.length : recentView.length}
+        next={() => {
+          const nextPage = page + 1;
+          setPage(nextPage);
+          fetchData(nextPage);
+        }}
+        hasMore={hasMore}
+        loader={<h4>Loading...</h4>}
+        endMessage={<p>No more items</p>}
+      >
+        <AlbumContainer>
+          {activeTab === 0 &&
+            myVideos.map((item, index) => (
+              <AlbumCover key={index} data={item} />
+            ))}
+          {activeTab === 1 &&
+            recentView.map((item, index) => (
+              <AlbumCover key={index} data={item} />
+            ))}
+        </AlbumContainer>
+      </InfiniteScroll>
     </BigContainer>
   );
 }
