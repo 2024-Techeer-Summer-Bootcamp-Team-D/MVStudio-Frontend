@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import ChatOutlinedIcon from '@mui/icons-material/ChatOutlined';
 import YouTubeIcon from '@mui/icons-material/YouTube';
 import InstagramIcon from '@mui/icons-material/Instagram';
-import VisibilityIcon from '@mui/icons-material/Visibility';
+// import VisibilityIcon from '@mui/icons-material/Visibility';
 import { getList, getHistory } from '../api/musicVideos';
 import { getMemberInfo } from '../api/member';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -123,12 +123,11 @@ const Overlay = styled.div`
   justify-content: center;
   border-radius: 0.5rem;
   opacity: 0;
-  gap: 1rem;
+  /* gap: 1rem; */
   transition: opacity 0.3s ease-in-out;
 `;
 
 const OverlayText = styled.p`
-  margin: 0.5rem 0;
   display: flex;
   align-items: center;
   font-size: 1.3rem;
@@ -141,9 +140,7 @@ const AlbumCover = ({ data }) => (
     <AlbumCoverImage src={data.cover_image} alt={data.subject} />
     <Overlay className="overlay">
       <OverlayText>{data.subject}</OverlayText>
-      <OverlayText>
-        <VisibilityIcon /> {data.views}
-      </OverlayText>
+      <OverlayText>{/* <VisibilityIcon /> {data.views} */}</OverlayText>
     </Overlay>
   </AlbumCoverContainer>
 );
