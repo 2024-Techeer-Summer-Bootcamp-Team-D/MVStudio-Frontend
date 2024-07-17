@@ -1,46 +1,36 @@
 /* eslint-disable react/prop-types */
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import ChatOutlinedIcon from '@mui/icons-material/ChatOutlined';
 import YouTubeIcon from '@mui/icons-material/YouTube';
 import InstagramIcon from '@mui/icons-material/Instagram';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
-import VisibilityIcon from '@mui/icons-material/Visibility';
-
-const theme = createTheme({
-  palette: {
-    gradient: {
-      main: 'linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%)',
-    },
-  },
-});
+// import VisibilityIcon from '@mui/icons-material/Visibility';
+import { getList, getHistory } from '../api/musicVideos';
+import { getMemberInfo } from '../api/member';
+import { useNavigate, useParams } from 'react-router-dom';
+import BasicTabs from '../components/BasicTaps';
+import InfiniteScroll from 'react-infinite-scroll-component';
 
 const BigContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: start;
-  margin-left: 20%;
+  margin-left: 40%;
   margin-right: 20%;
+  min-width: 36rem;
   width: 60%;
 `;
 
-const TitleContainer = styled.div`
-  display: flex;
-  flex-direction: row;
-  font-size: 2rem;
-  padding-left: 1rem;
-  width: 100%;
-`;
-
 const Profile = styled.p`
-  font-size: 1.2rem;
+  font-size: 2rem;
   color: #ffffff;
-  margin-right: 2rem;
+  padding-left: 1rem;
+  margin-top: 2rem;
 `;
 
 const ProImg = styled.img`
-  width: 10rem;
-  height: 10rem;
+  width: 8rem;
+  height: 8rem;
   border-radius: 50%;
   flex-shrink: 0;
 `;
@@ -49,9 +39,8 @@ const ProName = styled.div`
   font-size: 1rem;
   color: #ffffff;
   display: flex;
-  flex-direction: row;
-  align-items: center;
-  height: 4rem;
+  flex-direction: column;
+  align-items: start;
 `;
 
 const VideoCount = styled.div`
@@ -62,7 +51,10 @@ const VideoCount = styled.div`
 const InfoContainer = styled.div`
   display: flex;
   flex-direction: column;
-  padding-left: 3rem;
+  padding-left: 2rem;
+  width: 100%;
+  align-items: start;
+  gap: 0.875rem;
 `;
 
 const ProText = styled.div`
@@ -71,52 +63,33 @@ const ProText = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
-  padding-top: 1rem;
+  margin: 0;
 `;
 
 const ExtraFunction = styled.div`
   display: flex;
   flex-direction: row;
-  height: 100%;
   padding-bottom: 0;
-  margin-top: 1rem;
 `;
 
 const InstagramIconEdit = styled(InstagramIcon)`
   margin-right: 1rem;
   color: #a4a4a4;
+  cursor: pointer;
+  height: 1rem;
 `;
 
 const YouTubeIconEdit = styled(YouTubeIcon)`
   margin-right: 1rem;
   color: #a4a4a4;
-`;
-
-const TabContainer = styled.div`
-  display: flex;
-  flex-direction: row;
-  width: 100%;
-  padding-left: 1rem;
-  margin-top: 1rem;
-`;
-
-const Tab = styled.div`
-  font-size: 1.2rem;
-  color: #ffffff;
-  margin-right: 2rem;
-  padding-bottom: 0.3rem;
   cursor: pointer;
-  border-bottom: ${(props) =>
-    props.active ? '0.2rem solid rgba(139, 139, 139, 0.7)' : 'none'};
-  /* border-radius: 0.2rem; */
-  margin-bottom: 0.2rem;
 `;
 
 const AlbumContainer = styled.div`
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 1rem;
-  width: 80%;
+  width: 100%;
   padding-left: 1rem;
   padding-right: 1rem;
   margin-top: 1rem;
@@ -136,6 +109,8 @@ const AlbumCoverImage = styled.img`
   width: 100%;
   height: auto;
   border-radius: 0.5rem;
+  aspect-ratio: 5 / 3;
+  object-fit: cover;
 `;
 
 const Overlay = styled.div`
@@ -144,7 +119,7 @@ const Overlay = styled.div`
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(0, 0, 0, 0.7);
   color: #fff;
   display: flex;
   flex-direction: row;
@@ -152,27 +127,21 @@ const Overlay = styled.div`
   justify-content: center;
   border-radius: 0.5rem;
   opacity: 0;
-  gap: 1rem;
   transition: opacity 0.3s ease-in-out;
 `;
 
 const OverlayText = styled.p`
-  margin: 0.5rem 0;
   display: flex;
   align-items: center;
-  font-size: 1.3rem;
-  font-weight: 550;
   gap: 0.5rem;
 `;
 
-const AlbumCover = ({ pic, title, view }) => (
+const AlbumCover = ({ data }) => (
   <AlbumCoverContainer>
-    <AlbumCoverImage src={pic} alt={title} />
+    <AlbumCoverImage src={data.cover_image} alt={data.subject} />
     <Overlay className="overlay">
-      <OverlayText>{title}</OverlayText>
-      <OverlayText>
-        <VisibilityIcon /> {view}
-      </OverlayText>
+      <OverlayText>{data.subject}</OverlayText>
+      <OverlayText>{/* <VisibilityIcon /> {data.views} */}</OverlayText>
     </Overlay>
   </AlbumCoverContainer>
 );
@@ -180,164 +149,250 @@ const AlbumCover = ({ pic, title, view }) => (
 const MyContainer = styled.div`
   display: flex;
   flex-direction: row;
-  width: 72.5%;
-  height: 14rem;
-  padding-right: 2rem;
-  padding-left: 5rem;
-  padding-bottom: 1rem;
-  margin-top: 2rem;
-  align-items: center;
-  border-bottom: 0.2rem solid rgba(139, 139, 139, 0.7);
+  width: 100%;
+  align-items: start;
+  /* border-bottom: 0.2rem solid rgba(139, 139, 139, 0.7); */
+  margin: 2rem;
 `;
 
 const ProfileName = styled.p`
   font-size: 1.4rem;
   width: 7rem;
+  /* margin: 0; */
 `;
 
-const Button15 = styled.button`
-  width: 6rem;
-  background: #6a069c;
-  border: none;
-  z-index: 1;
-  position: relative;
-  padding: 10px 20px;
-  color: #fff;
-  font-size: 1rem;
-  cursor: pointer;
-  overflow: hidden;
-  border-radius: 1rem;
-  outline: none;
-  font-family: 'SUIT', sans-serif;
+// const Button15 = styled.button`
+//   width: 6rem;
+//   background: #6a069c;
+//   border: none;
+//   z-index: 1;
+//   position: relative;
+//   padding: 10px 20px;
+//   color: #fff;
+//   font-size: 1rem;
+//   cursor: pointer;
+//   overflow: hidden;
+//   border-radius: 1rem;
+//   outline: none;
+//   font-family: 'SUIT', sans-serif;
 
-  &:hover {
-    color: #fff;
-  }
+//   &:hover {
+//     color: #fff;
+//   }
 
-  &:after {
-    content: '';
-    width: 6rem;
-    height: 100%;
-    top: 0;
-    right: 0;
-    z-index: -1;
-    background-color: #663dff;
-    border-radius: 5px;
-    box-shadow:
-      inset 2px 2px 2px 0px rgba(255, 255, 255, 0.5),
-      7px 7px 20px 0px rgba(0, 0, 0, 0.1),
-      4px 4px 5px 0px rgba(0, 0, 0, 0.1);
-    transition: all 0.3s ease;
-  }
+//   &:after {
+//     content: '';
+//     width: 6rem;
+//     height: 100%;
+//     top: 0;
+//     right: 0;
+//     z-index: -1;
+//     background-color: #663dff;
+//     border-radius: 5px;
+//     box-shadow:
+//       inset 2px 2px 2px 0px rgba(255, 255, 255, 0.5),
+//       7px 7px 20px 0px rgba(0, 0, 0, 0.1),
+//       4px 4px 5px 0px rgba(0, 0, 0, 0.1);
+//     transition: all 0.3s ease;
+//   }
 
-  &:hover:after {
-    left: 0;
-    width: 100%;
-  }
+//   &:hover:after {
+//     left: 0;
+//     width: 100%;
+//   }
 
-  &:active {
-    top: 2px;
-  }
+//   &:active {
+//     top: 2px;
+//   }
+// `;
+
+const EmptyContainer = styled.div`
+  margin-left: 40%;
+  margin-top: 20%;
+  color: #ffffff;
+  font-size: 2rem;
+  display: flex;
+  flex-direction: row;
 `;
 
 function Mypage() {
-  const [activeTab, setActiveTab] = useState('My Videos');
+  const { id: memberId } = useParams();
+  const [activeTab, setActiveTab] = useState(0);
+  const [myVideos, setMyVideos] = useState([]);
+  const [recentView, setRecentView] = useState([]);
+  const [userInfo, setUserInfo] = useState();
+  const [videoCount, setVideoCount] = useState(0);
+  const [hasMore, setHasMore] = useState(true);
+  const myId = localStorage.getItem('memberId');
+  const [page, setPage] = useState(1);
+  const [fetchedVideoIds, setFetchedVideoIds] = useState([]);
 
-  const Myvideos = [
-    {
-      pic: 'https://i.ibb.co/Jn12dqF/unnamed.jpg',
-      title: '사랑인가봐',
-      view: '0707',
-    },
-    {
-      pic: 'https://i.ibb.co/r5LYBrq/Khbujpf3-Vt7-XREZy-SOLv-Ynfg-Fypr7-KHSx-q9-N5r8ezs-GZkv-Vq-CLom3-St-WLt-XJTY5mk2-VMp-ZICPA4-E-w544-h.jpg',
-      title: '사랑인가봐',
-      view: '0707',
-    },
-    {
-      pic: 'https://i.ibb.co/sQ0Ts7X/x4jy1m2x5d-As-ZHfb-FK-Xwu-O3g-Rbr-Rq-m2jd-VYSlm7-A9-D6j9e-YFrm-Gk6-Zl-Ndhdz-CXT-o-Wk4-NGex-WLPheet-Q.jpg',
-      title: '사랑인가봐',
-      view: '0707',
-    },
-    {
-      pic: 'https://i.ibb.co/sQ0Ts7X/x4jy1m2x5d-As-ZHfb-FK-Xwu-O3g-Rbr-Rq-m2jd-VYSlm7-A9-D6j9e-YFrm-Gk6-Zl-Ndhdz-CXT-o-Wk4-NGex-WLPheet-Q.jpg',
-      title: '사랑인가봐',
-      view: '0707',
-    },
-  ];
+  // 페이지별 데이터를 가져오는 함수
+  const fetchData = async (pageNum) => {
+    try {
+      const response = await getList(pageNum, 9, null, memberId);
+      const newData = response.music_videos.filter(
+        (video) => !fetchedVideoIds.flat().includes(video.id),
+      );
+      if (newData.length > 0) {
+        setFetchedVideoIds((prevIds) => {
+          const newIds = [...prevIds];
+          newIds[pageNum - 1] = newData.map((video) => video.id);
+          return newIds;
+        });
+        setMyVideos((prevVideos) => {
+          const filteredVideos = newData.filter(
+            (video) =>
+              !prevVideos.some((prevVideo) => prevVideo.id === video.id),
+          );
+          return [...prevVideos, ...filteredVideos];
+        });
+      }
+      setVideoCount(response.pagination.total_items);
+      setHasMore(response.pagination.total_items > pageNum * 9);
+    } catch (error) {
+      console.error('뮤비 목록 조회 오류', error);
+    }
+  };
 
-  const RecentlyViewed = [
-    {
-      pic: 'https://i.ibb.co/Fn93yzJ/1.webp',
-      title: '사랑인가봐',
-      view: '0707',
-    },
-    {
-      pic: 'https://i.ibb.co/vVhY1w6/2.webp',
-      title: '사랑인가봐',
-      view: '0707',
-    },
-    {
-      pic: 'https://i.ibb.co/g6vLFDV/3.webp',
-      title: '사랑인가봐',
-      view: '0707',
-    },
-    {
-      pic: 'https://i.ibb.co/99cZ04Y/4.webp',
-      title: '사랑인가봐',
-      view: '0707',
-    },
-  ];
+  // 컴포넌트가 마운트될 때 초기 데이터 가져오기
+  useEffect(() => {
+    fetchData(1);
+    fetchRecent(1);
+  }, []);
+
+  // 멤버 정보 가져오기
+  useEffect(() => {
+    const fetchMemberInfo = async () => {
+      try {
+        const response = await getMemberInfo(memberId);
+        setUserInfo(response);
+      } catch (error) {
+        console.error('회원 조회 오류', error);
+      }
+    };
+    fetchMemberInfo();
+  }, [memberId]);
+
+  const fetchRecent = async (pageNum) => {
+    try {
+      const response = await getHistory(memberId, pageNum, 9);
+      const newData = response.music_videos.filter(
+        (video) => !fetchedVideoIds.flat().includes(video.id),
+      );
+      if (newData.length > 0) {
+        setFetchedVideoIds((prevIds) => {
+          const newIds = [...prevIds];
+          newIds[pageNum - 1] = newData.map((video) => video.id);
+          return newIds;
+        });
+        setRecentView((prevVideos) => {
+          // Filter out existing videos in prevVideos to avoid duplicates
+          const filteredVideos = newData.filter(
+            (video) =>
+              !prevVideos.some((prevVideo) => prevVideo.id === video.id),
+          );
+          return [...prevVideos, ...filteredVideos];
+        });
+      }
+      setHasMore(response.pagination.total_items > pageNum * 9);
+    } catch (error) {
+      console.error('뮤비 조회 기록 오류', error);
+    }
+  };
+
+  // 페이지 변경 핸들러
+  const handleChange = (event, newValue) => {
+    setActiveTab(newValue);
+    setFetchedVideoIds([]);
+  };
+
+  // 프로필 수정 페이지로 이동
+  const navigateToEdit = () => {
+    navigate(`/edit`);
+  };
+
+  const handleIconClick = (url) => {
+    if (url === null) {
+      return;
+    } else {
+      window.open(url, '_blank');
+    }
+  };
+
+  const isOwner = myId === memberId;
+
+  const navigate = useNavigate();
+
+  if (!userInfo) {
+    return <EmptyContainer>조회하신 회원정보가 없습니다.</EmptyContainer>;
+  }
 
   return (
     <BigContainer>
-      <TitleContainer>
-        <Profile>Profile</Profile>
-      </TitleContainer>
+      <Profile>Profile</Profile>
       <MyContainer>
         <ProImg
-          src="https://i.ibb.co/tQJcHkm/Kakao-Talk-20221107-190554542-2.jpg"
-          alt="남자 주인공"
+          src={userInfo?.profile_image || 'https://i.ibb.co/nB2HMyf/image.png'}
+          alt={userInfo?.login_id}
         />
         <InfoContainer>
           <ProName>
-            <ProfileName>권혁진</ProfileName>
-            <Button15>Edit</Button15>
+            <ProfileName>{userInfo?.nickname}</ProfileName>
+            {/* {myId === memberId && (
+              <Button15 onClick={navigateToEdit}>Edit</Button15>
+            )} */}
           </ProName>
-          <VideoCount>동영상 24개</VideoCount>
+          <VideoCount>동영상 {videoCount}개</VideoCount>
           <ProText>
             <ChatOutlinedIcon />
-            사랑, 그놈...
+            <p>{userInfo?.comment || '코멘트를 추가해보세요..'}</p>
           </ProText>
           <ExtraFunction>
-            <YouTubeIconEdit fontSize="medium" />
-            <ThemeProvider theme={theme}>
-              <InstagramIconEdit color="gradient" fontSize="medium" />
-            </ThemeProvider>
+            <YouTubeIconEdit
+              fontSize="medium"
+              onClick={() => handleIconClick(userInfo?.youtube_account)}
+            />
+            <InstagramIconEdit
+              fontSize="medium"
+              onClick={() => handleIconClick(userInfo?.instagram_account)}
+            />
           </ExtraFunction>
         </InfoContainer>
       </MyContainer>
-      <TabContainer>
-        <Tab
-          active={activeTab === 'My Videos'}
-          onClick={() => setActiveTab('My Videos')}
-        >
-          My Videos
-        </Tab>
-        <Tab
-          active={activeTab === 'Recently Viewed'}
-          onClick={() => setActiveTab('Recently Viewed')}
-        >
-          Recently Viewed
-        </Tab>
-      </TabContainer>
-      <AlbumContainer>
-        {(activeTab === 'My Videos' ? Myvideos : RecentlyViewed).map(
-          (item, index) => (
-            <AlbumCover key={index} {...item} />
-          ),
-        )}
-      </AlbumContainer>
+      <BasicTabs
+        value={activeTab}
+        handleChange={handleChange}
+        isOwner={isOwner}
+      />
+      <InfiniteScroll
+        dataLength={activeTab === 0 ? myVideos.length : recentView.length}
+        next={() => {
+          const nextPage = page + 1;
+          setPage(nextPage);
+          activeTab === 0 ? fetchData(nextPage) : fetchRecent(nextPage);
+        }}
+        hasMore={hasMore}
+        loader={<h4>Loading...</h4>}
+        endMessage={<p>No more items</p>}
+        style={{
+          width: '100%',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+        }}
+      >
+        <AlbumContainer>
+          {activeTab === 0 &&
+            myVideos.map((item, index) => (
+              <AlbumCover key={index} data={item} />
+            ))}
+          {activeTab === 1 &&
+            recentView.map((item, index) => (
+              <AlbumCover key={index} data={item} />
+            ))}
+        </AlbumContainer>
+      </InfiniteScroll>
     </BigContainer>
   );
 }

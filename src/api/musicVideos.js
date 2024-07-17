@@ -2,28 +2,29 @@ import { jsonAxios } from './axios.config';
 
 export const getList = async (page, size, sort = null, member_id = null) => {
   try {
-    // URLSearchParams 객체에 전달된 매개변수 추가
-    const params = new URLSearchParams();
-    params.append('page', page);
-    params.append('size', size);
-    if (sort) params.append('sort', sort);
-    if (member_id) params.append('member_id', member_id);
-
-    // 최종 URL 생성
-    const url = `http://127.0.0.1:8000/api/v1/music-videos/?${params.toString()}`;
-
-    // 요청 전 최종 URL 확인
-    console.log('Final URL:', url);
-
-    // GET 요청
-    const response = await jsonAxios.get(url);
-    console.log('response', response.data);
+    const response = await jsonAxios.get(
+      `/music-videos/?page=${page}&size=${size}` +
+        (sort ? `&sort=${sort}` : '') +
+        (member_id ? `&member_id=${member_id}` : ''),
+    );
+    console.log('겟리스트:', response.data);
     return response.data;
   } catch (error) {
     console.error('errorcode:', error);
   }
 };
 
+export const getHistory = async (member_id, page, size) => {
+  try {
+    const response = await jsonAxios.get(
+      `/music-videos/histories-list/${member_id}?page=${page}&size=${size}`,
+    );
+    console.log('기록 :', response.data);
+    return response.data;
+  } catch (error) {
+    console.error(`error code:`, error);
+  }
+};
 export const getGenre = async () => {
   try {
     const response = await jsonAxios.get('/music-videos/genres/');

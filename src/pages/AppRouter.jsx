@@ -12,6 +12,7 @@ import Create from './Create';
 import Play from './Play';
 import ViewChart from './ViewChart';
 import Main from './Main';
+import EditProfile from './EditProfile';
 
 function AppRouter() {
   return (
@@ -21,7 +22,7 @@ function AppRouter() {
           <Route path="/" element={<OnBoardingPage />} />
           <Route path="/auth" element={<Auth />} />
           <Route path="/test" element={<Main />} />
-          <Route path="/mypage" element={<Mypage />} />
+          <Route path="/users/:id" element={<Mypage />} />
           <Route path="/mainpage" element={<MainPage />} />
           <Route path="/search" element={<Search />} />
           <Route path="/lyricsselect" element={<LyricsSelect />} />
@@ -29,6 +30,7 @@ function AppRouter() {
           <Route path="/create" element={<Create />} />
           <Route path="/play" element={<Play />} />
           <Route path="/chart" element={<ViewChart />} />
+          <Route path="/edit" element={<EditProfile />} />
         </Routes>
       </App>
     </Router>
