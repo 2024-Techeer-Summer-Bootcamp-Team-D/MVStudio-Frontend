@@ -330,7 +330,10 @@ function Mypage() {
     <BigContainer>
       <Profile>Profile</Profile>
       <MyContainer>
-        <ProImg src={userInfo?.profile_image} alt={userInfo?.login_id} />
+        <ProImg
+          src={userInfo?.profile_image || 'https://i.ibb.co/nB2HMyf/image.png'}
+          alt={userInfo?.login_id}
+        />
         <InfoContainer>
           <ProName>
             <ProfileName>{userInfo?.nickname}</ProfileName>
