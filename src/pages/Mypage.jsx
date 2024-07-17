@@ -7,7 +7,8 @@ import InstagramIcon from '@mui/icons-material/Instagram';
 // import VisibilityIcon from '@mui/icons-material/Visibility';
 import { getList, getHistory } from '../api/musicVideos';
 import { getMemberInfo } from '../api/member';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
+// import { useNavigate } from 'react-router-dom';
 import BasicTabs from '../components/BasicTaps';
 import InfiniteScroll from 'react-infinite-scroll-component';
 
@@ -308,9 +309,9 @@ function Mypage() {
   };
 
   // 프로필 수정 페이지로 이동
-  const navigateToEdit = () => {
-    navigate(`/edit`);
-  };
+  // const navigateToEdit = () => {
+  //   navigate(`/edit`);
+  // };
 
   const handleIconClick = (url) => {
     if (url === null) {
@@ -322,7 +323,7 @@ function Mypage() {
 
   const isOwner = myId === memberId;
 
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   if (!userInfo) {
     return <EmptyContainer>조회하신 회원정보가 없습니다.</EmptyContainer>;
