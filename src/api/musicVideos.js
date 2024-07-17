@@ -25,3 +25,65 @@ export const getHistory = async (member_id, page, size) => {
     console.error(`error code:`, error);
   }
 };
+export const getGenre = async () => {
+  try {
+    const response = await jsonAxios.get('/music-videos/genres/');
+    console.log('response:', response.data.data);
+    return response.data;
+  } catch (error) {
+    console.error('errorcode:', error);
+  }
+};
+
+export const getInstruments = async () => {
+  try {
+    const response = await jsonAxios.get('/music-videos/instruments/');
+    console.log('response:', response.data.data);
+    return response.data;
+  } catch (error) {
+    console.error('errorcode:', error);
+  }
+};
+
+export const postLyrics = async (subject, genres, language, vocal) => {
+  try {
+    const response = await jsonAxios.post('/music-videos/lyrics/', {
+      subject: subject,
+      genres: genres,
+      language: language,
+      vocal: vocal,
+    });
+    console.log('response:', response.data);
+    return response.data;
+  } catch (error) {
+    console.error('errorcode:', error);
+  }
+};
+
+export const PostVideos = async (
+  member_id,
+  subject,
+  genres_ids,
+  instruments_ids,
+  tempo,
+  language,
+  vocal,
+  lyrics,
+) => {
+  try {
+    const response = await jsonAxios.post('/music-videos/', {
+      member_id: member_id,
+      subject: subject,
+      genres_ids: genres_ids,
+      instruments_ids: instruments_ids,
+      tempo: tempo,
+      language: language,
+      vocal: vocal,
+      lyrics: lyrics,
+    });
+    console.log('response:', response.data);
+    return response.data;
+  } catch (error) {
+    console.error('errorcode:', error);
+  }
+};
