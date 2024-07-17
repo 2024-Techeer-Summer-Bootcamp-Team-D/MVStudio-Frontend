@@ -2,9 +2,6 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import VisibilityIcon from '@mui/icons-material/Visibility';
-import { getList } from '../api/musicVideos';
-
-getList();
 
 const CreateContainer = styled.div`
   width: 100%;

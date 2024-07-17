@@ -1,7 +1,6 @@
 /* eslint-disable react/no-unescaped-entities */
 import React from 'react';
 import styled from 'styled-components';
-import { postVideos } from '../api/musicVideos'; // postVideos 함수 가져오기
 
 const BigContainer = styled.div`
   display: flex;
@@ -107,15 +106,6 @@ const Button = styled.button`
   }
 `;
 
-async function handlePostVideos() {
-  try {
-    const response = await postVideos();
-    console.log('Video posted successfully:', response);
-  } catch (error) {
-    console.error('Error posting video:', error);
-  }
-}
-
 function LyricsSelect() {
   return (
     <BigContainer>
@@ -139,7 +129,6 @@ function LyricsSelect() {
               <div style={styles.style1After}></div>
             </blockquote>
           </div>
-          <Button onClick={handlePostVideos}>Select</Button>
         </LyricsContainer>
         <LyricsContainer>
           <div>
@@ -160,7 +149,6 @@ function LyricsSelect() {
               <div style={styles.style1After}></div>
             </blockquote>
           </div>
-          <Button onClick={handlePostVideos}>Select</Button>
         </LyricsContainer>
         <LyricsContainer>
           <div>
@@ -182,9 +170,9 @@ function LyricsSelect() {
               <div style={styles.style1After}></div>
             </blockquote>
           </div>
-          <Button onClick={handlePostVideos}>Create</Button>
         </LyricsContainer>
       </OtherContainer>
+      <Button>Create</Button>
     </BigContainer>
   );
 }

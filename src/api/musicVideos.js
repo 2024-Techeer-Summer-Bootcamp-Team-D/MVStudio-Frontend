@@ -26,8 +26,8 @@ export const getList = async (page, size, sort = null, member_id = null) => {
 
 export const getGenre = async () => {
   try {
-    const response = await jsonAxios.get('/music-videos/genres/');
-    console.log('response:', response.data.data);
+    const response = await jsonAxios.get('/music-videos/genres');
+
     return response.data;
   } catch (error) {
     console.error('errorcode:', error);
@@ -36,8 +36,7 @@ export const getGenre = async () => {
 
 export const getInstruments = async () => {
   try {
-    const response = await jsonAxios.get('/music-videos/instruments/');
-    console.log('response:', response.data.data);
+    const response = await jsonAxios.get('/music-videos/instruments');
     return response.data;
   } catch (error) {
     console.error('errorcode:', error);
@@ -46,13 +45,13 @@ export const getInstruments = async () => {
 
 export const postLyrics = async (subject, genres, language, vocal) => {
   try {
-    const response = await jsonAxios.post('/music-videos/lyrics/', {
+    const response = await jsonAxios.post('/music-videos/lyrics', {
       subject: subject,
       genres: genres,
       language: language,
       vocal: vocal,
     });
-    console.log('response:', response.data);
+
     return response.data;
   } catch (error) {
     console.error('errorcode:', error);
@@ -70,7 +69,7 @@ export const PostVideos = async (
   lyrics,
 ) => {
   try {
-    const response = await jsonAxios.post('/music-videos/', {
+    const response = await jsonAxios.post('/music-videos', {
       member_id: member_id,
       subject: subject,
       genres_ids: genres_ids,
@@ -80,6 +79,16 @@ export const PostVideos = async (
       vocal: vocal,
       lyrics: lyrics,
     });
+    console.log('response:', response.data);
+    return response.data;
+  } catch (error) {
+    console.error('errorcode:', error);
+  }
+};
+
+export const getStyles = async () => {
+  try {
+    const response = await jsonAxios.get('/music-videos/styles');
     console.log('response:', response.data);
     return response.data;
   } catch (error) {

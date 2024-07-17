@@ -1,8 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled, { css, keyframes } from 'styled-components';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import { getGenre, getInstruments, postLyrics } from '../api/musicVideos';
+import {
+  getGenre,
+  getInstruments,
+  postLyrics,
+  getStyles,
+} from '../api/musicVideos';
 import { useNavigate } from 'react-router-dom';
 
 const jellyAnimation = keyframes`
@@ -18,25 +23,24 @@ const jellyAnimation = keyframes`
     transform: scale(0.95, 1.05);
   }
 `;
-getGenre();
-getInstruments();
+
 const JellyButton = styled.button`
-  margin-left: 38%;
-  margin-top: 2%;
-  width: 16rem;
-  height: 3rem;
-  font-size: 1.4rem;
+  margin-left: 78%;
+  margin-bottom: 5%;
+  width: 12rem;
+  height: 3.6rem;
+  font-size: 1rem;
   font-weight: 500;
   /* border: 0.1rem solid #ffffff; */
   background-image: linear-gradient(
     to right,
-    #20004e,
-    #37006e,
-    #4600be,
-    #32005a
+    #240b38,
+    #50075f,
+    #7200be,
+    #3b005a
   );
   color: white; /* 텍스트의 색상을 지정합니다 */
-  border-radius: 1rem;
+  border-radius: 0.7rem;
   cursor: pointer;
   transition: background-color 0.3s ease;
 
@@ -44,10 +48,10 @@ const JellyButton = styled.button`
     animation: ${jellyAnimation} 0.5s both;
     background-image: linear-gradient(
       to right,
-      #20004e,
-      #37006e,
-      #4600be,
-      #32005a
+      #240b38,
+      #50075f,
+      #7200be,
+      #3b005a
     );
   }
 `;
@@ -63,7 +67,7 @@ const JellyButton = styled.button`
 
 const CreateContainer = styled.div`
   width: 100%;
-  height: 80vh;
+  height: 100%;
   display: flex;
   flex-direction: column;
 `;
@@ -80,8 +84,7 @@ const LeftContainer = styled.div`
   display: flex;
   flex-direction: column;
   width: 40%;
-  margin-left: 11%;
-  padding-left: 2rem;
+  padding: 3%;
   border-top-left-radius: 1rem;
   border-bottom-left-radius: 1rem;
   justify-content: center;
@@ -91,9 +94,8 @@ const LeftContainer = styled.div`
 const RightContainer = styled.div`
   width: 55%;
   display: flex;
+  padding: 3%;
   flex-direction: column;
-  margin-right: 11%;
-  padding-left: 2rem;
   border-top-right-radius: 1rem;
   border-bottom-right-radius: 1rem;
   justify-content: center;
@@ -110,21 +112,21 @@ const TitleStyle = styled.p`
 
 const Button = styled.button`
   width: 10rem;
-  font-size: 1.4rem;
-  font-weight: 600;
+  font-size: 1rem;
+  font-weight: 500;
   color: #fff;
   cursor: pointer;
   height: 3.6rem;
   text-align: center;
   background-size: 300% 100%;
-  border-radius: 1.3rem;
+  border-radius: 0.7rem;
   transition: all 0.4s ease-in-out;
   background-image: linear-gradient(
     to right,
-    #20004e,
-    #37006e,
-    #4600be,
-    #32005a
+    #240b38,
+    #50075f,
+    #7200be,
+    #3b005a
   );
 
   &:hover {
@@ -146,11 +148,7 @@ const Button = styled.button`
 const TitleInput = styled.input`
   display: flex;
   word-break: break-all;
-  background: linear-gradient(
-    45deg,
-    rgba(156, 106, 99, 0.8) 30%,
-    rgba(111, 59, 151, 0.8) 90%
-  );
+  background: linear-gradient(to right, #240b38, #50075f, #3b005a);
   width: 90%;
   height: 8rem;
   outline: none;
@@ -166,6 +164,7 @@ const TitleInput = styled.input`
   text-align: left;
   vertical-align: top;
   padding-bottom: 4rem;
+  margin-bottom: 3rem;
   ::placeholder {
     position: absolute;
     top: 1rem;
@@ -267,6 +266,15 @@ const InstrumentList = styled.div`
   position: relative;
 `;
 
+const StylesList = styled.div`
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  height: 8rem;
+  transition: transform 0.5s ease-in-out;
+  transform: ${({ optionIndex }) => `translateX(-${optionIndex * 16.73}%)`};
+  position: relative;
+`;
 const ToThePadding = styled.div`
   padding-top: 1.5rem;
 `;
@@ -323,7 +331,7 @@ const GroupText = styled.div`
 `;
 
 const ModalItem = styled.p`
-  font-size: 1.7rem;
+  font-size: 1rem;
   color: rgba(205, 112, 238, 0.8);
   margin-left: 1rem;
   font-family: 'SUIT', sans-serif;
@@ -335,7 +343,7 @@ const ModalItem = styled.p`
 `;
 
 const InstrumentItem = styled.p`
-  font-size: 1.7rem;
+  font-size: 1rem;
   color: rgba(205, 112, 238, 0.8);
   margin-left: 1rem;
   font-family: 'SUIT', sans-serif;
@@ -348,7 +356,7 @@ const InstrumentItem = styled.p`
 
 const ModalValue = styled.p`
   font-family: 'SUIT', sans-serif;
-  font-size: 1.7rem;
+  font-size: 1rem;
   color: #ffffff;
   font-weight: 500;
 `;
@@ -362,7 +370,7 @@ const SubmitButton = styled.button`
   color: white;
   text-transform: none;
   font-family: 'SUIT', sans-serif;
-  margin-left: 15.9rem;
+  margin-left: 14.5rem;
   margin-top: 2.5rem;
   font-size: 1.2rem;
   font-weight: 550;
@@ -383,11 +391,12 @@ const WarningContainer = styled.div`
   display: flex;
 `;
 
-function Create() {
+const Create = () => {
   const navigate = useNavigate();
   const goLyrics = () => {
     navigate('/LyricsSelect');
   };
+
   const click = () => {
     postLyrics(
       voice,
@@ -400,43 +409,65 @@ function Create() {
     goLyrics();
   };
 
-  const newCoverArray = [
-    { src: 'https://picsum.photos/seed/1/100', label: 'POP' },
-    { src: 'https://picsum.photos/seed/2/100', label: 'ROCK' },
-    { src: 'https://picsum.photos/seed/3/100', label: 'JAZZ' },
-    { src: 'https://picsum.photos/seed/4/100', label: 'CLASSICAL' },
-    { src: 'https://picsum.photos/seed/5/100', label: 'HIP HOP' },
-    { src: 'https://picsum.photos/seed/6/100', label: 'COUNTRY' },
-    { src: 'https://picsum.photos/seed/7/100', label: 'BLUES' },
-    { src: 'https://picsum.photos/seed/8/100', label: 'R&B' },
-    { src: 'https://picsum.photos/seed/9/100', label: 'REGGAE' },
-    { src: 'https://picsum.photos/seed/10/100', label: 'ELECTRONIC' },
-  ];
-
-  const instrumentCoverArray = [
-    { src: 'https://picsum.photos/seed/11/100', label: 'Guitar' },
-    { src: 'https://picsum.photos/seed/12/100', label: 'Piano' },
-    { src: 'https://picsum.photos/seed/13/100', label: 'Violin' },
-    { src: 'https://picsum.photos/seed/14/100', label: 'Drum' },
-    { src: 'https://picsum.photos/seed/15/100', label: 'Saxophone' },
-    { src: 'https://picsum.photos/seed/16/100', label: 'Flute' },
-    { src: 'https://picsum.photos/seed/17/100', label: 'Trumpet' },
-    { src: 'https://picsum.photos/seed/18/100', label: 'Harp' },
-    { src: 'https://picsum.photos/seed/19/100', label: 'Cello' },
-    { src: 'https://picsum.photos/seed/20/100', label: 'Clarinet' },
-  ];
-
+  // State 선언
+  const [genreList, setGenreList] = useState([]);
+  const [instrumentsList, setInstrumentsList] = useState([]);
   const [voice, setVoice] = useState('');
   const [language, setLanguage] = useState('');
   const [tempo, setTempo] = useState('');
   const [selectedGenres, setSelectedGenres] = useState([]);
   const [selectedInstruments, setSelectedInstruments] = useState([]);
   const [songTitle, setSongTitle] = useState('');
-
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentGenreIndex, setCurrentGenreIndex] = useState(0);
   const [currentInstrumentIndex, setCurrentInstrumentIndex] = useState(0);
+  const [genreId, setGenreId] = useState([]);
+  const [instrumentsId, setInstrumentsId] = useState([]);
+  const [stylesId, setStylesId] = useState([]);
+  const [stylesList, setStylesList] = useState([]);
+  const [currentStylesIndex, setCurrentStylesIndex] = useState(0);
+  const [selectedStyles, setSelectedStyles] = useState([]);
 
+  // API 데이터 fetch
+  useEffect(() => {
+    const fetchGenreData = async () => {
+      try {
+        const data = await getGenre();
+        console.log('response(genre) : ', data.genres);
+        setGenreList(data.genres);
+      } catch {
+        console.error('장르 데이터 조회 오류');
+      }
+    };
+    fetchGenreData();
+  }, []);
+
+  useEffect(() => {
+    const fetchInstrumentData = async () => {
+      try {
+        const data = await getInstruments();
+        setInstrumentsList(data.instruments);
+        console.log('response(instrument):', data.instruments);
+      } catch {
+        console.error('악기 데이터 조회 오류');
+      }
+    };
+    fetchInstrumentData();
+  }, []);
+
+  useEffect(() => {
+    const fetchStylesData = async () => {
+      try {
+        const data = await getStyles();
+        console.log('response(style) : ', data.data);
+        setStylesList(data.data);
+      } catch {
+        console.error('스타일 데이터 조회 오류');
+      }
+    };
+    fetchStylesData();
+  }, []);
+  // 핸들러 함수들
   const handleCreateClick = () => {
     setIsModalOpen(true);
   };
@@ -457,21 +488,32 @@ function Create() {
     setTempo(label);
   };
 
-  const handleGenreClick = (label) => {
+  const handleGenreClick = (label, id) => {
     if (selectedGenres.includes(label)) {
       setSelectedGenres(selectedGenres.filter((genre) => genre !== label));
     } else {
       setSelectedGenres([...selectedGenres, label]);
+      setGenreId([...genreId, id]);
     }
   };
 
-  const handleInstrumentClick = (label) => {
+  const handleInstrumentClick = (label, id) => {
     if (selectedInstruments.includes(label)) {
       setSelectedInstruments(
         selectedInstruments.filter((instrument) => instrument !== label),
       );
     } else {
       setSelectedInstruments([...selectedInstruments, label]);
+      setInstrumentsId([...instrumentsId, id]);
+    }
+  };
+
+  const handleStylesClick = (label, id) => {
+    if (selectedStyles.includes(label)) {
+      setSelectedStyles(selectedStyles.filter((style) => style !== label));
+    } else {
+      setSelectedStyles([...selectedStyles, label]);
+      setStylesId([...stylesId, id]);
     }
   };
 
@@ -481,8 +523,43 @@ function Create() {
 
   const genresCount = selectedGenres.length;
   const instrumentsCount = selectedInstruments.length;
-
   const shouldShowWarning = genresCount >= 3 || instrumentsCount >= 3;
+
+  const handleGenrePrevClick = () => {
+    if (currentGenreIndex > 0) {
+      setCurrentGenreIndex(currentGenreIndex - 1);
+    }
+  };
+
+  const handleGenreNextClick = () => {
+    if (currentGenreIndex < genreList?.length - 6) {
+      setCurrentGenreIndex(currentGenreIndex + 1);
+    }
+  };
+
+  const handleInstrumentPrevClick = () => {
+    if (currentInstrumentIndex > 0) {
+      setCurrentInstrumentIndex(currentInstrumentIndex - 1);
+    }
+  };
+
+  const handleInstrumentNextClick = () => {
+    if (currentInstrumentIndex < instrumentsList.length - 6) {
+      setCurrentInstrumentIndex(currentInstrumentIndex + 1);
+    }
+  };
+
+  const handleStylesPrevClick = () => {
+    if (currentStylesIndex > 0) {
+      setCurrentStylesIndex(currentStylesIndex - 1);
+    }
+  };
+
+  const handleStylesNextClick = () => {
+    if (currentStylesIndex < stylesList.length - 6) {
+      setCurrentStylesIndex(currentStylesIndex + 1);
+    }
+  };
 
   return (
     <CreateContainer>
@@ -557,27 +634,29 @@ function Create() {
             <TitleStyle>Genre</TitleStyle>
             <GenreContainer>
               <ArrowFunction
-                onClick={() => setCurrentGenreIndex(currentGenreIndex - 1)}
+                onClick={handleGenrePrevClick}
                 disabled={currentGenreIndex === 0}
               />
               <ViewContainer>
                 <CardList currentIndex={currentGenreIndex}>
-                  {newCoverArray.map((option, index) => (
+                  {genreList?.map((option, index) => (
                     <CoverBox key={index}>
                       <RoundCover
-                        src={option.src}
-                        selected={selectedGenres.includes(option.label)}
-                        onClick={() => handleGenreClick(option.label)}
+                        src={option.genre_image_url}
+                        selected={selectedGenres.includes(option.genre_name)}
+                        onClick={() =>
+                          handleGenreClick(option.genre_name, option.genre_id)
+                        }
                       />
-                      <CoverLabel>{option.label}</CoverLabel>
+                      <CoverLabel>{option.genre_name}</CoverLabel>
                     </CoverBox>
                   ))}
                 </CardList>
               </ViewContainer>
               <ArrowFunction
-                onClick={() => setCurrentGenreIndex(currentGenreIndex + 1)}
-                disabled={currentGenreIndex === newCoverArray.length - 6}
-                isPrev
+                onClick={handleGenreNextClick}
+                disabled={currentGenreIndex === genreList?.length - 6}
+                isPrev={true}
               />
             </GenreContainer>
           </ToThePadding>
@@ -585,32 +664,67 @@ function Create() {
             <TitleStyle>Instrument</TitleStyle>
             <GenreContainer>
               <ArrowFunction
-                onClick={() =>
-                  setCurrentInstrumentIndex(currentInstrumentIndex - 1)
-                }
+                onClick={handleInstrumentPrevClick}
                 disabled={currentInstrumentIndex === 0}
               />
+
               <ViewContainer>
                 <InstrumentList optionIndex={currentInstrumentIndex}>
-                  {instrumentCoverArray.map((option, index) => (
+                  {instrumentsList?.map((option, index) => (
                     <CoverBox key={index}>
                       <RoundCover
-                        src={option.src}
-                        selected={selectedInstruments.includes(option.label)}
-                        onClick={() => handleInstrumentClick(option.label)}
+                        src={option.instrument_image_url}
+                        selected={selectedInstruments.includes(
+                          option.instrument_name,
+                        )}
+                        onClick={() =>
+                          handleInstrumentClick(
+                            option.instrument_name,
+                            option.instrument_id,
+                          )
+                        }
                       />
-                      <CoverLabel>{option.label}</CoverLabel>
+                      <CoverLabel>{option.instrument_name}</CoverLabel>
                     </CoverBox>
                   ))}
                 </InstrumentList>
               </ViewContainer>
               <ArrowFunction
-                onClick={() =>
-                  setCurrentInstrumentIndex(currentInstrumentIndex + 1)
-                }
+                onClick={handleInstrumentNextClick}
                 disabled={
-                  currentInstrumentIndex === instrumentCoverArray.length - 6
+                  currentInstrumentIndex === instrumentsList?.length - 6
                 }
+                isPrev={true}
+              />
+            </GenreContainer>
+          </ToTheMargin>
+
+          <ToTheMargin>
+            <TitleStyle>Style</TitleStyle>
+            <GenreContainer>
+              <ArrowFunction
+                onClick={handleStylesPrevClick}
+                disabled={currentStylesIndex === 0}
+              />
+              <ViewContainer>
+                <StylesList optionIndex={currentStylesIndex}>
+                  {stylesList?.map((option, index) => (
+                    <CoverBox key={index}>
+                      <RoundCover
+                        src={option.style_image_url}
+                        selected={selectedStyles.includes(option.style_name)}
+                        onClick={() =>
+                          handleStylesClick(option.style_name, option.style_id)
+                        }
+                      />
+                      <CoverLabel>{option.style_name}</CoverLabel>
+                    </CoverBox>
+                  ))}
+                </StylesList>
+              </ViewContainer>
+              <ArrowFunction
+                onClick={handleStylesNextClick}
+                disabled={currentStylesIndex === stylesList.length - 6}
                 isPrev
               />
             </GenreContainer>
@@ -646,11 +760,15 @@ function Create() {
                 <InstrumentItem>Instrument :</InstrumentItem>
                 <ModalValue>{selectedInstruments.join(', ')}</ModalValue>
               </GroupText>
+              <GroupText>
+                <ModalItem>style :</ModalItem>
+                <ModalValue>{selectedStyles.join(', ')}</ModalValue>
+              </GroupText>
               {shouldShowWarning && (
                 <WarningContainer>
                   <WarningMessage>
-                    너무 많은 옵션을 선택할시 선택한 옵션 반영이 잘 되지않을 수
-                    있습니다.
+                    너무 많은 옵션을 선택할 시 선택한 옵션 반영이 잘 되지 않을
+                    수 있습니다.
                   </WarningMessage>
                 </WarningContainer>
               )}
@@ -661,6 +779,6 @@ function Create() {
       )}
     </CreateContainer>
   );
-}
+};
 
 export default Create;
