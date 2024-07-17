@@ -1,3 +1,5 @@
+// Search.jsx
+
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import LongCover from '../components/LongCover';
@@ -8,30 +10,13 @@ const BigContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-left: 9.4rem;
 `;
 
 const WholeContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding-left: 18rem;
-`;
-
-const SearchResult = styled.p`
-  font-size: 2rem;
-  font-weight: bold;
-  margin-bottom: 0.1rem;
-  margin-right: 48rem;
-  color: #ffffff;
-`;
-
-const SearchTerm = styled.p`
-  font-size: 1.5rem;
-  color: #ffffff;
-  margin-left: 9.5rem;
-  font-family: 'SUIT', sans-serif;
-  margin-right: auto;
+  padding-left: 3%;
 `;
 
 const LoadingMessage = styled.img.attrs({
@@ -42,10 +27,16 @@ const LoadingMessage = styled.img.attrs({
   margin-bottom: 1rem;
 `;
 
+const NoResultsMessage = styled.p`
+  font-size: 1.5rem;
+  color: #555555;
+  margin-top: 2rem;
+`;
+
 const Search = () => {
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
-  const keyword = searchParams.get('keyword');
+  const keyword = searchParams.get('keyword') || '';
   const [currentPage, setCurrentPage] = useState(1);
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -55,10 +46,13 @@ const Search = () => {
     const fetchData = async () => {
       setLoading(true);
       try {
-        const result = await getsearch(currentPage, 3, keyword); // 페이지당 3개씩 가져오도록 설정
-        if (result) {
+        const result = await getsearch(currentPage, 2, keyword);
+        console.log('Response data:', result);
+        if (result && result.music_videos) {
           setItems((prevItems) => [...prevItems, ...result.music_videos]);
-          setHasMore(result.pagination.next_page);
+          setHasMore(result.pagination && result.pagination.next_page);
+        } else {
+          setHasMore(false);
         }
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -73,13 +67,15 @@ const Search = () => {
 
   useEffect(() => {
     const handleScroll = () => {
-      const scrollPosition =
-        window.innerHeight + document.documentElement.scrollTop;
-      const pageHeight = document.documentElement.offsetHeight;
-      const remainingScroll = pageHeight - scrollPosition;
+      if (!loading && hasMore) {
+        const scrollPosition =
+          window.innerHeight + document.documentElement.scrollTop;
+        const pageHeight = document.documentElement.offsetHeight;
+        const remainingScroll = pageHeight - scrollPosition;
 
-      if (remainingScroll <= 5 * window.innerHeight && !loading && hasMore) {
-        setCurrentPage((prevPage) => prevPage + 1);
+        if (remainingScroll <= 5 * window.innerHeight) {
+          setCurrentPage((prevPage) => prevPage + 1);
+        }
       }
     };
 
@@ -89,26 +85,32 @@ const Search = () => {
 
   return (
     <WholeContainer>
-      <SearchResult>Search result</SearchResult>
-      <SearchTerm>{`'${keyword}' Search result`}</SearchTerm>
       <BigContainer>
-        {items.map((item, index) => (
-          <LongCover
-            key={index}
-            pic={item.cover_image}
-            title={item.subject}
-            uploader={item.member_name}
-            view={item.views}
-            options={{
-              genres: item.genres,
-              instruments: item.instruments,
-              language: item.language,
-              vocal: item.vocal,
-              tempo: item.tempo,
-            }}
-          />
-        ))}
+        {items.length > 0 &&
+          items.map((item, index) => (
+            <LongCover
+              key={index}
+              data={{
+                pic: item.cover_image,
+                title: item.subject,
+                uploader: item.member_name,
+                view: item.views,
+                options: {
+                  genres: item.genres,
+                  instruments: item.instruments,
+                  style_name: item.style_name,
+                  language: item.language,
+                  vocal: item.vocal,
+                  tempo: item.tempo,
+                },
+                isOwner: item.is_owner,
+              }}
+            />
+          ))}
         {loading && <LoadingMessage />}
+        {!loading && items.length === 0 && (
+          <NoResultsMessage>검색결과가 없습니다.</NoResultsMessage>
+        )}
       </BigContainer>
     </WholeContainer>
   );

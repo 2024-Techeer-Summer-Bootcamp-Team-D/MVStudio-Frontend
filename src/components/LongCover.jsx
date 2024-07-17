@@ -1,32 +1,26 @@
-/* eslint-disable react/prop-types */
 import React from 'react';
+import PropTypes from 'prop-types'; // prop-types import 추가
 import styled from 'styled-components';
+import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
-import VisibilityIcon from '@mui/icons-material/Visibility';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import IosShareIcon from '@mui/icons-material/IosShare';
-import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 
 const BigContainer = styled.div`
   display: flex;
-  width: 70rem;
-  height: 20rem;
+  width: 95rem;
+  height: 19rem;
   position: relative;
   flex-direction: row;
   align-items: start;
-  margin-bottom: 2rem;
-  padding: 1rem;
-  /* background-color: rgba(54, 48, 48, 0.6); */
-  background-color: #212121;
-  border: 0.1rem solid rgba(255, 255, 255, 0.3);
-
   border-radius: 2rem;
 `;
 
 const ReaderContainer = styled.div`
   position: relative;
   width: 30rem;
-  height: 100%;
+  height: 18rem;
+  margin-top: 2.8rem;
   z-index: 2; /* Ensure this is above the InfoContainer */
   display: flex;
   align-items: center;
@@ -42,8 +36,8 @@ const ReaderContainer = styled.div`
 `;
 
 const ReaderPic = styled.img`
-  border-radius: 1rem;
-  width: 100%; /* Adjusted to maintain aspect ratio */
+  border-radius: 0.5rem;
+  width: 100%;
   height: 100%;
   object-fit: cover;
   transition: filter 0.3s ease;
@@ -67,19 +61,19 @@ const Overlay = styled.div`
   width: calc(100% - 12.375rem);
   height: 100%;
   margin-left: 2rem;
-  margin-top: 1rem;
+  margin-top: 3.8rem;
   margin-bottom: 1rem;
 `;
 
 const UploaderContainer = styled.div`
   display: flex;
   align-items: center;
-  margin-bottom: 0.5rem;
 `;
 
 const UploaderIcon = styled(PersonOutlineIcon)`
   color: #ffffff;
   margin-right: 0.5rem;
+  margin-left: 0.5rem;
 `;
 
 const Title = styled.p`
@@ -87,43 +81,37 @@ const Title = styled.p`
   font-weight: 550;
   color: #ffffff;
   margin-bottom: 0.5rem;
-  margin-top: 0rem;
+  margin-top: -1rem;
 `;
 
 const ViewContainer = styled.div`
   display: flex;
   align-items: center;
-  margin-bottom: 0.5rem;
+
+  margin-left: 0.1rem;
 `;
 
 const Uploader = styled.p`
   font-size: 1.2rem;
   color: #ffffff;
-  margin: 0;
-`;
-
-const ViewIcon = styled(VisibilityIcon)`
-  color: #ffffff;
-  margin-right: 0.5rem;
 `;
 
 const View = styled.p`
   font-size: 1rem;
   color: #ffffff;
   margin: 0;
+  margin-right: auto;
 `;
 
-const Options = styled.p`
+const Options = styled.div`
   font-size: 1.2rem;
-  color: #c0bdbd;
+  color: #ffffff;
   margin: 0;
   word-wrap: break-word;
   width: 93.5%;
-  background-color: rgba(86, 82, 82, 0.5);
-
-  height: 40%;
-  padding: 1rem;
+  height: 14rem;
   border-radius: 1rem;
+  line-height: 1.1;
 `;
 
 const ExtraInfo = styled.div`
@@ -147,39 +135,62 @@ const ShareIcon = styled(IosShareIcon)`
   color: #ffffff;
 `;
 
-const Icons = styled.div`
-  display: flex;
-  flex-direction: row;
-  gap: 2rem;
-`;
+const LongCover = ({ data }) => {
+  if (!data) {
+    return null; // 데이터가 없으면 아무것도 렌더링하지 않음
+  }
 
-function LongCover({ pic, title, uploader, view, options, owner }) {
   return (
     <BigContainer>
       <ReaderContainer>
-        <ReaderPic className="reader-pic" src={pic} alt="Reader" />
-        <PlayIcon fontSize="large" className="play-icon" />
+        <ReaderPic src={data.pic} className="reader-pic" />
+        <PlayIcon className="play-icon" />
       </ReaderContainer>
       <Overlay>
-        <ExtraInfo>
-          <Title>{title}</Title>
-          <Icons>
-            <ShareIcon owner={owner} fontSize="medium" />
-            <DeleteIcon owner={owner} fontSize="medium" />
-          </Icons>
-        </ExtraInfo>
-        <UploaderContainer>
-          <UploaderIcon fontSize="medium" />
-          <Uploader>{uploader}</Uploader>
-        </UploaderContainer>
+        <Title>{data.title}</Title>
         <ViewContainer>
-          <ViewIcon fontSize="medium" />
-          <View>{view}</View>
+          <View>{data.view} views</View>
         </ViewContainer>
-        <Options>{options}</Options>
+        <UploaderContainer>
+          <UploaderIcon />
+          <Uploader>{data.uploader}</Uploader>
+        </UploaderContainer>
+
+        <Options>
+          {data.options.genres.join(', ')}
+          ,&nbsp;{data.options.instruments.join(', ')}
+          ,&nbsp;{data.options.style_name}
+          ,&nbsp;{data.options.language}
+          ,&nbsp;{data.options.vocal}
+          ,&nbsp;{data.options.tempo}
+        </Options>
+        <ExtraInfo>
+          <div>
+            <DeleteIcon owner={data.isOwner} />
+            <ShareIcon owner={data.isOwner} />
+          </div>
+        </ExtraInfo>
       </Overlay>
     </BigContainer>
   );
-}
+};
+
+LongCover.propTypes = {
+  data: PropTypes.shape({
+    pic: PropTypes.string.isRequired,
+    title: PropTypes.string.isRequired,
+    uploader: PropTypes.string.isRequired,
+    view: PropTypes.number.isRequired,
+    options: PropTypes.shape({
+      genres: PropTypes.arrayOf(PropTypes.string).isRequired,
+      instruments: PropTypes.arrayOf(PropTypes.string).isRequired,
+      style_name: PropTypes.string.isRequired,
+      language: PropTypes.string.isRequired,
+      vocal: PropTypes.bool.isRequired,
+      tempo: PropTypes.string.isRequired,
+    }).isRequired,
+    isOwner: PropTypes.bool.isRequired,
+  }).isRequired,
+};
 
 export default LongCover;
