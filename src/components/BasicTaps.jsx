@@ -1,8 +1,10 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
 import React from 'react';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Box from '@mui/material/Box';
+import { styled } from '@mui/material/styles';
 
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -27,19 +29,40 @@ function a11yProps(index) {
   };
 }
 
+const StyledTabs = styled(Tabs)(({ theme }) => ({
+  position: 'relative',
+  zIndex: 1,
+  '&::before': {
+    content: '""',
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    width: '100%',
+    height: '0.1rem', // Adjust height as needed
+    background: '#a4a4a4',
+  },
+}));
+
 export default function BasicTabs({ value, handleChange, isOwner }) {
   return (
-    <Box sx={{ width: '100%' }}>
+    <Box sx={{ width: '100%', overflow: 'visible' }}>
       <Box
-        sx={{ borderBottom: 1, borderColor: 'divider', position: 'relative' }}
+        sx={{
+          borderBottom: 1,
+          borderColor: 'divider',
+          position: 'relative',
+          overflow: 'visible',
+        }}
       >
-        <Tabs
+        <StyledTabs
           value={value}
           onChange={handleChange}
           aria-label="basic tabs example"
           sx={{
             '& .MuiTabs-indicator': {
-              top: 0, // Indicator position set to top
+              top: '-0.1rem', // Adjust to overlap the border
+              zIndex: 99, // Ensure the indicator is above the border
+              height: '0.2rem', // Adjust the height as needed
             },
             '& .MuiTab-root': {
               color: '#ffffff', // Tab text color
@@ -55,7 +78,7 @@ export default function BasicTabs({ value, handleChange, isOwner }) {
             <Tab label="Videos" {...a11yProps(0)} />
           )}
           {isOwner && <Tab label="Recently Viewed" {...a11yProps(1)} />}
-        </Tabs>
+        </StyledTabs>
       </Box>
       <CustomTabPanel value={value} index={0}>
         My Videos

@@ -23,7 +23,6 @@ const BigContainer = styled.div`
 const Profile = styled.p`
   font-size: 2rem;
   color: #ffffff;
-  margin-right: 2rem;
   padding-left: 1rem;
 `;
 
@@ -40,7 +39,6 @@ const ProName = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
-  height: 4rem;
 `;
 
 const VideoCount = styled.div`
@@ -51,7 +49,8 @@ const VideoCount = styled.div`
 const InfoContainer = styled.div`
   display: flex;
   flex-direction: column;
-  padding-left: 3rem;
+  padding-left: 2rem;
+  gap: 0.3rem;
 `;
 
 const ProText = styled.div`
@@ -60,7 +59,8 @@ const ProText = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
-  padding-top: 1rem;
+  margin: 0;
+  height: 3rem;
 `;
 
 const ExtraFunction = styled.div`
@@ -68,7 +68,6 @@ const ExtraFunction = styled.div`
   flex-direction: row;
   height: 100%;
   padding-bottom: 0;
-  margin-top: 1rem;
 `;
 
 const InstagramIconEdit = styled(InstagramIcon)`
@@ -151,9 +150,7 @@ const MyContainer = styled.div`
   width: 72.5%;
   height: 14rem;
   padding-right: 2rem;
-  padding-left: 5rem;
   padding-bottom: 1rem;
-  margin-top: 2rem;
   align-items: center;
   /* border-bottom: 0.2rem solid rgba(139, 139, 139, 0.7); */
 `;
@@ -161,6 +158,7 @@ const MyContainer = styled.div`
 const ProfileName = styled.p`
   font-size: 1.4rem;
   width: 7rem;
+  margin-bottom: 0.9rem;
 `;
 
 const Button15 = styled.button`
@@ -208,6 +206,15 @@ const Button15 = styled.button`
   }
 `;
 
+const EmptyContainer = styled.div`
+  margin-left: 40%;
+  margin-top: 20%;
+  color: #ffffff;
+  font-size: 2rem;
+  display: flex;
+  flex-direction: row;
+`;
+
 function Mypage() {
   const { id: memberId } = useParams();
   const [activeTab, setActiveTab] = useState(0);
@@ -223,7 +230,7 @@ function Mypage() {
   // 페이지별 데이터를 가져오는 함수
   const fetchData = async (pageNum) => {
     try {
-      const response = await getList(pageNum, 9, null, null);
+      const response = await getList(pageNum, 9, null, memberId);
       const newData = response.music_videos.filter(
         (video) => !fetchedVideoIds.flat().includes(video.id),
       );
@@ -234,7 +241,6 @@ function Mypage() {
           return newIds;
         });
         setMyVideos((prevVideos) => {
-          // Filter out existing videos in prevVideos to avoid duplicates
           const filteredVideos = newData.filter(
             (video) =>
               !prevVideos.some((prevVideo) => prevVideo.id === video.id),
@@ -295,18 +301,6 @@ function Mypage() {
     }
   };
 
-  // useEffect(() => {
-  //   const fetchHistory = async () => {
-  //     try {
-  //       const response = await getHistory(memberId, 1, 9);
-  //       setRecentView(response.music_videos);
-  //     } catch (error) {
-  //       console.error('기록 목록 조회 오류', error);
-  //     }
-  //   };
-  //   fetchHistory();
-  // }, [memberId]);
-
   // 페이지 변경 핸들러
   const handleChange = (event, newValue) => {
     setActiveTab(newValue);
@@ -319,12 +313,21 @@ function Mypage() {
   };
 
   const handleIconClick = (url) => {
-    window.open(url, '_blank');
+    if (url === null) {
+      return;
+    } else {
+      window.open(url, '_blank');
+    }
   };
 
   const isOwner = myId === memberId;
 
   const navigate = useNavigate();
+
+  if (!userInfo) {
+    return <EmptyContainer>조회하신 회원정보가 없습니다.</EmptyContainer>;
+  }
+
   return (
     <BigContainer>
       <Profile>Profile</Profile>
@@ -348,21 +351,11 @@ function Mypage() {
           <ExtraFunction>
             <YouTubeIconEdit
               fontSize="medium"
-              onClick={() =>
-                handleIconClick(
-                  userInfo?.youtube_account ||
-                    'https://www.youtube.com/watch?v=xbiih8pzC30',
-                )
-              }
+              onClick={() => handleIconClick(userInfo?.youtube_account)}
             />
             <InstagramIconEdit
               fontSize="medium"
-              onClick={() =>
-                handleIconClick(
-                  userInfo?.instagram_account ||
-                    'https://www.youtube.com/watch?v=xbiih8pzC30',
-                )
-              }
+              onClick={() => handleIconClick(userInfo?.instagram_account)}
             />
           </ExtraFunction>
         </InfoContainer>
