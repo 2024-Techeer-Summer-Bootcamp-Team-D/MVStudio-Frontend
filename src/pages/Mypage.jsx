@@ -17,6 +17,7 @@ const BigContainer = styled.div`
   align-items: start;
   margin-left: 40%;
   margin-right: 20%;
+  min-width: 36rem;
   width: 60%;
 `;
 
@@ -24,11 +25,12 @@ const Profile = styled.p`
   font-size: 2rem;
   color: #ffffff;
   padding-left: 1rem;
+  margin-top: 2rem;
 `;
 
 const ProImg = styled.img`
-  width: 10rem;
-  height: 10rem;
+  width: 8rem;
+  height: 8rem;
   border-radius: 50%;
   flex-shrink: 0;
 `;
@@ -37,8 +39,8 @@ const ProName = styled.div`
   font-size: 1rem;
   color: #ffffff;
   display: flex;
-  flex-direction: row;
-  align-items: center;
+  flex-direction: column;
+  align-items: start;
 `;
 
 const VideoCount = styled.div`
@@ -50,7 +52,9 @@ const InfoContainer = styled.div`
   display: flex;
   flex-direction: column;
   padding-left: 2rem;
-  gap: 0.3rem;
+  width: 100%;
+  align-items: start;
+  gap: 0.875rem;
 `;
 
 const ProText = styled.div`
@@ -60,13 +64,11 @@ const ProText = styled.div`
   flex-direction: row;
   align-items: center;
   margin: 0;
-  height: 3rem;
 `;
 
 const ExtraFunction = styled.div`
   display: flex;
   flex-direction: row;
-  height: 100%;
   padding-bottom: 0;
 `;
 
@@ -74,6 +76,7 @@ const InstagramIconEdit = styled(InstagramIcon)`
   margin-right: 1rem;
   color: #a4a4a4;
   cursor: pointer;
+  height: 1rem;
 `;
 
 const YouTubeIconEdit = styled(YouTubeIcon)`
@@ -86,7 +89,7 @@ const AlbumContainer = styled.div`
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 1rem;
-  width: 80%;
+  width: 100%;
   padding-left: 1rem;
   padding-right: 1rem;
   margin-top: 1rem;
@@ -106,6 +109,8 @@ const AlbumCoverImage = styled.img`
   width: 100%;
   height: auto;
   border-radius: 0.5rem;
+  aspect-ratio: 5 / 3;
+  object-fit: cover;
 `;
 
 const Overlay = styled.div`
@@ -114,7 +119,7 @@ const Overlay = styled.div`
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(0, 0, 0, 0.7);
   color: #fff;
   display: flex;
   flex-direction: row;
@@ -122,15 +127,12 @@ const Overlay = styled.div`
   justify-content: center;
   border-radius: 0.5rem;
   opacity: 0;
-  /* gap: 1rem; */
   transition: opacity 0.3s ease-in-out;
 `;
 
 const OverlayText = styled.p`
   display: flex;
   align-items: center;
-  font-size: 1.3rem;
-  font-weight: 550;
   gap: 0.5rem;
 `;
 
@@ -147,64 +149,62 @@ const AlbumCover = ({ data }) => (
 const MyContainer = styled.div`
   display: flex;
   flex-direction: row;
-  width: 72.5%;
-  height: 14rem;
-  padding-right: 2rem;
-  padding-bottom: 1rem;
-  align-items: center;
+  width: 100%;
+  align-items: start;
   /* border-bottom: 0.2rem solid rgba(139, 139, 139, 0.7); */
+  margin: 2rem;
 `;
 
 const ProfileName = styled.p`
   font-size: 1.4rem;
   width: 7rem;
-  margin-bottom: 0.9rem;
+  /* margin: 0; */
 `;
 
-const Button15 = styled.button`
-  width: 6rem;
-  background: #6a069c;
-  border: none;
-  z-index: 1;
-  position: relative;
-  padding: 10px 20px;
-  color: #fff;
-  font-size: 1rem;
-  cursor: pointer;
-  overflow: hidden;
-  border-radius: 1rem;
-  outline: none;
-  font-family: 'SUIT', sans-serif;
+// const Button15 = styled.button`
+//   width: 6rem;
+//   background: #6a069c;
+//   border: none;
+//   z-index: 1;
+//   position: relative;
+//   padding: 10px 20px;
+//   color: #fff;
+//   font-size: 1rem;
+//   cursor: pointer;
+//   overflow: hidden;
+//   border-radius: 1rem;
+//   outline: none;
+//   font-family: 'SUIT', sans-serif;
 
-  &:hover {
-    color: #fff;
-  }
+//   &:hover {
+//     color: #fff;
+//   }
 
-  &:after {
-    content: '';
-    width: 6rem;
-    height: 100%;
-    top: 0;
-    right: 0;
-    z-index: -1;
-    background-color: #663dff;
-    border-radius: 5px;
-    box-shadow:
-      inset 2px 2px 2px 0px rgba(255, 255, 255, 0.5),
-      7px 7px 20px 0px rgba(0, 0, 0, 0.1),
-      4px 4px 5px 0px rgba(0, 0, 0, 0.1);
-    transition: all 0.3s ease;
-  }
+//   &:after {
+//     content: '';
+//     width: 6rem;
+//     height: 100%;
+//     top: 0;
+//     right: 0;
+//     z-index: -1;
+//     background-color: #663dff;
+//     border-radius: 5px;
+//     box-shadow:
+//       inset 2px 2px 2px 0px rgba(255, 255, 255, 0.5),
+//       7px 7px 20px 0px rgba(0, 0, 0, 0.1),
+//       4px 4px 5px 0px rgba(0, 0, 0, 0.1);
+//     transition: all 0.3s ease;
+//   }
 
-  &:hover:after {
-    left: 0;
-    width: 100%;
-  }
+//   &:hover:after {
+//     left: 0;
+//     width: 100%;
+//   }
 
-  &:active {
-    top: 2px;
-  }
-`;
+//   &:active {
+//     top: 2px;
+//   }
+// `;
 
 const EmptyContainer = styled.div`
   margin-left: 40%;
@@ -339,9 +339,9 @@ function Mypage() {
         <InfoContainer>
           <ProName>
             <ProfileName>{userInfo?.nickname}</ProfileName>
-            {myId === memberId && (
+            {/* {myId === memberId && (
               <Button15 onClick={navigateToEdit}>Edit</Button15>
-            )}
+            )} */}
           </ProName>
           <VideoCount>동영상 {videoCount}개</VideoCount>
           <ProText>
@@ -375,6 +375,12 @@ function Mypage() {
         hasMore={hasMore}
         loader={<h4>Loading...</h4>}
         endMessage={<p>No more items</p>}
+        style={{
+          width: '100%',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+        }}
       >
         <AlbumContainer>
           {activeTab === 0 &&
