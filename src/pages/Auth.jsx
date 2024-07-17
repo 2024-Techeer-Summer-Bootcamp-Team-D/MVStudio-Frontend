@@ -559,7 +559,7 @@ const Auth = () => {
     console.log('id:', id);
     localStorage.setItem('memberId', id);
     // window.location.href = 'http://localhost:4173/mainpage';
-    navigate(`/edit`);
+    navigate(`/mainpage`);
   };
 
   return (
