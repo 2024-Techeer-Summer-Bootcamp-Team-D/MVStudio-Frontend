@@ -310,7 +310,6 @@ function Mypage() {
   // 페이지 변경 핸들러
   const handleChange = (event, newValue) => {
     setActiveTab(newValue);
-    setPage(1); // 페이지 초기화
     setFetchedVideoIds([]);
   };
 
