@@ -14,7 +14,6 @@ import PauseRounded from '@mui/icons-material/PauseRounded';
 import PlayArrowRounded from '@mui/icons-material/PlayArrowRounded';
 import FastForwardRounded from '@mui/icons-material/FastForwardRounded';
 import FastRewindRounded from '@mui/icons-material/FastRewindRounded';
-import { getplay } from '../api/play';
 
 const BackLayout = styled.div`
   width: 100%;
@@ -302,7 +301,6 @@ const StyledButton = styled.button`
 `;
 
 function Play() {
-  getplay();
   const [paused, setPaused] = useState(false);
   const [lyricsVisible, setLyricsVisible] = useState(true);
 
