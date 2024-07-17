@@ -156,7 +156,7 @@ const LongCover = ({ data }) => {
           ,&nbsp;{data.options.instruments.join(', ')}
           ,&nbsp;{data.options.style_name}
           ,&nbsp;{data.options.language}
-          ,&nbsp;{data.options.vocal ? 'Vocal' : 'Instrumental'}
+          ,&nbsp;{data.options.vocal}
           ,&nbsp;{data.options.tempo}
         </Options>
       </Overlay>
@@ -177,7 +177,7 @@ LongCover.propTypes = {
       instruments: PropTypes.arrayOf(PropTypes.string).isRequired,
       style_name: PropTypes.string.isRequired,
       language: PropTypes.string.isRequired,
-      vocal: PropTypes.bool.isRequired,
+      vocal: PropTypes.string.isRequired,
       tempo: PropTypes.string.isRequired,
     }).isRequired,
   }).isRequired,
