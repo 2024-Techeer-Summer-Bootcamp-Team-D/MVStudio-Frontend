@@ -1,5 +1,3 @@
-// Search.jsx
-
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import LongCover from '../components/LongCover';
@@ -33,6 +31,12 @@ const NoResultsMessage = styled.p`
   margin-top: 2rem;
 `;
 
+const formatTime = (seconds) => {
+  const minutes = Math.floor(seconds / 60);
+  const remainingSeconds = seconds % 60;
+  return `${minutes}:${remainingSeconds < 10 ? '0' : ''}${remainingSeconds}`;
+};
+
 const Search = () => {
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
@@ -42,28 +46,37 @@ const Search = () => {
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true);
-      try {
-        const result = await getsearch(currentPage, 2, keyword);
-        console.log('Response data:', result);
-        if (result && result.music_videos) {
-          setItems((prevItems) => [...prevItems, ...result.music_videos]);
-          setHasMore(result.pagination && result.pagination.next_page);
-        } else {
-          setHasMore(false);
-        }
-      } catch (error) {
-        console.error('Error fetching data:', error);
+  const fetchData = async () => {
+    setLoading(true);
+    try {
+      const result = await getsearch(currentPage, 3, keyword);
+      console.log('Response data:', result);
+      if (result && result.music_videos) {
+        setItems((prevItems) =>
+          currentPage === 1
+            ? result.music_videos
+            : [...prevItems, ...result.music_videos],
+        );
+        setHasMore(result.pagination && result.pagination.next_page);
+      } else {
         setHasMore(false);
-      } finally {
-        setLoading(false);
       }
-    };
+    } catch (error) {
+      console.error('Error fetching data:', error);
+      setHasMore(false);
+    } finally {
+      setLoading(false);
+    }
+  };
 
+  useEffect(() => {
     fetchData();
   }, [currentPage, keyword]);
+
+  useEffect(() => {
+    setItems([]);
+    setCurrentPage(1);
+  }, [keyword]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -71,9 +84,7 @@ const Search = () => {
         const scrollPosition =
           window.innerHeight + document.documentElement.scrollTop;
         const pageHeight = document.documentElement.offsetHeight;
-        const remainingScroll = pageHeight - scrollPosition;
-
-        if (remainingScroll <= 5 * window.innerHeight) {
+        if (scrollPosition >= pageHeight - 5) {
           setCurrentPage((prevPage) => prevPage + 1);
         }
       }
@@ -95,6 +106,7 @@ const Search = () => {
                 title: item.subject,
                 uploader: item.member_name,
                 view: item.views,
+                mvlength: formatTime(item.length),
                 options: {
                   genres: item.genres,
                   instruments: item.instruments,
@@ -103,7 +115,6 @@ const Search = () => {
                   vocal: item.vocal,
                   tempo: item.tempo,
                 },
-                isOwner: item.is_owner,
               }}
             />
           ))}

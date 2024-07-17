@@ -1,15 +1,12 @@
 import React from 'react';
-import PropTypes from 'prop-types'; // prop-types import 추가
+import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
-import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
-import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
-import IosShareIcon from '@mui/icons-material/IosShare';
 
 const BigContainer = styled.div`
   display: flex;
   width: 95rem;
-  height: 19rem;
+  height: 18.5rem;
   position: relative;
   flex-direction: row;
   align-items: start;
@@ -18,13 +15,13 @@ const BigContainer = styled.div`
 
 const ReaderContainer = styled.div`
   position: relative;
-  width: 30rem;
-  height: 18rem;
+  width: 28.8rem;
+  height: 17rem;
   margin-top: 2.8rem;
-  z-index: 2; /* Ensure this is above the InfoContainer */
+  z-index: 2;
   display: flex;
   align-items: center;
-  justify-content: center; /* Center children horizontally and vertically */
+  justify-content: center;
 
   &:hover .reader-pic {
     filter: brightness(0.8);
@@ -60,7 +57,7 @@ const Overlay = styled.div`
   flex-direction: column;
   width: calc(100% - 12.375rem);
   height: 100%;
-  margin-left: 2rem;
+  margin-left: 1.5rem;
   margin-top: 3.8rem;
   margin-bottom: 1rem;
 `;
@@ -68,16 +65,12 @@ const Overlay = styled.div`
 const UploaderContainer = styled.div`
   display: flex;
   align-items: center;
-`;
-
-const UploaderIcon = styled(PersonOutlineIcon)`
-  color: #ffffff;
-  margin-right: 0.5rem;
-  margin-left: 0.5rem;
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
 `;
 
 const Title = styled.p`
-  font-size: 2rem;
+  font-size: 1.8rem;
   font-weight: 550;
   color: #ffffff;
   margin-bottom: 0.5rem;
@@ -87,24 +80,25 @@ const Title = styled.p`
 const ViewContainer = styled.div`
   display: flex;
   align-items: center;
-
   margin-left: 0.1rem;
 `;
 
 const Uploader = styled.p`
-  font-size: 1.2rem;
+  font-size: 1rem;
   color: #ffffff;
+  margin-left: 0.8rem;
+  margin-bottom: 1.3rem;
 `;
 
 const View = styled.p`
-  font-size: 1rem;
+  font-size: 0.8rem;
   color: #ffffff;
   margin: 0;
   margin-right: auto;
 `;
 
 const Options = styled.div`
-  font-size: 1.2rem;
+  font-size: 1rem;
   color: #ffffff;
   margin: 0;
   word-wrap: break-word;
@@ -114,30 +108,28 @@ const Options = styled.div`
   line-height: 1.1;
 `;
 
-const ExtraInfo = styled.div`
-  position: relative;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-  z-index: 2;
-  width: 98%;
-  gap: 1rem;
+const LengthText = styled.span`
+  position: absolute;
+  bottom: 0.6rem;
+  right: 0.7rem;
+  background-color: rgba(0, 0, 0, 0.6);
+  color: white;
+  padding: 0.2rem 0.4rem;
+  border-radius: 0.2rem;
+  font-size: 0.8rem;
+  font-family: suit;
+  font-weight: 800;
 `;
 
-const DeleteIcon = styled(DeleteOutlineIcon)`
-  visibility: ${(props) => (props.owner ? 'visible' : 'hidden')};
-  color: #ffffff;
-`;
-
-const ShareIcon = styled(IosShareIcon)`
-  visibility: ${(props) => (props.owner ? 'visible' : 'hidden')};
-  color: #ffffff;
+const Profile = styled.img`
+  width: 2rem;
+  height: 2rem;
+  border-radius: 1rem;
 `;
 
 const LongCover = ({ data }) => {
   if (!data) {
-    return null; // 데이터가 없으면 아무것도 렌더링하지 않음
+    return null;
   }
 
   return (
@@ -145,6 +137,7 @@ const LongCover = ({ data }) => {
       <ReaderContainer>
         <ReaderPic src={data.pic} className="reader-pic" />
         <PlayIcon className="play-icon" />
+        <LengthText>{data.mvlength}</LengthText>
       </ReaderContainer>
       <Overlay>
         <Title>{data.title}</Title>
@@ -152,7 +145,9 @@ const LongCover = ({ data }) => {
           <View>{data.view} views</View>
         </ViewContainer>
         <UploaderContainer>
-          <UploaderIcon />
+          <Profile
+            src={data.profile_image || 'https://i.ibb.co/h8q8YgC/pro.jpg'}
+          />
           <Uploader>{data.uploader}</Uploader>
         </UploaderContainer>
 
@@ -161,15 +156,9 @@ const LongCover = ({ data }) => {
           ,&nbsp;{data.options.instruments.join(', ')}
           ,&nbsp;{data.options.style_name}
           ,&nbsp;{data.options.language}
-          ,&nbsp;{data.options.vocal}
+          ,&nbsp;{data.options.vocal ? 'Vocal' : 'Instrumental'}
           ,&nbsp;{data.options.tempo}
         </Options>
-        <ExtraInfo>
-          <div>
-            <DeleteIcon owner={data.isOwner} />
-            <ShareIcon owner={data.isOwner} />
-          </div>
-        </ExtraInfo>
       </Overlay>
     </BigContainer>
   );
@@ -181,6 +170,8 @@ LongCover.propTypes = {
     title: PropTypes.string.isRequired,
     uploader: PropTypes.string.isRequired,
     view: PropTypes.number.isRequired,
+    mvlength: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
+      .isRequired,
     options: PropTypes.shape({
       genres: PropTypes.arrayOf(PropTypes.string).isRequired,
       instruments: PropTypes.arrayOf(PropTypes.string).isRequired,
@@ -189,7 +180,6 @@ LongCover.propTypes = {
       vocal: PropTypes.bool.isRequired,
       tempo: PropTypes.string.isRequired,
     }).isRequired,
-    isOwner: PropTypes.bool.isRequired,
   }).isRequired,
 };
 
