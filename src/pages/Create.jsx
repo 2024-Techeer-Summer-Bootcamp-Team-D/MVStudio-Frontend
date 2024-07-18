@@ -18,8 +18,6 @@ const jellyAnimation = keyframes`
     transform: scale(0.95, 1.05);
   }
 `;
-getGenre();
-getInstruments();
 const JellyButton = styled.button`
   margin-left: 38%;
   margin-top: 2%;
