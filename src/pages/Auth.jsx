@@ -12,6 +12,10 @@ import dayjs from 'dayjs';
 import { postLogin, postRegister } from '../api/member';
 import { useNavigate } from 'react-router-dom';
 import { getCountries } from '../api/member';
+import GoogleIcon from '@mui/icons-material/Google';
+import PersonIcon from '@mui/icons-material/Person';
+import { Person, Style } from '@mui/icons-material';
+import VpnKeyIcon from '@mui/icons-material/VpnKey';
 
 const GlobalStyle = createGlobalStyle`
   * {
@@ -70,13 +74,15 @@ const MarginFont = styled.p`
   font-weight: 100;
   line-height: 20px;
   letter-spacing: 0.5px;
-  margin: 0.5rem 0 0.5rem;
+  margin-top: 0.5rem;
+  margin-bottom: 2.5rem;
 `;
 
 const Description = styled.p`
   font-family: 'suit';
   font-size: 1rem;
-  margin: 0.5rem 0 0.5rem;
+  margin-bottom: 0.5rem;
+  margin: 1.5rem;
 `;
 
 const StyledForm = styled.form`
@@ -116,6 +122,7 @@ const StyledButton = styled.button`
   &:props.active {
     transform: scale(0.95);
   }
+  margin-bottom: 2rem;
 `;
 
 const Container = styled.div`
@@ -184,15 +191,30 @@ const OverlayContainer = styled.div`
     props.active ? 'translateX(-100%)' : 'translateX(0)'};
 `;
 
-const StyledInput = styled.input`
+const StyledInputContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: start;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
   background-color: #fbfafb;
   border-radius: 0.25rem;
   border: none;
-  padding: 0.75rem 1rem;
   margin: 0.5rem 0;
   width: 90%;
   height: 3.125rem;
   font-size: 1rem;
+`;
+
+const StyledInput = styled.input`
+  border-radius: 0.25rem;
+  border: none;
+  /* padding: 0.75rem 1rem; */
+  width: 100%;
+  height: 100%;
+  font-size: 1rem;
+  background-color: #fbfafb;
 `;
 
 const Overlay = styled.div`
@@ -245,12 +267,32 @@ const OverlayRight = styled(OverlayPanel)`
 
 const LogoImage = styled.img`
   width: 20rem;
-  height: 20rem;
+  height: 18rem;
   margin-bottom: 1rem;
 `;
 
+const SocialLogin = styled.div`
+  background-color: #d95140;
+  border-radius: 0.25rem;
+  border: none;
+  width: 90%;
+  height: 3.125rem;
+  font-size: 1rem;
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  padding: 0.25rem;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  color: white;
+  cursor: pointer;
+`;
+const handleSocialLogin = () => {
+  window.location.href = `${import.meta.env.VITE_REACT_APP_BASE_URL}/api/v1/oauth/login/google`;
+};
+
 const SignUpForm = ({ successLogin }) => {
-  const [countryList, setCountryList] = useState();
+  const [countryList, setCountryList] = useState([]);
   const [idValue, setIdValue] = useState('');
   const [nicknameValue, setNicknameValue] = useState('');
   const [passwordValue, setPasswordValue] = useState('');
@@ -277,114 +319,94 @@ const SignUpForm = ({ successLogin }) => {
   return (
     <StyledForm>
       <BoldFont>Create Account</BoldFont>
+      <SocialLogin onClick={() => handleSocialLogin()}>
+        <GoogleIcon
+          style={{
+            display: 'flex',
+            position: 'absolute',
+            padding: '0.25rem',
+            justifyContent: 'center',
+            alignItems: 'center',
+            width: '2rem',
+            height: '2rem',
+          }}
+        />
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            width: '100%',
+            height: '100%',
+          }}
+        >
+          Sign Up with Google
+        </div>
+      </SocialLogin>
       <Description>or use your ID for registration</Description>
-      <StyledInput
-        type="text"
-        placeholder="Enter your ID"
-        value={idValue}
-        onChange={(e) => setIdValue(e.target.value)}
-      />
-      <StyledInput
-        type="text"
-        placeholder="Enter your Nickname"
-        value={nicknameValue}
-        onChange={(e) => setNicknameValue(e.target.value)}
-      />
-      <StyledInput
-        type="password"
-        placeholder="Password"
-        value={passwordValue}
-        onChange={(e) => setPasswordValue(e.target.value)}
-      />
-      <StyledInput
-        type="password"
-        placeholder="Confirm Password"
-        value={passwordCheckValue}
-        onChange={(e) => setPasswordCheckValue(e.target.value)}
-      />
+      <StyledInputContainer>
+        <PersonIcon
+          sx={{
+            color: '#170630',
+            fontSize: '1.75rem',
+            marginLeft: '0.25rem',
+          }}
+        />
+        <StyledInput
+          type="text"
+          placeholder="Enter your ID"
+          value={idValue}
+          onChange={(e) => setIdValue(e.target.value)}
+        />
+      </StyledInputContainer>
+      <StyledInputContainer>
+        <PersonIcon
+          sx={{
+            color: '#170630',
+            fontSize: '1.75rem',
+            marginLeft: '0.25rem',
+          }}
+        />
+        <StyledInput
+          type="text"
+          placeholder="Enter your Nickname"
+          value={nicknameValue}
+          onChange={(e) => setNicknameValue(e.target.value)}
+        />
+      </StyledInputContainer>
+      <StyledInputContainer>
+        <VpnKeyIcon
+          sx={{
+            color: '#170630',
+            fontSize: '1.75rem',
+            marginLeft: '0.25rem',
+          }}
+        />
+        <StyledInput
+          type="password"
+          placeholder="Password"
+          value={passwordValue}
+          onChange={(e) => setPasswordValue(e.target.value)}
+        />
+      </StyledInputContainer>
+
+      <StyledInputContainer>
+        <VpnKeyIcon
+          sx={{
+            color: '#170630',
+            fontSize: '1.75rem',
+            marginLeft: '0.25rem',
+          }}
+        />
+        <StyledInput
+          type="password"
+          placeholder="Confirm Password"
+          value={passwordCheckValue}
+          onChange={(e) => setPasswordCheckValue(e.target.value)}
+        />
+      </StyledInputContainer>
       {/* 페이지 넘어가게(완) , 비밀번호 확인 , 길이제한 , 성별넣어주세요, 로컬스톨지 넣기(완), 닉네임 영어 넣기, 하잇 */}
-      <div
-        style={{
-          width: '90%',
-          display: 'flex',
-          flexDirection: 'row',
-          justifyContent: 'center',
-          gap: '3%',
-        }}
-      >
-        {/* 나라 선택 */}
-        <FormControl
-          sx={{
-            m: -2,
-            minWidth: '37%',
-            margin: '0.5rem 0rem',
-            bgcolor: '#fbfafb',
-            border: 'none',
-            borderRadius: '0.5rem',
-            fontSize: '1rem',
-          }}
-        >
-          <InputLabel id="country-label">Country</InputLabel>
-          <Select
-            labelId="country-label"
-            id="country"
-            value={country}
-            onChange={(e) => setCountry(e.target.value)}
-            autoWidth
-            label="Country"
-            sx={{ border: 'none' }}
-          >
-            {countryList?.map((data) => (
-              <MenuItem key={data.id} value={data.id}>
-                {data.name}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
 
-        {/* 생일 날짜 선택 */}
-        <LocalizationProvider dateAdapter={AdapterDayjs}>
-          <DatePicker
-            sx={{
-              m: -2,
-              minWidth: '37%',
-              margin: '0.5rem 0rem',
-              bgcolor: '#fbfafb',
-              border: 'none',
-              borderRadius: '0.5rem',
-              fontSize: '1rem',
-            }}
-            value={birthday}
-            label="Birthday"
-            onChange={(e) => setBirthday(e.target.value)}
-          />
-        </LocalizationProvider>
-
-        {/* 성별 선택 */}
-        <FormControl
-          sx={{
-            m: -2,
-            minWidth: '20%',
-            margin: '0.5rem 0rem',
-            bgcolor: '#fbfafb',
-            borderRadius: '0.5rem',
-            fontSize: '1rem',
-          }}
-        >
-          <InputLabel id="gender-label">Gender</InputLabel>
-          <Select
-            labelId="gender-label"
-            id="gender"
-            value={gender}
-            onChange={(e) => setGender(e.target.value)}
-            autoWidth
-            label="gender"
-          >
-            <MenuItem value="M">Male</MenuItem>
-            <MenuItem value="F">Female</MenuItem>
-          </Select>
-        </FormControl>
-      </div>
       {loginError && <ErrorContainer>{loginError}</ErrorContainer>}
 
       <StyledButton
@@ -469,19 +491,61 @@ const SignInForm = ({ successLogin }) => {
   return (
     <StyledForm>
       <BoldFont>LogIn</BoldFont>
+      <SocialLogin onClick={() => handleSocialLogin()}>
+        <GoogleIcon
+          style={{
+            display: 'flex',
+            position: 'absolute',
+            padding: '0.25rem',
+            justifyContent: 'center',
+            alignItems: 'center',
+            width: '2rem',
+            height: '2rem',
+          }}
+        />
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            width: '100%',
+            height: '100%',
+          }}
+        >
+          Login with Google
+        </div>
+      </SocialLogin>
       <Description>or use your account</Description>
-      <StyledInput
-        type="text"
-        placeholder="Enter your ID"
-        value={idValue}
-        onChange={handleIdChange}
-      />
-      <StyledInput
-        type="password"
-        placeholder="Enter your Password"
-        value={passwordValue}
-        onChange={handlePasswordChange}
-      />
+      <StyledInputContainer>
+        <PersonIcon
+          sx={{
+            color: '#170630',
+            fontSize: '1.75rem',
+            marginLeft: '0.25rem',
+          }}
+        />
+        <StyledInput
+          type="text"
+          placeholder="Enter your ID"
+          value={idValue}
+          onChange={handleIdChange}
+        />
+      </StyledInputContainer>
+      <StyledInputContainer>
+        <VpnKeyIcon
+          sx={{
+            color: '#170630',
+            fontSize: '1.75rem',
+            marginLeft: '0.25rem',
+          }}
+        />
+        <StyledInput
+          type="password"
+          placeholder="Enter your Password"
+          value={passwordValue}
+          onChange={handlePasswordChange}
+        />
+      </StyledInputContainer>
       {loginError && <ErrorContainer>{loginError}</ErrorContainer>}
       <StyledButton
         type="button"
@@ -558,7 +622,6 @@ const Auth = () => {
     console.log('함수 실행됌');
     console.log('id:', id);
     localStorage.setItem('memberId', id);
-    // window.location.href = 'http://localhost:4173/mainpage';
     navigate(`/edit`);
   };
 
