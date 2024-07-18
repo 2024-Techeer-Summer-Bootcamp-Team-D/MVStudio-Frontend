@@ -60,7 +60,7 @@ export const postLyrics = async (subject, genres, language, vocal) => {
   }
 };
 
-export const PostVideos = async (
+export const postVideos = async (
   member_id,
   subject,
   genres_ids,

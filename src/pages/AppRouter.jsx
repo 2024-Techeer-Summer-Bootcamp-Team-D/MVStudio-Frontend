@@ -13,6 +13,7 @@ import Play from './Play';
 import ViewChart from './ViewChart';
 import Main from './Main';
 import EditProfile from './EditProfile';
+import SaveTokens from './SaveTokens';
 
 function AppRouter() {
   return (
@@ -21,6 +22,7 @@ function AppRouter() {
         <Routes>
           <Route path="/" element={<OnBoardingPage />} />
           <Route path="/auth" element={<Auth />} />
+          <Route path="/auth/:loginType" element={<SaveTokens />} />
           <Route path="/test" element={<Main />} />
           <Route path="/users/:id" element={<Mypage />} />
           <Route path="/mainpage" element={<MainPage />} />
