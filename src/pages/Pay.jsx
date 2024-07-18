@@ -4,10 +4,9 @@ import styled, { css } from 'styled-components';
 const BackGoundContainer = styled.div`
   width: 100vw;
   height: 100vh;
-  background-image: url(https://i.ibb.co/72bmVLd/Group-1457.png);
+  background-image: url('https://i.ibb.co/QYWG3Wc/image.png');
   background-size: cover;
   background-position: center;
-  /* filter: brightness(70%) blur(5px); Adjust brightness and blur as needed */
 `;
 
 const ParentContainer = styled.div`
@@ -40,7 +39,7 @@ const SelectBox = styled.div`
     border-color 0.3s;
 
   &:hover {
-    transform: translateY(-10px);
+    transform: translateY(-0.8rem);
     border-color: #ffffff;
   }
 
@@ -77,6 +76,18 @@ const BottomBox = styled.div`
   padding-top: 2rem;
 `;
 
+const MoreSmallTextBox = styled.p`
+  font-size: 1.5rem;
+  color: white;
+  margin-top: 3rem;
+`;
+
+const MoreSmall2TextBox = styled.p`
+  font-size: 1.5rem;
+  color: white;
+  margin-top: 1rem;
+`;
+
 const SmallTextBox = styled.p`
   font-size: 2rem;
   color: white;
@@ -93,21 +104,14 @@ const LargeTextBox = styled.p`
 `;
 
 const PaymentButton = styled.button`
-  padding: 1rem 2rem;
-  font-size: 1.5rem;
-  font-family: suit;
-  font-weight: 800;
-  color: #000000;
-  background-color: #fff535;
-  border: none;
+  width: 14rem;
+  height: 4rem;
+  background-image: url('https://i.ibb.co/gwVfSgx/kakaoo-removebg-preview.png');
+  background-size: cover;
+  background-position: center;
   border-radius: 0.5rem;
   margin-bottom: 5rem;
   cursor: pointer;
-  transition: background-color 0.3s;
-
-  &:hover {
-    background-color: #333333;
-  }
 `;
 
 const Pay = () => {
@@ -148,10 +152,10 @@ const Pay = () => {
       <ParentContainer>
         <WholeContainer>
           {[
-            { credits: 20, price: '₩2,000' },
-            { credits: 50, price: '₩5,000' },
-            { credits: 100, price: '₩10,000' },
-            { credits: 200, price: '₩20,000' },
+            { credits: 20, price: '₩2,000', info1: 123, info2: 123 },
+            { credits: 50, price: '₩5,000', info1: 123, info2: 123 },
+            { credits: 100, price: '₩10,000', info1: 123, info2: 123 },
+            { credits: 200, price: '₩20,000', info1: 123, info2: 123 },
           ].map((item, index) => (
             <SelectBox
               key={index}
@@ -164,11 +168,13 @@ const Pay = () => {
               </TopBox>
               <BottomBox>
                 <SmallTextBox>{item.price}</SmallTextBox>
+                <MoreSmallTextBox>{item.info1}</MoreSmallTextBox>
+                <MoreSmall2TextBox>{item.info2}</MoreSmall2TextBox>
               </BottomBox>
             </SelectBox>
           ))}
         </WholeContainer>
-        <PaymentButton onClick={handlePayment}>Pay</PaymentButton>
+        <PaymentButton onClick={handlePayment}></PaymentButton>
       </ParentContainer>
     </BackGoundContainer>
   );
