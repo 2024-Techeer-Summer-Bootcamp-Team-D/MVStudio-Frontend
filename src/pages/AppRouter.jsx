@@ -22,8 +22,8 @@ function AppRouter() {
           <Route path="/" element={<OnBoardingPage />} />
           <Route path="/auth" element={<Auth />} />
           <Route path="/test" element={<Main />} />
-          <Route path="/users/:id" element={<Mypage />} />
-          <Route path="/mainpage" element={<MainPage />} />
+          <Route path="/users/:username" element={<Mypage />} />
+          <Route path="/home" element={<MainPage />} />
           <Route path="/search" element={<Search />} />
           <Route path="/lyricsselect" element={<LyricsSelect />} />
           <Route path="/onboarding" element={<OnBoardingPage />} />

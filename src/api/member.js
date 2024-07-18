@@ -27,7 +27,7 @@ export const postRegister = async (
   country,
 ) => {
   try {
-    const response = await jsonAxios.post('/members/', {
+    const response = await jsonAxios.post('/members/sign-up', {
       login_id: id,
       password: pw,
       nickname: nickName,
@@ -53,9 +53,9 @@ export const getCountries = async () => {
   }
 };
 
-export const getMemberInfo = async (id) => {
+export const getMemberInfo = async (username) => {
   try {
-    const response = await jsonAxios.get(`/members/${id}`);
+    const response = await jsonAxios.get(`/members/${username}`);
     console.log('겟멤버:', response.data);
     return response.data;
   } catch (error) {
@@ -64,7 +64,7 @@ export const getMemberInfo = async (id) => {
 };
 
 export const patchMemberInfo = async (
-  memberId,
+  username,
   nickname,
   comment,
   country,
@@ -80,6 +80,7 @@ export const patchMemberInfo = async (
 
   // JSON 데이터 추가
   const jsonData = {
+    username,
     nickname,
     comment,
     country,
@@ -88,9 +89,12 @@ export const patchMemberInfo = async (
   formData.append('json_data', JSON.stringify(jsonData));
 
   try {
-    const response = await formAxios.patch(`/members/${memberId}`,{
-      nickname: jsonData.nickname
-      comment: j
+    const response = await formAxios.patch(`/members/${username}`, {
+      nickname: formData.nickname,
+      comment: formData.comment,
+      country: formData.country,
+      birthday: formData.birthday,
+      profile_image: formData.profileImageFile,
     });
     return response.data;
   } catch (error) {

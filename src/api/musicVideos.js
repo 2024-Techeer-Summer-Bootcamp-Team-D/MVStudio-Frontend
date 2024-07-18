@@ -88,10 +88,10 @@ export const postVideos = async (
   }
 };
 
-export const getTask = async (id) => {
+export const getTask = async (username) => {
   try {
-    const response = await jsonAxios.get(`/music-videos/status/${id}`);
-    console.log('보낸아이디:', id, '받은 응답:', response);
+    const response = await jsonAxios.get(`/music-videos/status/${username}`);
+    console.log('보낸아이디:', username, '받은 응답:', response);
     return response;
   } catch (error) {
     console.error('errorcode:', error);
