@@ -1,154 +1,159 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { getTask } from '../api/musicVideos';
-import { useNavigate } from 'react-router-dom';
 import styled, { keyframes } from 'styled-components';
+import CheckIcon from '@mui/icons-material/Check';
+import { green } from '@mui/material/colors';
 
-const pulseAnimation = keyframes`
-  0% {
-    transform: scale(1);
-    opacity: 1;
-  }
-  50% {
-    transform: scale(1.1);
-    opacity: 0.7;
-  }
-  100% {
-    transform: scale(1);
-    opacity: 1;
-  }
+// Define keyframes for the loading animation
+const loadingAnimation = keyframes`
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 `;
 
-const Button = styled.button`
-  padding: 1rem 2rem;
-  font-size: 1.2rem;
-  color: white;
-  background-color: #155799;
-  border: none;
-  cursor: pointer;
-  outline: none;
-  transition: 0.3s;
+// Modal component with updated background color
+const Modal = styled.div`
+  position: fixed;
+  top: 50%;
+  left: 75%;
+  background-color: #2b2c2d;
   border-radius: 1rem;
-  margin-bottom: 1rem;
+  z-index: 1001;
+  height: 18rem;
+  width: 22rem;
+  display: flex;
+  align-items: start;
+  justify-content: center;
+  padding-top: 0.5rem;
+`;
 
-  &.pulse {
-    &:hover {
-      box-shadow: 0 0 0 18px transparent;
-      animation: ${pulseAnimation} 1s;
-    }
-  }
+// Task status item styling
+const TaskStatusItem = styled.li`
+  background-color: #5c5b5b;
+  border-radius: 0.5rem;
+  padding: 0.5rem;
+  margin: 0.5rem 0;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  color: white;
+`;
 
-  &.close {
-    transition: 0.3s;
-
-    &:hover {
-      background: transparent;
-      box-shadow:
-        inset 54px 0 0 0 var(--btn-bg),
-        inset -54px 0 0 0 var(--btn-bg);
-    }
-  }
+// Loading spinner component
+const LoadingSpinner = styled.div`
+  border: 4px solid rgba(0, 0, 0, 0.3);
+  border-top: 4px solid #fff;
+  border-radius: 50%;
+  width: 1rem;
+  height: 1rem;
+  animation: ${loadingAnimation} 1s linear infinite;
+  margin-left: 1rem;
 `;
 
 function Service() {
   const [showGif, setShowGif] = useState(false);
-  const [showButton, setShowButton] = useState(false);
-  const [activeTaskCount, setActiveTaskCount] = useState(0);
-  const [taskCompleted, setTaskCompleted] = useState(0);
-  const navigate = useNavigate();
+  const [showModal, setShowModal] = useState(false);
+  const [taskStatuses, setTaskStatuses] = useState([]);
+  const gifRef = useRef(null);
 
   useEffect(() => {
     const intervalId = setInterval(async () => {
       const taskIds = JSON.parse(localStorage.getItem('taskId')) || [];
-      console.log('받은 아이디:', taskIds);
+      console.log('Received IDs:', taskIds);
       if (taskIds.length > 0) {
         setShowGif(true);
-        setActiveTaskCount(taskIds.length);
 
         try {
-          const promises = taskIds.map(async (taskId) => {
-            const response = await getTask(taskId);
-            if (response.status === 201) {
-              setTaskCompleted((prev) => prev + 1);
-            }
-            return response;
-          });
+          const statuses = await Promise.all(
+            taskIds.map(async (taskId) => {
+              const response = await getTask(taskId);
+              // Returning an object for each taskId
+              return {
+                taskId,
+                status: response.data.HTTPstatus,
+                message: response.data.message,
+              };
+            }),
+          );
 
-          await Promise.all(promises);
+          setTaskStatuses(statuses);
 
-          if (taskCompleted === taskIds.length) {
+          const completedTasks = statuses.filter(
+            (status) => status.status === 201,
+          ).length;
+          if (completedTasks === taskIds.length) {
             setShowGif(false);
           }
-
-          if (promises.some((p) => p.status === 201)) {
-            setShowButton(true);
-          }
         } catch (error) {
-          console.error('API 호출 오류:', error);
+          console.error('API call error:', error);
         }
       } else {
         setShowGif(false);
-        setActiveTaskCount(0);
       }
     }, 5000);
 
     return () => clearInterval(intervalId);
-  }, [taskCompleted]);
+  }, []);
 
-  const handleButtonClick = () => {
-    setShowButton(false);
-    navigate('/play');
+  const handleGifClick = () => {
+    setShowModal((prevShowModal) => !prevShowModal);
   };
 
+  // Log taskStatuses to console
+  console.log('Current task statuses:', taskStatuses);
+
   return (
-    <div
-      style={{ position: 'fixed', bottom: '10%', right: '10%', zIndex: 1000 }}
-    >
+    <div style={{ position: 'fixed', bottom: '5%', right: '5%', zIndex: 1000 }}>
       {showGif && (
-        <div style={{ display: 'flex', alignItems: 'center' }}>
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            position: 'relative',
+          }}
+        >
           <div
-            style={{ position: 'relative', width: '18rem', height: '14rem' }}
+            ref={gifRef}
+            style={{ position: 'relative', width: '5rem', height: '5rem' }}
           >
             <img
               src="https://i.ibb.co/JymMRPQ/Colorful-Gif-Animations-Replace-loading-Screen-Hareketli-Resim-Design-2019.gif"
               alt="GIF"
-              style={{ width: '100%', height: '100%' }}
-            />
-            <div
               style={{
-                position: 'absolute',
-                bottom: 0,
-                left: 0,
                 width: '100%',
-                color: 'white',
-                textAlign: 'center',
+                height: '100%',
+                objectFit: 'cover',
+                borderRadius: '50%',
+                cursor: 'pointer',
               }}
-            >
-              <h2>{`뮤직비디오 생성 중... (${activeTaskCount}개 호출 중)`}</h2>
-            </div>
+              onClick={handleGifClick}
+            />
+            {showModal && (
+              <Modal>
+                <ul style={{ paddingLeft: '0.2rem', paddingRight: '' }}>
+                  {taskStatuses.map(({ taskId, status, message }) => (
+                    <TaskStatusItem key={taskId}>
+                      <div
+                        style={{
+                          display: 'flex',
+                          flexDirection: 'column',
+                          alignItems: 'flex-start',
+                        }}
+                      >
+                        <p style={{ padding: '0.3rem' }}>
+                          {taskId} : {message}
+                        </p>
+                      </div>
+                      {status === 200 ? (
+                        <LoadingSpinner />
+                      ) : (
+                        <CheckIcon sx={{ color: green[500] }} />
+                      )}
+                    </TaskStatusItem>
+                  ))}
+                </ul>
+              </Modal>
+            )}
           </div>
-          {showButton && (
-            <div
-              style={{
-                padding: '1rem',
-                background: '#161219d0',
-                width: '15rem',
-                height: '15rem',
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                justifyContent: 'center',
-                borderRadius: '1rem',
-                marginLeft: '1rem',
-              }}
-            >
-              <Button className="pulse" onClick={handleButtonClick}>
-                Play
-              </Button>
-              <p style={{ color: 'white', textAlign: 'center' }}>
-                생성이 완료되었습니다.
-              </p>
-            </div>
-          )}
         </div>
       )}
     </div>

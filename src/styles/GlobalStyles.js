@@ -55,7 +55,7 @@ const GlobalStyles = createGlobalStyle`
   body {
     line-height: 1;
     font-family: 'bmjua', sans-serif;
-    background-color: #C1E3FF;
+    background-color: #05000a;
   }
 
   ol, ul {
