@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
+import { useNavigate } from 'react-router-dom';
 
 const BigContainer = styled.div`
   display: flex;
@@ -22,6 +23,7 @@ const ReaderContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+  cursor: pointer; /* 커서를 포인터로 변경 */
 
   &:hover .reader-pic {
     filter: brightness(0.8);
@@ -46,7 +48,6 @@ const PlayIcon = styled(PlayArrowIcon)`
   color: white;
   opacity: 0;
   transition: opacity 0.3s ease;
-  cursor: pointer;
   z-index: 3;
 `;
 
@@ -128,13 +129,21 @@ const Profile = styled.img`
 `;
 
 const LongCover = ({ data }) => {
+  const navigate = useNavigate();
+
+  const handleReaderContainerClick = () => {
+    navigate('/play'); // ReaderContainer 클릭 시 /play 페이지로 이동합니다.
+  };
+
   if (!data) {
     return null;
   }
 
   return (
     <BigContainer>
-      <ReaderContainer>
+      <ReaderContainer onClick={handleReaderContainerClick}>
+        {' '}
+        {/* ReaderContainer 클릭 이벤트 핸들러 추가 */}
         <ReaderPic src={data.pic} className="reader-pic" />
         <PlayIcon className="play-icon" />
         <LengthText>{data.mvlength}</LengthText>
@@ -150,7 +159,6 @@ const LongCover = ({ data }) => {
           />
           <Uploader>{data.uploader}</Uploader>
         </UploaderContainer>
-
         <Options>
           {data.options.genres.join(', ')}
           ,&nbsp;{data.options.instruments.join(', ')}
@@ -167,11 +175,13 @@ const LongCover = ({ data }) => {
 LongCover.propTypes = {
   data: PropTypes.shape({
     pic: PropTypes.string.isRequired,
+    profile_image: PropTypes.string.isRequired,
     title: PropTypes.string.isRequired,
     uploader: PropTypes.string.isRequired,
     view: PropTypes.number.isRequired,
     mvlength: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
       .isRequired,
+
     options: PropTypes.shape({
       genres: PropTypes.arrayOf(PropTypes.string).isRequired,
       instruments: PropTypes.arrayOf(PropTypes.string).isRequired,

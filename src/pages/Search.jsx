@@ -46,14 +46,15 @@ const Search = () => {
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
 
-  const fetchData = async () => {
+  const fetchData = async (page) => {
+    if (loading) return; // 이미 로딩 중이면 중복 호출 방지
     setLoading(true);
     try {
-      const result = await getsearch(currentPage, 3, keyword);
+      const result = await getsearch(page, 3, keyword); // 페이지당 데이터 10개씩 가져오기
       console.log('Response data:', result);
       if (result && result.music_videos) {
         setItems((prevItems) =>
-          currentPage === 1
+          page === 1
             ? result.music_videos
             : [...prevItems, ...result.music_videos],
         );
@@ -70,22 +71,17 @@ const Search = () => {
   };
 
   useEffect(() => {
-    fetchData();
-  }, [currentPage, keyword]);
-
-  useEffect(() => {
-    setItems([]);
-    setCurrentPage(1);
-  }, [keyword]);
-
-  useEffect(() => {
     const handleScroll = () => {
-      if (!loading && hasMore) {
+      if (hasMore && !loading) {
         const scrollPosition =
           window.innerHeight + document.documentElement.scrollTop;
         const pageHeight = document.documentElement.offsetHeight;
-        if (scrollPosition >= pageHeight - 5) {
-          setCurrentPage((prevPage) => prevPage + 1);
+        if (pageHeight - scrollPosition <= 10 * 16) {
+          // 10rem을 px로 환산
+          // 스크롤이 끝에 도달했을 때 fetchData를 호출합니다.
+          setTimeout(() => {
+            setCurrentPage((prevPage) => prevPage + 1);
+          }, 2000); // 2초 후에 fetchData 호출
         }
       }
     };
@@ -93,6 +89,16 @@ const Search = () => {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, [loading, hasMore]);
+
+  useEffect(() => {
+    fetchData(1); // 최초 호출을 페이지 1로 설정
+  }, [keyword]);
+
+  useEffect(() => {
+    if (currentPage > 1) {
+      fetchData(currentPage); // 페이지가 변경될 때마다 데이터를 가져옵니다.
+    }
+  }, [currentPage]);
 
   return (
     <WholeContainer>
@@ -107,6 +113,7 @@ const Search = () => {
                 uploader: item.member_name,
                 view: item.views,
                 mvlength: formatTime(item.length),
+                profile_image: item.profile_image,
                 options: {
                   genres: item.genres,
                   instruments: item.instruments,
