@@ -302,7 +302,6 @@ const SignUpForm = ({ successLogin }) => {
         value={passwordCheckValue}
         onChange={(e) => setPasswordCheckValue(e.target.value)}
       />
-      {/* 페이지 넘어가게(완) , 비밀번호 확인 , 길이제한 , 성별넣어주세요, 로컬스톨지 넣기(완), 닉네임 영어 넣기, 하잇 */}
       <div
         style={{
           width: '90%',

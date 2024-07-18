@@ -1,4 +1,4 @@
-import { jsonAxios } from './axios.config';
+import { formAxios, jsonAxios } from './axios.config';
 
 export const postLogin = async (id, pw) => {
   //동기처리
@@ -60,5 +60,41 @@ export const getMemberInfo = async (id) => {
     return response.data;
   } catch (error) {
     console.error('errorcode:', error);
+  }
+};
+
+export const patchMemberInfo = async (
+  memberId,
+  nickname,
+  comment,
+  country,
+  birthday,
+  profileImageFile,
+) => {
+  const formData = new FormData();
+
+  // 이미지 파일 추가
+  if (profileImageFile) {
+    formData.append('profile_image', profileImageFile);
+  }
+
+  // JSON 데이터 추가
+  const jsonData = {
+    nickname,
+    comment,
+    country,
+    birthday,
+  };
+  formData.append('json_data', JSON.stringify(jsonData));
+
+  try {
+    const response = await formAxios.patch(`/members/${memberId}`,{
+      nickname: jsonData.nickname
+      comment: j
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Error patching member info:', error);
+    throw error;
   }
 };
