@@ -57,36 +57,28 @@ export const patchMemberInfo = async (
   comment,
   country,
   birthday,
-  profileImageFile,
+  profile_image,
   email,
 ) => {
   const formData = new FormData();
 
   // 이미지 파일 추가
-  if (profileImageFile) {
-    formData.append('profile_image', profileImageFile);
+  formData.append('email', email);
+  formData.append('nickname', nickname);
+  formData.append('comment', comment);
+  formData.append('country', country);
+  formData.append('birthday', birthday);
+
+  // 이미지 파일이 있을 경우 추가
+  if (profile_image) {
+    formData.append('profile_image', profile_image);
   }
 
-  // JSON 데이터 추가
-  const jsonData = {
-    email,
-    username,
-    nickname,
-    comment,
-    country,
-    birthday,
-  };
-  formData.append('json_data', JSON.stringify(jsonData));
-
   try {
-    const response = await formAxios.patch(`/members/details/${username}`, {
-      nickname: formData.nickname,
-      comment: formData.comment,
-      country: formData.country,
-      birthday: formData.birthday,
-      profile_image: formData.profileImageFile,
-      email: formData.email,
-    });
+    const response = await formAxios.patch(
+      `/members/details/${username}`,
+      formData,
+    );
     return response.data;
   } catch (error) {
     console.error('Error patching member info:', error);

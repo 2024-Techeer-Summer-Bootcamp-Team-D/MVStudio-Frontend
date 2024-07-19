@@ -21,9 +21,10 @@ const StyledForm = styled.form`
   flex-direction: column;
   margin: 2rem auto;
   padding: 2rem;
-  max-width: 500px;
   border-radius: 10px;
   text-align: center;
+  min-width: 30%;
+  margin-left: 50%;
 `;
 
 const StyledButton = styled.button`
@@ -88,7 +89,7 @@ function EditProfile() {
     profile_image_file: null,
   });
   const [countryList, setCountryList] = useState([]);
-  const username = localStorage.getItem('username');
+  const username = 'helpme';
 
   useEffect(() => {
     const fetchData = async () => {
@@ -160,6 +161,16 @@ function EditProfile() {
         userInfo.email,
       );
       console.log('Successfully patched member info:', response);
+      console.log(
+        '제발 제대로 가긴했음??? : ',
+        username,
+        userInfo.nickname,
+        userInfo.comment,
+        userInfo.country,
+        userInfo.birthday.format('YYYY-MM-DD'),
+        userInfo.profile_image_file,
+        userInfo.email,
+      );
     } catch (error) {
       console.error('Error patching member info:', error);
     }

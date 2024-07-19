@@ -3,7 +3,7 @@ import { jsonAxios } from './axios.config';
 export const getList = async (page, size, sort = null, username = null) => {
   try {
     const response = await jsonAxios.get(
-      `/music-videos/?page=${page}&size=${size}` +
+      `/music-videos?page=${page}&size=${size}` +
         (sort ? `&sort=${sort}` : '') +
         (username ? `&username=${username}` : ''),
     );
@@ -14,10 +14,10 @@ export const getList = async (page, size, sort = null, username = null) => {
   }
 };
 
-export const getHistory = async (member_id, page, size) => {
+export const getHistory = async (username, page, size) => {
   try {
     const response = await jsonAxios.get(
-      `/music-videos/histories-list/${member_id}?page=${page}&size=${size}`,
+      `/music-videos/histories-list/${username}?page=${page}&size=${size}`,
     );
     console.log('기록 :', response.data);
     return response.data;

@@ -158,7 +158,6 @@ const MyContainer = styled.div`
 
 const ProfileName = styled.p`
   font-size: 1.4rem;
-  width: 7rem;
   /* margin: 0; */
 `;
 
@@ -217,7 +216,7 @@ const EmptyContainer = styled.div`
 `;
 
 function Mypage() {
-  const { username: userName } = useParams();
+  const { username: userName } = useParams('');
   const [activeTab, setActiveTab] = useState(0);
   const [myVideos, setMyVideos] = useState([]);
   const [recentView, setRecentView] = useState([]);
@@ -231,7 +230,7 @@ function Mypage() {
   // 페이지별 데이터를 가져오는 함수
   const fetchData = async (pageNum) => {
     try {
-      const response = await getList(pageNum, 9, null, userName);
+      const response = await getList(pageNum, 9, null, null);
       const newData = response.music_videos.filter(
         (video) => !fetchedVideoIds.flat().includes(video.id),
       );
@@ -277,7 +276,7 @@ function Mypage() {
 
   const fetchRecent = async (pageNum) => {
     try {
-      const response = await getHistory(myUserName, pageNum, 9);
+      const response = await getHistory(userName, pageNum, 9);
       const newData = response.music_videos.filter(
         (video) => !fetchedVideoIds.flat().includes(video.id),
       );
@@ -339,7 +338,7 @@ function Mypage() {
         />
         <InfoContainer>
           <ProName>
-            <ProfileName>{userInfo?.nickname}</ProfileName>
+            <ProfileName>{userInfo?.nickname || '멋쟁이중절모'}</ProfileName>
             {/* {myId === memberId && (
               <Button15 onClick={navigateToEdit}>Edit</Button15>
             )} */}
