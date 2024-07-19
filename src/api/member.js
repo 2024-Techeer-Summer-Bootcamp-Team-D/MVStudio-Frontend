@@ -55,7 +55,7 @@ export const getCountries = async () => {
 
 export const getMemberInfo = async (username) => {
   try {
-    const response = await jsonAxios.get(`/members/${username}`);
+    const response = await jsonAxios.get(`/members/details/${username}`);
     console.log('겟멤버:', response.data);
     return response.data;
   } catch (error) {
@@ -70,6 +70,7 @@ export const patchMemberInfo = async (
   country,
   birthday,
   profileImageFile,
+  email,
 ) => {
   const formData = new FormData();
 
@@ -80,6 +81,7 @@ export const patchMemberInfo = async (
 
   // JSON 데이터 추가
   const jsonData = {
+    email,
     username,
     nickname,
     comment,
@@ -89,12 +91,13 @@ export const patchMemberInfo = async (
   formData.append('json_data', JSON.stringify(jsonData));
 
   try {
-    const response = await formAxios.patch(`/members/${username}`, {
+    const response = await formAxios.patch(`/members/details/${username}`, {
       nickname: formData.nickname,
       comment: formData.comment,
       country: formData.country,
       birthday: formData.birthday,
       profile_image: formData.profileImageFile,
+      email: formData.email,
     });
     return response.data;
   } catch (error) {
