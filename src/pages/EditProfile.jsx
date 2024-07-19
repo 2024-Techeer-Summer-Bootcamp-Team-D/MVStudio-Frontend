@@ -48,7 +48,7 @@ const StyledInput = styled.input`
   border: none;
   padding: 0.75rem 1rem;
   margin: 0.5rem 0;
-  width: 90%;
+  width: 100%;
   height: 3.125rem;
   font-size: 1rem;
 `;
