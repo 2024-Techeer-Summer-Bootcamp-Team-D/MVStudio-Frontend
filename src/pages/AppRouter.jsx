@@ -3,17 +3,17 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Mypage from './Mypage';
 import Search from './Search';
 import App from '../App';
-// import EditProfile from './EditProfile';
 import LyricsSelect from './LyricsSelect';
 import MainPage from './MainPage';
 import OnBoardingPage from './OnBoardingPage';
-import Auth from './Auth';
+import Auth from './auth/Auth';
 import Create from './Create';
 import Play from './Play';
 import ViewChart from './ViewChart';
 import Main from './Main';
 import EditProfile from './EditProfile';
-import SaveTokens from './SaveTokens';
+import SaveTokens from './auth/SaveTokens';
+import Register from './auth/Register';
 
 function AppRouter() {
   return (
@@ -23,9 +23,10 @@ function AppRouter() {
           <Route path="/" element={<OnBoardingPage />} />
           <Route path="/auth" element={<Auth />} />
           <Route path="/auth/:loginType" element={<SaveTokens />} />
+          <Route path="/auth/register" element={<Register />} />
           <Route path="/test" element={<Main />} />
           <Route path="/users/:id" element={<Mypage />} />
-          <Route path="/mainpage" element={<MainPage />} />
+          <Route path="/main" element={<MainPage />} />
           <Route path="/search" element={<Search />} />
           <Route path="/lyricsselect" element={<LyricsSelect />} />
           <Route path="/onboarding" element={<OnBoardingPage />} />

@@ -9,7 +9,7 @@ export const setCookie = (key, value) => {
 
 // 쿠키 가져오기
 export const getCookie = (key) => {
-  cookies.get(key);
+  return cookies.get(key);
 };
 
 // 쿠키 삭제

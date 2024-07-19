@@ -1,21 +1,17 @@
 /* eslint-disable react/prop-types */
-import React, { useState, useEffect } from 'react';
+
+import React, { useState } from 'react';
 import styled, { createGlobalStyle } from 'styled-components';
-import InputLabel from '@mui/material/InputLabel';
-import MenuItem from '@mui/material/MenuItem';
-import FormControl from '@mui/material/FormControl';
-import Select from '@mui/material/Select';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import dayjs from 'dayjs';
-import { postLogin, postRegister } from '../api/member';
 import { useNavigate } from 'react-router-dom';
-import { getCountries } from '../api/member';
+import { setCookie } from '@/util/cookies';
+
+// 아이콘 불러오기
 import GoogleIcon from '@mui/icons-material/Google';
 import PersonIcon from '@mui/icons-material/Person';
-import { Person, Style } from '@mui/icons-material';
 import VpnKeyIcon from '@mui/icons-material/VpnKey';
+
+// API 불러오기
+import { postLogin, postRegister } from '@/api/member';
 
 const GlobalStyle = createGlobalStyle`
   * {
@@ -292,29 +288,13 @@ const handleSocialLogin = () => {
 };
 
 const SignUpForm = ({ successLogin }) => {
-  const [countryList, setCountryList] = useState([]);
   const [idValue, setIdValue] = useState('');
-  const [nicknameValue, setNicknameValue] = useState('');
+  const [emailValue, setEmailValue] = useState('');
   const [passwordValue, setPasswordValue] = useState('');
   const [passwordCheckValue, setPasswordCheckValue] = useState('');
-  const [country, setCountry] = useState();
-  const [gender, setGender] = useState('');
-  const [birthday, setBirthday] = useState(dayjs());
   const [loginError, setLoginError] = useState('');
 
   const englishAndNumbersRegex = /^[A-Za-z0-9]+$/;
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await getCountries();
-        setCountryList(response.data);
-      } catch {
-        console.error('나라 데이터 조회 오류,,');
-      }
-    };
-    fetchData();
-  }, []);
 
   return (
     <StyledForm>
@@ -369,9 +349,9 @@ const SignUpForm = ({ successLogin }) => {
         />
         <StyledInput
           type="text"
-          placeholder="Enter your Nickname"
-          value={nicknameValue}
-          onChange={(e) => setNicknameValue(e.target.value)}
+          placeholder="Enter your email"
+          value={emailValue}
+          onChange={(e) => setEmailValue(e.target.value)}
         />
       </StyledInputContainer>
       <StyledInputContainer>
@@ -416,11 +396,9 @@ const SignUpForm = ({ successLogin }) => {
           const validateInputs = () => {
             if (
               !idValue ||
-              !nicknameValue ||
+              !emailValue ||
               !passwordValue ||
-              !passwordCheckValue ||
-              !gender ||
-              !country
+              !passwordCheckValue
             ) {
               setLoginError('입력하지 않은 칸이 있어요!');
               return false;
@@ -436,24 +414,12 @@ const SignUpForm = ({ successLogin }) => {
               return false;
             }
 
-            if (nicknameValue.length > 10) {
-              setLoginError('닉네임의 길이를 10글자 이내로 해주세요!');
-              return false;
-            }
-
             setLoginError(''); // Clear any existing error messages
             return true;
           };
 
           if (validateInputs()) {
-            postRegister(
-              idValue,
-              passwordValue,
-              nicknameValue,
-              birthday.format('YYYY-MM-DD'),
-              gender,
-              parseInt(country, 10),
-            )
+            postRegister(idValue, emailValue, passwordValue)
               .then((resp) => {
                 if (resp.status === 201 && resp.code === 'A001') {
                   successLogin(resp.id);
@@ -551,10 +517,21 @@ const SignInForm = ({ successLogin }) => {
         type="button"
         color="purple"
         onClick={() =>
+          // postLogin(idValue, passwordValue)
+          //   .then((resp) => {
+          //     if ((resp.status === 201) & (resp.code === 'A002')) {
+          //       successLogin(resp.id);
+          //     } else {
+          //       setLoginError('아이디와 비밀번호를 다시한번 확인해주세요!');
+          //     }
+          //   })
+          //   .catch(() => {
+          //     setLoginError('서버 오류입니다.');
+          //   })
           postLogin(idValue, passwordValue)
             .then((resp) => {
-              if ((resp.status === 201) & (resp.code === 'A002')) {
-                successLogin(resp.id);
+              if (resp.access_token) {
+                successLogin(resp.access_token);
               } else {
                 setLoginError('아이디와 비밀번호를 다시한번 확인해주세요!');
               }
@@ -618,11 +595,11 @@ const TearGlass2 = styled.img`
 const Auth = () => {
   const [panelActive, setPanelActive] = useState('');
   const navigate = useNavigate();
-  const successLogin = (id) => {
+  const successLogin = (accessToken) => {
     console.log('함수 실행됌');
-    console.log('id:', id);
-    localStorage.setItem('memberId', id);
-    navigate(`/edit`);
+    // localStorage.setItem('memberId', id);
+    setCookie('accessToken', accessToken);
+    navigate('/main');
   };
 
   return (

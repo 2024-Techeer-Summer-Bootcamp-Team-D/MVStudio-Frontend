@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
-import { setCookie, removeCookie } from '../util/cookies';
+import { setCookie, removeCookie } from '@/util/cookies';
 
 function SaveTokens() {
   const { loginType: loginType } = useParams();
@@ -13,17 +13,17 @@ function SaveTokens() {
       setCookie('accessToken', accessToken);
       console.log('loginType:', loginType);
       if (loginType === 'login') {
-        navigate('/main');
+        // navigate('/main');
         return;
       } else if (loginType === 'signup') {
-        navigate('/onboarding');
+        // navigate('/onboarding');
         return;
       } else {
         removeCookie('accessToken');
-        navigate('/auth');
+        // navigate('/auth');
       }
     } else {
-      navigate('/auth');
+      // navigate('/auth');
     }
   }, []);
 

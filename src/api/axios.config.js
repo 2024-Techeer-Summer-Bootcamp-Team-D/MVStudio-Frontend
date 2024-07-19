@@ -1,22 +1,16 @@
 /* eslint-disable no-undef */
 import axios from 'axios';
-import { getCookie, removeCookie } from '../util/cookies';
+import { getCookie, setCookie } from '../util/cookies';
 
 const BASE_URL = `${import.meta.env.VITE_REACT_APP_BASE_URL}/api/v1`;
-const reIssuedToken = async () => {
+
+export const reissueToken = async () => {
   try {
-    const response = await axios.post(`${BASE_URL}/reissue`, {
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      withCredentials: true, // CORS 요청 시 쿠키를 포함
-    });
-    if (response.data.data.access_token) {
-      setCookie('accessToken', response.data.data.access_token);
-    }
+    const response = await axios.post(`${BASE_URL}/members/refresh`);
+    console.log('response:', response.data);
     return response.data;
   } catch (error) {
-    removeCookie('accessToken');
+    console.error('errorcode:', error);
   }
 };
 
@@ -27,26 +21,48 @@ export const jsonAxios = axios.create({
   },
 });
 
-// 요청 인터셉터를 추가하여 모든 요청에 최신 토큰을 포함시킵니다.
 jsonAxios.interceptors.request.use(
   (config) => {
-    const token = getCookie('accessToken'); // 요청 직전에 액세스 토큰을 쿠키에서 가져옵니다.
-    config.headers.Authorization = `Bearer ${token}`;
-    config.headers['Content-Type'] = 'application/json';
+    const token = getCookie('accessToken');
+    console.log('token:', token);
+    if (token) {
+      config.headers.Authorization = `${token}`; // Bearer 접두사를 사용하지 않을 때
+      // config.headers.Authorization = `Bearer ${token}`; // Bearer 접두사를 사용할 때
+    }
     return config;
   },
-  (error) => Promise.reject(error),
+  (error) => {
+    return Promise.reject(error);
+  },
 );
 
 jsonAxios.interceptors.response.use(
   (response) => {
+    // 응답이 성공적일 때는 그대로 응답을 반환합니다.
     return response;
   },
-  (error) => {
-    if (error.response.status === 401) {
-      alert('로그인이 필요합니다.');
-      window.location.href = '/auth';
+  async (error) => {
+    const originalRequest = error.config;
+    if (
+      error.response &&
+      error.response.status === 401 &&
+      !originalRequest._retry
+    ) {
+      originalRequest._retry = true;
+      try {
+        const newAccessToken = await reissueToken();
+        setCookie('accessToken', newAccessToken); // 새로운 액세스 토큰을 쿠키에 저장합니다.
+        jsonAxios.defaults.headers.common['Authorization'] =
+          `Bearer ${newAccessToken}`;
+        originalRequest.headers['Authorization'] = `Bearer ${newAccessToken}`;
+        return jsonAxios(originalRequest); // 원래 요청을 새로운 토큰으로 재시도합니다.
+      } catch (reissueError) {
+        // 토큰 재발급 실패 시, 추가적인 오류 처리를 할 수 있습니다.
+        console.error('Token reissue failed:', reissueError);
+        return Promise.reject(reissueError);
+      }
     }
+    // 다른 오류는 그대로 반환합니다.
     return Promise.reject(error);
   },
 );
