@@ -88,7 +88,7 @@ function EditProfile() {
     profile_image_file: null,
   });
   const [countryList, setCountryList] = useState([]);
-  const memberId = localStorage.getItem('memberId');
+  const username = localStorage.getItem('username');
 
   useEffect(() => {
     const fetchData = async () => {
@@ -105,7 +105,7 @@ function EditProfile() {
   useEffect(() => {
     const fetchMemberInfo = async () => {
       try {
-        const response = await getMemberInfo(memberId);
+        const response = await getMemberInfo(username);
         setUserInfo({
           nickname: response.data.nickname,
           country: response.data.country,
@@ -113,13 +113,14 @@ function EditProfile() {
           profile_image: response.data.profile_image,
           comment: response.data.comment,
           profile_image_file: null,
+          email: response.data.email,
         });
       } catch (error) {
         console.error('Error fetching member info', error);
       }
     };
     fetchMemberInfo();
-  }, [memberId]);
+  }, [username]);
 
   const handleProfileImageChange = (e) => {
     const file = e.target.files[0];
@@ -150,12 +151,13 @@ function EditProfile() {
   const handleSubmit = async () => {
     try {
       const response = await patchMemberInfo(
-        memberId,
+        username,
         userInfo.nickname,
         userInfo.comment,
         userInfo.country,
         userInfo.birthday.format('YYYY-MM-DD'),
         userInfo.profile_image_file,
+        userInfo.email,
       );
       console.log('Successfully patched member info:', response);
     } catch (error) {
@@ -184,6 +186,14 @@ function EditProfile() {
         </label>
       </ProfileImageWrapper>
       <FormControl sx={{ m: 1, minWidth: '90%' }}>
+        <StyledInput
+          id="nickname"
+          name="email"
+          type="text"
+          placeholder="Enter your Nickname"
+          value={userInfo.email}
+          onChange={handleChange}
+        />
         <StyledInput
           id="nickname"
           name="nickname"
