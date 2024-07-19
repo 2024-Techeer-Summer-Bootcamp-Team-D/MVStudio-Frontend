@@ -555,7 +555,7 @@ const Auth = () => {
   const [panelActive, setPanelActive] = useState('');
   const navigate = useNavigate();
   const successLogin = (id) => {
-    console.log('함수 실행됌');
+    console.log('함수 실행됨');
     console.log('id:', id);
     localStorage.setItem('memberId', id);
     // window.location.href = 'http://localhost:4173/mainpage';

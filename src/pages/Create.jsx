@@ -2,12 +2,7 @@ import React, { useState, useEffect } from 'react';
 import styled, { css, keyframes } from 'styled-components';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import {
-  getGenre,
-  getInstruments,
-  postLyrics,
-  getStyles,
-} from '../api/musicVideos';
+import { getGenre, getInstruments, getStyles } from '../api/musicVideos';
 import { useNavigate } from 'react-router-dom';
 
 const jellyAnimation = keyframes`
@@ -26,7 +21,7 @@ const jellyAnimation = keyframes`
 
 const JellyButton = styled.button`
   margin-left: 78%;
-  margin-bottom: 5%;
+  margin-bottom: 3%;
   width: 12rem;
   height: 3.6rem;
   font-size: 1rem;
@@ -67,14 +62,14 @@ const JellyButton = styled.button`
 
 const CreateContainer = styled.div`
   width: 100%;
-  height: 100%;
+  height: 80%;
   display: flex;
   flex-direction: column;
 `;
 
 const BigContainer = styled.div`
   width: 100%;
-  height: 100%;
+  height: 80%;
   display: flex;
   flex-direction: row;
   align-content: center;
@@ -84,32 +79,40 @@ const LeftContainer = styled.div`
   display: flex;
   flex-direction: column;
   width: 40%;
+  height: 100%;
   padding: 3%;
   border-top-left-radius: 1rem;
   border-bottom-left-radius: 1rem;
-  justify-content: center;
+  justify-content: start;
   height: 100%;
 `;
 
 const RightContainer = styled.div`
   width: 55%;
-  display: flex;
   padding: 3%;
+  display: flex;
   flex-direction: column;
   border-top-right-radius: 1rem;
   border-bottom-right-radius: 1rem;
-  justify-content: center;
+  justify-content: start;
 `;
 
-const TitleStyle = styled.p`
+const TitleStyle1 = styled.p`
   font-family: 'SUIT', sans-serif;
   font-size: 1.4rem;
   color: #ffffff;
-  margin-bottom: 0.5rem;
+  margin-bottom: 1rem;
   margin-top: 0.5rem;
   font-weight: 700;
 `;
 
+const TitleStyle2 = styled.p`
+  font-family: 'SUIT', sans-serif;
+  font-size: 1.4rem;
+  color: #ffffff;
+  margin-top: 0.5rem;
+  font-weight: 700;
+`;
 const Button = styled.button`
   width: 10rem;
   font-size: 1rem;
@@ -121,6 +124,7 @@ const Button = styled.button`
   background-size: 300% 100%;
   border-radius: 0.7rem;
   transition: all 0.4s ease-in-out;
+  margin-bottom: 1.5rem;
   background-image: linear-gradient(
     to right,
     #240b38,
@@ -164,7 +168,7 @@ const TitleInput = styled.input`
   text-align: left;
   vertical-align: top;
   padding-bottom: 4rem;
-  margin-bottom: 3rem;
+  margin-bottom: 4rem;
   ::placeholder {
     position: absolute;
     top: 1rem;
@@ -284,7 +288,7 @@ const ToThePadding = styled.div`
 // `;
 
 const ToTheMargin = styled.div`
-  margin-top: 3.2rem;
+  margin-top: 5.2rem;
 `;
 
 const Overlay = styled.div`
@@ -390,25 +394,7 @@ const WarningMessage = styled.div`
 const WarningContainer = styled.div`
   display: flex;
 `;
-
 const Create = () => {
-  const navigate = useNavigate();
-  const goLyrics = () => {
-    navigate('/LyricsSelect');
-  };
-
-  const click = () => {
-    postLyrics(
-      voice,
-      language,
-      tempo,
-      selectedGenres,
-      selectedInstruments,
-      songTitle,
-    );
-    goLyrics();
-  };
-
   // State 선언
   const [genreList, setGenreList] = useState([]);
   const [instrumentsList, setInstrumentsList] = useState([]);
@@ -427,8 +413,10 @@ const Create = () => {
   const [stylesList, setStylesList] = useState([]);
   const [currentStylesIndex, setCurrentStylesIndex] = useState(0);
   const [selectedStyles, setSelectedStyles] = useState([]);
+  const [warningModalOpen, setWarningModalOpen] = useState(false);
 
   // API 데이터 fetch
+
   useEffect(() => {
     const fetchGenreData = async () => {
       try {
@@ -467,9 +455,27 @@ const Create = () => {
     };
     fetchStylesData();
   }, []);
+
+  // handleSelectCloseModal 함수 수정
+  const handleWarningCloseModal = () => {
+    setWarningModalOpen(false);
+    // 모달을 닫을 때 경고 메시지 숨기기
+  };
+
   // 핸들러 함수들
   const handleCreateClick = () => {
+    // if (
+    //   !songTitle ||
+    //   !voice ||
+    //   !language ||
+    //   !tempo ||
+    //   !selectedGenres ||
+    //   !selectedStyles
+    // ) {
+    //   setWarningModalOpen(true);
+    // } else {
     setIsModalOpen(true);
+    // }
   };
 
   const handleCloseModal = () => {
@@ -489,12 +495,17 @@ const Create = () => {
   };
 
   const handleGenreClick = (label, id) => {
-    if (selectedGenres.includes(label)) {
-      setSelectedGenres(selectedGenres.filter((genre) => genre !== label));
-    } else {
-      setSelectedGenres([...selectedGenres, label]);
-      setGenreId([...genreId, id]);
+    // 이미 선택된 장르인지 확인
+    const isSelected = selectedGenres.includes(label);
+
+    // 이미 선택된 장르라면 아무 작업도 하지 않음 (하나의 장르만 선택해야 하므로)
+    if (isSelected) {
+      return;
     }
+
+    // 이전에 선택된 장르를 모두 해제하고 새로운 장르를 선택함
+    setSelectedGenres([selectedGenres, label]);
+    setGenreId([genreId, id]);
   };
 
   const handleInstrumentClick = (label, id) => {
@@ -509,21 +520,25 @@ const Create = () => {
   };
 
   const handleStylesClick = (label, id) => {
-    if (selectedStyles.includes(label)) {
-      setSelectedStyles(selectedStyles.filter((style) => style !== label));
-    } else {
-      setSelectedStyles([...selectedStyles, label]);
-      setStylesId([...stylesId, id]);
+    // 이미 선택된 스타일인지 확인
+    const isSelected = selectedStyles.includes(label);
+
+    // 이미 선택된 스타일이라면 아무 작업도 하지 않음 (하나의 스타일만 선택해야 하므로)
+    if (isSelected) {
+      return;
     }
+
+    // 이전에 선택된 스타일을 모두 해제하고 새로운 스타일을 선택함
+    setSelectedStyles([selectedStyles, label]);
+    setStylesId([stylesId, id]);
   };
 
   const handleSongTitleChange = (event) => {
     setSongTitle(event.target.value);
   };
 
-  const genresCount = selectedGenres.length;
   const instrumentsCount = selectedInstruments.length;
-  const shouldShowWarning = genresCount >= 3 || instrumentsCount >= 3;
+  const shouldShowWarning = instrumentsCount >= 3;
 
   const handleGenrePrevClick = () => {
     if (currentGenreIndex > 0) {
@@ -561,77 +576,120 @@ const Create = () => {
     }
   };
 
+  const WarningBox = styled.div`
+    position: absolute;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 42rem;
+    height: 7rem;
+    background-color: #3c1160;
+    color: white;
+    border-radius: 2rem;
+    padding: 2rem;
+    padding-left: 1.5rem;
+    padding-right: 2.2rem;
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+    display: flex;
+    flex-direction: row;
+    align-items: start;
+    z-index: 99999;
+  `;
+
+  // const location = useLocation();
+  const handleSubmit = () => {
+    const userPreferences = {
+      genre: selectedGenres,
+      instrument: selectedInstruments,
+      style: selectedStyles,
+      songTitle,
+      voice,
+      language,
+      tempo,
+    };
+
+    navigate('/lyricsSelect', { state: userPreferences });
+  };
+  const navigate = useNavigate();
+
   return (
     <CreateContainer>
       <BigContainer>
+        {/* 좌측 컨테이너 */}
         <LeftContainer>
-          <ToThePadding />
-          <TitleStyle>Title</TitleStyle>
-          <TitleInput
-            placeholder="Please enter a title"
-            onChange={handleSongTitleChange}
-          />
-          <TitleStyle>Voice</TitleStyle>
-          <ChooseOption>
-            <Button
-              clicked={voice === 'Female'}
-              onClick={() => handleVoiceClick('Female')}
-            >
-              Female
-            </Button>
-            <Button
-              clicked={voice === 'Male'}
-              onClick={() => handleVoiceClick('Male')}
-            >
-              Male
-            </Button>
-          </ChooseOption>
-          <TitleStyle>Language</TitleStyle>
-          <ChooseOption>
-            <Button
-              clicked={language === 'English'}
-              onClick={() => handleLanguageClick('English')}
-            >
-              English
-            </Button>
-            <Button
-              clicked={language === '한국어'}
-              onClick={() => handleLanguageClick('한국어')}
-            >
-              한국어
-            </Button>
-            <Button
-              clicked={language === '日本語'}
-              onClick={() => handleLanguageClick('日本語')}
-            >
-              日本語
-            </Button>
-          </ChooseOption>
-          <TitleStyle>Tempo</TitleStyle>
-          <ChooseOption>
-            <Button
-              clicked={tempo === 'Slow'}
-              onClick={() => handleTempoClick('Slow')}
-            >
-              Slow
-            </Button>
-            <Button
-              clicked={tempo === 'Normal'}
-              onClick={() => handleTempoClick('Normal')}
-            >
-              Normal
-            </Button>
-            <Button
-              clicked={tempo === 'Fast'}
-              onClick={() => handleTempoClick('Fast')}
-            >
-              Fast
-            </Button>
-          </ChooseOption>
+          {/* ToThePadding 컴포넌트 */}
+          <ToThePadding>
+            <TitleStyle1>Title</TitleStyle1>
+            <TitleInput
+              placeholder="Please enter a title"
+              onChange={handleSongTitleChange}
+            />
+            <TitleStyle1>Voice</TitleStyle1>
+            <ChooseOption>
+              <Button
+                clicked={voice === 'Female'}
+                onClick={() => handleVoiceClick('Female')}
+              >
+                Female
+              </Button>
+              <Button
+                clicked={voice === 'Male'}
+                onClick={() => handleVoiceClick('Male')}
+              >
+                Male
+              </Button>
+            </ChooseOption>
+            <TitleStyle1>Language</TitleStyle1>
+            <ChooseOption>
+              <Button
+                clicked={language === 'English'}
+                onClick={() => handleLanguageClick('English')}
+              >
+                English
+              </Button>
+              <Button
+                clicked={language === '한국어'}
+                onClick={() => handleLanguageClick('한국어')}
+              >
+                한국어
+              </Button>
+              <Button
+                clicked={language === '日本語'}
+                onClick={() => handleLanguageClick('日本語')}
+              >
+                日本語
+              </Button>
+            </ChooseOption>
+            <TitleStyle1>Tempo</TitleStyle1>
+            <ChooseOption>
+              <Button
+                clicked={tempo === 'Slow'}
+                onClick={() => handleTempoClick('Slow')}
+              >
+                Slow
+              </Button>
+              <Button
+                clicked={tempo === 'Normal'}
+                onClick={() => handleTempoClick('Normal')}
+              >
+                Normal
+              </Button>
+              <Button
+                clicked={tempo === 'Fast'}
+                onClick={() => handleTempoClick('Fast')}
+              >
+                Fast
+              </Button>
+            </ChooseOption>
+          </ToThePadding>
         </LeftContainer>
+
+        {/* 우측 컨테이너 */}
         <RightContainer>
           <ToThePadding>
-            <TitleStyle>Genre</TitleStyle>
+            {/* Genre 관련 컴포넌트 */}
+            <TitleStyle2>Genre</TitleStyle2>
             <GenreContainer>
               <ArrowFunction
                 onClick={handleGenrePrevClick}
@@ -659,79 +717,88 @@ const Create = () => {
                 isPrev={true}
               />
             </GenreContainer>
-          </ToThePadding>
-          <ToTheMargin>
-            <TitleStyle>Instrument</TitleStyle>
-            <GenreContainer>
-              <ArrowFunction
-                onClick={handleInstrumentPrevClick}
-                disabled={currentInstrumentIndex === 0}
-              />
 
-              <ViewContainer>
-                <InstrumentList optionIndex={currentInstrumentIndex}>
-                  {instrumentsList?.map((option, index) => (
-                    <CoverBox key={index}>
-                      <RoundCover
-                        src={option.instrument_image_url}
-                        selected={selectedInstruments.includes(
-                          option.instrument_name,
-                        )}
-                        onClick={() =>
-                          handleInstrumentClick(
+            {/* ToTheMargin 컴포넌트 */}
+            <ToTheMargin>
+              {/* Instrument 관련 컴포넌트 */}
+              <TitleStyle2>Instrument</TitleStyle2>
+              <GenreContainer>
+                <ArrowFunction
+                  onClick={handleInstrumentPrevClick}
+                  disabled={currentInstrumentIndex === 0}
+                />
+
+                <ViewContainer>
+                  <InstrumentList optionIndex={currentInstrumentIndex}>
+                    {instrumentsList?.map((option, index) => (
+                      <CoverBox key={index}>
+                        <RoundCover
+                          src={option.instrument_image_url}
+                          selected={selectedInstruments.includes(
                             option.instrument_name,
-                            option.instrument_id,
-                          )
-                        }
-                      />
-                      <CoverLabel>{option.instrument_name}</CoverLabel>
-                    </CoverBox>
-                  ))}
-                </InstrumentList>
-              </ViewContainer>
-              <ArrowFunction
-                onClick={handleInstrumentNextClick}
-                disabled={
-                  currentInstrumentIndex === instrumentsList?.length - 6
-                }
-                isPrev={true}
-              />
-            </GenreContainer>
-          </ToTheMargin>
+                          )}
+                          onClick={() =>
+                            handleInstrumentClick(
+                              option.instrument_name,
+                              option.instrument_id,
+                            )
+                          }
+                        />
+                        <CoverLabel>{option.instrument_name}</CoverLabel>
+                      </CoverBox>
+                    ))}
+                  </InstrumentList>
+                </ViewContainer>
+                <ArrowFunction
+                  onClick={handleInstrumentNextClick}
+                  disabled={
+                    currentInstrumentIndex === instrumentsList?.length - 6
+                  }
+                  isPrev={true}
+                />
+              </GenreContainer>
+            </ToTheMargin>
 
-          <ToTheMargin>
-            <TitleStyle>Style</TitleStyle>
-            <GenreContainer>
-              <ArrowFunction
-                onClick={handleStylesPrevClick}
-                disabled={currentStylesIndex === 0}
-              />
-              <ViewContainer>
-                <StylesList optionIndex={currentStylesIndex}>
-                  {stylesList?.map((option, index) => (
-                    <CoverBox key={index}>
-                      <RoundCover
-                        src={option.style_image_url}
-                        selected={selectedStyles.includes(option.style_name)}
-                        onClick={() =>
-                          handleStylesClick(option.style_name, option.style_id)
-                        }
-                      />
-                      <CoverLabel>{option.style_name}</CoverLabel>
-                    </CoverBox>
-                  ))}
-                </StylesList>
-              </ViewContainer>
-              <ArrowFunction
-                onClick={handleStylesNextClick}
-                disabled={currentStylesIndex === stylesList.length - 6}
-                isPrev
-              />
-            </GenreContainer>
-          </ToTheMargin>
+            {/* Style 관련 컴포넌트 */}
+            <ToTheMargin>
+              <TitleStyle2>Style</TitleStyle2>
+              <GenreContainer>
+                <ArrowFunction
+                  onClick={handleStylesPrevClick}
+                  disabled={currentStylesIndex === 0}
+                />
+                <ViewContainer>
+                  <StylesList optionIndex={currentStylesIndex}>
+                    {stylesList?.map((option, index) => (
+                      <CoverBox key={index}>
+                        <RoundCover
+                          src={option.style_image_url}
+                          selected={selectedStyles.includes(option.style_name)}
+                          onClick={() =>
+                            handleStylesClick(
+                              option.style_name,
+                              option.style_id,
+                            )
+                          }
+                        />
+                        <CoverLabel>{option.style_name}</CoverLabel>
+                      </CoverBox>
+                    ))}
+                  </StylesList>
+                </ViewContainer>
+                <ArrowFunction
+                  onClick={handleStylesNextClick}
+                  disabled={currentStylesIndex === stylesList.length - 6}
+                  isPrev
+                />
+              </GenreContainer>
+            </ToTheMargin>
+          </ToThePadding>
         </RightContainer>
       </BigContainer>
+      {/* 생성 버튼 */}
       <JellyButton onClick={handleCreateClick}>Create Song</JellyButton>
+      {/* 모달 */}
       {isModalOpen && (
         <>
           <Overlay />
@@ -772,10 +839,26 @@ const Create = () => {
                   </WarningMessage>
                 </WarningContainer>
               )}
-              <SubmitButton onClick={click}>Submit</SubmitButton>
+              <SubmitButton
+                onClick={() => {
+                  handleSubmit();
+                }}
+              >
+                Submit
+              </SubmitButton>
             </ModalText>
           </ModalContainer>
         </>
+      )}
+
+      {/* 경고 모달 */}
+      {warningModalOpen && (
+        <WarningBox>
+          <ArrowBackIcon cursor="pointer" onClick={handleWarningCloseModal} />
+          <WarningMessage>
+            title, voice, language, tempo, genre, style은 필수 선택 요소입니다.
+          </WarningMessage>
+        </WarningBox>
       )}
     </CreateContainer>
   );
