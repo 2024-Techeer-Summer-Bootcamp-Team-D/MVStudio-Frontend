@@ -9,7 +9,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import dayjs from 'dayjs';
 import PersonIcon from '@mui/icons-material/Person';
-import { getCountries } from '../../api/member';
+import { getCountries } from '@/api/member';
 
 const GlobalStyle = createGlobalStyle`
   * {

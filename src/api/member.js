@@ -1,8 +1,12 @@
 import { jsonAxios, formAxios } from './axios.config';
+import axios from 'axios';
+
+const BASE_URL = `${import.meta.env.VITE_REACT_APP_BASE_URL}/api/v1`;
 
 export const postLogin = async (username, password) => {
+  console.log('baseurl:', BASE_URL);
   try {
-    const response = await jsonAxios.post('/members/login', {
+    const response = await axios.post(`${BASE_URL}/members/login`, {
       username,
       password,
     });
@@ -15,7 +19,7 @@ export const postLogin = async (username, password) => {
 
 export const postRegister = async (username, email, password) => {
   try {
-    const response = await jsonAxios.post('/members/sign-up', {
+    const response = await axios.post(`${BASE_URL}/members/sign-up`, {
       username,
       email,
       password,
