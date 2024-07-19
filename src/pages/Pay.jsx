@@ -20,17 +20,18 @@ const ParentContainer = styled.div`
 
 const WholeContainer = styled.div`
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
   width: 80%;
-  height: 60%;
+  height: 50%;
   padding: 1rem;
-  margin-bottom: 2rem;
+  margin-bottom: 1rem; // Reduced margin-bottom
+  gap: 2rem;
 `;
 
 const SelectBox = styled.div`
-  width: 22.5rem;
-  height: 25rem;
+  width: 18rem;
+  height: 20rem;
   border: 2px solid #5b5b5b98;
   margin-bottom: 2rem;
   cursor: pointer;
@@ -77,51 +78,116 @@ const BottomBox = styled.div`
 `;
 
 const MoreSmallTextBox = styled.p`
-  font-size: 1.5rem;
+  font-size: 1rem;
   color: white;
   margin-top: 3rem;
 `;
 
 const MoreSmall2TextBox = styled.p`
-  font-size: 1.5rem;
+  font-size: 1rem;
   color: white;
   margin-top: 1rem;
 `;
 
 const SmallTextBox = styled.p`
-  font-size: 2rem;
+  font-size: 1.5rem;
   color: white;
 `;
 
 const MediumTextBox = styled.p`
-  font-size: 2.8rem;
+  font-size: 2rem;
   color: white;
 `;
 
 const LargeTextBox = styled.p`
-  font-size: 4.5rem;
+  font-size: 3rem;
   color: white;
 `;
 
-const PaymentButton = styled.button`
-  width: 14rem;
-  height: 4rem;
-  background-image: url('https://i.ibb.co/gwVfSgx/kakaoo-removebg-preview.png');
-  background-size: cover;
-  background-position: center;
-  border-radius: 0.5rem;
-  margin-bottom: 5rem;
+const PayBox = styled.div`
+  width: 40rem;
+  height: 18rem;
+  border: 2px solid #5b5b5b98;
+  background-color: #141414;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+`;
+
+const PayButton = styled.button`
+  width: 6rem;
+  height: 3rem;
+  background-color: #747474;
+  border: 2px solid #5b5b5b98;
+  border-radius: 2rem;
+  color: white;
+  border: none;
   cursor: pointer;
+  transition:
+    background-color 0.3s,
+    transform 0.3s;
+
+  &:hover {
+    background-color: #333;
+    transform: translateY(-0.3rem);
+  }
+`;
+
+const PaymentButton = styled.div`
+  position: relative;
+  width: 12rem;
+  height: 4rem;
+  font-family: suit;
+  font-weight: 800;
+  font-size: 1.5rem;
+  text-align: center;
+  color: #000000;
+  border-radius: 3rem;
+  border: 2px solid transparent;
+  background-color: ${(props) => props.bgColor};
+  padding-top: 1rem;
+  cursor: pointer;
+  transition:
+    transform 0.3s,
+    border-color 0.3s;
+
+  ${(props) =>
+    props.selected &&
+    css`
+      border-color: #ffffff;
+    `}
+`;
+
+const ButtonRow = styled.div`
+  display: flex;
+  gap: 3rem;
 `;
 
 const Pay = () => {
   const [selectedBox, setSelectedBox] = React.useState(null);
+  const [selectedPayment, setSelectedPayment] = React.useState(null);
 
   const handleClick = (index) => {
     setSelectedBox(index);
   };
 
+  const handlePaymentButtonClick = (method) => {
+    setSelectedPayment(method);
+  };
+
   const handlePayment = () => {
+    if (!selectedPayment) {
+      alert('Please select a payment method.');
+      return;
+    }
+
+    if (selectedPayment !== 'KakaoPay') {
+      alert('카카오페이로만 결제가 가능합니다.');
+      return;
+    }
+
     let credits = null;
     switch (selectedBox) {
       case 0:
@@ -141,7 +207,9 @@ const Pay = () => {
     }
 
     if (credits !== null) {
-      alert(`Payment for ${credits} Credits selected.`);
+      alert(
+        `Payment for ${credits} Credits selected using ${selectedPayment}.`,
+      );
     } else {
       alert('Please select the number of credits to purchase.');
     }
@@ -174,7 +242,43 @@ const Pay = () => {
             </SelectBox>
           ))}
         </WholeContainer>
-        <PaymentButton onClick={handlePayment}></PaymentButton>
+        <PayBox>
+          <ButtonRow>
+            <PaymentButton
+              bgColor="yellow"
+              selected={selectedPayment === 'KakaoPay'}
+              onClick={() => handlePaymentButtonClick('KakaoPay')}
+            >
+              KakaoPay
+            </PaymentButton>
+            <PaymentButton
+              bgColor="#00e700"
+              selected={selectedPayment === 'NaverPay'}
+              onClick={() => handlePaymentButtonClick('NaverPay')}
+            >
+              NaverPay
+            </PaymentButton>
+          </ButtonRow>
+          <ButtonRow>
+            <PaymentButton
+              bgColor="blue"
+              selected={selectedPayment === 'TossPay'}
+              onClick={() => handlePaymentButtonClick('TossPay')}
+            >
+              TossPay
+            </PaymentButton>
+            <PaymentButton
+              bgColor="red"
+              selected={selectedPayment === 'Payco'}
+              onClick={() => handlePaymentButtonClick('Payco')}
+            >
+              Payco
+            </PaymentButton>
+          </ButtonRow>
+          <PayButton onClick={handlePayment} style={{ marginTop: '1rem' }}>
+            Pay
+          </PayButton>
+        </PayBox>
       </ParentContainer>
     </BackGoundContainer>
   );
