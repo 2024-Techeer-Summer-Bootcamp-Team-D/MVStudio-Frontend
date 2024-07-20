@@ -87,3 +87,13 @@ export const postVideos = async (
     console.error('errorcode:', error);
   }
 };
+
+export const getTask = async (id) => {
+  try {
+    const response = await jsonAxios.get(`/music-videos/status/${id}`);
+    console.log('보낸아이디:', id, '받은 응답:', response);
+    return response;
+  } catch (error) {
+    console.error('errorcode:', error);
+  }
+};
