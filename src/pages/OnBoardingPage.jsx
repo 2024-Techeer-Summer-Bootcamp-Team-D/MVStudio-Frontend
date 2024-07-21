@@ -1,6 +1,7 @@
 /* OnBoardingPage.js */
 import React from 'react';
 import styled, { keyframes } from 'styled-components';
+import { useNavigate } from 'react-router-dom';
 
 const slideIn = keyframes`
   0% {
@@ -228,9 +229,8 @@ const Button = styled.button`
   }
 `;
 
-const handleClick = () => {};
-
 const OnBoardingPage = () => {
+  const navigate = useNavigate();
   return (
     <Container>
       <Section>
@@ -293,7 +293,13 @@ const OnBoardingPage = () => {
           모든 기능이 준비되어 있으니,
           <br /> 지금 한번 시도해 보세요.
           <ButtonContainer>
-            <Button onClick={handleClick}>Start</Button>
+            <Button
+              onClick={() => {
+                navigate('/auth');
+              }}
+            >
+              Start
+            </Button>
           </ButtonContainer>
         </FifthText>
       </Section>
