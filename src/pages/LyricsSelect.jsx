@@ -1,8 +1,9 @@
 /* eslint-disable react/no-unescaped-entities */
 import React from 'react';
 import styled from 'styled-components';
+import { postVideos } from '../api/musicVideos'; // postVideos 함수 가져오기
 
-const BigContianer = styled.div`
+const BigContainer = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
@@ -16,11 +17,12 @@ const OtherContainer = styled.div`
   gap: 3.4rem;
 `;
 
-const Tilte = styled.p`
+const Title = styled.p`
   font-size: 2rem;
   color: #ffffff;
   margin-left: 11.5%;
 `;
+
 const LyricsContainer = styled.div`
   display: flex;
   flex-direction: column;
@@ -105,10 +107,19 @@ const Button = styled.button`
   }
 `;
 
+async function handlePostVideos() {
+  try {
+    const response = await postVideos();
+    console.log('Video posted successfully:', response);
+  } catch (error) {
+    console.error('Error posting video:', error);
+  }
+}
+
 function LyricsSelect() {
   return (
-    <BigContianer>
-      <Tilte>Select Lyrics</Tilte>
+    <BigContainer>
+      <Title>Select Lyrics</Title>
       <OtherContainer>
         <LyricsContainer>
           <div>
@@ -116,21 +127,19 @@ function LyricsSelect() {
               La Vie en Rose &#9834;
               <br />
               <br />
-              빨갛게 물들여 지금 이 시간 I'll make it red (Eh eh eh) Make it red
-              (Eh eh eh) 어느새 내 맘에 빨간 장미처럼 우아하게 (Eh eh eh) 새롭게
-              eh eh (Rose)
+              빨갛게 물들여 지금 이 시간 make it red Make it r롭게 eh eh (Rose)
               <br />
-              <br /> 이런 느낌은 ruby보다 더 (Ruby보다 더) 내가 느끼는
-              반짝임처럼 끌리면 이끌려 na na now 바로 지금 na na now I don't
-              wanna make it blue 상상해봐 너의 la vie en rose
+              <br /> 이런 느낌은 ruby보다 더 내가 느끼는 반짝임처럼 끌리면
+              이끌려 na na now 바로 지금 na na now I wanna make it blue 상상해봐
+              너의 la vie en rose
               <br />
               <br /> 더 깊어진 눈빛 그 속에 붉어진 내 맘을 타오르게 해 나를
-              춤추게 해 (Ooh) 잊지마 여기 서 있는 rose (Ooh) 언제나 빛날 수 있게
+              춤추게 제나 빛날 수 있게
               <div style={styles.style1Before}></div>
               <div style={styles.style1After}></div>
             </blockquote>
           </div>
-          <Button>Select</Button>
+          <Button onClick={handlePostVideos}>Select</Button>
         </LyricsContainer>
         <LyricsContainer>
           <div>
@@ -151,7 +160,7 @@ function LyricsSelect() {
               <div style={styles.style1After}></div>
             </blockquote>
           </div>
-          <Button>Select</Button>
+          <Button onClick={handlePostVideos}>Select</Button>
         </LyricsContainer>
         <LyricsContainer>
           <div>
@@ -173,10 +182,10 @@ function LyricsSelect() {
               <div style={styles.style1After}></div>
             </blockquote>
           </div>
-          <Button>Select</Button>
+          <Button onClick={handlePostVideos}>Create</Button>
         </LyricsContainer>
       </OtherContainer>
-    </BigContianer>
+    </BigContainer>
   );
 }
 
