@@ -3,6 +3,15 @@ import axios from 'axios';
 
 const BASE_URL = `${import.meta.env.VITE_REACT_APP_BASE_URL}/api/v1`;
 
+export const getUsername = async () => {
+  try {
+    const response = await jsonAxios.get('/members');
+    return response.data;
+  } catch (error) {
+    console.error('errorcode:', error);
+  }
+};
+
 export const postLogin = async (username, password) => {
   console.log('baseurl:', BASE_URL);
   try {
@@ -10,7 +19,6 @@ export const postLogin = async (username, password) => {
       username,
       password,
     });
-    console.log('response:', response.data);
     return response.data;
   } catch (error) {
     console.error('errorcode:', error);
@@ -34,7 +42,6 @@ export const postRegister = async (username, email, password) => {
 export const getCountries = async () => {
   try {
     const response = await jsonAxios.get('/members/countries');
-    console.log('response:', response.data);
     return response.data;
   } catch (error) {
     console.error('get countries error:', error);
@@ -43,8 +50,12 @@ export const getCountries = async () => {
 
 export const getMemberInfo = async (username) => {
   try {
+<<<<<<< HEAD
     const response = await jsonAxios.get(`/members/details/${username}`);
     console.log('겟멤버:', response.data);
+=======
+    const response = await jsonAxios.get(`/members/${id}`);
+>>>>>>> develop
     return response.data;
   } catch (error) {
     console.error('errorcode:', error);

@@ -1,6 +1,6 @@
 /* eslint-disable no-undef */
 import axios from 'axios';
-import { getCookie, setCookie } from '../util/cookies';
+import { getCookie, setCookie } from '@/utils/cookies';
 
 const BASE_URL = `${import.meta.env.VITE_REACT_APP_BASE_URL}/api/v1`;
 
@@ -24,7 +24,6 @@ export const jsonAxios = axios.create({
 jsonAxios.interceptors.request.use(
   (config) => {
     const token = getCookie('accessToken');
-    console.log('token:', token);
     if (token) {
       config.headers.Authorization = `${token}`; // Bearer 접두사를 사용하지 않을 때
       // config.headers.Authorization = `Bearer ${token}`; // Bearer 접두사를 사용할 때

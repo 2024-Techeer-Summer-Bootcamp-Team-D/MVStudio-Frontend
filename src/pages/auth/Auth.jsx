@@ -3,14 +3,14 @@
 import React, { useState } from 'react';
 import styled, { createGlobalStyle } from 'styled-components';
 import { useNavigate } from 'react-router-dom';
-import { setCookie } from '@/util/cookies';
+import { setCookie } from '@/utils/cookies';
 
-// 아이콘 불러오기
+// Material-UI
 import GoogleIcon from '@mui/icons-material/Google';
 import PersonIcon from '@mui/icons-material/Person';
 import VpnKeyIcon from '@mui/icons-material/VpnKey';
 
-// API 불러오기
+// API
 import { postLogin, postRegister } from '@/api/member';
 
 const GlobalStyle = createGlobalStyle`
