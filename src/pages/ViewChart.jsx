@@ -256,13 +256,19 @@ const ViewChart = () => {
           },
         },
       },
-      layout: {
-        padding: {
-          top: 0, // 위쪽 패딩을 0으로 설정
-          right: 20,
-          bottom: 20,
-          left: 20,
-        },
+    },
+    layout: {
+      padding: {
+        top: 0,
+        right: 20,
+        bottom: 40,
+        left: 20,
+      },
+    },
+    plugins: {
+      legend: {
+        position: 'top', // 'right'에서 'top'으로 변경
+        align: 'end', // 오른쪽 정렬
       },
     },
   };
@@ -300,6 +306,62 @@ const ViewChart = () => {
             return label;
           },
         },
+      },
+      legend: {
+        position: 'top',
+        align: 'end',
+      },
+    },
+    layout: {
+      padding: {
+        top: 0,
+        right: 20,
+        bottom: 40,
+        left: 20,
+      },
+    },
+  };
+  const pieDoughnut = {
+    scales: {
+      x: {
+        ticks: {
+          font: {
+            size: 14, // x축 글자 크기
+          },
+        },
+      },
+      y: {
+        beginAtZero: true,
+        ticks: {
+          font: {
+            size: 14, // y축 글자 크기
+            callback: function (value) {
+              return value + '%'; // y축 값을 퍼센트로 표시
+            },
+          },
+        },
+      },
+    },
+    plugins: {
+      tooltip: {
+        callbacks: {
+          label: function (context) {
+            let label = context.dataset.label || '';
+            if (label) {
+              label += ': ';
+            }
+            label += context.raw + '%'; // 툴팁 값을 퍼센트로 표시
+            return label;
+          },
+        },
+      },
+    },
+    layout: {
+      padding: {
+        top: 0,
+        right: 20,
+        bottom: 200,
+        left: 20,
       },
     },
   };
@@ -348,11 +410,9 @@ const ViewChart = () => {
         )}
         {value === 1 && <Bar data={viewAgeData} options={ageChartOptions} />}
         {value === 2 && (
-          <Doughnut data={countryChartData} options={ageChartOptions} />
+          <Doughnut data={countryChartData} options={pieDoughnut} />
         )}
-        {value === 3 && (
-          <Pie data={gentderChartData} options={ageChartOptions} />
-        )}
+        {value === 3 && <Pie data={gentderChartData} options={pieDoughnut} />}
       </ChartSizeSetting>
     </ChartContainer>
   );
