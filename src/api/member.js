@@ -19,6 +19,7 @@ export const postLogin = async (username, password) => {
       username,
       password,
     });
+    console.log('response:', response.data);
     return response.data;
   } catch (error) {
     console.error('errorcode:', error);
@@ -42,6 +43,7 @@ export const postRegister = async (username, email, password) => {
 export const getCountries = async () => {
   try {
     const response = await jsonAxios.get('/members/countries');
+    console.log('response:', response.data);
     return response.data;
   } catch (error) {
     console.error('get countries error:', error);
@@ -50,12 +52,8 @@ export const getCountries = async () => {
 
 export const getMemberInfo = async (username) => {
   try {
-<<<<<<< HEAD
     const response = await jsonAxios.get(`/members/details/${username}`);
     console.log('겟멤버:', response.data);
-=======
-    const response = await jsonAxios.get(`/members/${id}`);
->>>>>>> develop
     return response.data;
   } catch (error) {
     console.error('errorcode:', error);
@@ -73,7 +71,6 @@ export const patchMemberInfo = async (
 ) => {
   const formData = new FormData();
 
-  // 이미지 파일 추가
   formData.append('email', email);
   formData.append('nickname', nickname);
   formData.append('comment', comment);
