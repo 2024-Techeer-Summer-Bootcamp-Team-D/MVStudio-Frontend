@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from 'react';
+import { useUser } from '@/libs/stores/userStore';
 import styled, { createGlobalStyle } from 'styled-components';
+
+// Material UI
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
@@ -9,7 +12,9 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import dayjs from 'dayjs';
 import PersonIcon from '@mui/icons-material/Person';
-import { getCountries } from '@/api/member';
+
+// API
+import { getCountries, patchMemberInfo } from '@/api/member';
 
 const GlobalStyle = createGlobalStyle`
   * {
@@ -140,7 +145,7 @@ const FormContainer = styled.div`
   transition: all 0.6s ease-in-out;
 `;
 
-const SignUpContainer = styled(FormContainer)`
+const RegisterContainer = styled(FormContainer)`
   left: 0;
   width: 50%;
   opacity: 1;
@@ -215,13 +220,16 @@ const StyledInput = styled.input`
   background-color: #fbfafb;
 `;
 
-const SignUpForm = () => {
+const RegisterForm = () => {
   const [loginError, setLoginError] = useState('');
   const [nickname, setNickname] = useState('');
   const [countryList, setCountryList] = useState([]);
   const [country, setCountry] = useState();
   const [gender, setGender] = useState('');
   const [birthday, setBirthday] = useState(dayjs());
+
+  const username = useUser((state) => state.username);
+  const fetchUsername = useUser((state) => state.fetchUsername);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -233,6 +241,7 @@ const SignUpForm = () => {
       }
     };
     fetchData();
+    fetchUsername();
   }, []);
 
   return (
@@ -347,14 +356,12 @@ const SignUpForm = () => {
         type="button"
         color="purple"
         onClick={() => {
-          const validateInputs = () => {
-            if (!birthday || !gender || !country) {
-              setLoginError('입력하지 않은 칸이 있어요!');
-              return false;
-            }
-            setLoginError(''); // Clear any existing error messages
-            return true;
-          };
+          if (!nickname || !birthday || !gender || !country) {
+            setLoginError('입력하지 않은 칸이 있어요!');
+          } else {
+            setLoginError('');
+            patchMemberInfo();
+          }
         }}
       >
         Sign Up
@@ -419,9 +426,9 @@ function Register() {
       <GlobalStyle />
       <Container>
         {/* 오른쪽 */}
-        <SignUpContainer>
-          <SignUpForm />
-        </SignUpContainer>
+        <RegisterContainer>
+          <RegisterForm />
+        </RegisterContainer>
 
         {/* 왼쪽 */}
         <OverlayContainer>

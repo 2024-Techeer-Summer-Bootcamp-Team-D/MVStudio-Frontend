@@ -1,14 +1,15 @@
 /* eslint-disable react/prop-types */
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
+import ignorePath from '../utils/igonerePath';
+
+// Material-UI
 import AddIcon from '@mui/icons-material/Add';
 import HomeIcon from '@mui/icons-material/Home';
 import WhatshotIcon from '@mui/icons-material/Whatshot';
-// import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
-import ignorePath from '../util/igonerePath';
 import EqualizerIcon from '@mui/icons-material/Equalizer';
 import MovieIcon from '@mui/icons-material/Movie';
-import { useNavigate } from 'react-router-dom';
 
 const NAVBAR_HEIGHT = '0rem'; // 네비게이션 바의 높이 설정
 

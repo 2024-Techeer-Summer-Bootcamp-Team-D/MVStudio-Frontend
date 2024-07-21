@@ -1,8 +1,10 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import ignorePath from '../utils/igonerePath';
 import styled from 'styled-components';
+
+// Material-UI
 import SearchIcon from '@mui/icons-material/Search';
-import ignorePath from '../util/igonerePath'; // 경로를 올바르게 수정
 
 const Bar = styled.div`
   width: 100%;
