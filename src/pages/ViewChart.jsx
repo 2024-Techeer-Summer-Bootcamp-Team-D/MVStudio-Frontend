@@ -5,7 +5,8 @@ import 'chart.js/auto'; // Import the necessary chart.js components
 import Box from '@mui/material/Box';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
-// import { grey } from '@mui/material/colors';
+// import { useUser } from '@/libs/stores/userStore';
+import { getUsername } from '@/api/member';
 import {
   getGenderData,
   getViewData,
@@ -67,12 +68,26 @@ const ViewChart = () => {
   const [countryData, setCountryData] = useState(null);
   const [value, setValue] = useState(0);
   const username = 'genie';
+  // const username = useUser((state) => state.username);
+  // const fetchUsername = useUser((state) => state.fetchUsername);
+  // useEffect(() => {
+  //   fetchUsername();
+  // }, []);
+  // console.log('유저네임:', username);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
 
   useEffect(() => {
+    const fetchUsernameData = async () => {
+      try {
+        const response = await getUsername();
+        console.log('username', response);
+      } catch (error) {
+        console.log('조회수 조회 오류', error);
+      }
+    };
     const fetchViewData = async () => {
       try {
         const response = await getViewData(username);
@@ -109,6 +124,7 @@ const ViewChart = () => {
         console.log('조회수 조회 오류', error);
       }
     };
+    fetchUsernameData();
     fetchAgeData();
     fetchCountryData();
     fetchGenderData();
