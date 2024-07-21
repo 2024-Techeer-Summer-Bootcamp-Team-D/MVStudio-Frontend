@@ -12,6 +12,7 @@ import Play from './Play';
 import ViewChart from './ViewChart';
 import Main from './Main';
 import EditProfile from './EditProfile';
+import Pay from './Pay';
 import SaveTokens from './auth/SaveTokens';
 import Register from './auth/Register';
 
@@ -34,6 +35,7 @@ function AppRouter() {
           <Route path="/play" element={<Play />} />
           <Route path="/chart" element={<ViewChart />} />
           <Route path="/edit" element={<EditProfile />} />
+          <Route path="/pay" element={<Pay />} />
         </Routes>
       </App>
     </Router>
