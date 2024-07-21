@@ -119,7 +119,7 @@ const TextBox = styled.div`
   display: flex;
   flex-direction: column;
   width: 50%;
-  align-items: start;
+  margin-left: 1rem;
 `;
 
 const Title = styled.div`
@@ -383,13 +383,6 @@ function Play() {
       <LyricsBox expanded={lyricsVisible}>
         <div>
           <blockquote style={{ ...styles.blockquote, ...styles.style1 }}>
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
-            느낌적인 느낌느낌
             <div style={styles.style1Before}></div>
             <div style={styles.style1After}></div>
           </blockquote>
