@@ -5,6 +5,7 @@ import styled from 'styled-components';
 import Sidebar from './components/Sidebar';
 import Navbar from './components/Navbar';
 import GlobalStyles from './styles/GlobalStyles';
+import Service from './components/Service';
 
 const BackLayout = styled.div`
   background-color: #05000a;
@@ -27,6 +28,7 @@ function App({ children }) {
       <Navbar />
       <ContentArea>
         <Sidebar />
+        <Service />
         {children}
       </ContentArea>
     </BackLayout>

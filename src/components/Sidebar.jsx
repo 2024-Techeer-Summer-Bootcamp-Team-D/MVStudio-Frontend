@@ -1,27 +1,35 @@
 /* eslint-disable react/prop-types */
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
+import ignorePath from '../utils/igonerePath';
+
+// Material-UI
 import AddIcon from '@mui/icons-material/Add';
 import HomeIcon from '@mui/icons-material/Home';
 import WhatshotIcon from '@mui/icons-material/Whatshot';
-// import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
-import ignorePath from '../util/igonerePath';
 import EqualizerIcon from '@mui/icons-material/Equalizer';
 import MovieIcon from '@mui/icons-material/Movie';
 
+const NAVBAR_HEIGHT = '0rem'; // 네비게이션 바의 높이 설정
+
 const Container = styled.div`
-  background-color: #e3ecf1;
-  height: 100%;
+  background-color: #05000a;
+  height: 100vh;
+  position: fixed;
+  border-right: 1px solid #380272;
+  top: ${NAVBAR_HEIGHT}; // 사이드바의 상단 위치를 네비게이션 바의 높이만큼 설정
 `;
 
 const SidebarContainer = styled.div`
   background-color: #05000a;
-  position: relative;
   color: #fafafa;
-  height: 100%;
+  height: calc(
+    100vh - ${NAVBAR_HEIGHT}
+  ); // 전체 높이에서 네비게이션 바의 높이를 뺌
   z-index: 99;
   width: 18rem;
-  border-right: 1px solid #380272;
+  padding-top: ${NAVBAR_HEIGHT}; // 사이드바 내부의 컨텐츠를 네비게이션 바 높이만큼 아래로 밀어냄
   transform: translateX(${({ xPosition }) => -xPosition}px);
 `;
 
@@ -148,6 +156,17 @@ const Uploader = styled.div`
   color: #a4a4a4;
 `;
 
+const Logo = styled.div`
+  left: 1rem;
+  font-family: 'SUIT', sans-serif;
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: #ffffff;
+  margin-left: 1rem;
+  margin-bottom: 2rem;
+  margin-top: 2rem;
+`;
+
 const MyChannelContainer = styled.div`
   /* visibility: ${({ isOpen }) => (isOpen ? 'visible' : 'hidden')}; */
   display: flex;
@@ -192,6 +211,11 @@ function Sidebar() {
   //     window.removeEventListener('click', handleClose);
   //   };
   // }, []);
+  const myId = localStorage.getItem('memberId');
+  const navigate = useNavigate();
+  const moveEdit = () => {
+    navigate(`/users/${myId}`);
+  };
 
   const isIgnoredPath = ignorePath().includes(location.pathname);
 
@@ -201,6 +225,7 @@ function Sidebar() {
 
   return (
     <Container>
+      <Logo>MVStudio</Logo>
       <SidebarContainer>
         <HomeItem>
           <HomeIcon fontSize="small" />
@@ -215,7 +240,7 @@ function Sidebar() {
           <NavigationText>You</NavigationText>
         </NavigationItem> */}
         <MyChannelContainer>
-          <MyStudio>
+          <MyStudio onClick={moveEdit}>
             <NavigationText>
               <EditMovieIcon fontSize="small" />
               My Studio

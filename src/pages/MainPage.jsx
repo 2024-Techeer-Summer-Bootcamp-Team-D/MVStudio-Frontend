@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import VisibilityIcon from '@mui/icons-material/Visibility';
+// import { getList } from '../api/musicVideos';
 
 const CreateContainer = styled.div`
   width: 100%;
@@ -9,7 +10,7 @@ const CreateContainer = styled.div`
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  margin-left: 6%;
+  margin-left: 20%;
   margin-right: 6%;
 `;
 

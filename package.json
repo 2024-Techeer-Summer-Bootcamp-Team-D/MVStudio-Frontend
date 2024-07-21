@@ -23,9 +23,12 @@
     "dayjs": "^1.11.11",
     "react": "^18.3.1",
     "react-chartjs-2": "^5.2.0",
+    "react-cookie": "^7.1.4",
     "react-dom": "^18.3.1",
+    "react-infinite-scroll-component": "^6.1.0",
     "react-router-dom": "^6.24.0",
-    "styled-components": "^6.1.11"
+    "styled-components": "^6.1.11",
+    "zustand": "^4.5.4"
   },
   "devDependencies": {
     "@eslint/js": "^9.5.0",

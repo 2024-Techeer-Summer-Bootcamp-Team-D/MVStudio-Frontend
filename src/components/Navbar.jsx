@@ -1,8 +1,10 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import ignorePath from '../utils/igonerePath';
 import styled from 'styled-components';
+
+// Material-UI
 import SearchIcon from '@mui/icons-material/Search';
-import ignorePath from '../util/igonerePath';
 
 const Bar = styled.div`
   width: 100%;
@@ -12,6 +14,7 @@ const Bar = styled.div`
   justify-content: center;
   align-items: center; /* 수직 중앙 정렬 */
   border-bottom: 1px solid #380272;
+  z-index: 3;
 `;
 
 const Searchbar = styled.div`
