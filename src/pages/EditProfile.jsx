@@ -12,6 +12,7 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import dayjs from 'dayjs';
 import CameraAltIcon from '@mui/icons-material/CameraAlt';
 import { patchMemberInfo } from '../api/member';
+import { useUser } from '@/libs/stores/userStore';
 
 const StyledForm = styled.form`
   background-color: #dfd4df;
@@ -89,7 +90,8 @@ function EditProfile() {
     profile_image_file: null,
   });
   const [countryList, setCountryList] = useState([]);
-  const username = 'helpme';
+  const username = useUser((state) => state.username);
+  const fetchUsername = useUser((state) => state.fetchUsername);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -101,6 +103,7 @@ function EditProfile() {
       }
     };
     fetchData();
+    fetchUsername();
   }, []);
 
   useEffect(() => {
@@ -115,6 +118,7 @@ function EditProfile() {
           comment: response.data.comment,
           profile_image_file: null,
           email: response.data.email,
+          sex: response.data.sex,
         });
       } catch (error) {
         console.error('Error fetching member info', error);
@@ -159,18 +163,9 @@ function EditProfile() {
         userInfo.birthday.format('YYYY-MM-DD'),
         userInfo.profile_image_file,
         userInfo.email,
+        userInfo.sex,
       );
       console.log('Successfully patched member info:', response);
-      console.log(
-        '제발 제대로 가긴했음??? : ',
-        username,
-        userInfo.nickname,
-        userInfo.comment,
-        userInfo.country,
-        userInfo.birthday.format('YYYY-MM-DD'),
-        userInfo.profile_image_file,
-        userInfo.email,
-      );
     } catch (error) {
       console.error('Error patching member info:', error);
     }

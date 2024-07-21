@@ -68,6 +68,7 @@ export const patchMemberInfo = async (
   birthday,
   profile_image,
   email,
+  sex,
 ) => {
   const formData = new FormData();
 
@@ -76,6 +77,7 @@ export const patchMemberInfo = async (
   formData.append('comment', comment);
   formData.append('country', country);
   formData.append('birthday', birthday);
+  formData.append('sex', sex);
 
   // 이미지 파일이 있을 경우 추가
   if (profile_image) {
