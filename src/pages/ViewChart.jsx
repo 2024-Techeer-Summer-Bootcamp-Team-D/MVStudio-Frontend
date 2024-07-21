@@ -5,8 +5,8 @@ import 'chart.js/auto'; // Import the necessary chart.js components
 import Box from '@mui/material/Box';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
-// import { useUser } from '@/libs/stores/userStore';
-import { getUsername } from '@/api/member';
+import { useUser } from '@/libs/stores/userStore';
+// import { getUsername } from '@/api/member';
 import {
   getGenderData,
   getViewData,
@@ -17,7 +17,7 @@ import {
 const Statistics = styled.button`
   width: 6rem;
   height: 2rem;
-  font-size: 1.5rem;
+  font-size: 1.7rem;
   color: #ffffff;
   background-color: rgba(255, 255, 255, 0);
   border: none;
@@ -25,26 +25,36 @@ const Statistics = styled.button`
   position: relative;
   cursor: pointer;
   display: flex;
+  margin-left: 0.5rem;
 `;
 
 const ChartContainer = styled.div`
   width: 100%;
   height: 100vh;
   position: relative;
-  margin-left: 20rem;
+  margin-left: 2rem;
   display: flex;
   flex-direction: column;
 `;
 
 const TotalBox = styled.div`
   text-align: left;
-  margin-left: 2.2rem;
+  margin-left: 1rem;
   position: relative;
 `;
 
 const TotalText = styled.p`
   color: white;
-  font-size: 1rem;
+  font-size: 1.3rem;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  position: relative;
+  /* border-right: 1px solid #a4a4a4; */
+`;
+
+const StudioText = styled.p`
+  color: white;
+  font-size: 1.3rem;
   margin-top: 1rem;
   margin-bottom: 1rem;
   position: relative;
@@ -80,14 +90,6 @@ const ViewChart = () => {
   };
 
   useEffect(() => {
-    const fetchUsernameData = async () => {
-      try {
-        const response = await getUsername();
-        console.log('username', response);
-      } catch (error) {
-        console.log('조회수 조회 오류', error);
-      }
-    };
     const fetchViewData = async () => {
       try {
         const response = await getViewData(username);
@@ -124,7 +126,6 @@ const ViewChart = () => {
         console.log('조회수 조회 오류', error);
       }
     };
-    fetchUsernameData();
     fetchAgeData();
     fetchCountryData();
     fetchGenderData();
@@ -149,8 +150,8 @@ const ViewChart = () => {
           (data) => (data.gender_number / genderViews) * 100,
         ),
         fill: false,
-        backgroundColor: ['rgba(255, 99, 132, 0.5)', 'rgba(54, 162, 235, 1)'],
-        borderColor: ['rgba(255, 99, 132, 0.5)', 'rgba(54, 162, 235, 1)'],
+        backgroundColor: ['rgba(54, 162, 235, 1)', 'rgba(255, 99, 132, 0.5)'],
+        borderColor: ['rgba(54, 162, 235, 1)', 'rgba(255, 99, 132, 0.5)'],
         borderWidth: 1,
       },
     ],
@@ -323,10 +324,11 @@ const ViewChart = () => {
         </Tabs>
       </Box>
       <TotalBox>
-        <TotalText>{viewData.member_name} 님 스튜디오</TotalText>
+        <StudioText>{viewData.member_name} 님 스튜디오</StudioText>
         <InfoBox>
           <TotalText>Total View : {viewData.total_views}</TotalText>
           <TotalText>Total Video : {viewData.total_mv}</TotalText>
+          <TotalText>Most View Video: {viewData.popular_mv_subject}</TotalText>
         </InfoBox>
       </TotalBox>
       <ChartSizeSetting>
