@@ -6,16 +6,22 @@ const BASE_URL = `${import.meta.env.VITE_REACT_APP_BASE_URL}/api/v1`;
 
 export const reissueToken = async () => {
   try {
-    const response = await axios.post(`${BASE_URL}/members/refresh`);
-    console.log('response:', response.data);
-    return response.data;
+    const response = await axios.post(
+      `${BASE_URL}/members/refresh`,
+      {},
+      {
+        withCredentials: true,
+      },
+    );
+    return response.data.access_token;
   } catch (error) {
-    console.error('errorcode:', error);
+    console.error('이게 안되면 안되는건데:', error);
   }
 };
 
 export const jsonAxios = axios.create({
   baseURL: `${BASE_URL}`,
+  withCredentials: true,
   headers: {
     'Content-Type': 'application/json',
   },
@@ -44,12 +50,17 @@ jsonAxios.interceptors.response.use(
     const originalRequest = error.config;
     if (
       error.response &&
-      error.response.status === 401 &&
+      error.response.status === 403 &&
       !originalRequest._retry
     ) {
+      console.error('토큰 재발급 시작:', error);
       originalRequest._retry = true;
       try {
         const newAccessToken = await reissueToken();
+        if (newAccessToken === undefined) {
+          console.error('토큰 재발급 실패:', error);
+          return Promise.reject(error);
+        }
         setCookie('accessToken', newAccessToken); // 새로운 액세스 토큰을 쿠키에 저장합니다.
         jsonAxios.defaults.headers.common['Authorization'] =
           `Bearer ${newAccessToken}`;

@@ -318,7 +318,7 @@ const RegisterForm = () => {
             }}
             value={birthday}
             label="Birthday"
-            onChange={(e) => setBirthday(e.target.value)}
+            onChange={(e) => setBirthday(e)}
           />
         </LocalizationProvider>
 
@@ -360,7 +360,23 @@ const RegisterForm = () => {
             setLoginError('입력하지 않은 칸이 있어요!');
           } else {
             setLoginError('');
-            patchMemberInfo();
+            console.log('birthday:', dayjs(birthday).format('YYYY-MM-DD'));
+            patchMemberInfo(
+              username,
+              nickname,
+              '',
+              country,
+              dayjs(birthday).format('YYYY-MM-DD'),
+              '',
+              '',
+              gender,
+            ).then((response) => {
+              if (response.status === 200) {
+                // window.location.href = '/';
+              } else {
+                setLoginError('회원가입에 실패했어요!');
+              }
+            });
           }
         }}
       >
