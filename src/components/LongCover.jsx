@@ -23,7 +23,7 @@ const ReaderContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  cursor: pointer; /* 커서를 포인터로 변경 */
+  cursor: pointer;
 
   &:hover .reader-pic {
     filter: brightness(0.8);
@@ -132,18 +132,27 @@ const LongCover = ({ data }) => {
   const navigate = useNavigate();
 
   const handleReaderContainerClick = () => {
-    navigate('/play'); // ReaderContainer 클릭 시 /play 페이지로 이동합니다.
+    navigate('/play');
   };
 
   if (!data) {
     return null;
   }
 
+  const options = [
+    ...data.options.genres,
+    ...data.options.instruments,
+    data.options.style_name,
+    data.options.language,
+    data.options.vocal,
+    data.options.tempo,
+  ]
+    .filter(Boolean)
+    .join(', ');
+
   return (
     <BigContainer>
       <ReaderContainer onClick={handleReaderContainerClick}>
-        {' '}
-        {/* ReaderContainer 클릭 이벤트 핸들러 추가 */}
         <ReaderPic src={data.pic} className="reader-pic" />
         <PlayIcon className="play-icon" />
         <LengthText>{data.mvlength}</LengthText>
@@ -159,14 +168,7 @@ const LongCover = ({ data }) => {
           />
           <Uploader>{data.uploader}</Uploader>
         </UploaderContainer>
-        <Options>
-          {data.options.genres.join(', ')}
-          ,&nbsp;{data.options.instruments.join(', ')}
-          ,&nbsp;{data.options.style_name}
-          ,&nbsp;{data.options.language}
-          ,&nbsp;{data.options.vocal}
-          ,&nbsp;{data.options.tempo}
-        </Options>
+        <Options>{options}</Options>
       </Overlay>
     </BigContainer>
   );
@@ -181,7 +183,6 @@ LongCover.propTypes = {
     view: PropTypes.number.isRequired,
     mvlength: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
       .isRequired,
-
     options: PropTypes.shape({
       genres: PropTypes.arrayOf(PropTypes.string).isRequired,
       instruments: PropTypes.arrayOf(PropTypes.string).isRequired,
