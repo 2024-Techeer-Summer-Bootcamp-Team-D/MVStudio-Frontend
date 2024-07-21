@@ -6,7 +6,10 @@ import Box from '@mui/material/Box';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import { useUser } from '@/libs/stores/userStore';
+import ChartDataLabels from 'chartjs-plugin-datalabels';
+import { Chart } from 'chart.js';
 // import { getUsername } from '@/api/member';
+Chart.register(ChartDataLabels);
 import {
   getGenderData,
   getViewData,
@@ -267,8 +270,11 @@ const ViewChart = () => {
     },
     plugins: {
       legend: {
-        position: 'top', // 'right'에서 'top'으로 변경
-        align: 'end', // 오른쪽 정렬
+        position: 'top',
+        align: 'end',
+      },
+      datalabels: {
+        display: false, // 명시적으로 datalabels 비활성화
       },
     },
   };
@@ -278,7 +284,7 @@ const ViewChart = () => {
       x: {
         ticks: {
           font: {
-            size: 14, // x축 글자 크기
+            size: 14,
           },
         },
       },
@@ -286,9 +292,9 @@ const ViewChart = () => {
         beginAtZero: true,
         ticks: {
           font: {
-            size: 14, // y축 글자 크기
+            size: 14,
             callback: function (value) {
-              return value + '%'; // y축 값을 퍼센트로 표시
+              return value + '%';
             },
           },
         },
@@ -302,7 +308,7 @@ const ViewChart = () => {
             if (label) {
               label += ': ';
             }
-            label += context.raw + '%'; // 툴팁 값을 퍼센트로 표시
+            label += context.raw + '%';
             return label;
           },
         },
@@ -310,6 +316,9 @@ const ViewChart = () => {
       legend: {
         position: 'top',
         align: 'end',
+      },
+      datalabels: {
+        display: false, // 명시적으로 datalabels 비활성화
       },
     },
     layout: {
@@ -353,6 +362,24 @@ const ViewChart = () => {
             label += context.raw + '%'; // 툴팁 값을 퍼센트로 표시
             return label;
           },
+        },
+      },
+      datalabels: {
+        color: '#fff',
+        font: {
+          weight: 'bold',
+          size: 12,
+        },
+        formatter: (value, ctx) => {
+          if (value === 0 || value === null || value === undefined) {
+            return null; // 값이 없으면 라벨을 표시하지 않음
+          }
+          const label = ctx.chart.data.labels[ctx.dataIndex];
+          return label;
+        },
+        display: (ctx) => {
+          const value = ctx.dataset.data[ctx.dataIndex];
+          return value > 0; // 값이 0보다 큰 경우에만 라벨 표시
         },
       },
     },
