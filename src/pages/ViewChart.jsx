@@ -63,8 +63,10 @@ const StudioText = styled.p`
 const ChartSizeSetting = styled.div`
   width: 90%;
   height: 90%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `;
-
 const InfoBox = styled.div`
   display: flex;
   flex-direction: row;
@@ -242,7 +244,7 @@ const ViewChart = () => {
       x: {
         ticks: {
           font: {
-            size: 14, // x축 글자 크기
+            size: 14,
           },
         },
       },
@@ -250,8 +252,16 @@ const ViewChart = () => {
         beginAtZero: true,
         ticks: {
           font: {
-            size: 14, // y축 글자 크기
+            size: 14,
           },
+        },
+      },
+      layout: {
+        padding: {
+          top: 0, // 위쪽 패딩을 0으로 설정
+          right: 20,
+          bottom: 20,
+          left: 20,
         },
       },
     },
@@ -327,6 +337,7 @@ const ViewChart = () => {
         <StudioText>{viewData.member_name} 님 스튜디오</StudioText>
         <InfoBox>
           <TotalText>Total View : {viewData.total_views}</TotalText>
+          {/* <TotalText>|</TotalText> */}
           <TotalText>Total Video : {viewData.total_mv}</TotalText>
           <TotalText>Most View Video: {viewData.popular_mv_subject}</TotalText>
         </InfoBox>

@@ -19,6 +19,7 @@ const Bar = styled.div`
 `;
 
 const Searchbar = styled.div`
+  position: sticky;
   width: 40%;
   height: 40%;
   margin-top: -1rem;
