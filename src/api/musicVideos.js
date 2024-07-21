@@ -105,3 +105,25 @@ export const getStyles = async () => {
     console.error('errorcode:', error);
   }
 };
+
+export const getVideoList = async (
+  page,
+  size,
+  sort = null,
+  member_id = null,
+) => {
+  try {
+    const queryParams = new URLSearchParams({
+      page: page,
+      size: size,
+      sort: sort,
+      member_id: member_id,
+    }).toString();
+
+    const response = await axios.get(`/api/music-videos?${queryParams}`);
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching video list:', error);
+    throw error;
+  }
+};
