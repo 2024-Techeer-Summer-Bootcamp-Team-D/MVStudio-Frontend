@@ -118,18 +118,8 @@ function LyricsSelect() {
   useEffect(() => {
     const fetchLyrics = async () => {
       try {
-        const { voice, language, selectedGenres, songTitle } = state;
-        const lyrics = await postLyrics(
-          songTitle,
-          selectedGenres,
-          language,
-          voice,
-        );
-        // const lyrics = {
-        //   lyrics_ori: ['1번가사', '2번가사', '3번가사'],
-        //   lyrics_eng: ['1번가사', '2번가사', '3번가사'],
-        // };
-        console.log('가사나와랏', lyrics.lyrics_ori);
+        const { voice, language, genre, songTitle } = state;
+        const lyrics = await postLyrics(songTitle, [genre], language, voice);
         setLyricsList(lyrics);
       } catch (error) {
         console.error('Failed to fetch lyrics:', error);
@@ -162,7 +152,7 @@ function LyricsSelect() {
             isSelected={selectedLyrics === lyrics}
             onClick={() => handleClick(lyrics)}
           >
-            <Text>{lyrics}</Text>
+            <Text dangerouslySetInnerHTML={{ __html: lyrics }} />
           </LyricsContainer>
         ))}
       </OtherContainer>

@@ -400,18 +400,17 @@ const Create = () => {
   const [voice, setVoice] = useState('');
   const [language, setLanguage] = useState('');
   const [tempo, setTempo] = useState('');
-  const [selectedGenres, setSelectedGenres] = useState([]);
+
   const [selectedInstruments, setSelectedInstruments] = useState([]);
   const [songTitle, setSongTitle] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentGenreIndex, setCurrentGenreIndex] = useState(0);
   const [currentInstrumentIndex, setCurrentInstrumentIndex] = useState(0);
-  const [genreId, setGenreId] = useState([]);
+  const [genreId, setGenreId] = useState();
   const [instrumentsId, setInstrumentsId] = useState([]);
-  const [stylesId, setStylesId] = useState([]);
+  const [stylesId, setStylesId] = useState();
   const [stylesList, setStylesList] = useState([]);
   const [currentStylesIndex, setCurrentStylesIndex] = useState(0);
-  const [selectedStyles, setSelectedStyles] = useState([]);
   const [warningModalOpen, setWarningModalOpen] = useState(false);
 
   // API 데이터 fetch
@@ -493,19 +492,19 @@ const Create = () => {
     setTempo(label);
   };
 
-  const handleGenreClick = (label, id) => {
-    // 이미 선택된 장르인지 확인
-    const isSelected = selectedGenres.includes(label);
+  // const handleGenreClick = (label, id) => {
+  //   // 이미 선택된 장르인지 확인
+  //   const isSelected = selectedGenres.includes(label);
 
-    // 이미 선택된 장르라면 아무 작업도 하지 않음 (하나의 장르만 선택해야 하므로)
-    if (isSelected) {
-      return;
-    }
+  //   // 이미 선택된 장르라면 아무 작업도 하지 않음 (하나의 장르만 선택해야 하므로)
+  //   if (isSelected) {
+  //     return;
+  //   }
 
-    // 이전에 선택된 장르를 모두 해제하고 새로운 장르를 선택함
-    setSelectedGenres([selectedGenres, label]);
-    setGenreId([genreId, id]);
-  };
+  //   // 이전에 선택된 장르를 모두 해제하고 새로운 장르를 선택함
+  //   setGenreId([genreId, id]);
+  //   console.log();
+  // };
 
   const handleInstrumentClick = (label, id) => {
     if (selectedInstruments.includes(label)) {
@@ -516,20 +515,6 @@ const Create = () => {
       setSelectedInstruments([...selectedInstruments, label]);
       setInstrumentsId([...instrumentsId, id]);
     }
-  };
-
-  const handleStylesClick = (label, id) => {
-    // 이미 선택된 스타일인지 확인
-    const isSelected = selectedStyles.includes(label);
-
-    // 이미 선택된 스타일이라면 아무 작업도 하지 않음 (하나의 스타일만 선택해야 하므로)
-    if (isSelected) {
-      return;
-    }
-
-    // 이전에 선택된 스타일을 모두 해제하고 새로운 스타일을 선택함
-    setSelectedStyles([selectedStyles, label]);
-    setStylesId([stylesId, id]);
   };
 
   const handleSongTitleChange = (event) => {
@@ -595,13 +580,14 @@ const Create = () => {
     align-items: start;
     z-index: 99999;
   `;
-
+  console.log('wkddddddddd', genreList);
+  console.log(genreId);
   // const location = useLocation();
   const handleSubmit = () => {
     const userPreferences = {
-      genre: selectedGenres,
+      genre: genreId,
       instrument: selectedInstruments,
-      style: selectedStyles,
+      style: stylesId,
       songTitle,
       voice,
       language,
@@ -700,10 +686,10 @@ const Create = () => {
                     <CoverBox key={index}>
                       <RoundCover
                         src={option.genre_image_url}
-                        selected={selectedGenres.includes(option.genre_name)}
-                        onClick={() =>
-                          handleGenreClick(option.genre_name, option.genre_id)
-                        }
+                        selected={genreId - 1 === index}
+                        onClick={() => {
+                          setGenreId(index + 1);
+                        }}
                       />
                       <CoverLabel>{option.genre_name}</CoverLabel>
                     </CoverBox>
@@ -772,13 +758,8 @@ const Create = () => {
                       <CoverBox key={index}>
                         <RoundCover
                           src={option.style_image_url}
-                          selected={selectedStyles.includes(option.style_name)}
-                          onClick={() =>
-                            handleStylesClick(
-                              option.style_name,
-                              option.style_id,
-                            )
-                          }
+                          selected={stylesId - 1 === index}
+                          onClick={() => setStylesId(index + 1)}
                         />
                         <CoverLabel>{option.style_name}</CoverLabel>
                       </CoverBox>
@@ -820,7 +801,7 @@ const Create = () => {
               </GroupText>
               <GroupText>
                 <ModalItem>Genre :</ModalItem>
-                <ModalValue>{selectedGenres.join(', ')}</ModalValue>
+                <ModalValue>{genreList[genreId - 1].genre_name}</ModalValue>
               </GroupText>
               <GroupText>
                 <InstrumentItem>Instrument :</InstrumentItem>
@@ -828,7 +809,7 @@ const Create = () => {
               </GroupText>
               <GroupText>
                 <ModalItem>style :</ModalItem>
-                <ModalValue>{selectedStyles.join(', ')}</ModalValue>
+                <ModalValue>{stylesList[stylesId - 1].style_name}</ModalValue>
               </GroupText>
               {shouldShowWarning && (
                 <WarningContainer>
