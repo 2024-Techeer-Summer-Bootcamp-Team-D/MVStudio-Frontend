@@ -60,8 +60,9 @@ const JellyButton = styled.button`
 // `;
 
 const CreateContainer = styled.div`
-  width: 100%;
-  height: 80%;
+  margin-left: 22rem;
+  width: 80%;
+  height: 50%;
   display: flex;
   flex-direction: column;
 `;
