@@ -12,6 +12,8 @@ const BigContainer = styled.div`
   flex-direction: row;
   align-items: start;
   border-radius: 2rem;
+  margin-left: 18.8rem;
+  margin-top: 1rem;
 `;
 
 const ReaderContainer = styled.div`
@@ -66,8 +68,8 @@ const Overlay = styled.div`
 const UploaderContainer = styled.div`
   display: flex;
   align-items: center;
-  margin-top: 0.5rem;
-  margin-bottom: 0.5rem;
+  margin-top: 1.5rem;
+  margin-bottom: 1.5rem;
 `;
 
 const Title = styled.p`
@@ -88,13 +90,13 @@ const Uploader = styled.p`
   font-size: 1rem;
   color: #ffffff;
   margin-left: 0.8rem;
-  margin-bottom: 1.3rem;
+  margin-bottom: 0.5rem;
 `;
 
 const View = styled.p`
   font-size: 0.8rem;
   color: #ffffff;
-  margin: 0;
+  margin-top: 0.5rem;
   margin-right: auto;
 `;
 
@@ -132,7 +134,7 @@ const LongCover = ({ data }) => {
   const navigate = useNavigate();
 
   const handleReaderContainerClick = () => {
-    navigate('/play');
+    navigate(`/play?id=${data.id}`);
   };
 
   if (!data) {
@@ -176,6 +178,7 @@ const LongCover = ({ data }) => {
 
 LongCover.propTypes = {
   data: PropTypes.shape({
+    id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
     pic: PropTypes.string.isRequired,
     profile_image: PropTypes.string.isRequired,
     title: PropTypes.string.isRequired,
