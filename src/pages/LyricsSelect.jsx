@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import styled, { css } from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 import { useLocation } from 'react-router-dom';
-import { postLyrics } from '../api/musicVideos';
+import { postLyrics, postVideos } from '../api/musicVideos';
 
 const BigContainer = styled.div`
   display: flex;
@@ -110,7 +110,6 @@ const ButtonContainer = styled.div`
 function LyricsSelect() {
   const [selectedLyrics, setSelectedLyrics] = useState('');
   const [lyricsList, setLyricsList] = useState([]);
-
   const location = useLocation();
   const { state } = location;
   const navigate = useNavigate();
@@ -136,10 +135,32 @@ function LyricsSelect() {
   const goMain = () => {
     navigate('/mainPage');
   };
-
-  const click = () => {
-    // Assuming you have variables: voice, language, tempo, selectedGenres, selectedInstruments, songTitle
-    goMain();
+  console.log('클릭', click);
+  const click = async () => {
+    try {
+      const {
+        member_id,
+        voice,
+        language,
+        tempo,
+        genres_ids,
+        instruments_ids,
+        songTitle,
+      } = state;
+      await postVideos(
+        member_id,
+        songTitle,
+        genres_ids,
+        instruments_ids,
+        tempo,
+        language,
+        voice,
+        selectedLyrics,
+      );
+      goMain();
+    } catch (error) {
+      console.error('Failed to create video:', error);
+    }
   };
 
   return (

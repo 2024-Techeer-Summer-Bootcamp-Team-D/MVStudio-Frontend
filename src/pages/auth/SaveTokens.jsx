@@ -4,6 +4,7 @@ import { setCookie, removeCookie } from '@/util/cookies';
 
 function SaveTokens() {
   const { loginType: loginType } = useParams();
+  // eslint-disable-next-line no-unused-vars
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const accessToken = searchParams.get('accessToken');
