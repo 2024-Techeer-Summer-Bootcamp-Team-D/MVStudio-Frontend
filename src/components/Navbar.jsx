@@ -1,7 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import ignorePath from '../utils/igonerePath';
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 
 // Material-UI
 import SearchIcon from '@mui/icons-material/Search';
@@ -33,6 +33,14 @@ const Searchbar = styled.div`
   padding-left: 0.5rem; /* 패딩 추가하여 오른쪽 정렬 시 입력상자와 가장자리 간격 확보 */
 `;
 
+const shakeAnimation = keyframes`
+  0% { transform: rotate(0deg); }
+  25% { transform: rotate(8deg); }
+  50% { transform: rotate(0deg); }
+  75% { transform: rotate(-8deg); }
+  100% { transform: rotate(0deg); }
+`;
+
 const Logo = styled.div`
   position: absolute;
   left: 2rem;
@@ -41,11 +49,20 @@ const Logo = styled.div`
   font-weight: bold;
   color: #ffffff;
   cursor: pointer;
+  transition: transform 0.5s;
+
+  &:hover {
+    img {
+      transform: scale(1.1);
+      animation: ${shakeAnimation} 0.8s infinite;
+    }
+  }
 `;
 
 const LogoImage = styled.img`
   height: 1.5rem;
   margin-right: 0.5rem;
+  transition: transform 0.5s;
 `;
 
 const SearchInput = styled.input`
