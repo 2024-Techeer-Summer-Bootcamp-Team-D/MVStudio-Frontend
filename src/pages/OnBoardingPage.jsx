@@ -1,9 +1,70 @@
-/* OnBoardingPage.js */
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import styled, { keyframes } from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 
-const slideIn = keyframes`
+const WholeContainer = styled.div`
+  height: 100%;
+  width: 100%;
+`;
+
+const FirstSection = styled.div`
+  height: 100%;
+  width: 100%;
+  position: relative;
+`;
+
+const SecondSection = styled.div`
+  height: 100%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  gap: 10rem;
+`;
+
+const ThirdSection = styled.div`
+  height: 100%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  gap: 10rem;
+`;
+
+const FourthSection = styled.div`
+  height: 100%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  gap: 10rem;
+`;
+
+const FifthSection = styled.div`
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+`;
+
+const slideUp = keyframes`
+  0% {
+    opacity: 0;
+    transform: translateY(50px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+`;
+
+const slideDown = keyframes`
   0% {
     opacity: 0;
     transform: translateY(-50px);
@@ -14,27 +75,35 @@ const slideIn = keyframes`
   }
 `;
 
-const Container = styled.div`
-  height: 500vh;
-  overflow-x: hidden;
-  overflow-y: auto;
-  width: 100vw;
-`;
-
 const Section = styled.div`
   height: 100vh;
   display: flex;
   align-items: center;
+  justify-content: center;
   opacity: 0;
-  transform: translateY(-50px);
-  transition:
-    opacity 1s ease,
-    transform 1s ease;
+  scroll-snap-align: start;
+  animation: ${(props) =>
+      props.visible ? (props.direction === 'up' ? slideDown : slideUp) : 'none'}
+    1s forwards;
+`;
 
-  &.visible {
-    opacity: 1;
-    transform: translateY(0);
-  }
+const Pagination = styled.div`
+  position: fixed;
+  right: 2%;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  z-index: 1000;
+`;
+
+const PaginationDot = styled.div`
+  width: 1rem;
+  height: 1rem;
+  background-color: ${(props) => (props.active ? '#37006e' : '#999')};
+  border-radius: 50%;
+  cursor: pointer;
 `;
 
 const Title = styled.div`
@@ -43,8 +112,8 @@ const Title = styled.div`
   position: relative;
   font-weight: 700;
   font-family: 'suit';
-  margin-left: 20%;
-  margin-bottom: 20%;
+  margin-top: 15rem;
+  margin-left: 12rem;
 `;
 
 const FirstText = styled.div`
@@ -53,8 +122,8 @@ const FirstText = styled.div`
   position: relative;
   font-weight: 700;
   font-family: 'suit';
-  margin-left: 10%;
-  margin-top: 5%;
+  margin-left: 55rem;
+  margin-top: 5rem;
 `;
 
 const GreyText = styled.div`
@@ -69,32 +138,30 @@ const Mac1 = styled.img`
   width: 45%;
   height: 50%;
   position: relative;
-  margin-left: 10%;
+  margin-right: 9rem;
 `;
 
 const SecondText = styled.div`
   color: white;
-  font-size: 2.5rem;
+  font-size: 3rem;
   position: relative;
   font-weight: 700;
   font-family: 'suit';
-  margin-left: 20%;
 `;
 
 const Mac2 = styled.img`
-  width: 40%;
+  width: 45%;
   height: 50%;
   position: relative;
-  margin-left: 12%;
 `;
 
 const ThirdText = styled.div`
   color: white;
-  font-size: 2.5rem;
+  font-size: 3rem;
   position: relative;
   font-weight: 700;
   font-family: 'suit';
-  margin-left: 10%;
+  margin-right: 20rem;
 `;
 
 const Connect = styled.div`
@@ -105,21 +172,20 @@ const Insta = styled.img`
   width: 35%;
   height: 70%;
   position: relative;
-  margin-left: 12%;
+  margin-right: 12rem;
 `;
 
 const FourthText = styled.div`
   color: white;
-  font-size: 2.5rem;
+  font-size: 3rem;
   position: relative;
   font-weight: 700;
   font-family: 'suit';
-  margin-left: 25rem;
 `;
 
 const FifthText = styled.div`
   color: white;
-  font-size: 3rem;
+  font-size: 4rem;
   font-weight: 700;
   font-family: 'suit';
   text-align: center;
@@ -127,83 +193,12 @@ const FifthText = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  width: 100%;
-  height: 100%;
-`;
-
-const CircleGlass = styled.img`
-  width: 10rem;
-  height: 10rem;
-  margin-left: -4rem;
-  margin-top: -55rem;
-  filter: blur(2px);
-  position: absolute;
-`;
-
-const SecondCircleGlass1 = styled.img`
-  width: 8rem;
-  height: 8rem;
-  position: absolute;
-  margin-left: 80rem;
-  margin-top: -50rem;
-  filter: blur(2px);
-`;
-
-const SecondCircleGlass2 = styled.img`
-  width: 8rem;
-  height: 8rem;
-  position: absolute;
-  margin-left: 114rem;
-  margin-top: 60rem;
-  filter: blur(2px);
-`;
-
-const FirstLeftGlass = styled.img`
-  width: 20rem;
-  height: 20rem;
-  position: absolute;
-  margin-left: -10rem;
-  margin-top: 50rem;
-  filter: blur(2px);
-`;
-
-const TwistGlass = styled.img`
-  width: 15rem;
-  height: 15rem;
-  position: absolute;
-  margin-left: -6.5rem;
-  margin-top: 50rem;
-  filter: blur(2px);
-`;
-
-const TearGlass1 = styled.img`
-  width: 5rem;
-  height: 5rem;
-  position: absolute;
-  margin-left: 110rem;
-  margin-top: 50rem;
-  filter: blur(2px);
-`;
-
-const ReactGlass = styled.img`
-  width: 15rem;
-  height: 15rem;
-  position: absolute;
-  margin-left: 85%;
-  margin-top: 39%;
-  filter: blur(2px);
-`;
-
-const MainGlass = styled.img`
-  width: 50%;
-  height: 100%;
-  position: absolute;
-  margin-left: 95rem;
-  filter: blur(2px);
+  margin-top: 8rem;
+  margin-right: 16rem;
 `;
 
 const ButtonContainer = styled.div`
-  margin: 2%;
+  margin: 4rem;
   text-align: center;
 `;
 
@@ -241,6 +236,28 @@ const Button = styled.button`
 const OnBoardingPage = () => {
   const navigate = useNavigate();
   const sectionsRef = useRef([]);
+  const [currentSection, setCurrentSection] = useState(0);
+  const [scrollDirection, setScrollDirection] = useState(null);
+
+  const scrollToSection = (index) => {
+    sectionsRef.current[index].scrollIntoView({ behavior: 'smooth' });
+    setCurrentSection(index);
+  };
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollTop = window.scrollY || window.pageYOffset;
+      const sectionHeight = window.innerHeight;
+      const currentSectionIndex = Math.round(scrollTop / sectionHeight);
+      setScrollDirection(currentSectionIndex > currentSection ? 'down' : 'up');
+      setCurrentSection(currentSectionIndex);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, [currentSection]);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -248,10 +265,11 @@ const OnBoardingPage = () => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
             entry.target.classList.add('visible');
+            setCurrentSection(parseInt(entry.target.dataset.index));
           }
         });
       },
-      { threshold: 0.1 },
+      { threshold: 0.5 },
     );
 
     sectionsRef.current.forEach((section) => {
@@ -270,95 +288,111 @@ const OnBoardingPage = () => {
   }, []);
 
   return (
-    <Container>
+    <WholeContainer>
+      <Pagination>
+        {[...Array(5)].map((_, index) => (
+          <PaginationDot
+            key={index}
+            active={currentSection === index}
+            onClick={() => scrollToSection(index)}
+          />
+        ))}
+      </Pagination>
       {[...Array(5)].map((_, index) => (
         <Section
           key={index}
+          data-index={index}
           ref={(el) => {
             sectionsRef.current[index] = el;
           }}
+          visible={currentSection === index}
+          direction={scrollDirection}
         >
           {index === 0 && (
             <>
-              <CircleGlass src="https://i.ibb.co/f2gnqxw/image.png" />
-              <FirstLeftGlass src="https://i.ibb.co/BzSg1mg/image.png" />
-              <Title>MVStudio</Title>
-              <FirstText>
-                <GreyText>
-                  단
+              <FirstSection>
+                <Title>MVStudio</Title>
+                <FirstText>
+                  <GreyText>
+                    단
+                    <br />
+                    하나뿐인,
+                    <br />
+                  </GreyText>
+                  나만의
                   <br />
-                  하나뿐인,
+                  뮤직비디오
                   <br />
-                </GreyText>
-                나만의
-                <br />
-                뮤직비디오
-                <br />
-              </FirstText>
-              <MainGlass src="https://i.ibb.co/qsF0KL8/image.png" />
+                </FirstText>
+              </FirstSection>
             </>
           )}
           {index === 1 && (
             <>
-              <SecondCircleGlass1 src="https://i.ibb.co/f2gnqxw/image.png" />
-              <SecondText>
-                <GreyText>당신의 아이디어,</GreyText>
-                모두 여기에.
-              </SecondText>
-              <Mac1 src="https://i.ibb.co/7NqqQkk/Second-Page-Mac-removebg-preview.png" />
-              <SecondCircleGlass2 src="https://i.ibb.co/f2gnqxw/image.png" />
+              <SecondSection>
+                <SecondText>
+                  <GreyText>당신의 아이디어,</GreyText>
+                  모두 여기에.
+                </SecondText>
+                <Mac1 src="https://i.ibb.co/7NqqQkk/Second-Page-Mac-removebg-preview.png" />
+              </SecondSection>
             </>
           )}
           {index === 2 && (
             <>
-              <TwistGlass src="https://i.ibb.co/wLPMNtf/image.png" />
-              <Mac2 src="https://i.ibb.co/h9R1pCh/qwdwqdqwd-removebg-preview.png" />
-              <ThirdText>
-                <GreyText>
-                  힙합부터
-                  <br />
-                  재즈까지,
-                </GreyText>
-                <Connect>
-                  <PurpleText>유니크한</PurpleText>&nbsp;뮤직비디오
-                </Connect>
-              </ThirdText>
-              <TearGlass1 src="https://i.ibb.co/jL01sDq/image.png" />
+              <ThirdSection>
+                <Mac2 src="https://i.ibb.co/h9R1pCh/qwdwqdqwd-removebg-preview.png" />
+                <ThirdText>
+                  <GreyText>
+                    힙합부터
+                    <br />
+                    재즈까지,
+                  </GreyText>
+                  <Connect>
+                    <PurpleText>유니크한</PurpleText>&nbsp;뮤직비디오
+                  </Connect>
+                </ThirdText>
+              </ThirdSection>
             </>
           )}
           {index === 3 && (
             <>
-              <FourthText>
-                <Connect>
-                  <GreyText>나만의 뮤직비디오</GreyText>를
-                </Connect>
-                <Connect>
-                  <PurpleText>소셜 계정</PurpleText>에
-                </Connect>
-                손쉽게 공유
-              </FourthText>
-              <Insta src="https://i.ibb.co/WcQcFpM/qqefmqklem-removebg-preview.png" />
-              <ReactGlass src="https://i.ibb.co/9rb8mGv/image.png" />
+              <FourthSection>
+                <FourthText>
+                  <Connect>
+                    <GreyText>나만의 뮤직비디오</GreyText>를
+                  </Connect>
+                  <Connect>
+                    <PurpleText>소셜 계정</PurpleText>에
+                  </Connect>
+                  손쉽게 공유
+                </FourthText>
+                <Insta src="https://i.ibb.co/WcQcFpM/qqefmqklem-removebg-preview.png" />
+              </FourthSection>
             </>
           )}
           {index === 4 && (
-            <FifthText>
-              모든 기능이 준비되어 있으니,
-              <br /> 지금 한번 시도해 보세요.
-              <ButtonContainer>
-                <Button
-                  onClick={() => {
-                    navigate('/auth');
-                  }}
-                >
-                  Start
-                </Button>
-              </ButtonContainer>
-            </FifthText>
+            <>
+              <FifthSection>
+                <FifthText>
+                  모든 기능이 준비되어 있으니,
+                  <br /> 지금 한번 시도해 보세요.
+                  <ButtonContainer>
+                    <Button
+                      onClick={() => {
+                        navigate('/auth');
+                      }}
+                    >
+                      Start
+                    </Button>
+                  </ButtonContainer>
+                </FifthText>
+              </FifthSection>
+            </>
           )}
         </Section>
       ))}
-    </Container>
+    </WholeContainer>
   );
 };
 
