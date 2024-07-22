@@ -28,6 +28,7 @@
     "react-infinite-scroll-component": "^6.1.0",
     "react-router-dom": "^6.24.0",
     "styled-components": "^6.1.11",
+    "sweetalert2": "^11.12.3",
     "zustand": "^4.5.4"
   },
   "devDependencies": {
