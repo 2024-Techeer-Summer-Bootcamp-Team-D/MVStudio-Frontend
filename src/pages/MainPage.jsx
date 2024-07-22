@@ -265,7 +265,7 @@ function MainPageTest() {
 
   const fetchMostViewList = async () => {
     try {
-      const response = await getList(mostViewPage, 4);
+      const response = await getList(mostViewPage, 4, 'views');
       if (response && response.music_videos) {
         setMostViewList((prevList) => [...prevList, ...response.music_videos]);
         setMostViewPage((prevPage) => prevPage + 1);
