@@ -3,14 +3,27 @@ import axios from 'axios';
 
 const BASE_URL = `${import.meta.env.VITE_REACT_APP_BASE_URL}/api/v1`;
 
-export const postLogin = async (username, password) => {
-  console.log('baseurl:', BASE_URL);
+export const getUsername = async () => {
   try {
-    const response = await axios.post(`${BASE_URL}/members/login`, {
-      username,
-      password,
-    });
-    console.log('response:', response.data);
+    const response = await jsonAxios.get('/members');
+    return response.data;
+  } catch (error) {
+    console.error('errorcode:', error);
+  }
+};
+
+export const postLogin = async (username, password) => {
+  try {
+    const response = await axios.post(
+      `${BASE_URL}/members/login`,
+      {
+        username,
+        password,
+      },
+      {
+        withCredentials: true, // 쿠키를 주고받기 위해 이 옵션을 추가합니다.
+      },
+    );
     return response.data;
   } catch (error) {
     console.error('errorcode:', error);
@@ -41,9 +54,9 @@ export const getCountries = async () => {
   }
 };
 
-export const getMemberInfo = async (id) => {
+export const getMemberInfo = async (username) => {
   try {
-    const response = await jsonAxios.get(`/members/${id}`);
+    const response = await jsonAxios.get(`/members/details/${username}`);
     console.log('겟멤버:', response.data);
     return response.data;
   } catch (error) {
@@ -57,39 +70,53 @@ export const patchMemberInfo = async (
   comment,
   country,
   birthday,
-  profileImageFile,
+  profile_image,
   email,
+  gender,
 ) => {
   const formData = new FormData();
 
-  // 이미지 파일 추가
-  if (profileImageFile) {
-    formData.append('profile_image', profileImageFile);
+  // patch 요청을 보낼 때, 변경된 정보만 보내기 위해 조건문을 사용
+  if (email) {
+    formData.append('email', email);
+  }
+  if (nickname) {
+    formData.append('nickname', nickname);
+  }
+  if (comment) {
+    formData.append('comment', comment);
+  }
+  if (country) {
+    formData.append('country', country);
+  }
+  if (birthday) {
+    formData.append('birthday', birthday);
+  }
+  if (gender) {
+    formData.append('sex', gender);
+  }
+  if (profile_image) {
+    formData.append('profile_image', profile_image);
   }
 
-  // JSON 데이터 추가
-  const jsonData = {
-    email,
-    username,
-    nickname,
-    comment,
-    country,
-    birthday,
-  };
-  formData.append('json_data', JSON.stringify(jsonData));
-
   try {
-    const response = await formAxios.patch(`/members/details/${username}`, {
-      nickname: formData.nickname,
-      comment: formData.comment,
-      country: formData.country,
-      birthday: formData.birthday,
-      profile_image: formData.profileImageFile,
-      email: formData.email,
-    });
+    const response = await formAxios.patch(
+      `/members/details/${username}`,
+      formData,
+    );
     return response.data;
   } catch (error) {
     console.error('Error patching member info:', error);
     throw error;
+  }
+};
+
+// 로그아웃 요청을 보내는 함수
+export const postLogout = async () => {
+  try {
+    const response = await jsonAxios.post('/members/logout');
+    return response.data;
+  } catch (error) {
+    return new Error('Logout failed');
   }
 };

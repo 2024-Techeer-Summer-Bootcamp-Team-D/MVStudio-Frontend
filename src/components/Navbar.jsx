@@ -1,10 +1,12 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import styled from 'styled-components';
-import SearchIcon from '@mui/icons-material/Search';
-import ignorePath from '../util/igonerePath';
+import ignorePath from '../utils/igonerePath';
+import styled, { keyframes } from 'styled-components';
 
-const Bar = styled.div`
+// Material-UI
+import SearchIcon from '@mui/icons-material/Search';
+
+const BackLayout = styled.div`
   width: 100%;
   height: 5rem;
   background-color: #05000a;
@@ -13,33 +15,58 @@ const Bar = styled.div`
   align-items: center; /* 수직 중앙 정렬 */
   border-bottom: 1px solid #380272;
   z-index: 3;
+  position: fixed;
+`;
+
+const BackLayoutSpace = styled.div`
+  width: 100%;
+  height: 5rem;
 `;
 
 const Searchbar = styled.div`
-  width: 40%;
-  height: 40%;
-  margin-top: -1rem;
-  background-color: #b8b8b8;
-  border-radius: 2rem;
-  margin-left: 10%;
+  width: 50%;
+  height: 45%;
+  background-color: white;
+  border-radius: 0.75rem;
   display: flex;
   align-items: center; /* 수직 중앙 정렬 */
-  justify-content: flex-start; /* 수평 오른쪽 정렬 */
   padding-left: 0.5rem; /* 패딩 추가하여 오른쪽 정렬 시 입력상자와 가장자리 간격 확보 */
+`;
+
+const shakeAnimation = keyframes`
+  0% { transform: rotate(0deg); }
+  25% { transform: rotate(8deg); }
+  50% { transform: rotate(0deg); }
+  75% { transform: rotate(-8deg); }
+  100% { transform: rotate(0deg); }
 `;
 
 const Logo = styled.div`
   position: absolute;
-  left: 1rem;
+  left: 2rem;
   font-family: 'SUIT', sans-serif;
-  font-size: 2.5rem;
+  font-size: 1.5rem;
   font-weight: bold;
   color: #ffffff;
-  margin-right: 17rem;
+  cursor: pointer;
+  transition: transform 0.5s;
+
+  &:hover {
+    img {
+      transform: scale(1.1);
+      animation: ${shakeAnimation} 0.8s infinite;
+    }
+  }
+`;
+
+const LogoImage = styled.img`
+  height: 1.5rem;
+  margin-right: 0.5rem;
+  transition: transform 0.5s;
 `;
 
 const SearchInput = styled.input`
-  background-color: #b8b8b8;
+  background-color: white;
   font-size: 1rem;
   border-radius: 2rem;
   width: 100%;
@@ -71,16 +98,22 @@ function Navbar() {
   }
 
   return (
-    <Bar>
-      <Logo>MVStudio</Logo>
-      <Searchbar>
-        <Icon />
-        <SearchInput
-          placeholder="Search..."
-          onKeyDown={handleSearch} // 검색어 입력 시 이벤트 핸들러 추가
-        />
-      </Searchbar>
-    </Bar>
+    <>
+      <BackLayoutSpace />
+      <BackLayout>
+        <Logo onClick={() => navigate('/main')}>
+          <LogoImage src="https://mvstudio-bucket.s3.ap-northeast-2.amazonaws.com/static_image/logo_image/MVStudio_backgroundless.png" />
+          MVStudio
+        </Logo>
+        <Searchbar>
+          <Icon />
+          <SearchInput
+            placeholder="Search..."
+            onKeyDown={handleSearch} // 검색어 입력 시 이벤트 핸들러 추가
+          />
+        </Searchbar>
+      </BackLayout>
+    </>
   );
 }
 
