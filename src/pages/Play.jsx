@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import YouTubeIcon from '@mui/icons-material/YouTube';
 import InstagramIcon from '@mui/icons-material/Instagram';
@@ -14,11 +15,13 @@ import PauseRounded from '@mui/icons-material/PauseRounded';
 import PlayArrowRounded from '@mui/icons-material/PlayArrowRounded';
 import FastForwardRounded from '@mui/icons-material/FastForwardRounded';
 import FastRewindRounded from '@mui/icons-material/FastRewindRounded';
+import { GetPlay } from '@/api/play';
 
 const BackLayout = styled.div`
-  width: 100%;
+  width: 80%;
   display: flex;
   flex-direction: row;
+  margin-left: 20%;
 `;
 
 const IconBox = styled.div`
@@ -246,8 +249,8 @@ const StyledRow = styled.div`
 const styles = {
   blockquote: {
     margin: '2.5rem',
-    width: '20rem', // 'Width'에서 'width'로 수정
-    height: '33rem', // 'Height'에서 'height'로 수정
+    width: '20rem',
+    height: '33rem',
     fontFamily: 'suit',
     color: '#ffffff',
   },
@@ -301,8 +304,16 @@ const StyledButton = styled.button`
 `;
 
 function Play() {
+  const { id } = useParams();
   const [paused, setPaused] = useState(false);
   const [lyricsVisible, setLyricsVisible] = useState(true);
+  const [playData, setPlayData] = useState(null);
+
+  useEffect(() => {
+    if (id) {
+      GetPlay({ mv_id: id }).then((data) => setPlayData(data));
+    }
+  }, [id]);
 
   const toggleLyrics = () => {
     setLyricsVisible(!lyricsVisible);
@@ -326,10 +337,10 @@ function Play() {
         </VideoContainer>
         <StyledRow>
           <TextBox>
-            <Title>Ocean Song</Title>
+            <Title>{playData ? playData.title : 'Loading...'}</Title>
             <UserInfo>
               <PersonIcon sx={{ color: 'white', fontSize: '1rem' }} />
-              <Subtitle>King Jinwoo</Subtitle>
+              <Subtitle>{playData ? playData.artist : 'Loading...'}</Subtitle>
             </UserInfo>
           </TextBox>
           <ShareBox>

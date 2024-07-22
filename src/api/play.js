@@ -1,8 +1,8 @@
-import { jsonAxios } from '../axios.config';
+import { jsonAxios } from './axios.config';
 
-export const GetPlay = async () => {
+export const GetPlay = async (mv_id) => {
   try {
-    const response = await jsonAxios.get();
+    const response = await jsonAxios.get(`/music-videos/${mv_id}`);
 
     console.log('response:', response.data);
     return response.data;
