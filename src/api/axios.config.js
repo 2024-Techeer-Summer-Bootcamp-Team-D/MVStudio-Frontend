@@ -15,7 +15,7 @@ export const reissueToken = async () => {
     );
     return response.data.access_token;
   } catch (error) {
-    console.error('이게 안되면 안되는건데:', error);
+    return new Error('Token reissue failed');
   }
 };
 
@@ -50,15 +50,14 @@ jsonAxios.interceptors.response.use(
     const originalRequest = error.config;
     if (
       error.response &&
-      error.response.status === 403 &&
+      (error.response.status === 403 || error.response.status === 401) &&
       !originalRequest._retry
     ) {
-      console.error('토큰 재발급 시작:', error);
       originalRequest._retry = true;
       try {
         const newAccessToken = await reissueToken();
+        console.log('newAccessToken:', newAccessToken);
         if (newAccessToken === undefined) {
-          console.error('토큰 재발급 실패:', error);
           return Promise.reject(error);
         }
         setCookie('accessToken', newAccessToken); // 새로운 액세스 토큰을 쿠키에 저장합니다.
@@ -67,8 +66,12 @@ jsonAxios.interceptors.response.use(
         originalRequest.headers['Authorization'] = `Bearer ${newAccessToken}`;
         return jsonAxios(originalRequest); // 원래 요청을 새로운 토큰으로 재시도합니다.
       } catch (reissueError) {
-        // 토큰 재발급 실패 시, 추가적인 오류 처리를 할 수 있습니다.
-        console.error('Token reissue failed:', reissueError);
+        if (
+          window.location.pathname !== '/auth' &&
+          (error.response.status === 403 || error.response.status === 401)
+        ) {
+          window.location.href = '/auth';
+        }
         return Promise.reject(reissueError);
       }
     }
@@ -87,7 +90,6 @@ export const formAxios = axios.create({
 formAxios.interceptors.request.use(
   (config) => {
     const token = getCookie('accessToken');
-    console.log('token:', token);
     if (token) {
       config.headers.Authorization = `${token}`; // Bearer 접두사를 사용하지 않을 때
       // config.headers.Authorization = `Bearer ${token}`; // Bearer 접두사를 사용할 때
@@ -108,20 +110,28 @@ formAxios.interceptors.response.use(
     const originalRequest = error.config;
     if (
       error.response &&
-      error.response.status === 401 &&
+      (error.response.status === 403 || error.response.status === 401) &&
       !originalRequest._retry
     ) {
       originalRequest._retry = true;
       try {
         const newAccessToken = await reissueToken();
+        console.log('newAccessToken:', newAccessToken);
+        if (newAccessToken === undefined) {
+          return Promise.reject(error);
+        }
         setCookie('accessToken', newAccessToken); // 새로운 액세스 토큰을 쿠키에 저장합니다.
-        formAxios.defaults.headers.common['Authorization'] =
+        jsonAxios.defaults.headers.common['Authorization'] =
           `Bearer ${newAccessToken}`;
         originalRequest.headers['Authorization'] = `Bearer ${newAccessToken}`;
-        return formAxios(originalRequest); // 원래 요청을 새로운 토큰으로 재시도합니다.
+        return jsonAxios(originalRequest); // 원래 요청을 새로운 토큰으로 재시도합니다.
       } catch (reissueError) {
-        // 토큰 재발급 실패 시, 추가적인 오류 처리를 할 수 있습니다.
-        console.error('Token reissue failed:', reissueError);
+        if (
+          window.location.pathname !== '/auth' &&
+          (error.response.status === 403 || error.response.status === 401)
+        ) {
+          window.location.href = '/auth';
+        }
         return Promise.reject(reissueError);
       }
     }

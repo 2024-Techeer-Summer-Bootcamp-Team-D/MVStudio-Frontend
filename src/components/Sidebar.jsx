@@ -4,6 +4,8 @@ import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import ignorePath from '../utils/igonerePath';
 import { useUser } from '@/libs/stores/userStore';
+import { postLogout } from '@/api/member';
+import Swal from 'sweetalert2';
 
 // Material-UI
 import AddIcon from '@mui/icons-material/Add';
@@ -237,7 +239,28 @@ function Sidebar() {
         </ThumbnailContainer> */}
         </TrendingContainer>
 
-        <MenuItem>
+        <MenuItem
+          onClick={() => {
+            Swal.fire({
+              title: '로그아웃',
+              text: '로그아웃하시겠습니까?',
+              icon: 'warning',
+              showCancelButton: true,
+              confirmButtonColor: '#3085d6',
+              cancelButtonColor: '#d33',
+              confirmButtonText: 'logout',
+            }).then((result) => {
+              if (result.isConfirmed) {
+                Swal.fire({
+                  title: 'Deleted!',
+                  text: 'Your file has been deleted.',
+                  icon: 'success',
+                });
+                postLogout().then(() => navigate('/auth'));
+              }
+            });
+          }}
+        >
           <LogoutIcon fontSize="small" />
           <MenuTitle>Logout</MenuTitle>
         </MenuItem>

@@ -108,3 +108,13 @@ export const patchMemberInfo = async (
     throw error;
   }
 };
+
+// 로그아웃 요청을 보내는 함수
+export const postLogout = async () => {
+  try {
+    const response = await jsonAxios.post('/members/logout');
+    return response.data;
+  } catch (error) {
+    return new Error('Logout failed');
+  }
+};
