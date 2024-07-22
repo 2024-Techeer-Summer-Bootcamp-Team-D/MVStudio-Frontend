@@ -20,6 +20,8 @@ const BackLayout = styled.div`
 const ContentArea = styled.div`
   display: flex;
   flex-direction: row;
+  padding-top: 5rem;
+  padding-left: 18rem;
 `;
 
 function App({ children }) {
@@ -27,8 +29,8 @@ function App({ children }) {
     <BackLayout>
       <GlobalStyles />
       <Navbar />
+      <Sidebar />
       <ContentArea>
-        <Sidebar />
         <Service />
         {children}
       </ContentArea>

@@ -10,8 +10,8 @@ const CreateContainer = styled.div`
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  margin-left: 20%;
   margin-right: 6%;
+  margin-top: 3rem;
 `;
 
 const TitleStyle = styled.p`

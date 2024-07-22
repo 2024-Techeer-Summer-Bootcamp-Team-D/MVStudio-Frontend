@@ -65,7 +65,6 @@ function Service() {
     fetchUsername();
     const intervalId = setInterval(async () => {
       const taskIds = JSON.parse(localStorage.getItem('taskId')) || [];
-      console.log('Received IDs:', taskIds);
       if (taskIds.length > 0) {
         setShowGif(true);
 
@@ -108,9 +107,6 @@ function Service() {
   const handleGifClick = () => {
     setShowModal((prevShowModal) => !prevShowModal);
   };
-
-  // Log taskStatuses to console
-  console.log('Current task statuses:', taskStatuses);
 
   return (
     <div style={{ position: 'fixed', bottom: '5%', right: '5%', zIndex: 1000 }}>

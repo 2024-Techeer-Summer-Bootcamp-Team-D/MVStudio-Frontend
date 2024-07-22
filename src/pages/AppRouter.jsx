@@ -25,7 +25,7 @@ function AppRouter() {
           <Route path="/auth/:loginType" element={<SaveTokens />} />
           <Route path="/auth" element={<Auth />} />
           <Route path="/main" element={<Main />} />
-          <Route path="/users/:id" element={<Mypage />} />
+          <Route path="/users/:username" element={<Mypage />} />
           <Route path="/search" element={<Search />} />
           <Route path="/lyricsselect" element={<LyricsSelect />} />
           <Route path="/create" element={<Create />} />

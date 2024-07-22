@@ -1,11 +1,11 @@
 import { jsonAxios } from './axios.config';
 
-export const getList = async (page, size, sort = null, member_id = null) => {
+export const getList = async (page, size, sort = null, username = null) => {
   try {
     const response = await jsonAxios.get(
-      `/music-videos/?page=${page}&size=${size}` +
+      `/music-videos?page=${page}&size=${size}` +
         (sort ? `&sort=${sort}` : '') +
-        (member_id ? `&member_id=${member_id}` : ''),
+        (username ? `&username=${username}` : ''),
     );
     console.log('겟리스트:', response.data);
     return response.data;
@@ -14,10 +14,10 @@ export const getList = async (page, size, sort = null, member_id = null) => {
   }
 };
 
-export const getHistory = async (member_id, page, size) => {
+export const getHistory = async (username, page, size) => {
   try {
     const response = await jsonAxios.get(
-      `/music-videos/histories-list/${member_id}?page=${page}&size=${size}`,
+      `/music-videos/histories-list/${username}?page=${page}&size=${size}`,
     );
     console.log('기록 :', response.data);
     return response.data;
@@ -61,7 +61,7 @@ export const postLyrics = async (subject, genres, language, vocal) => {
 };
 
 export const postVideos = async (
-  member_id,
+  username,
   subject,
   genres_ids,
   instruments_ids,
@@ -72,7 +72,7 @@ export const postVideos = async (
 ) => {
   try {
     const response = await jsonAxios.post('/music-videos/', {
-      member_id: member_id,
+      username: username,
       subject: subject,
       genres_ids: genres_ids,
       instruments_ids: instruments_ids,
@@ -88,10 +88,10 @@ export const postVideos = async (
   }
 };
 
-export const getTask = async (id) => {
+export const getTask = async (taskId) => {
   try {
-    const response = await jsonAxios.get(`/music-videos/status/${id}`);
-    console.log('보낸아이디:', id, '받은 응답:', response);
+    const response = await jsonAxios.get(`/music-videos/status/${taskId}`);
+    console.log('보낸아이디:', taskId, '받은 응답:', response);
     return response;
   } catch (error) {
     console.error('errorcode:', error);
