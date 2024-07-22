@@ -3,6 +3,9 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import ignorePath from '../utils/igonerePath';
+import { useUser } from '@/libs/stores/userStore';
+import { postLogout } from '@/api/member';
+import Swal from 'sweetalert2';
 
 // Material-UI
 import AddIcon from '@mui/icons-material/Add';
@@ -10,46 +13,30 @@ import HomeIcon from '@mui/icons-material/Home';
 import WhatshotIcon from '@mui/icons-material/Whatshot';
 import EqualizerIcon from '@mui/icons-material/Equalizer';
 import MovieIcon from '@mui/icons-material/Movie';
+import LogoutIcon from '@mui/icons-material/Logout';
 
-const Container = styled.div`
-  background-color: #05000a;
-  height: 100vh;
-  border-right: 1px solid #380272;
+const BackLayout = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 15rem;
+  height: calc(100% - 5rem);
   position: fixed;
-  margin-right: 18rem;
+  border-right: 1px solid #380272;
+  padding: 1rem;
+  justify-content: space-between;
 `;
 
-const SidebarContainer = styled.div`
-  position: relative;
-  background-color: #05000a;
-  color: #fafafa;
-  height: 100vh;
-  z-index: 99;
-  width: 18rem;
-  transform: translateX(${({ xPosition }) => -xPosition}px);
+const BackLayoutSpace = styled.div`
+  width: 15rem;
+  height: 100%;
 `;
 
-const HomeItem = styled.div`
+const MenuItem = styled.button`
   display: flex;
-  height: 3rem;
+  height: 2.5rem;
+  width: 100%;
   align-items: center;
-  margin-left: 1rem;
-  margin-right: 1rem;
-  padding-left: 0.25rem;
-  cursor: pointer;
-  &:hover {
-    background-color: #333333;
-    border-radius: 0.5rem; /* Adjust as needed */
-  }
-`;
-
-const CreateItem = styled.div`
-  display: flex;
-  height: 3rem;
-  align-items: center;
-  margin-left: 1rem;
-  margin-right: 1rem;
-  padding-left: 0.25rem;
+  color: white;
   cursor: pointer;
   &:hover {
     background-color: #333333;
@@ -57,55 +44,8 @@ const CreateItem = styled.div`
   }
 `;
 
-const NavigationItem = styled.div`
-  display: flex;
-  height: 3rem;
-  align-items: center;
-  margin-left: 1rem;
-  margin-right: 1rem;
-  padding-left: 0.25rem;
-  cursor: pointer;
-  &:hover {
-    background-color: #333333;
-    border-radius: 0.5rem;
-  }
-`;
-
-const MyStudio = styled.div`
-  display: flex;
-  height: 3rem;
-  align-items: center;
-  margin-left: 0.4rem;
-  margin-right: 1rem;
-  padding-left: 0.25rem;
-  gap: 0.5rem;
-  cursor: pointer;
-  &:hover {
-    background-color: #333333;
-    border-radius: 0.5rem;
-  }
-`;
-
-const Statics = styled.div`
-  display: flex;
-  height: 3rem;
-  align-items: center;
-  margin-left: 0.4rem;
-  margin-right: 1rem;
-  padding-left: 0.25rem;
-  gap: 0.5rem;
-  cursor: pointer;
-  &:hover {
-    background-color: #333333;
-    border-radius: 0.5rem;
-  }
-`;
-
-const NavigationText = styled.div`
+const MenuTitle = styled.div`
   margin-left: 0.625rem;
-  font-weight: 500;
-  font-size: 1.2rem;
-  gap: 0.5rem;
 `;
 
 const TrendingText = styled.p`
@@ -115,7 +55,7 @@ const TrendingText = styled.p`
   font-size: 1.2rem;
 `;
 
-const ExpandContainer = styled.div`
+const TrendingContainer = styled.div`
   padding: 1.25rem;
   display: flex;
   flex-direction: column;
@@ -152,18 +92,6 @@ const Uploader = styled.div`
   color: #a4a4a4;
 `;
 
-const MyChannelContainer = styled.div`
-  /* visibility: ${({ isOpen }) => (isOpen ? 'visible' : 'hidden')}; */
-  display: flex;
-  flex-direction: column;
-  /* max-height: ${({ isOpen }) => (isOpen ? '1000px' : '0')};
-  opacity: ${({ isOpen }) => (isOpen ? '1' : '0')}; */
-  overflow: hidden;
-  transition:
-    max-height 0.5s ease,
-    opacity 0.5s ease;
-`;
-
 const EditMovieIcon = styled(MovieIcon)`
   margin-right: 0.6rem;
 `;
@@ -172,128 +100,172 @@ const EditEqualizerIcon = styled(EqualizerIcon)`
   margin-right: 0.6rem;
 `;
 
+const LogoutContainer = styled.div`
+  display: flex;
+  width: 100%;
+  align-items: end;
+  justify-content: start;
+  margin-left: 1rem;
+  margin-right: 1rem;
+  padding-left: 0.25rem;
+  color: white;
+  background-color: #a2a2a2;
+`;
+
+const LogoutButton = styled.button`
+  display: flex;
+  height: 3rem;
+  align-items: center;
+  margin-left: 1rem;
+  margin-right: 1rem;
+  padding-left: 0.25rem;
+  color: white;
+  cursor: pointer;
+  &:hover {
+    background-color: #333333;
+    border-radius: 0.5rem;
+  }
+`;
+
+const MenuContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+
 function Sidebar() {
-  // const [xPosition, setX] = useState(0);
-  // const [isExpandOpen, setExpandOpen] = useState(false);
-
-  // const side = useRef();
-
-  // const handleClose = (e) => {
-  //   let sideArea = side.current;
-  //   let sideChildren = side.current.contains(e.target);
-  //   if (sideArea && !sideChildren) {
-  //     setX(0);
-  //   }
-  // };
-
-  // const toggleExpand = () => {
-  //   setExpandOpen(!isExpandOpen);
-  // };
-
-  // useEffect(() => {
-  //   window.addEventListener('click', handleClose);
-  //   return () => {
-  //     window.removeEventListener('click', handleClose);
-  //   };
-  // }, []);
-  const myId = localStorage.getItem('memberId');
   const navigate = useNavigate();
-  const moveEdit = () => {
-    navigate(`/users/${myId}`);
-  };
+  const username = useUser((state) => state.username);
+  const fetchUsername = useUser((state) => state.fetchUsername);
 
-  const isIgnoredPath = ignorePath().includes(location.pathname);
-
-  if (isIgnoredPath) {
+  if (ignorePath().includes(location.pathname)) {
     return null;
   }
 
   return (
-    <Container>
-      <SidebarContainer>
-        <HomeItem>
-          <HomeIcon fontSize="small" />
-          <NavigationText>Home</NavigationText>
-        </HomeItem>
-        <CreateItem>
-          <AddIcon fontSize="small" />
-          <NavigationText>Create</NavigationText>
-        </CreateItem>
-        {/* <NavigationItem onClick={toggleExpand}>
-          <PersonOutlineIcon fontSize="small" />
-          <NavigationText>You</NavigationText>
-        </NavigationItem> */}
-        <MyChannelContainer>
-          <MyStudio onClick={moveEdit}>
-            <NavigationText>
-              <EditMovieIcon fontSize="small" />
-              My Studio
-            </NavigationText>
-          </MyStudio>
-          <Statics>
-            <NavigationText>
-              <EditEqualizerIcon fontSize="small" />
-              Statics
-            </NavigationText>
-          </Statics>
-        </MyChannelContainer>
-        <NavigationItem>
-          <WhatshotIcon fontSize="small" />
-          <TrendingText>Trending </TrendingText>
-        </NavigationItem>
-        <ExpandContainer>
-          <ThumbnailContainer>
-            <Thumbnail src="https://i.ibb.co/Jn12dqF/unnamed.jpg" alt="alt" />
-            <InfoContainer>
-              <ImageTitle>Title</ImageTitle>
-              <Uploader>Uploader</Uploader>
-            </InfoContainer>
-          </ThumbnailContainer>
-          <ThumbnailContainer>
-            <Thumbnail src="https://i.ibb.co/Jn12dqF/unnamed.jpg" alt="alt" />
-            <InfoContainer>
-              <ImageTitle>Title</ImageTitle>
-              <Uploader>Uploader</Uploader>
-            </InfoContainer>
-          </ThumbnailContainer>
-          <ThumbnailContainer>
-            <Thumbnail src="https://i.ibb.co/Jn12dqF/unnamed.jpg" alt="alt" />
-            <InfoContainer>
-              <ImageTitle>Title</ImageTitle>
-              <Uploader>Uploader</Uploader>
-            </InfoContainer>
-          </ThumbnailContainer>
-          <ThumbnailContainer>
-            <Thumbnail src="https://i.ibb.co/Jn12dqF/unnamed.jpg" alt="alt" />
-            <InfoContainer>
-              <ImageTitle>Title</ImageTitle>
-              <Uploader>Uploader</Uploader>
-            </InfoContainer>
-          </ThumbnailContainer>
-          <ThumbnailContainer>
-            <Thumbnail src="https://i.ibb.co/Jn12dqF/unnamed.jpg" alt="alt" />
-            <InfoContainer>
-              <ImageTitle>Title</ImageTitle>
-              <Uploader>Uploader</Uploader>
-            </InfoContainer>
-          </ThumbnailContainer>
-          <ThumbnailContainer>
-            <Thumbnail src="https://i.ibb.co/Jn12dqF/unnamed.jpg" alt="alt" />
-            <InfoContainer>
-              <ImageTitle>Title</ImageTitle>
-              <Uploader>Uploader</Uploader>
-            </InfoContainer>
-          </ThumbnailContainer>
-          <ThumbnailContainer>
-            <Thumbnail src="https://i.ibb.co/Jn12dqF/unnamed.jpg" alt="alt" />
-            <InfoContainer>
-              <ImageTitle>Title</ImageTitle>
-              <Uploader>Uploader</Uploader>
-            </InfoContainer>
-          </ThumbnailContainer>
-        </ExpandContainer>
-      </SidebarContainer>
-    </Container>
+    <>
+      <BackLayoutSpace />
+      <BackLayout>
+        <MenuContainer>
+          {/* Home 버튼 */}
+          <MenuItem onClick={() => navigate('/main')}>
+            <HomeIcon fontSize="small" />
+            <MenuTitle>Home</MenuTitle>
+          </MenuItem>
+
+          {/* Create 버튼 */}
+          <MenuItem onClick={() => navigate('/create')}>
+            <AddIcon fontSize="small" />
+            <MenuTitle>Create</MenuTitle>
+          </MenuItem>
+
+          {/* My Studio 버튼 */}
+          <MenuItem
+            onClick={async () => {
+              await fetchUsername();
+              navigate(`/users/${username}`);
+            }}
+          >
+            <MovieIcon fontSize="small" />
+            <MenuTitle>My Studio</MenuTitle>
+          </MenuItem>
+
+          {/* Chart 버튼 */}
+          <MenuItem
+            onClick={async () => {
+              await fetchUsername();
+              navigate(`/charts/${username}`);
+            }}
+          >
+            <EqualizerIcon fontSize="small" />
+            <MenuTitle>Statics</MenuTitle>
+          </MenuItem>
+
+          {/* Trending 리스트 */}
+          <MenuItem>
+            <WhatshotIcon fontSize="small" />
+            <MenuTitle>Trending</MenuTitle>
+          </MenuItem>
+        </MenuContainer>
+        {/* Trending 리스트 확장 */}
+        <TrendingContainer>
+          {/* <ThumbnailContainer>
+          <Thumbnail src="https://i.ibb.co/Jn12dqF/unnamed.jpg" alt="alt" />
+          <InfoContainer>
+            <ImageTitle>Title</ImageTitle>
+            <Uploader>Uploader</Uploader>
+          </InfoContainer>
+        </ThumbnailContainer>
+        <ThumbnailContainer>
+          <Thumbnail src="https://i.ibb.co/Jn12dqF/unnamed.jpg" alt="alt" />
+          <InfoContainer>
+            <ImageTitle>Title</ImageTitle>
+            <Uploader>Uploader</Uploader>
+          </InfoContainer>
+        </ThumbnailContainer>
+        <ThumbnailContainer>
+          <Thumbnail src="https://i.ibb.co/Jn12dqF/unnamed.jpg" alt="alt" />
+          <InfoContainer>
+            <ImageTitle>Title</ImageTitle>
+            <Uploader>Uploader</Uploader>
+          </InfoContainer>
+        </ThumbnailContainer>
+        <ThumbnailContainer>
+          <Thumbnail src="https://i.ibb.co/Jn12dqF/unnamed.jpg" alt="alt" />
+          <InfoContainer>
+            <ImageTitle>Title</ImageTitle>
+            <Uploader>Uploader</Uploader>
+          </InfoContainer>
+        </ThumbnailContainer>
+        <ThumbnailContainer>
+          <Thumbnail src="https://i.ibb.co/Jn12dqF/unnamed.jpg" alt="alt" />
+          <InfoContainer>
+            <ImageTitle>Title</ImageTitle>
+            <Uploader>Uploader</Uploader>
+          </InfoContainer>
+        </ThumbnailContainer>
+        <ThumbnailContainer>
+          <Thumbnail src="https://i.ibb.co/Jn12dqF/unnamed.jpg" alt="alt" />
+          <InfoContainer>
+            <ImageTitle>Title</ImageTitle>
+            <Uploader>Uploader</Uploader>
+          </InfoContainer>
+        </ThumbnailContainer>
+        <ThumbnailContainer>
+          <Thumbnail src="https://i.ibb.co/Jn12dqF/unnamed.jpg" alt="alt" />
+          <InfoContainer>
+            <ImageTitle>Title</ImageTitle>
+            <Uploader>Uploader</Uploader>
+          </InfoContainer>
+        </ThumbnailContainer> */}
+        </TrendingContainer>
+
+        <MenuItem
+          onClick={() => {
+            Swal.fire({
+              title: '로그아웃',
+              text: '로그아웃하시겠습니까?',
+              icon: 'warning',
+              showCancelButton: true,
+              confirmButtonColor: '#3085d6',
+              cancelButtonColor: '#d33',
+              confirmButtonText: 'logout',
+            }).then((result) => {
+              if (result.isConfirmed) {
+                Swal.fire({
+                  title: 'Deleted!',
+                  text: 'Your file has been deleted.',
+                  icon: 'success',
+                });
+                postLogout().then(() => navigate('/auth'));
+              }
+            });
+          }}
+        >
+          <LogoutIcon fontSize="small" />
+          <MenuTitle>Logout</MenuTitle>
+        </MenuItem>
+      </BackLayout>
+    </>
   );
 }
 

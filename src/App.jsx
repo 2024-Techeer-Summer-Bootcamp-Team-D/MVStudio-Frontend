@@ -1,6 +1,7 @@
 /* eslint-disable react/prop-types */
 import React from 'react';
 import './styles/index.css';
+import './styles/swal.config.css';
 import styled from 'styled-components';
 import Sidebar from './components/Sidebar';
 import Navbar from './components/Navbar';
@@ -19,8 +20,6 @@ const BackLayout = styled.div`
 const ContentArea = styled.div`
   display: flex;
   flex-direction: row;
-  padding-top: 5rem;
-  padding-left: 18rem;
 `;
 
 function App({ children }) {
@@ -28,8 +27,8 @@ function App({ children }) {
     <BackLayout>
       <GlobalStyles />
       <Navbar />
-      <Sidebar />
       <ContentArea>
+        <Sidebar />
         <Service />
         {children}
       </ContentArea>

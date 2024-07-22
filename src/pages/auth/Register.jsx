@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useUser } from '@/libs/stores/userStore';
 import styled, { createGlobalStyle } from 'styled-components';
+import { useNavigate } from 'react-router-dom';
 
 // Material UI
 import InputLabel from '@mui/material/InputLabel';
@@ -230,6 +231,9 @@ const RegisterForm = () => {
 
   const username = useUser((state) => state.username);
   const fetchUsername = useUser((state) => state.fetchUsername);
+  // console.log('username:', username);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -318,7 +322,7 @@ const RegisterForm = () => {
             }}
             value={birthday}
             label="Birthday"
-            onChange={(e) => setBirthday(e.target.value)}
+            onChange={(e) => setBirthday(e)}
           />
         </LocalizationProvider>
 
@@ -360,7 +364,23 @@ const RegisterForm = () => {
             setLoginError('입력하지 않은 칸이 있어요!');
           } else {
             setLoginError('');
-            patchMemberInfo();
+            console.log('birthday:', dayjs(birthday).format('YYYY-MM-DD'));
+            patchMemberInfo(
+              username,
+              nickname,
+              '',
+              country,
+              dayjs(birthday).format('YYYY-MM-DD'),
+              '',
+              '',
+              gender,
+            ).then((response) => {
+              if (response.status === 200) {
+                navigate('/main');
+              } else {
+                setLoginError('회원가입에 실패했어요!');
+              }
+            });
           }
         }}
       >

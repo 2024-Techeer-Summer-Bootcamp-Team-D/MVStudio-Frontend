@@ -1,0 +1,22 @@
+.swal2-popup {
+  background-color: #111; /* 팝업 배경색 검은색 */
+  color: white; /* 텍스트 색상 흰색 */
+}
+
+.swal2-title {
+  color: white; /* 제목 텍스트 색상 흰색 */
+}
+
+.swal2-content {
+  color: white; /* 내용 텍스트 색상 흰색 */
+}
+
+.swal2-styled.swal2-confirm {
+  background-color: #4caf50; /* 확인 버튼 배경색 */
+  color: white; /* 확인 버튼 텍스트 색상 */
+}
+
+.swal2-styled.swal2-cancel {
+  background-color: #f44336; /* 취소 버튼 배경색 */
+  color: white; /* 취소 버튼 텍스트 색상 */
+}
