@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useUser } from '@/libs/stores/userStore';
 import styled, { createGlobalStyle } from 'styled-components';
+import { useNavigate } from 'react-router-dom';
 
 // Material UI
 import InputLabel from '@mui/material/InputLabel';
@@ -230,6 +231,9 @@ const RegisterForm = () => {
 
   const username = useUser((state) => state.username);
   const fetchUsername = useUser((state) => state.fetchUsername);
+  // console.log('username:', username);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -372,7 +376,7 @@ const RegisterForm = () => {
               gender,
             ).then((response) => {
               if (response.status === 200) {
-                // window.location.href = '/';
+                navigate('/main');
               } else {
                 setLoginError('회원가입에 실패했어요!');
               }

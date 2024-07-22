@@ -73,19 +73,30 @@ export const patchMemberInfo = async (
   gender,
 ) => {
   const formData = new FormData();
-  formData.append('email', email);
-  formData.append('nickname', nickname);
-  formData.append('comment', comment);
-  formData.append('country', country);
-  formData.append('birthday', birthday);
-  formData.append('sex', gender);
 
-  console.log('profile_image:', profile_image);
-
-  // 이미지 파일이 있을 경우 추가
+  // patch 요청을 보낼 때, 변경된 정보만 보내기 위해 조건문을 사용
+  if (email) {
+    formData.append('email', email);
+  }
+  if (nickname) {
+    formData.append('nickname', nickname);
+  }
+  if (comment) {
+    formData.append('comment', comment);
+  }
+  if (country) {
+    formData.append('country', country);
+  }
+  if (birthday) {
+    formData.append('birthday', birthday);
+  }
+  if (gender) {
+    formData.append('sex', gender);
+  }
   if (profile_image) {
     formData.append('profile_image', profile_image);
   }
+
   try {
     const response = await formAxios.patch(
       `/members/details/${username}`,
