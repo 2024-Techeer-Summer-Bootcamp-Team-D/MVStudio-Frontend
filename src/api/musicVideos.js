@@ -1,11 +1,11 @@
 import { jsonAxios } from './axios.config';
 
-export const getList = async (page, size, sort = null, member_id = null) => {
+export const getList = async (page, size, sort = null, username = null) => {
   try {
     const response = await jsonAxios.get(
-      `/music-videos/?page=${page}&size=${size}` +
+      `/music-videos?page=${page}&size=${size}` +
         (sort ? `&sort=${sort}` : '') +
-        (member_id ? `&member_id=${member_id}` : ''),
+        (username ? `&username=${username}` : ''),
     );
     console.log('겟리스트:', response.data);
     return response.data;
@@ -103,27 +103,5 @@ export const getStyles = async () => {
     return response.data;
   } catch (error) {
     console.error('errorcode:', error);
-  }
-};
-
-export const getVideoList = async (
-  page,
-  size,
-  sort = null,
-  member_id = null,
-) => {
-  try {
-    const queryParams = new URLSearchParams({
-      page: page,
-      size: size,
-      sort: sort,
-      member_id: member_id,
-    }).toString();
-
-    const response = await axios.get(`/api/music-videos?${queryParams}`);
-    return response.data;
-  } catch (error) {
-    console.error('Error fetching video list:', error);
-    throw error;
   }
 };

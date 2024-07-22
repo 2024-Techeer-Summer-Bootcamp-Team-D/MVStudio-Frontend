@@ -107,6 +107,19 @@ const ButtonContainer = styled.div`
   padding-left: 35%;
 `;
 
+// `task_id`를 localStorage에서 로드하는 함수
+const loadTaskIdsFromLocalStorage = () => {
+  const storedTaskIds = localStorage.getItem('task_ids');
+  return storedTaskIds ? JSON.parse(storedTaskIds) : [];
+};
+
+// `task_id`를 localStorage에 저장하는 함수
+const saveTaskIdToLocalStorage = (taskId) => {
+  const existingTaskIds = loadTaskIdsFromLocalStorage();
+  existingTaskIds.push(taskId);
+  localStorage.setItem('taskId', JSON.stringify(existingTaskIds));
+};
+
 function LyricsSelect() {
   const [selectedLyrics, setSelectedLyrics] = useState('');
   const [lyricsList, setLyricsList] = useState([]);
@@ -135,7 +148,7 @@ function LyricsSelect() {
   const goMain = () => {
     navigate('/mainPage');
   };
-  console.log('클릭', click);
+
   const click = async () => {
     try {
       const {
@@ -147,7 +160,7 @@ function LyricsSelect() {
         instruments_ids,
         songTitle,
       } = state;
-      await postVideos(
+      const response = await postVideos(
         member_id,
         songTitle,
         genres_ids,
@@ -157,6 +170,8 @@ function LyricsSelect() {
         voice,
         selectedLyrics,
       );
+      const taskId = response.task_id;
+      saveTaskIdToLocalStorage(taskId); // 저장 함수 호출
       goMain();
     } catch (error) {
       console.error('Failed to create video:', error);
