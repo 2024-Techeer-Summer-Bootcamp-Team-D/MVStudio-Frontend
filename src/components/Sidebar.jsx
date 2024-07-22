@@ -3,6 +3,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import ignorePath from '../utils/igonerePath';
+import { useUser } from '@/libs/stores/userStore';
 
 // Material-UI
 import AddIcon from '@mui/icons-material/Add';
@@ -10,51 +11,30 @@ import HomeIcon from '@mui/icons-material/Home';
 import WhatshotIcon from '@mui/icons-material/Whatshot';
 import EqualizerIcon from '@mui/icons-material/Equalizer';
 import MovieIcon from '@mui/icons-material/Movie';
+import LogoutIcon from '@mui/icons-material/Logout';
 
-const NAVBAR_HEIGHT = '0rem'; // 네비게이션 바의 높이 설정
-
-const Container = styled.div`
-  background-color: #05000a;
-  height: 100vh;
+const BackLayout = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 15rem;
+  height: calc(100% - 5rem);
   position: fixed;
   border-right: 1px solid #380272;
-  top: ${NAVBAR_HEIGHT}; // 사이드바의 상단 위치를 네비게이션 바의 높이만큼 설정
+  padding: 1rem;
+  justify-content: space-between;
 `;
 
-const SidebarContainer = styled.div`
-  background-color: #05000a;
-  color: #fafafa;
-  height: calc(
-    100vh - ${NAVBAR_HEIGHT}
-  ); // 전체 높이에서 네비게이션 바의 높이를 뺌
-  z-index: 99;
-  width: 18rem;
-  padding-top: ${NAVBAR_HEIGHT}; // 사이드바 내부의 컨텐츠를 네비게이션 바 높이만큼 아래로 밀어냄
-  transform: translateX(${({ xPosition }) => -xPosition}px);
+const BackLayoutSpace = styled.div`
+  width: 15rem;
+  height: 100%;
 `;
 
 const MenuItem = styled.button`
   display: flex;
-  height: 3rem;
+  height: 2.5rem;
+  width: 100%;
   align-items: center;
-  margin-left: 1rem;
-  margin-right: 1rem;
-  padding-left: 0.25rem;
   color: white;
-  cursor: pointer;
-  &:hover {
-    background-color: #333333;
-    border-radius: 0.5rem;
-  }
-`;
-
-const NavigationItem = styled.div`
-  display: flex;
-  height: 3rem;
-  align-items: center;
-  margin-left: 1rem;
-  margin-right: 1rem;
-  padding-left: 0.25rem;
   cursor: pointer;
   &:hover {
     background-color: #333333;
@@ -64,9 +44,6 @@ const NavigationItem = styled.div`
 
 const MenuTitle = styled.div`
   margin-left: 0.625rem;
-  font-weight: 500;
-  font-size: 1.2rem;
-  gap: 0.5rem;
 `;
 
 const TrendingText = styled.p`
@@ -76,7 +53,7 @@ const TrendingText = styled.p`
   font-size: 1.2rem;
 `;
 
-const ExpandContainer = styled.div`
+const TrendingContainer = styled.div`
   padding: 1.25rem;
   display: flex;
   flex-direction: column;
@@ -113,17 +90,6 @@ const Uploader = styled.div`
   color: #a4a4a4;
 `;
 
-const Logo = styled.div`
-  left: 1rem;
-  font-family: 'SUIT', sans-serif;
-  font-size: 2.5rem;
-  font-weight: bold;
-  color: #ffffff;
-  margin-left: 1rem;
-  margin-bottom: 2rem;
-  margin-top: 2rem;
-`;
-
 const EditMovieIcon = styled(MovieIcon)`
   margin-right: 0.6rem;
 `;
@@ -132,98 +98,151 @@ const EditEqualizerIcon = styled(EqualizerIcon)`
   margin-right: 0.6rem;
 `;
 
+const LogoutContainer = styled.div`
+  display: flex;
+  width: 100%;
+  align-items: end;
+  justify-content: start;
+  margin-left: 1rem;
+  margin-right: 1rem;
+  padding-left: 0.25rem;
+  color: white;
+  background-color: #a2a2a2;
+`;
+
+const LogoutButton = styled.button`
+  display: flex;
+  height: 3rem;
+  align-items: center;
+  margin-left: 1rem;
+  margin-right: 1rem;
+  padding-left: 0.25rem;
+  color: white;
+  cursor: pointer;
+  &:hover {
+    background-color: #333333;
+    border-radius: 0.5rem;
+  }
+`;
+
+const MenuContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+
 function Sidebar() {
   const navigate = useNavigate();
+  const username = useUser((state) => state.username);
+  const fetchUsername = useUser((state) => state.fetchUsername);
 
   if (ignorePath().includes(location.pathname)) {
     return null;
   }
 
   return (
-    <Container>
-      {/* Home 버튼 */}
-      <MenuItem>
-        <HomeIcon fontSize="small" />
-        <MenuTitle>Home</MenuTitle>
-      </MenuItem>
+    <>
+      <BackLayoutSpace />
+      <BackLayout>
+        <MenuContainer>
+          {/* Home 버튼 */}
+          <MenuItem onClick={() => navigate('/main')}>
+            <HomeIcon fontSize="small" />
+            <MenuTitle>Home</MenuTitle>
+          </MenuItem>
 
-      {/* Create 버튼 */}
-      <MenuItem>
-        <AddIcon fontSize="small" />
-        <MenuTitle>Create</MenuTitle>
-      </MenuItem>
+          {/* Create 버튼 */}
+          <MenuItem onClick={() => navigate('/create')}>
+            <AddIcon fontSize="small" />
+            <MenuTitle>Create</MenuTitle>
+          </MenuItem>
 
-      {/* My Studio 버튼 */}
-      <MenuItem>
-        <EditMovieIcon fontSize="small" />
-        <MenuTitle>My Studio</MenuTitle>
-      </MenuItem>
+          {/* My Studio 버튼 */}
+          <MenuItem
+            onClick={async () => {
+              await fetchUsername();
+              navigate(`/users/${username}`);
+            }}
+          >
+            <MovieIcon fontSize="small" />
+            <MenuTitle>My Studio</MenuTitle>
+          </MenuItem>
 
-      {/* Chart 버튼 */}
-      <MenuItem>
-        <EditEqualizerIcon fontSize="small" />
-        <MenuTitle>Statics</MenuTitle>
-      </MenuItem>
+          {/* Chart 버튼 */}
+          <MenuItem
+            onClick={async () => {
+              await fetchUsername();
+              navigate(`/charts/${username}`);
+            }}
+          >
+            <EqualizerIcon fontSize="small" />
+            <MenuTitle>Statics</MenuTitle>
+          </MenuItem>
 
-      {/* Trending 리스트 */}
-      <NavigationItem>
-        <WhatshotIcon fontSize="small" />
-        <TrendingText>Trending </TrendingText>
-      </NavigationItem>
+          {/* Trending 리스트 */}
+          <MenuItem>
+            <WhatshotIcon fontSize="small" />
+            <MenuTitle>Trending</MenuTitle>
+          </MenuItem>
+        </MenuContainer>
+        {/* Trending 리스트 확장 */}
+        <TrendingContainer>
+          {/* <ThumbnailContainer>
+          <Thumbnail src="https://i.ibb.co/Jn12dqF/unnamed.jpg" alt="alt" />
+          <InfoContainer>
+            <ImageTitle>Title</ImageTitle>
+            <Uploader>Uploader</Uploader>
+          </InfoContainer>
+        </ThumbnailContainer>
+        <ThumbnailContainer>
+          <Thumbnail src="https://i.ibb.co/Jn12dqF/unnamed.jpg" alt="alt" />
+          <InfoContainer>
+            <ImageTitle>Title</ImageTitle>
+            <Uploader>Uploader</Uploader>
+          </InfoContainer>
+        </ThumbnailContainer>
+        <ThumbnailContainer>
+          <Thumbnail src="https://i.ibb.co/Jn12dqF/unnamed.jpg" alt="alt" />
+          <InfoContainer>
+            <ImageTitle>Title</ImageTitle>
+            <Uploader>Uploader</Uploader>
+          </InfoContainer>
+        </ThumbnailContainer>
+        <ThumbnailContainer>
+          <Thumbnail src="https://i.ibb.co/Jn12dqF/unnamed.jpg" alt="alt" />
+          <InfoContainer>
+            <ImageTitle>Title</ImageTitle>
+            <Uploader>Uploader</Uploader>
+          </InfoContainer>
+        </ThumbnailContainer>
+        <ThumbnailContainer>
+          <Thumbnail src="https://i.ibb.co/Jn12dqF/unnamed.jpg" alt="alt" />
+          <InfoContainer>
+            <ImageTitle>Title</ImageTitle>
+            <Uploader>Uploader</Uploader>
+          </InfoContainer>
+        </ThumbnailContainer>
+        <ThumbnailContainer>
+          <Thumbnail src="https://i.ibb.co/Jn12dqF/unnamed.jpg" alt="alt" />
+          <InfoContainer>
+            <ImageTitle>Title</ImageTitle>
+            <Uploader>Uploader</Uploader>
+          </InfoContainer>
+        </ThumbnailContainer>
+        <ThumbnailContainer>
+          <Thumbnail src="https://i.ibb.co/Jn12dqF/unnamed.jpg" alt="alt" />
+          <InfoContainer>
+            <ImageTitle>Title</ImageTitle>
+            <Uploader>Uploader</Uploader>
+          </InfoContainer>
+        </ThumbnailContainer> */}
+        </TrendingContainer>
 
-      {/* Trending 리스트 확장 */}
-      {/* <ExpandContainer>
-        <ThumbnailContainer>
-          <Thumbnail src="https://i.ibb.co/Jn12dqF/unnamed.jpg" alt="alt" />
-          <InfoContainer>
-            <ImageTitle>Title</ImageTitle>
-            <Uploader>Uploader</Uploader>
-          </InfoContainer>
-        </ThumbnailContainer>
-        <ThumbnailContainer>
-          <Thumbnail src="https://i.ibb.co/Jn12dqF/unnamed.jpg" alt="alt" />
-          <InfoContainer>
-            <ImageTitle>Title</ImageTitle>
-            <Uploader>Uploader</Uploader>
-          </InfoContainer>
-        </ThumbnailContainer>
-        <ThumbnailContainer>
-          <Thumbnail src="https://i.ibb.co/Jn12dqF/unnamed.jpg" alt="alt" />
-          <InfoContainer>
-            <ImageTitle>Title</ImageTitle>
-            <Uploader>Uploader</Uploader>
-          </InfoContainer>
-        </ThumbnailContainer>
-        <ThumbnailContainer>
-          <Thumbnail src="https://i.ibb.co/Jn12dqF/unnamed.jpg" alt="alt" />
-          <InfoContainer>
-            <ImageTitle>Title</ImageTitle>
-            <Uploader>Uploader</Uploader>
-          </InfoContainer>
-        </ThumbnailContainer>
-        <ThumbnailContainer>
-          <Thumbnail src="https://i.ibb.co/Jn12dqF/unnamed.jpg" alt="alt" />
-          <InfoContainer>
-            <ImageTitle>Title</ImageTitle>
-            <Uploader>Uploader</Uploader>
-          </InfoContainer>
-        </ThumbnailContainer>
-        <ThumbnailContainer>
-          <Thumbnail src="https://i.ibb.co/Jn12dqF/unnamed.jpg" alt="alt" />
-          <InfoContainer>
-            <ImageTitle>Title</ImageTitle>
-            <Uploader>Uploader</Uploader>
-          </InfoContainer>
-        </ThumbnailContainer>
-        <ThumbnailContainer>
-          <Thumbnail src="https://i.ibb.co/Jn12dqF/unnamed.jpg" alt="alt" />
-          <InfoContainer>
-            <ImageTitle>Title</ImageTitle>
-            <Uploader>Uploader</Uploader>
-          </InfoContainer>
-        </ThumbnailContainer>
-      </ExpandContainer> */}
-    </Container>
+        <MenuItem>
+          <LogoutIcon fontSize="small" />
+          <MenuTitle>Logout</MenuTitle>
+        </MenuItem>
+      </BackLayout>
+    </>
   );
 }
 
