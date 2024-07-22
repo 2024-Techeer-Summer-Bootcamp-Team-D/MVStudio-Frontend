@@ -581,16 +581,16 @@ const Create = () => {
     align-items: start;
     z-index: 99999;
   `;
-  console.log('wkddddddddd', genreList);
+
   console.log(genreId);
   // const location = useLocation();
   const handleSubmit = () => {
     const userPreferences = {
-      genre: genreId,
-      instrument: selectedInstruments,
-      style: stylesId,
-      songTitle,
-      voice,
+      genres_ids: genreId,
+      instruments_ids: instrumentsId,
+      style_id: stylesId,
+      subject: songTitle,
+      vocal: voice,
       language,
       tempo,
     };

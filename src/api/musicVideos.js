@@ -60,30 +60,50 @@ export const postLyrics = async (subject, genres, language, vocal) => {
 };
 
 export const postVideos = async (
-  member_id,
+  username,
   subject,
   genres_ids,
   instruments_ids,
+  style_id,
   tempo,
   language,
   vocal,
   lyrics,
+  lyrics_eng,
 ) => {
   try {
-    const response = await jsonAxios.post('/music-videos', {
-      member_id: member_id,
-      subject: subject,
-      genres_ids: genres_ids,
-      instruments_ids: instruments_ids,
-      tempo: tempo,
-      language: language,
-      vocal: vocal,
-      lyrics: lyrics,
+    // 전달된 파라미터 로그로 확인
+    console.log('Post Video Params:', {
+      username,
+      subject,
+      genres_ids,
+      instruments_ids,
+      style_id,
+      tempo,
+      language,
+      vocal,
+      lyrics,
+      lyrics_eng,
     });
+
+    const response = await jsonAxios.post('/music-videos', {
+      username,
+      subject,
+      genres_ids,
+      instruments_ids,
+      style_id,
+      tempo,
+      language,
+      vocal,
+      lyrics,
+      lyrics_eng,
+    });
+
     console.log('response:', response.data);
     return response.data;
   } catch (error) {
     console.error('errorcode:', error);
+    throw error; // 에러를 상위 호출로 다시 던지기
   }
 };
 

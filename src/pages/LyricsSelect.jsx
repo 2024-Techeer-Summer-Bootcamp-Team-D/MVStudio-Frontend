@@ -2,12 +2,13 @@ import React, { useState, useEffect } from 'react';
 import styled, { css } from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 import { useLocation } from 'react-router-dom';
-import { postLyrics } from '../api/musicVideos';
+import { postLyrics, postVideos } from '../api/musicVideos';
 
 const BigContainer = styled.div`
   display: flex;
   flex-direction: column;
-  width: 100%;
+  width: 80%;
+  margin-left: 22rem;
 `;
 
 const OtherContainer = styled.div`
@@ -22,6 +23,7 @@ const Title = styled.p`
   font-size: 1.5rem;
   color: #ffffff;
   margin-left: 11.5%;
+  margin-top: 3rem;
   margin-bottom: 2rem;
 `;
 
@@ -107,10 +109,22 @@ const ButtonContainer = styled.div`
   padding-left: 35%;
 `;
 
+// `task_id`를 localStorage에서 로드하는 함수
+const loadTaskIdsFromLocalStorage = () => {
+  const storedTaskIds = localStorage.getItem('task_ids');
+  return storedTaskIds ? JSON.parse(storedTaskIds) : [];
+};
+
+// `task_id`를 localStorage에 저장하는 함수
+const saveTaskIdToLocalStorage = (taskId) => {
+  const existingTaskIds = loadTaskIdsFromLocalStorage();
+  existingTaskIds.push(taskId);
+  localStorage.setItem('taskId', JSON.stringify(existingTaskIds));
+};
+
 function LyricsSelect() {
   const [selectedLyrics, setSelectedLyrics] = useState('');
   const [lyricsList, setLyricsList] = useState([]);
-
   const location = useLocation();
   const { state } = location;
   const navigate = useNavigate();
@@ -118,8 +132,8 @@ function LyricsSelect() {
   useEffect(() => {
     const fetchLyrics = async () => {
       try {
-        const { voice, language, genre, songTitle } = state;
-        const lyrics = await postLyrics(songTitle, [genre], language, voice);
+        const { vocal, language, genres_ids, subject } = state;
+        const lyrics = await postLyrics(subject, [genres_ids], language, vocal);
         setLyricsList(lyrics);
       } catch (error) {
         console.error('Failed to fetch lyrics:', error);
@@ -137,9 +151,69 @@ function LyricsSelect() {
     navigate('/mainPage');
   };
 
-  const click = () => {
-    // Assuming you have variables: voice, language, tempo, selectedGenres, selectedInstruments, songTitle
-    goMain();
+  const click = async () => {
+    try {
+      const {
+        username,
+        subject,
+        genres_ids,
+        instruments_ids,
+        style_id,
+        tempo,
+        language,
+        vocal,
+        lyrics_eng,
+      } = state;
+
+      // state 객체 로그로 확인
+      console.log('State:', state);
+
+      if (!subject) {
+        throw new Error('Subject is missing');
+      }
+
+      // 비디오 생성 요청
+      const response = await postVideos(
+        username,
+        subject,
+        genres_ids,
+        instruments_ids,
+        style_id,
+        tempo,
+        language,
+        vocal,
+        selectedLyrics, // 오류가 발생하는 부분을 selectedLyrics로 변경
+        lyrics_eng,
+      );
+
+      // 응답 객체가 올바른지 확인
+      if (!response) {
+        throw new Error('서버 응답이 없습니다.');
+      }
+
+      // 응답이 error 속성을 가지고 있는지 확인
+      if (response.error) {
+        throw new Error(response.error);
+      }
+
+      const taskId = response.task_id;
+
+      if (!taskId) {
+        throw new Error('task_id가 응답에 포함되어 있지 않습니다.');
+      }
+
+      // 작업 ID를 로컬 스토리지에 저장
+      saveTaskIdToLocalStorage(taskId);
+
+      // 메인 페이지로 이동
+      goMain();
+    } catch (error) {
+      // 비디오 생성 실패 시 에러 메시지 출력
+      console.error(
+        'Failed to create video:',
+        error.message ? error.message : error,
+      );
+    }
   };
 
   return (

@@ -1,6 +1,7 @@
 import React from 'react';
 
-function Main(props) {
+// eslint-disable-next-line no-unused-vars
+function Main(_props) {
   return <div></div>;
 }
 
