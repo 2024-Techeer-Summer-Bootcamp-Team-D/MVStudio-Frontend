@@ -1,5 +1,5 @@
 /* OnBoardingPage.js */
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import styled, { keyframes } from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 
@@ -25,7 +25,16 @@ const Section = styled.div`
   height: 100vh;
   display: flex;
   align-items: center;
-  animation: ${slideIn} 1s ease forwards; /* Section이 나타날 때 slideIn 애니메이션 적용 */
+  opacity: 0;
+  transform: translateY(-50px);
+  transition:
+    opacity 1s ease,
+    transform 1s ease;
+
+  &.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
 `;
 
 const Title = styled.div`
@@ -231,78 +240,124 @@ const Button = styled.button`
 
 const OnBoardingPage = () => {
   const navigate = useNavigate();
+  const sectionsRef = useRef([]);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+          }
+        });
+      },
+      { threshold: 0.1 },
+    );
+
+    sectionsRef.current.forEach((section) => {
+      if (section) {
+        observer.observe(section);
+      }
+    });
+
+    return () => {
+      sectionsRef.current.forEach((section) => {
+        if (section) {
+          observer.unobserve(section);
+        }
+      });
+    };
+  }, []);
+
   return (
     <Container>
-      <Section>
-        <CircleGlass src="https://i.ibb.co/f2gnqxw/image.png" />
-        <FirstLeftGlass src="https://i.ibb.co/BzSg1mg/image.png" />
-        <Title>MVStudio</Title>
-        <FirstText>
-          <GreyText>
-            단
-            <br />
-            하나뿐인,
-            <br />
-          </GreyText>
-          나만의
-          <br />
-          뮤직비디오
-          <br />
-        </FirstText>
-        <MainGlass src="https://i.ibb.co/qsF0KL8/image.png" />
-      </Section>
-      <Section>
-        <SecondCircleGlass1 src="https://i.ibb.co/f2gnqxw/image.png" />
-        <SecondText>
-          <GreyText>당신의 아이디어,</GreyText>
-          모두 여기에.
-        </SecondText>
-        <Mac1 src="https://i.ibb.co/7NqqQkk/Second-Page-Mac-removebg-preview.png" />
-        <SecondCircleGlass2 src="https://i.ibb.co/f2gnqxw/image.png" />
-      </Section>
-      <Section>
-        <TwistGlass src="https://i.ibb.co/wLPMNtf/image.png" />
-        <Mac2 src="https://i.ibb.co/h9R1pCh/qwdwqdqwd-removebg-preview.png" />
-        <ThirdText>
-          <GreyText>
-            힙합부터
-            <br />
-            재즈까지,
-          </GreyText>
-          <Connect>
-            <PurpleText>유니크한</PurpleText>&nbsp;뮤직비디오
-          </Connect>
-        </ThirdText>
-        <TearGlass1 src="https://i.ibb.co/jL01sDq/image.png" />
-      </Section>
-      <Section>
-        <FourthText>
-          <Connect>
-            <GreyText>나만의 뮤직비디오</GreyText>를
-          </Connect>
-          <Connect>
-            <PurpleText>소셜 계정</PurpleText>에
-          </Connect>
-          손쉽게 공유
-        </FourthText>
-        <Insta src="https://i.ibb.co/WcQcFpM/qqefmqklem-removebg-preview.png" />
-        <ReactGlass src="https://i.ibb.co/9rb8mGv/image.png" />
-      </Section>
-      <Section>
-        <FifthText>
-          모든 기능이 준비되어 있으니,
-          <br /> 지금 한번 시도해 보세요.
-          <ButtonContainer>
-            <Button
-              onClick={() => {
-                navigate('/auth');
-              }}
-            >
-              Start
-            </Button>
-          </ButtonContainer>
-        </FifthText>
-      </Section>
+      {[...Array(5)].map((_, index) => (
+        <Section
+          key={index}
+          ref={(el) => {
+            sectionsRef.current[index] = el;
+          }}
+        >
+          {index === 0 && (
+            <>
+              <CircleGlass src="https://i.ibb.co/f2gnqxw/image.png" />
+              <FirstLeftGlass src="https://i.ibb.co/BzSg1mg/image.png" />
+              <Title>MVStudio</Title>
+              <FirstText>
+                <GreyText>
+                  단
+                  <br />
+                  하나뿐인,
+                  <br />
+                </GreyText>
+                나만의
+                <br />
+                뮤직비디오
+                <br />
+              </FirstText>
+              <MainGlass src="https://i.ibb.co/qsF0KL8/image.png" />
+            </>
+          )}
+          {index === 1 && (
+            <>
+              <SecondCircleGlass1 src="https://i.ibb.co/f2gnqxw/image.png" />
+              <SecondText>
+                <GreyText>당신의 아이디어,</GreyText>
+                모두 여기에.
+              </SecondText>
+              <Mac1 src="https://i.ibb.co/7NqqQkk/Second-Page-Mac-removebg-preview.png" />
+              <SecondCircleGlass2 src="https://i.ibb.co/f2gnqxw/image.png" />
+            </>
+          )}
+          {index === 2 && (
+            <>
+              <TwistGlass src="https://i.ibb.co/wLPMNtf/image.png" />
+              <Mac2 src="https://i.ibb.co/h9R1pCh/qwdwqdqwd-removebg-preview.png" />
+              <ThirdText>
+                <GreyText>
+                  힙합부터
+                  <br />
+                  재즈까지,
+                </GreyText>
+                <Connect>
+                  <PurpleText>유니크한</PurpleText>&nbsp;뮤직비디오
+                </Connect>
+              </ThirdText>
+              <TearGlass1 src="https://i.ibb.co/jL01sDq/image.png" />
+            </>
+          )}
+          {index === 3 && (
+            <>
+              <FourthText>
+                <Connect>
+                  <GreyText>나만의 뮤직비디오</GreyText>를
+                </Connect>
+                <Connect>
+                  <PurpleText>소셜 계정</PurpleText>에
+                </Connect>
+                손쉽게 공유
+              </FourthText>
+              <Insta src="https://i.ibb.co/WcQcFpM/qqefmqklem-removebg-preview.png" />
+              <ReactGlass src="https://i.ibb.co/9rb8mGv/image.png" />
+            </>
+          )}
+          {index === 4 && (
+            <FifthText>
+              모든 기능이 준비되어 있으니,
+              <br /> 지금 한번 시도해 보세요.
+              <ButtonContainer>
+                <Button
+                  onClick={() => {
+                    navigate('/auth');
+                  }}
+                >
+                  Start
+                </Button>
+              </ButtonContainer>
+            </FifthText>
+          )}
+        </Section>
+      ))}
     </Container>
   );
 };
