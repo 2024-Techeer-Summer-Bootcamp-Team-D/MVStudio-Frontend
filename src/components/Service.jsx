@@ -65,6 +65,8 @@ const StyledCheckIcon = styled(CheckIcon)`
   }
 `;
 
+// ... (이전 스타일 컴포넌트들은 그대로 유지)
+
 function Service() {
   const [showGif, setShowGif] = useState(false);
   const [showModal, setShowModal] = useState(false);
@@ -73,45 +75,41 @@ function Service() {
   const navigate = useNavigate();
   const username = useUser((state) => state.username);
   const fetchUsername = useUser((state) => state.fetchUsername);
-  console.log('User:', username);
+
+  const fetchTaskStatuses = async () => {
+    const taskIds = JSON.parse(localStorage.getItem('taskId')) || [];
+    const mvSubjects = JSON.parse(localStorage.getItem('mvSubject')) || [];
+    if (taskIds.length > 0) {
+      setShowGif(true);
+      try {
+        const statuses = await Promise.all(
+          taskIds.map(async (taskId, index) => {
+            const response = await getTask(taskId);
+            return {
+              taskId,
+              mvSubject: mvSubjects[index],
+              status: response.data.HTTPstatus,
+              message: response.data.message,
+            };
+          }),
+        );
+
+        setTaskStatuses(statuses);
+        console.log('Task Statuses:', statuses);
+
+        // 모든 작업이 완료되었는지 확인
+      } catch (error) {
+        console.error('API call error:', error);
+      }
+    } else {
+      setShowGif(false);
+    }
+  };
 
   useEffect(() => {
     fetchUsername();
-    const intervalId = setInterval(async () => {
-      const taskIds = JSON.parse(localStorage.getItem('taskId')) || [];
-      const mvSubjects = JSON.parse(localStorage.getItem('mvSubject')) || [];
-      console.log('mvSubjects:', mvSubjects);
-      if (taskIds.length > 0) {
-        setShowGif(true);
-        try {
-          const statuses = await Promise.all(
-            taskIds.map(async (taskId) => {
-              const response = await getTask(taskId);
-              // Returning an object for each taskId
-              return {
-                taskId,
-                status: response.data.HTTPstatus,
-                message: response.data.message,
-              };
-            }),
-          );
-
-          setTaskStatuses(statuses);
-          console.log('Task Statuses:', statuses);
-
-          // const completedTasks = statuses.filter(
-          //   (status) => status.status === 201,
-          // ).length;
-          // if (completedTasks === taskIds.length) {
-          //   setShowGif(false);
-          // }
-        } catch (error) {
-          console.error('API call error:', error);
-        }
-      } else {
-        setShowGif(false);
-      }
-    }, 5000);
+    fetchTaskStatuses(); // 즉시 상태 가져오기
+    const intervalId = setInterval(fetchTaskStatuses, 5000); // 5초마다 상태 업데이트
 
     if (username === undefined) {
       navigate('/auth');
@@ -126,8 +124,15 @@ function Service() {
 
   const handleTaskClick = (taskId) => {
     const updatedTaskIds = JSON.parse(localStorage.getItem('taskId')) || [];
-    const newTaskIds = updatedTaskIds.filter((id) => id !== taskId);
-    localStorage.setItem('taskId', JSON.stringify(newTaskIds));
+    const updatedMvSubjects =
+      JSON.parse(localStorage.getItem('mvSubject')) || [];
+    const index = updatedTaskIds.indexOf(taskId);
+    if (index > -1) {
+      updatedTaskIds.splice(index, 1);
+      updatedMvSubjects.splice(index, 1);
+    }
+    localStorage.setItem('taskId', JSON.stringify(updatedTaskIds));
+    localStorage.setItem('mvSubject', JSON.stringify(updatedMvSubjects));
     setTaskStatuses((prevStatuses) =>
       prevStatuses.filter((task) => task.taskId !== taskId),
     );
@@ -178,30 +183,31 @@ function Service() {
             />
             {showModal && (
               <Modal>
-                {taskStatuses.map(({ taskId, status, message }) => (
-                  <TaskStatusItem key={taskId}>
-                    <div
-                      style={{
-                        display: 'flex',
-                        flexDirection: 'column',
-                        alignItems: 'flex-start',
-                      }}
-                    >
-                      <p>
-                        {taskId} : <br />
-                        {message}
-                      </p>
-                    </div>
-                    {status === 200 ? (
-                      <LoadingSpinner />
-                    ) : (
-                      <StyledCheckIcon
-                        sx={{ color: green[500] }}
-                        onClick={() => handleTaskClick(taskId)}
-                      />
-                    )}
-                  </TaskStatusItem>
-                ))}
+                {taskStatuses.map(
+                  ({ taskId, mvSubject, message, isCompleted }) => (
+                    <TaskStatusItem key={taskId}>
+                      <div
+                        style={{
+                          display: 'flex',
+                          flexDirection: 'column',
+                          alignItems: 'flex-start',
+                        }}
+                      >
+                        <p>
+                          {mvSubject}: {message}
+                        </p>
+                      </div>
+                      {!isCompleted ? (
+                        <LoadingSpinner />
+                      ) : (
+                        <StyledCheckIcon
+                          sx={{ color: green[500] }}
+                          onClick={() => handleTaskClick(taskId)}
+                        />
+                      )}
+                    </TaskStatusItem>
+                  ),
+                )}
               </Modal>
             )}
           </div>

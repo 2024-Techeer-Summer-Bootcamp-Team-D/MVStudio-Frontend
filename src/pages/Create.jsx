@@ -23,6 +23,7 @@ const JellyButton = styled.button`
   height: 3.5rem;
   font-size: 1rem;
   font-weight: 500;
+  margin-bottom: 1rem;
   /* border: 0.1rem solid #ffffff; */
   background: linear-gradient(45deg, #b75dfd 30%, #ffa9a9 90%);
   color: white; /* 텍스트의 색상을 지정합니다 */

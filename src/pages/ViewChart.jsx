@@ -82,13 +82,13 @@ const ViewChart = () => {
   const [ageData, setAgeData] = useState(null);
   const [countryData, setCountryData] = useState(null);
   const [value, setValue] = useState(0);
-  const username = 'genie';
-  // const username = useUser((state) => state.username);
-  // const fetchUsername = useUser((state) => state.fetchUsername);
-  // useEffect(() => {
-  //   fetchUsername();
-  // }, []);
-  // console.log('유저네임:', username);
+  // const username = 'genie';
+  const username = useUser((state) => state.username);
+  const fetchUsername = useUser((state) => state.fetchUsername);
+  useEffect(() => {
+    fetchUsername();
+  }, []);
+  console.log('유저네임:', username);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -131,6 +131,7 @@ const ViewChart = () => {
         console.log('조회수 조회 오류', error);
       }
     };
+    fetchUsername();
     fetchAgeData();
     fetchCountryData();
     fetchGenderData();
