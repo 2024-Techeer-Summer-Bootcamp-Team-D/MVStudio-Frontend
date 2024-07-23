@@ -27,6 +27,7 @@ const StyledForm = styled.form`
   border-radius: 10px;
   text-align: center;
   min-width: 30%;
+  margin-top: 5%;
   margin-left: 25%;
 `;
 
