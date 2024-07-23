@@ -14,27 +14,31 @@ const loadingAnimation = keyframes`
 
 // Modal component with updated background color
 const Modal = styled.div`
-  position: fixed;
-  top: 50%;
-  left: 75%;
   background-color: #2b2c2d;
   border-radius: 1rem;
   z-index: 1001;
-  height: 18rem;
-  width: 22rem;
+  min-height: 24rem;
+  height: 100%;
+  width: 100%;
   display: flex;
-  align-items: start;
-  justify-content: center;
-  padding-top: 0.5rem;
+  flex-direction: column;
+  align-items: center;
+  padding: 1rem;
+  padding-top: 1.5rem;
+  padding-bottom: 1.5rem;
+  /* justify-content: center; */
+  /* padding-top: 0.5rem; */
 `;
 
 // Task status item styling
 const TaskStatusItem = styled.li`
   background-color: #5c5b5b;
   border-radius: 0.5rem;
-  padding: 0.5rem;
-  margin: 0.5rem 0;
+  padding: 1rem;
+  margin: 0.5rem;
   display: flex;
+  flex-direction: row;
+  justify-content: space-between;
   align-items: center;
   width: 100%;
   color: white;
@@ -48,7 +52,17 @@ const LoadingSpinner = styled.div`
   width: 1rem;
   height: 1rem;
   animation: ${loadingAnimation} 1s linear infinite;
-  margin-left: 1rem;
+`;
+
+const StyledCheckIcon = styled(CheckIcon)`
+  color: ${green[500]};
+
+  cursor: pointer;
+
+  &:hover {
+    transition: transform 0.3s ease;
+    transform: scale(1.5);
+  }
 `;
 
 function Service() {
@@ -65,9 +79,10 @@ function Service() {
     fetchUsername();
     const intervalId = setInterval(async () => {
       const taskIds = JSON.parse(localStorage.getItem('taskId')) || [];
+      const mvSubjects = JSON.parse(localStorage.getItem('mvSubject')) || [];
+      console.log('mvSubjects:', mvSubjects);
       if (taskIds.length > 0) {
         setShowGif(true);
-
         try {
           const statuses = await Promise.all(
             taskIds.map(async (taskId) => {
@@ -82,13 +97,14 @@ function Service() {
           );
 
           setTaskStatuses(statuses);
+          console.log('Task Statuses:', statuses);
 
-          const completedTasks = statuses.filter(
-            (status) => status.status === 201,
-          ).length;
-          if (completedTasks === taskIds.length) {
-            setShowGif(false);
-          }
+          // const completedTasks = statuses.filter(
+          //   (status) => status.status === 201,
+          // ).length;
+          // if (completedTasks === taskIds.length) {
+          //   setShowGif(false);
+          // }
         } catch (error) {
           console.error('API call error:', error);
         }
@@ -108,8 +124,24 @@ function Service() {
     setShowModal((prevShowModal) => !prevShowModal);
   };
 
+  const handleTaskClick = (taskId) => {
+    const updatedTaskIds = JSON.parse(localStorage.getItem('taskId')) || [];
+    const newTaskIds = updatedTaskIds.filter((id) => id !== taskId);
+    localStorage.setItem('taskId', JSON.stringify(newTaskIds));
+    setTaskStatuses((prevStatuses) =>
+      prevStatuses.filter((task) => task.taskId !== taskId),
+    );
+  };
+
   return (
-    <div style={{ position: 'fixed', bottom: '5%', right: '5%', zIndex: 1000 }}>
+    <div
+      style={{
+        position: 'fixed',
+        bottom: '3rem',
+        right: '3em',
+        zIndex: 1000,
+      }}
+    >
       {showGif && (
         <div
           style={{
@@ -120,44 +152,56 @@ function Service() {
         >
           <div
             ref={gifRef}
-            style={{ position: 'relative', width: '5rem', height: '5rem' }}
+            style={{
+              position: 'relative',
+              width: '100%',
+              height: '100%',
+              display: 'flex',
+              flexDirection: 'column-reverse',
+              alignItems: 'end',
+              justifyContent: 'end',
+            }}
           >
             <img
               src="https://i.ibb.co/JymMRPQ/Colorful-Gif-Animations-Replace-loading-Screen-Hareketli-Resim-Design-2019.gif"
               alt="GIF"
               style={{
-                width: '100%',
-                height: '100%',
+                width: '4rem',
+                height: '4rem',
                 objectFit: 'cover',
-                borderRadius: '50%',
+                borderRadius: '100%',
                 cursor: 'pointer',
+                position: 'relative',
+                marginTop: '1.5rem',
               }}
               onClick={handleGifClick}
             />
             {showModal && (
               <Modal>
-                <ul style={{ paddingLeft: '0.2rem', paddingRight: '' }}>
-                  {taskStatuses.map(({ taskId, status, message }) => (
-                    <TaskStatusItem key={taskId}>
-                      <div
-                        style={{
-                          display: 'flex',
-                          flexDirection: 'column',
-                          alignItems: 'flex-start',
-                        }}
-                      >
-                        <p style={{ padding: '0.3rem' }}>
-                          {taskId} : {message}
-                        </p>
-                      </div>
-                      {status === 200 ? (
-                        <LoadingSpinner />
-                      ) : (
-                        <CheckIcon sx={{ color: green[500] }} />
-                      )}
-                    </TaskStatusItem>
-                  ))}
-                </ul>
+                {taskStatuses.map(({ taskId, status, message }) => (
+                  <TaskStatusItem key={taskId}>
+                    <div
+                      style={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'flex-start',
+                      }}
+                    >
+                      <p>
+                        {taskId} : <br />
+                        {message}
+                      </p>
+                    </div>
+                    {status === 200 ? (
+                      <LoadingSpinner />
+                    ) : (
+                      <StyledCheckIcon
+                        sx={{ color: green[500] }}
+                        onClick={() => handleTaskClick(taskId)}
+                      />
+                    )}
+                  </TaskStatusItem>
+                ))}
               </Modal>
             )}
           </div>
