@@ -10,8 +10,6 @@ const CreateContainer = styled.div`
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  margin-left: 20%;
-  margin-right: 6%;
 `;
 
 const TitleStyle = styled.p`
@@ -20,18 +18,7 @@ const TitleStyle = styled.p`
   font-size: 1.5rem;
   color: #ffffff;
   font-weight: 700;
-  margin-left: 3.2rem;
-  margin-bottom: 1rem;
-`;
-
-const TitleStyle2 = styled.p`
-  font-family: 'SUIT', sans-serif;
-  font-size: 1rem;
-  color: #ffffff;
-  font-weight: 700;
-  margin-top: -3.5rem;
-  margin-left: 3.2rem;
-  margin-bottom: 1rem;
+  margin-left: 5rem;
 `;
 
 const TrendCoverBox = styled.div`
@@ -43,73 +30,41 @@ const TrendCoverBox = styled.div`
 
 const CoverBox = styled.div`
   transition: transform 0.5s ease-in-out;
-  width: 14.75%;
-  height: 14.75%;
-  flex: 0 0 14.75%;
+  width: 16.8%;
+  height: 16.8%;
+  flex: 0 0 16.8%;
+  /* width: 14rem;
+  height: 10rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column; */
 `;
 
 const TrendRoundCover = styled.button`
   background-image: url(${(props) => props.src});
   background-size: cover;
-  background-position: center;
-  border-radius: 10%;
-  width: 15.4rem;
-  height: 15rem;
+  border-radius: 1.2rem;
+  width: 18rem;
+  height: 11rem;
   position: relative;
-  &:hover {
-    filter: brightness(0.8);
-  }
-
-  &::after {
-    content: '${(props) => props.label}';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    border-radius: 1.2rem;
-    background-color: rgba(0, 0, 0, 0.5);
-    color: white;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    opacity: 0;
-    transition: opacity 0.3s ease;
-    pointer-events: none;
-  }
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-end;
+  border: none;
+  padding: 0;
+  flex-direction: column;
 `;
 
 const RoundCover = styled.button`
   background-image: url(${(props) => props.src});
   background-size: cover;
-  background-position: center;
-  border-radius: 10%;
-  width: 8rem;
-  height: 8rem;
+  border-radius: 1.2rem;
+  width: 12rem;
+  height: 7em;
   align-items: center;
-  justify-content: center;
   position: relative;
-  &:hover {
-    filter: brightness(0.8);
-  }
-
-  &::after {
-    content: '${(props) => props.label}';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    border-radius: 1.2rem;
-    background-color: rgba(0, 0, 0, 0.5);
-    color: white;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    opacity: 0;
-    transition: opacity 0.3s ease;
-    pointer-events: none;
-  }
+  display: flex;
 `;
 
 const TrendArrowFunction = styled(ArrowForwardIosIcon)`
@@ -131,37 +86,31 @@ const ArrowFunction = styled(ArrowForwardIosIcon)`
   z-index: 2;
 `;
 
-const TrendContainer = styled.div`
-  display: flex;
-  flex-direction: row;
-  overflow: hidden;
-  width: 100%;
-  margin-left: 1rem;
-  margin-bottom: 7rem;
-`;
-
 const Container = styled.div`
   display: flex;
   flex-direction: row;
-  overflow: hidden;
+  align-items: flex-start;
   width: 100%;
-  margin-left: 2rem;
-  margin-bottom: 7rem;
+  height: 13rem;
+  justify-content: center;
 `;
 
 const TrendViewContainer = styled.div`
-  width: 70rem;
-  height: 15rem;
-  gap: 2rem;
+  margin-top: 2rem;
+  width: 90%;
+  height: 20rem;
   display: flex;
+  align-items: flex-start;
   overflow: hidden;
 `;
 
 const ViewContainer = styled.div`
-  width: 70rem;
-  height: 15rem;
+  width: 90%;
+  height: 11rem;
   display: flex;
   overflow: hidden;
+  align-items: center;
+  justify-content: flex-start;
 `;
 
 const ViewListBox = styled.div`
@@ -180,7 +129,7 @@ const RecentListBox = styled.div`
   width: 100%;
   height: 8rem;
   transition: transform 0.5s ease-in-out;
-  transform: ${({ index }) => `translateX(-${index * 14.75}%)`};
+  transform: ${({ index }) => `translateX(-${index * 16.5}%)`};
   position: relative;
 `;
 
@@ -190,7 +139,7 @@ const CountryListBox = styled.div`
   width: 100%;
   height: 8rem;
   transition: transform 0.5s ease-in-out;
-  transform: ${({ index }) => `translateX(-${index * 14.75}%)`};
+  transform: ${({ index }) => `translateX(-${index * 16.8}%)`};
   position: relative;
 `;
 
@@ -200,45 +149,76 @@ const ShareListBox = styled.div`
   width: 100%;
   height: 8rem;
   transition: transform 0.5s ease-in-out;
-  transform: ${({ index }) => `translateX(-${index * 14.75}%)`};
+  transform: ${({ index }) => `translateX(-${index * 16.8}%)`};
   position: relative;
 `;
 
 const TrendImageOverlay = styled.div`
-  position: absolute;
-  bottom: 0;
-  width: 22%;
-  height: 50%;
+  width: 100%;
+  height: 25%;
   background-color: rgba(0, 0, 0, 0.5);
   backdrop-filter: blur(4px);
   border-bottom-left-radius: 1.2rem;
   border-bottom-right-radius: 1.2rem;
   color: white;
   font-size: 0.8rem;
-  top: 11rem;
+  display: flex;
+  padding: 0;
+  justify-content: center;
+  align-items: center;
 `;
 
 const FontMargin = styled.div`
-  margin-left: 1rem;
-  margin-top: 0.5rem;
+  color: white;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  font-size: 0.7rem;
+  padding: 0.75rem;
 `;
 
+const FontMargin2 = styled.div`
+  color: white;
+  margin-left: 0.2rem;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 12em;
+  height: 100%;
+  font-size: 0.7rem;
+  margin-top: 1rem;
+`;
 const SmallText = styled.div`
-  font-size: 0.5rem;
+  display: flex;
+  font-size: 0.7rem;
+  color: white;
+  margin-bottom: 0.5rem;
 `;
 
 const ViewNumber = styled.div`
   font-size: 0.7rem;
   text-align: right;
-  margin-right: 1rem;
-  margin-top: -0.9rem;
+  // margin-right: 1rem;
+  color: white;
+  display: flex;
 `;
 
 const ViewIcon = styled(VisibilityIcon)`
   color: #ffffff;
   margin-right: 0.3rem;
-  margin-left: 11.3rem;
-  margin-top: 0.6rem;
+`;
+
+const CoverContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+`;
+const IconBox = styled.div`
+  display: flex;
+  flex-direction: row;
 `;
 
 function MainPageTest() {
@@ -279,7 +259,9 @@ function MainPageTest() {
     try {
       const response = await getList(recentPage, 6, 'recently_viewed');
       if (response && response.music_videos) {
-        setRecentList((prevList) => [...prevList, ...response.music_videos]);
+        // 정확한 개수만 추가하도록 합니다
+        const newMusicVideos = response.music_videos.slice(0, 6);
+        setRecentList((prevList) => [...prevList, ...newMusicVideos]);
         setRecentPage((prevPage) => prevPage + 1);
       }
     } catch (error) {
@@ -366,10 +348,11 @@ function MainPageTest() {
       fetchShareList();
     }
   };
+
   return (
     <CreateContainer>
       <TitleStyle>Most View</TitleStyle>
-      <TrendContainer>
+      <Container>
         <TrendArrowFunction
           onClick={viewHandlePrev}
           preved={false}
@@ -380,15 +363,19 @@ function MainPageTest() {
           <ViewListBox index={mostViewIndex}>
             {mostViewList?.map((cover, index) => (
               <TrendCoverBox key={index}>
-                <TrendRoundCover src={cover.cover_image} />
-                <TrendImageOverlay>
-                  <FontMargin>
-                    {cover.subject}
-                    <SmallText>{cover.username}</SmallText>
-                  </FontMargin>
-                  <ViewIcon sx={{ color: '#ffffff', fontSize: '0.8rem' }} />
-                  <ViewNumber>{cover.views}</ViewNumber>
-                </TrendImageOverlay>
+                <TrendRoundCover src={cover.cover_image}>
+                  <TrendImageOverlay>
+                    <FontMargin>
+                      <SmallText>{cover.subject}</SmallText>
+                      <IconBox>
+                        <ViewIcon
+                          sx={{ color: '#ffffff', fontSize: '0.8rem' }}
+                        />
+                        <ViewNumber>{cover.views}</ViewNumber>
+                      </IconBox>
+                    </FontMargin>
+                  </TrendImageOverlay>
+                </TrendRoundCover>
               </TrendCoverBox>
             ))}
           </ViewListBox>
@@ -398,8 +385,8 @@ function MainPageTest() {
           preved={true}
           fontSize="large"
         />
-      </TrendContainer>
-      <TitleStyle2>Recent Upload</TitleStyle2>
+      </Container>
+      <TitleStyle>Recent Upload</TitleStyle>
       <Container>
         <ArrowFunction
           onClick={recentHandlePrev}
@@ -411,15 +398,22 @@ function MainPageTest() {
           <RecentListBox index={recentIndex}>
             {recentList?.map((cover, index) => (
               <CoverBox key={index}>
-                <RoundCover src={cover.cover_image} />
-                <TrendImageOverlay>
-                  <FontMargin>
-                    {cover.subject}
-                    <SmallText>{cover.username}</SmallText>
-                  </FontMargin>
-                  <ViewIcon sx={{ color: '#ffffff', fontSize: '0.8rem' }} />
-                  <ViewNumber>{cover.views}</ViewNumber>
-                </TrendImageOverlay>
+                <CoverContainer>
+                  <RoundCover src={cover.cover_image} />
+                  <FontMargin2>
+                    <div
+                      style={{
+                        display: 'flex',
+                        flexDirection: 'row',
+                      }}
+                    >
+                      {cover.subject}
+                      <SmallText>{cover.username}</SmallText>
+                      <ViewIcon sx={{ color: '#ffffff', fontSize: '0.8rem' }} />
+                      <ViewNumber>{cover.views}</ViewNumber>
+                    </div>
+                  </FontMargin2>
+                </CoverContainer>
               </CoverBox>
             ))}
           </RecentListBox>
@@ -430,7 +424,7 @@ function MainPageTest() {
           fontSize="small"
         />
       </Container>
-      <TitleStyle2>My Country Trend</TitleStyle2>
+      <TitleStyle>My Country Trend</TitleStyle>
       <Container>
         <ArrowFunction
           onClick={countryHandlePrev}
@@ -442,15 +436,22 @@ function MainPageTest() {
           <CountryListBox index={countryIndex}>
             {countryList?.map((cover, index) => (
               <CoverBox key={index}>
-                <RoundCover src={cover.cover_image} />
-                <TrendImageOverlay>
-                  <FontMargin>
-                    {cover.subject}
-                    <SmallText>{cover.username}</SmallText>
-                  </FontMargin>
-                  <ViewIcon sx={{ color: '#ffffff', fontSize: '0.8rem' }} />
-                  <ViewNumber>{cover.views}</ViewNumber>
-                </TrendImageOverlay>
+                <CoverContainer>
+                  <RoundCover src={cover.cover_image} />
+                  <FontMargin2>
+                    <div
+                      style={{
+                        display: 'flex',
+                        flexDirection: 'row',
+                      }}
+                    >
+                      {cover.subject}
+                      <SmallText>{cover.username}</SmallText>
+                      <ViewIcon sx={{ color: '#ffffff', fontSize: '0.8rem' }} />
+                      <ViewNumber>{cover.views}</ViewNumber>
+                    </div>
+                  </FontMargin2>
+                </CoverContainer>
               </CoverBox>
             ))}
           </CountryListBox>
@@ -461,27 +462,35 @@ function MainPageTest() {
           fontSize="small"
         />
       </Container>
-      <TitleStyle2>Share</TitleStyle2>
+      <TitleStyle>Share</TitleStyle>
       <Container>
         <ArrowFunction
           onClick={shareHandlePrev}
           preved={false}
           fontSize="small"
-          disabled={countryIndex === 0}
+          disabled={shareIndex === 0}
         />
         <ViewContainer>
           <ShareListBox index={shareIndex}>
             {shareList?.map((cover, index) => (
               <CoverBox key={index}>
-                <RoundCover src={cover.cover_image} />
-                <TrendImageOverlay>
-                  <FontMargin>
-                    {cover.subject}
-                    <SmallText>{cover.username}</SmallText>
-                  </FontMargin>
-                  <ViewIcon sx={{ color: '#ffffff', fontSize: '0.8rem' }} />
-                  <ViewNumber>{cover.views}</ViewNumber>
-                </TrendImageOverlay>
+                <CoverContainer>
+                  <RoundCover src={cover.cover_image} />
+                  <FontMargin2>
+                    <div
+                      style={{
+                        display: 'flex',
+                        flexDirection: 'row',
+                        marginTop: '1rem',
+                      }}
+                    >
+                      {cover.subject}
+                      <SmallText>{cover.username}</SmallText>
+                      <ViewIcon sx={{ color: '#ffffff', fontSize: '0.8rem' }} />
+                      <ViewNumber>{cover.views}</ViewNumber>
+                    </div>
+                  </FontMargin2>
+                </CoverContainer>
               </CoverBox>
             ))}
           </ShareListBox>
