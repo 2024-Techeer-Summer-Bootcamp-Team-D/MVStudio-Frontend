@@ -3,6 +3,7 @@ import styled, { css } from 'styled-components';
 import { useNavigate, useLocation } from 'react-router-dom';
 import CircularProgress from '@mui/material/CircularProgress';
 import { postLyrics, postVideos } from '../api/musicVideos';
+import Swal from 'sweetalert2';
 
 const BigContainer = styled.div`
   display: flex;
@@ -198,32 +199,45 @@ function LyricsSelect() {
             if (!subject) {
               throw new Error('Subject is missing');
             }
-
-            // 비디오 생성 요청
-            try {
-              const res = await postVideos(
-                subject,
-                [genres_ids],
-                instruments_ids,
-                style_id,
-                tempo,
-                language,
-                vocal,
-                lyricsList.lyrics_ori[lyricsIndex],
-                lyricsList.lyrics_eng[lyricsIndex],
-              );
-
-              console.log('res:', res);
-              const taskId = res.task_id;
-              if (!taskId) {
-                throw new Error('task_id가 응답에 포함되어 있지 않습니다.');
+            Swal.fire({
+              title: '뮤직 비디오 생성',
+              text: '뮤직 비디오를 생성하시겠습니까?',
+              icon: 'info',
+              showCancelButton: true,
+              confirmButtonColor: '#3085d6',
+              cancelButtonColor: '#d33',
+              confirmButtonText: '생성',
+              cancelButtonText: '취소',
+            }).then(async (result) => {
+              if (result.isConfirmed) {
+                try {
+                  const data = await postVideos(
+                    subject,
+                    [genres_ids],
+                    instruments_ids,
+                    style_id,
+                    tempo,
+                    language,
+                    vocal,
+                    lyricsList.lyrics_ori[lyricsIndex],
+                    lyricsList.lyrics_eng[lyricsIndex],
+                  );
+                  const taskId = data.task_id;
+                  if (!taskId) {
+                    throw new Error('task_id가 응답에 포함되어 있지 않습니다.');
+                  }
+                  saveTaskIdToLocalStorage(taskId);
+                  navigate('/main');
+                } catch (error) {
+                  throw new Error('비디오 생성에 실패했습니다.');
+                }
+                Swal.fire({
+                  title: '뮤직 비디오 제작 시작!',
+                  text: '뮤직 비디오 제작이 시작되었습니다. 5분 정도 기다려주세요!',
+                  icon: 'success',
+                });
               }
-              saveTaskIdToLocalStorage(taskId);
-              navigate('/main');
-            } catch (error) {
-              console.error('Failed to post videos:', error);
-              // 필요한 경우 에러 처리 추가
-            }
+            });
           } catch (error) {
             // 비디오 생성 실패 시 에러 메시지 출력
             console.error(

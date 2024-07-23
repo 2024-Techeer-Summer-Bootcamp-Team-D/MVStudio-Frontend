@@ -252,8 +252,8 @@ function Sidebar() {
             }).then((result) => {
               if (result.isConfirmed) {
                 Swal.fire({
-                  title: 'Deleted!',
-                  text: 'Your file has been deleted.',
+                  title: '로그아웃 완료!',
+                  text: '로그아웃 되었습니다.',
                   icon: 'success',
                 });
                 postLogout().then(() => navigate('/auth'));
