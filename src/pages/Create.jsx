@@ -19,82 +19,60 @@ const jellyAnimation = keyframes`
   }
 `;
 const JellyButton = styled.button`
-  margin-left: 78%;
-  margin-bottom: 3%;
-  width: 12rem;
-  height: 3.6rem;
+  width: 9rem;
+  height: 3.5rem;
   font-size: 1rem;
   font-weight: 500;
   /* border: 0.1rem solid #ffffff; */
-  background-image: linear-gradient(
-    to right,
-    #240b38,
-    #50075f,
-    #7200be,
-    #3b005a
-  );
+  background: linear-gradient(45deg, #b75dfd 30%, #ffa9a9 90%);
   color: white; /* 텍스트의 색상을 지정합니다 */
-  border-radius: 0.7rem;
+  border-radius: 1rem;
   cursor: pointer;
   transition: background-color 0.3s ease;
 
   &:hover {
     animation: ${jellyAnimation} 0.5s both;
-    background-image: linear-gradient(
-      to right,
-      #240b38,
-      #50075f,
-      #7200be,
-      #3b005a
-    );
   }
 `;
 
-// const PageTitle = styled.div`
-//   font-size: 1.8rem;
-//   font-weight: 600;
-//   font-family: 'SUIT' sans-serif;
-//   color: #ffffff;
-//   margin-top: 1%;
-//   margin-bottom: 2%;
-// `;
-
 const CreateContainer = styled.div`
-  margin-left: 22rem;
-  width: 80%;
-  height: 50%;
+  width: 100%;
+  height: calc(100vh - 5rem);
+  min-height: calc(100vh - 5rem);
+  background-color: #05000a;
   display: flex;
   flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  /* background-color: white; */
 `;
 
 const BigContainer = styled.div`
   width: 100%;
-  height: 80%;
+  gap: 3.4rem;
   display: flex;
   flex-direction: row;
+  justify-content: center;
   align-content: center;
+  padding: 1rem;
 `;
 
 const LeftContainer = styled.div`
   display: flex;
   flex-direction: column;
-  width: 40%;
-  height: 100%;
-  padding: 3%;
-  border-top-left-radius: 1rem;
-  border-bottom-left-radius: 1rem;
-  justify-content: start;
-  height: 100%;
+  /* width: 45%; */
+  height: 60vh;
+  align-items: center;
+  justify-content: center;
 `;
 
 const RightContainer = styled.div`
-  width: 55%;
-  padding: 3%;
+  /* width: 55%; */
+  height: 60vh;
   display: flex;
   flex-direction: column;
-  border-top-right-radius: 1rem;
-  border-bottom-right-radius: 1rem;
-  justify-content: start;
+  align-items: center;
+  justify-content: center;
 `;
 
 const TitleStyle1 = styled.p`
@@ -127,8 +105,8 @@ const Button = styled.button`
   margin-bottom: 1.5rem;
   background-image: linear-gradient(
     to right,
-    #240b38,
-    #50075f,
+    #140421,
+    #2a0650,
     #7200be,
     #3b005a
   );
@@ -152,8 +130,8 @@ const Button = styled.button`
 const TitleInput = styled.input`
   display: flex;
   word-break: break-all;
-  background: linear-gradient(to right, #240b38, #50075f, #3b005a);
-  width: 90%;
+  background-image: linear-gradient(to right, #140421, #2a0650);
+  width: 100%;
   height: 8rem;
   outline: none;
   border-radius: 0.7rem;
@@ -168,7 +146,7 @@ const TitleInput = styled.input`
   text-align: left;
   vertical-align: top;
   padding-bottom: 4rem;
-  margin-bottom: 4rem;
+
   ::placeholder {
     position: absolute;
     top: 1rem;
@@ -183,7 +161,6 @@ const ChooseOption = styled.div`
   display: flex;
   flex-direction: row;
   gap: 0.8rem;
-  margin-bottom: 3rem;
 `;
 
 const CoverBox = styled.div`
@@ -280,15 +257,10 @@ const StylesList = styled.div`
   position: relative;
 `;
 const ToThePadding = styled.div`
-  padding-top: 1.5rem;
-`;
-
-// const ToThePaddingTop = styled.div`
-//   padding-top: 4.5rem;
-// `;
-
-const ToTheMargin = styled.div`
-  margin-top: 5.2rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
 `;
 
 const Overlay = styled.div`
@@ -313,17 +285,21 @@ const ModalContainer = styled.div`
   color: white;
   border-radius: 2rem;
   padding: 2rem;
-  padding-left: 1.5rem;
   display: flex;
   flex-direction: column;
   align-items: start;
   z-index: 99999;
+  justify-content: space-between;
 `;
 
 const ModalText = styled.div`
   display: flex;
   flex-direction: column;
-  justify-content: start;
+  /* justify-content: space-between; */
+  gap: 2rem;
+  /* height: 100%; */
+  width: 100%;
+  padding: 2rem;
 `;
 
 const GroupText = styled.div`
@@ -331,7 +307,6 @@ const GroupText = styled.div`
   flex-direction: row;
   align-items: center;
   gap: 0.7rem;
-  height: 12%;
 `;
 
 const ModalItem = styled.p`
@@ -343,7 +318,6 @@ const ModalItem = styled.p`
   align-items: center;
   justify-content: start;
   font-weight: 550;
-  width: auto;
 `;
 
 const InstrumentItem = styled.p`
@@ -355,7 +329,6 @@ const InstrumentItem = styled.p`
   align-items: center;
   justify-content: start;
   font-weight: 550;
-  min-width: 26%;
 `;
 
 const ModalValue = styled.p`
@@ -463,18 +436,11 @@ const Create = () => {
 
   // 핸들러 함수들
   const handleCreateClick = () => {
-    // if (
-    //   !songTitle ||
-    //   !voice ||
-    //   !language ||
-    //   !tempo ||
-    //   !selectedGenres ||
-    //   !selectedStyles
-    // ) {
-    //   setWarningModalOpen(true);
-    // } else {
-    setIsModalOpen(true);
-    // }
+    if (!songTitle || !voice || !language || !tempo || !genreId || !stylesId) {
+      setWarningModalOpen(true);
+    } else {
+      setIsModalOpen(true);
+    }
   };
 
   const handleCloseModal = () => {
@@ -492,20 +458,6 @@ const Create = () => {
   const handleTempoClick = (label) => {
     setTempo(label);
   };
-
-  // const handleGenreClick = (label, id) => {
-  //   // 이미 선택된 장르인지 확인
-  //   const isSelected = selectedGenres.includes(label);
-
-  //   // 이미 선택된 장르라면 아무 작업도 하지 않음 (하나의 장르만 선택해야 하므로)
-  //   if (isSelected) {
-  //     return;
-  //   }
-
-  //   // 이전에 선택된 장르를 모두 해제하고 새로운 장르를 선택함
-  //   setGenreId([genreId, id]);
-  //   console.log();
-  // };
 
   const handleInstrumentClick = (label, id) => {
     if (selectedInstruments.includes(label)) {
@@ -563,27 +515,18 @@ const Create = () => {
 
   const WarningBox = styled.div`
     position: absolute;
-    top: 40%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 42rem;
-    height: 7rem;
-    background-color: #3c1160;
+    width: 50%;
+    height: 50%;
+    background-color: #1f0534;
     color: white;
     border-radius: 2rem;
     padding: 2rem;
-    padding-left: 1.5rem;
-    padding-right: 2.2rem;
-    padding-top: 2rem;
-    padding-bottom: 2rem;
     display: flex;
     flex-direction: row;
     align-items: start;
     z-index: 99999;
   `;
 
-  console.log(genreId);
-  // const location = useLocation();
   const handleSubmit = () => {
     const userPreferences = {
       genres_ids: genreId,
@@ -595,7 +538,7 @@ const Create = () => {
       tempo,
     };
 
-    navigate('/lyricsSelect', { state: userPreferences });
+    navigate('/create/lyrics', { state: userPreferences });
   };
   const navigate = useNavigate();
 
@@ -606,68 +549,76 @@ const Create = () => {
         <LeftContainer>
           {/* ToThePadding 컴포넌트 */}
           <ToThePadding>
-            <TitleStyle1>Title</TitleStyle1>
-            <TitleInput
-              placeholder="Please enter a title"
-              onChange={handleSongTitleChange}
-            />
-            <TitleStyle1>Voice</TitleStyle1>
-            <ChooseOption>
-              <Button
-                clicked={voice === 'Female'}
-                onClick={() => handleVoiceClick('Female')}
-              >
-                Female
-              </Button>
-              <Button
-                clicked={voice === 'Male'}
-                onClick={() => handleVoiceClick('Male')}
-              >
-                Male
-              </Button>
-            </ChooseOption>
-            <TitleStyle1>Language</TitleStyle1>
-            <ChooseOption>
-              <Button
-                clicked={language === 'English'}
-                onClick={() => handleLanguageClick('English')}
-              >
-                English
-              </Button>
-              <Button
-                clicked={language === '한국어'}
-                onClick={() => handleLanguageClick('한국어')}
-              >
-                한국어
-              </Button>
-              <Button
-                clicked={language === '日本語'}
-                onClick={() => handleLanguageClick('日本語')}
-              >
-                日本語
-              </Button>
-            </ChooseOption>
-            <TitleStyle1>Tempo</TitleStyle1>
-            <ChooseOption>
-              <Button
-                clicked={tempo === 'Slow'}
-                onClick={() => handleTempoClick('Slow')}
-              >
-                Slow
-              </Button>
-              <Button
-                clicked={tempo === 'Normal'}
-                onClick={() => handleTempoClick('Normal')}
-              >
-                Normal
-              </Button>
-              <Button
-                clicked={tempo === 'Fast'}
-                onClick={() => handleTempoClick('Fast')}
-              >
-                Fast
-              </Button>
-            </ChooseOption>
+            <div>
+              <TitleStyle1>Title</TitleStyle1>
+              <TitleInput
+                placeholder="Please enter a title"
+                onChange={handleSongTitleChange}
+              />
+            </div>
+            <div>
+              <TitleStyle1>Voice</TitleStyle1>
+              <ChooseOption>
+                <Button
+                  clicked={voice === 'Female'}
+                  onClick={() => handleVoiceClick('Female')}
+                >
+                  Female
+                </Button>
+                <Button
+                  clicked={voice === 'Male'}
+                  onClick={() => handleVoiceClick('Male')}
+                >
+                  Male
+                </Button>
+              </ChooseOption>
+            </div>
+            <div>
+              <TitleStyle1>Language</TitleStyle1>
+              <ChooseOption>
+                <Button
+                  clicked={language === 'English'}
+                  onClick={() => handleLanguageClick('English')}
+                >
+                  English
+                </Button>
+                <Button
+                  clicked={language === 'Korean'}
+                  onClick={() => handleLanguageClick('Korean')}
+                >
+                  한국어
+                </Button>
+                <Button
+                  clicked={language === 'Japanese'}
+                  onClick={() => handleLanguageClick('Japanese')}
+                >
+                  日本語
+                </Button>
+              </ChooseOption>
+            </div>
+            <div>
+              <TitleStyle1>Tempo</TitleStyle1>
+              <ChooseOption>
+                <Button
+                  clicked={tempo === 'Slow'}
+                  onClick={() => handleTempoClick('Slow')}
+                >
+                  Slow
+                </Button>
+                <Button
+                  clicked={tempo === 'Normal'}
+                  onClick={() => handleTempoClick('Normal')}
+                >
+                  Normal
+                </Button>
+                <Button
+                  clicked={tempo === 'Fast'}
+                  onClick={() => handleTempoClick('Fast')}
+                >
+                  Fast
+                </Button>
+              </ChooseOption>
+            </div>
           </ToThePadding>
         </LeftContainer>
 
@@ -675,37 +626,39 @@ const Create = () => {
         <RightContainer>
           <ToThePadding>
             {/* Genre 관련 컴포넌트 */}
-            <TitleStyle2>Genre</TitleStyle2>
-            <GenreContainer>
-              <ArrowFunction
-                onClick={handleGenrePrevClick}
-                disabled={currentGenreIndex === 0}
-              />
-              <ViewContainer>
-                <CardList currentIndex={currentGenreIndex}>
-                  {genreList?.map((option, index) => (
-                    <CoverBox key={index}>
-                      <RoundCover
-                        src={option.genre_image_url}
-                        selected={genreId - 1 === index}
-                        onClick={() => {
-                          setGenreId(index + 1);
-                        }}
-                      />
-                      <CoverLabel>{option.genre_name}</CoverLabel>
-                    </CoverBox>
-                  ))}
-                </CardList>
-              </ViewContainer>
-              <ArrowFunction
-                onClick={handleGenreNextClick}
-                disabled={currentGenreIndex === genreList?.length - 6}
-                isPrev={true}
-              />
-            </GenreContainer>
+            <div>
+              <TitleStyle2>Genre</TitleStyle2>
+              <GenreContainer>
+                <ArrowFunction
+                  onClick={handleGenrePrevClick}
+                  disabled={currentGenreIndex === 0}
+                />
+                <ViewContainer>
+                  <CardList currentIndex={currentGenreIndex}>
+                    {genreList?.map((option, index) => (
+                      <CoverBox key={index}>
+                        <RoundCover
+                          src={option.genre_image_url}
+                          selected={genreId - 1 === index}
+                          onClick={() => {
+                            setGenreId(index + 1);
+                          }}
+                        />
+                        <CoverLabel>{option.genre_name}</CoverLabel>
+                      </CoverBox>
+                    ))}
+                  </CardList>
+                </ViewContainer>
+                <ArrowFunction
+                  onClick={handleGenreNextClick}
+                  disabled={currentGenreIndex === genreList?.length - 6}
+                  isPrev={true}
+                />
+              </GenreContainer>
+            </div>
 
             {/* ToTheMargin 컴포넌트 */}
-            <ToTheMargin>
+            <div>
               {/* Instrument 관련 컴포넌트 */}
               <TitleStyle2>Instrument</TitleStyle2>
               <GenreContainer>
@@ -743,10 +696,10 @@ const Create = () => {
                   isPrev={true}
                 />
               </GenreContainer>
-            </ToTheMargin>
+            </div>
 
             {/* Style 관련 컴포넌트 */}
-            <ToTheMargin>
+            <div>
               <TitleStyle2>Style</TitleStyle2>
               <GenreContainer>
                 <ArrowFunction
@@ -773,12 +726,17 @@ const Create = () => {
                   isPrev
                 />
               </GenreContainer>
-            </ToTheMargin>
+            </div>
+            <div
+              style={{ width: '100%', display: 'flex', justifyContent: 'end' }}
+            >
+              <JellyButton onClick={handleCreateClick}>Create Song</JellyButton>
+            </div>
           </ToThePadding>
         </RightContainer>
+        {/* 생성 버튼 */}
       </BigContainer>
-      {/* 생성 버튼 */}
-      <JellyButton onClick={handleCreateClick}>Create Song</JellyButton>
+
       {/* 모달 */}
       {isModalOpen && (
         <>
@@ -802,7 +760,7 @@ const Create = () => {
               </GroupText>
               <GroupText>
                 <ModalItem>Genre :</ModalItem>
-                <ModalValue>{genreList[genreId - 1].genre_name}</ModalValue>
+                <ModalValue>{genreList[genreId - 1]?.genre_name}</ModalValue>
               </GroupText>
               <GroupText>
                 <InstrumentItem>Instrument :</InstrumentItem>
@@ -810,7 +768,7 @@ const Create = () => {
               </GroupText>
               <GroupText>
                 <ModalItem>style :</ModalItem>
-                <ModalValue>{stylesList[stylesId - 1].style_name}</ModalValue>
+                <ModalValue>{stylesList[stylesId - 1]?.style_name}</ModalValue>
               </GroupText>
               {shouldShowWarning && (
                 <WarningContainer>
@@ -820,14 +778,14 @@ const Create = () => {
                   </WarningMessage>
                 </WarningContainer>
               )}
-              <SubmitButton
-                onClick={() => {
-                  handleSubmit();
-                }}
-              >
-                Submit
-              </SubmitButton>
             </ModalText>
+            <SubmitButton
+              onClick={() => {
+                handleSubmit();
+              }}
+            >
+              Submit
+            </SubmitButton>
           </ModalContainer>
         </>
       )}

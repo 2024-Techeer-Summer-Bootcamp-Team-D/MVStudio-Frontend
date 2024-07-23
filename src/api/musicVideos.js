@@ -60,7 +60,6 @@ export const postLyrics = async (subject, genres, language, vocal) => {
 };
 
 export const postVideos = async (
-  username,
   subject,
   genres_ids,
   instruments_ids,
@@ -74,7 +73,6 @@ export const postVideos = async (
   try {
     // 전달된 파라미터 로그로 확인
     console.log('Post Video Params:', {
-      username,
       subject,
       genres_ids,
       instruments_ids,
@@ -87,7 +85,6 @@ export const postVideos = async (
     });
 
     const response = await jsonAxios.post('/music-videos', {
-      username,
       subject,
       genres_ids,
       instruments_ids,

@@ -27,8 +27,8 @@ function AppRouter() {
           <Route path="/main" element={<Main />} />
           <Route path="/users/:username" element={<Mypage />} />
           <Route path="/search" element={<Search />} />
-          <Route path="/lyricsselect" element={<LyricsSelect />} />
           <Route path="/create" element={<Create />} />
+          <Route path="/create/lyrics" element={<LyricsSelect />} />
           <Route path="/play" element={<Play />} />
           <Route path="/chart" element={<ViewChart />} />
           <Route path="/edit" element={<EditProfile />} />

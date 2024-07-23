@@ -21,7 +21,7 @@ const BackLayout = styled.div`
   width: 15rem;
   height: calc(100% - 5rem);
   position: fixed;
-  border-right: 1px solid #380272;
+  border-right: 1px solid #1e003b;
   padding: 1rem;
   justify-content: space-between;
 `;

@@ -20,6 +20,8 @@ const BackLayout = styled.div`
 const ContentArea = styled.div`
   display: flex;
   flex-direction: row;
+  height: calc(100vh - 5rem);
+  min-height: calc(100vh - 5rem);
 `;
 
 function App({ children }) {
