@@ -69,7 +69,7 @@ const TrendingContainer = styled.div`
   flex-direction: column;
   gap: 1rem;
   margin-top: 0.5rem;
-  transition: all 0.5s ease;
+  transition: all 0.7s ease;
   max-height: ${({ isOpen }) => (isOpen ? '300px' : '0')};
   opacity: ${({ isOpen }) => (isOpen ? '1' : '0')};
   visibility: ${({ isOpen }) => (isOpen ? 'visible' : 'hidden')};
@@ -129,7 +129,7 @@ function Sidebar() {
   useEffect(() => {
     const fetchTrendingItems = async () => {
       try {
-        const response = await getList(1, 9, 'recently_viewed');
+        const response = await getList(1, 6, 'recently_viewed');
         setTrendingItems(response.music_videos);
       } catch (error) {
         console.error('Error fetching trending items:', error);

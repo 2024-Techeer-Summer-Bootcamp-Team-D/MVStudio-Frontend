@@ -270,7 +270,7 @@ function EditProfile() {
           Swal.fire({
             title: '확인',
             text: '정보가 수정되었습니다',
-            icon: 'info',
+            icon: 'success',
             confirmButtonColor: '#3085d6',
             confirmButtonText: '확인',
           }).then(() => {
