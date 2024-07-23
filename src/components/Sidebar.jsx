@@ -172,8 +172,7 @@ function Sidebar() {
           {/* Chart 버튼 */}
           <MenuItem
             onClick={async () => {
-              await fetchUsername();
-              navigate(`/charts/${username}`);
+              navigate(`/chart`);
             }}
           >
             <EqualizerIcon fontSize="small" />

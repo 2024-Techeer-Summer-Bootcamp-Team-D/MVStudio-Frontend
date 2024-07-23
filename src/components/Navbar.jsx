@@ -31,6 +31,7 @@ const Searchbar = styled.div`
   display: flex;
   align-items: center; /* 수직 중앙 정렬 */
   padding-left: 0.5rem; /* 패딩 추가하여 오른쪽 정렬 시 입력상자와 가장자리 간격 확보 */
+  margin-left: 12rem;
 `;
 
 const shakeAnimation = keyframes`

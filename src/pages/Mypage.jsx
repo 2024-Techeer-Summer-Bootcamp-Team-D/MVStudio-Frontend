@@ -8,18 +8,20 @@ import InstagramIcon from '@mui/icons-material/Instagram';
 import { getList, getHistory } from '../api/musicVideos';
 import { getMemberInfo } from '../api/member';
 import { useParams } from 'react-router-dom';
-// import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import BasicTabs from '../components/BasicTaps';
 import InfiniteScroll from 'react-infinite-scroll-component';
+import { useUser } from '@/libs/stores/userStore';
+import EditIcon from '@mui/icons-material/Edit';
 
 const BigContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: start;
-  margin-left: 40%;
+  margin-left: 30%;
   margin-right: 20%;
   min-width: 36rem;
-  width: 60%;
+  width: 80%;
 `;
 
 const Profile = styled.p`
@@ -37,11 +39,13 @@ const ProImg = styled.img`
 `;
 
 const ProName = styled.div`
+  width: 90%;
   font-size: 1rem;
   color: #ffffff;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: start;
+  justify-content: space-between;
 `;
 
 const VideoCount = styled.div`
@@ -137,8 +141,8 @@ const OverlayText = styled.p`
   gap: 0.5rem;
 `;
 
-const AlbumCover = ({ data }) => (
-  <AlbumCoverContainer>
+const AlbumCover = ({ data, onClick }) => (
+  <AlbumCoverContainer onClick={onClick}>
     <AlbumCoverImage src={data.cover_image} alt={data.subject} />
     <Overlay className="overlay">
       <OverlayText>{data.subject}</OverlayText>
@@ -152,59 +156,12 @@ const MyContainer = styled.div`
   flex-direction: row;
   width: 100%;
   align-items: start;
-  /* border-bottom: 0.2rem solid rgba(139, 139, 139, 0.7); */
   margin: 2rem;
 `;
 
 const ProfileName = styled.p`
   font-size: 1.4rem;
-  /* margin: 0; */
 `;
-
-// const Button15 = styled.button`
-//   width: 6rem;
-//   background: #6a069c;
-//   border: none;
-//   z-index: 1;
-//   position: relative;
-//   padding: 10px 20px;
-//   color: #fff;
-//   font-size: 1rem;
-//   cursor: pointer;
-//   overflow: hidden;
-//   border-radius: 1rem;
-//   outline: none;
-//   font-family: 'SUIT', sans-serif;
-
-//   &:hover {
-//     color: #fff;
-//   }
-
-//   &:after {
-//     content: '';
-//     width: 6rem;
-//     height: 100%;
-//     top: 0;
-//     right: 0;
-//     z-index: -1;
-//     background-color: #663dff;
-//     border-radius: 5px;
-//     box-shadow:
-//       inset 2px 2px 2px 0px rgba(255, 255, 255, 0.5),
-//       7px 7px 20px 0px rgba(0, 0, 0, 0.1),
-//       4px 4px 5px 0px rgba(0, 0, 0, 0.1);
-//     transition: all 0.3s ease;
-//   }
-
-//   &:hover:after {
-//     left: 0;
-//     width: 100%;
-//   }
-
-//   &:active {
-//     top: 2px;
-//   }
-// `;
 
 const EmptyContainer = styled.div`
   margin-left: 40%;
@@ -215,22 +172,65 @@ const EmptyContainer = styled.div`
   flex-direction: row;
 `;
 
+const EditButton = styled.button`
+  background: none;
+  border: 2px solid #ffffff;
+  border-radius: 50%;
+  width: 2.5rem;
+  height: 2.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  position: relative;
+  margin-top: -0.6rem;
+  margin-left: 1rem;
+
+  &:hover {
+    width: 100px;
+    border-radius: 20px;
+  }
+
+  svg {
+    color: #ffffff;
+    transition: all 0.3s ease;
+  }
+
+  span {
+    position: absolute;
+    right: 10px;
+    color: #ffffff;
+    opacity: 0;
+    transition: all 0.3s ease;
+  }
+
+  &:hover svg {
+    transform: translateX(-15px);
+  }
+
+  &:hover span {
+    opacity: 1;
+  }
+`;
+
 function Mypage() {
-  const { username: userName } = useParams('');
+  const { username: username } = useParams('');
   const [activeTab, setActiveTab] = useState(0);
   const [myVideos, setMyVideos] = useState([]);
   const [recentView, setRecentView] = useState([]);
   const [userInfo, setUserInfo] = useState();
   const [videoCount, setVideoCount] = useState(0);
   const [hasMore, setHasMore] = useState(true);
-  const myUserName = localStorage.getItem('username');
   const [page, setPage] = useState(1);
   const [fetchedVideoIds, setFetchedVideoIds] = useState([]);
+  const myUserName = useUser((state) => state.username);
+  const fetchUsername = useUser((state) => state.fetchUsername);
 
-  // 페이지별 데이터를 가져오는 함수
   const fetchData = async (pageNum) => {
     try {
-      const response = await getList(pageNum, 9, null, null);
+      const response = await getList(pageNum, 9, null, username);
       const newData = response.music_videos.filter(
         (video) => !fetchedVideoIds.flat().includes(video.id),
       );
@@ -259,24 +259,25 @@ function Mypage() {
   useEffect(() => {
     fetchData(1);
     fetchRecent(1);
+    fetchUsername();
   }, []);
 
   // 멤버 정보 가져오기
   useEffect(() => {
     const fetchMemberInfo = async () => {
       try {
-        const response = await getMemberInfo(userName);
-        setUserInfo(response);
+        const response = await getMemberInfo(username);
+        setUserInfo(response.data);
       } catch (error) {
         console.error('회원 조회 오류', error);
       }
     };
     fetchMemberInfo();
-  }, [userName]);
+  }, [username]);
 
   const fetchRecent = async (pageNum) => {
     try {
-      const response = await getHistory(userName, pageNum, 9);
+      const response = await getHistory(username, pageNum, 9);
       const newData = response.music_videos.filter(
         (video) => !fetchedVideoIds.flat().includes(video.id),
       );
@@ -301,16 +302,16 @@ function Mypage() {
     }
   };
 
-  // 페이지 변경 핸들러
   const handleChange = (event, newValue) => {
     setActiveTab(newValue);
     setFetchedVideoIds([]);
   };
+  const navigate = useNavigate();
 
   // 프로필 수정 페이지로 이동
-  // const navigateToEdit = () => {
-  //   navigate(`/edit`);
-  // };
+  const navigateToEdit = () => {
+    navigate(`/edit`);
+  };
 
   const handleIconClick = (url) => {
     if (url === null) {
@@ -320,7 +321,7 @@ function Mypage() {
     }
   };
 
-  const isOwner = myUserName === userName;
+  const isOwner = myUserName === username;
 
   // const navigate = useNavigate();
 
@@ -339,9 +340,12 @@ function Mypage() {
         <InfoContainer>
           <ProName>
             <ProfileName>{userInfo?.nickname || '멋쟁이중절모'}</ProfileName>
-            {/* {myId === memberId && (
-              <Button15 onClick={navigateToEdit}>Edit</Button15>
-            )} */}
+            {isOwner && (
+              <EditButton onClick={navigateToEdit}>
+                <EditIcon fontSize="small" />
+                <span style={{ paddingRight: '1rem' }}>Edit</span>
+              </EditButton>
+            )}
           </ProName>
           <VideoCount>동영상 {videoCount}개</VideoCount>
           <ProText>
@@ -385,7 +389,11 @@ function Mypage() {
         <AlbumContainer>
           {activeTab === 0 &&
             myVideos.map((item, index) => (
-              <AlbumCover key={index} data={item} />
+              <AlbumCover
+                key={index}
+                data={item}
+                onClick={() => navigate(`/play/id=${item.id}`)}
+              />
             ))}
           {activeTab === 1 &&
             recentView.map((item, index) => (

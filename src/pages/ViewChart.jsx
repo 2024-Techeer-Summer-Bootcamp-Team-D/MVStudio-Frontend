@@ -264,7 +264,7 @@ const ViewChart = () => {
       padding: {
         top: 0,
         right: 20,
-        bottom: 40,
+        bottom: 120,
         left: 20,
       },
     },
@@ -325,7 +325,7 @@ const ViewChart = () => {
       padding: {
         top: 0,
         right: 20,
-        bottom: 40,
+        bottom: 120,
         left: 20,
       },
     },

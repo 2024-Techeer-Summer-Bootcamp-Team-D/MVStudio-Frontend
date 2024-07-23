@@ -13,6 +13,8 @@ import dayjs from 'dayjs';
 import CameraAltIcon from '@mui/icons-material/CameraAlt';
 import { patchMemberInfo } from '../api/member';
 import { useUser } from '@/libs/stores/userStore';
+import Swal from 'sweetalert2';
+import { useNavigate } from 'react-router-dom';
 
 const StyledForm = styled.form`
   background-color: #dfd4df;
@@ -25,7 +27,7 @@ const StyledForm = styled.form`
   border-radius: 10px;
   text-align: center;
   min-width: 30%;
-  margin-left: 50%;
+  margin-left: 25%;
 `;
 
 const StyledButton = styled.button`
@@ -81,6 +83,7 @@ const ProfileImageInput = styled.input`
 `;
 
 function EditProfile() {
+  const navigate = useNavigate();
   const [userInfo, setUserInfo] = useState({
     nickname: '',
     country: '',
@@ -260,7 +263,21 @@ function EditProfile() {
           onChange={handleDateChange}
         />
       </LocalizationProvider>
-      <StyledButton type="button" onClick={handleSubmit}>
+      <StyledButton
+        type="button"
+        onClick={() => {
+          Swal.fire({
+            title: '확인',
+            text: '정보가 수정되었습니다',
+            icon: 'info',
+            confirmButtonColor: '#3085d6',
+            confirmButtonText: '확인',
+          }).then(() => {
+            handleSubmit();
+            navigate(`/users/${username}`);
+          });
+        }}
+      >
         Save Changes
       </StyledButton>
     </StyledForm>
