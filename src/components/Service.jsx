@@ -3,6 +3,8 @@ import { getTask } from '../api/musicVideos';
 import styled, { keyframes } from 'styled-components';
 import CheckIcon from '@mui/icons-material/Check';
 import { green } from '@mui/material/colors';
+import { useUser } from '@/libs/stores/userStore';
+import { useNavigate } from 'react-router-dom';
 
 // Define keyframes for the loading animation
 const loadingAnimation = keyframes`
@@ -54,11 +56,15 @@ function Service() {
   const [showModal, setShowModal] = useState(false);
   const [taskStatuses, setTaskStatuses] = useState([]);
   const gifRef = useRef(null);
+  const navigate = useNavigate();
+  const username = useUser((state) => state.username);
+  const fetchUsername = useUser((state) => state.fetchUsername);
+  console.log('User:', username);
 
   useEffect(() => {
+    fetchUsername();
     const intervalId = setInterval(async () => {
       const taskIds = JSON.parse(localStorage.getItem('taskId')) || [];
-      console.log('Received IDs:', taskIds);
       if (taskIds.length > 0) {
         setShowGif(true);
 
@@ -91,15 +97,16 @@ function Service() {
       }
     }, 5000);
 
+    if (username === undefined) {
+      navigate('/auth');
+    }
+
     return () => clearInterval(intervalId);
   }, []);
 
   const handleGifClick = () => {
     setShowModal((prevShowModal) => !prevShowModal);
   };
-
-  // Log taskStatuses to console
-  console.log('Current task statuses:', taskStatuses);
 
   return (
     <div style={{ position: 'fixed', bottom: '5%', right: '5%', zIndex: 1000 }}>

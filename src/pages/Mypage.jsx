@@ -158,7 +158,6 @@ const MyContainer = styled.div`
 
 const ProfileName = styled.p`
   font-size: 1.4rem;
-  width: 7rem;
   /* margin: 0; */
 `;
 
@@ -217,21 +216,21 @@ const EmptyContainer = styled.div`
 `;
 
 function Mypage() {
-  const { id: memberId } = useParams();
+  const { username: userName } = useParams('');
   const [activeTab, setActiveTab] = useState(0);
   const [myVideos, setMyVideos] = useState([]);
   const [recentView, setRecentView] = useState([]);
   const [userInfo, setUserInfo] = useState();
   const [videoCount, setVideoCount] = useState(0);
   const [hasMore, setHasMore] = useState(true);
-  const myId = localStorage.getItem('memberId');
+  const myUserName = localStorage.getItem('username');
   const [page, setPage] = useState(1);
   const [fetchedVideoIds, setFetchedVideoIds] = useState([]);
 
   // 페이지별 데이터를 가져오는 함수
   const fetchData = async (pageNum) => {
     try {
-      const response = await getList(pageNum, 9, null, memberId);
+      const response = await getList(pageNum, 9, null, null);
       const newData = response.music_videos.filter(
         (video) => !fetchedVideoIds.flat().includes(video.id),
       );
@@ -266,18 +265,18 @@ function Mypage() {
   useEffect(() => {
     const fetchMemberInfo = async () => {
       try {
-        const response = await getMemberInfo(memberId);
+        const response = await getMemberInfo(userName);
         setUserInfo(response);
       } catch (error) {
         console.error('회원 조회 오류', error);
       }
     };
     fetchMemberInfo();
-  }, [memberId]);
+  }, [userName]);
 
   const fetchRecent = async (pageNum) => {
     try {
-      const response = await getHistory(memberId, pageNum, 9);
+      const response = await getHistory(userName, pageNum, 9);
       const newData = response.music_videos.filter(
         (video) => !fetchedVideoIds.flat().includes(video.id),
       );
@@ -321,7 +320,7 @@ function Mypage() {
     }
   };
 
-  const isOwner = myId === memberId;
+  const isOwner = myUserName === userName;
 
   // const navigate = useNavigate();
 
@@ -339,7 +338,7 @@ function Mypage() {
         />
         <InfoContainer>
           <ProName>
-            <ProfileName>{userInfo?.nickname}</ProfileName>
+            <ProfileName>{userInfo?.nickname || '멋쟁이중절모'}</ProfileName>
             {/* {myId === memberId && (
               <Button15 onClick={navigateToEdit}>Edit</Button15>
             )} */}
