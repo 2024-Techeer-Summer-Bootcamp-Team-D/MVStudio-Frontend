@@ -18,8 +18,8 @@ const BigContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: start;
-  margin-left: 30%;
-  margin-right: 20%;
+  margin-left: 25%;
+  margin-right: 25%;
   min-width: 36rem;
   width: 80%;
 `;
