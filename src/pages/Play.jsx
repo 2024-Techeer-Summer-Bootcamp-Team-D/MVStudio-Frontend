@@ -1,55 +1,24 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 import YouTubeIcon from '@mui/icons-material/YouTube';
 import InstagramIcon from '@mui/icons-material/Instagram';
 import ShareIcon from '@mui/icons-material/Share';
 import DownloadIcon from '@mui/icons-material/Download';
-import PersonIcon from '@mui/icons-material/Person';
-import { useTheme } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Slider from '@mui/material/Slider';
-import Typography from '@mui/material/Typography';
-import IconButton from '@mui/material/IconButton';
-import PauseRounded from '@mui/icons-material/PauseRounded';
-import PlayArrowRounded from '@mui/icons-material/PlayArrowRounded';
-import FastForwardRounded from '@mui/icons-material/FastForwardRounded';
-import FastRewindRounded from '@mui/icons-material/FastRewindRounded';
-import { GetPlay } from '@/api/play';
+import { getPlay } from '@/api/play';
 
 const BackLayout = styled.div`
-  width: 80%;
-  display: flex;
-  flex-direction: row;
-  margin-left: 20%;
-`;
-
-const IconBox = styled.div`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
   width: 100%;
-`;
-
-const TinyText = styled(Typography)`
-  font-size: 0.75rem;
-  opacity: 0.38;
-  font-weight: 500;
-  letter-spacing: 0.2;
-  color: white;
+  display: flex;
+  flex-direction: row;
+  margin-left: 18%;
 `;
 
 function MusicPlayerSlider() {
-  const theme = useTheme();
   const duration = 200; // seconds
   const [position, setPosition] = useState(32);
-
-  function formatDuration(value) {
-    const minute = Math.floor(value / 60);
-    const secondLeft = value - minute * 60;
-    return `${minute}:${secondLeft < 10 ? `0${secondLeft}` : secondLeft}`;
-  }
 
   return (
     <Box sx={{ width: '100%', overflow: 'hidden' }}>
@@ -72,11 +41,7 @@ function MusicPlayerSlider() {
               boxShadow: '0 2px 12px 0 rgba(0,0,0,0.4)',
             },
             '&:hover, &.Mui-focusVisible': {
-              boxShadow: `0px 0px 0px 8px ${
-                theme.palette.mode === 'dark'
-                  ? 'rgb(255 255 255 / 16%)'
-                  : 'rgb(0 0 0 / 16%)'
-              }`,
+              boxShadow: '0px 0px 0px 8px rgba(0,0,0,0.16)',
             },
             '&.Mui-active': {
               width: 15,
@@ -95,10 +60,7 @@ function MusicPlayerSlider() {
           justifyContent: 'space-between',
           mt: -2,
         }}
-      >
-        <TinyText>{formatDuration(position)}</TinyText>
-        <TinyText>-{formatDuration(duration - position)}</TinyText>
-      </Box>
+      ></Box>
     </Box>
   );
 }
@@ -122,18 +84,16 @@ const TextBox = styled.div`
   display: flex;
   flex-direction: column;
   width: 50%;
-  margin-left: 1rem;
 `;
 
 const Title = styled.div`
-  font-size: 1rem;
+  font-size: 1.5rem;
   font-weight: bold;
+  margin-top: 1rem;
 `;
 
 const Subtitle = styled.div`
   font-size: 0.8rem;
-  font-weight: normal;
-  align-items: center;
   display: flex;
 `;
 
@@ -141,6 +101,7 @@ const ButtonBox = styled.div`
   display: flex;
   flex-direction: row;
   gap: 1rem;
+  margin-top: 1rem;
 `;
 
 const Button = styled.button`
@@ -205,29 +166,72 @@ const StyledShareIcon = styled(ShareIcon)`
 
 const VideoContainer = styled.div`
   width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   margin-top: 3rem;
 `;
 
 const UserInfo = styled.div`
   display: flex;
   flex-direction: row;
+  margin-top: 0.7rem;
+`;
+
+const UserInfo2 = styled.div`
+  display: flex;
+  flex-direction: column;
+  margin-left: 0.8rem;
+  margin-top: 0.7rem;
 `;
 
 const LyricsBox = styled.div`
   width: ${({ expanded }) => (expanded ? '30%' : '0%')};
+  height: 39.95rem;
   display: flex;
   justify-content: start;
   align-items: start;
   margin-left: 2rem;
-  transition: width 0.5s ease-in-out;
+  margin-top: 3rem;
+  position: relative;
+  overflow: hidden; /* Ensure content does not overflow */
+`;
 
-  & > div {
-    display: ${({ expanded }) => (expanded ? 'block' : 'none')};
-    transition: display 0.5s ease-in-out;
-  }
+const LyricsBackground = styled.div`
+  width: 100%;
+  height: 100%;
+  background-color: white;
+  background-image: ${({ coverImage }) =>
+    coverImage ? `url(${coverImage})` : 'none'};
+  background-size: cover;
+  background-position: center;
+  filter: blur(1.7rem);
+  position: absolute;
+  z-index: 1;
+`;
+
+const LyricsContent = styled.div`
+  width: 100%;
+  height: 100%;
+  position: relative;
+  z-index: 2;
+  border: 2px solid #5b5b5b;
+  box-sizing: border-box;
+  overflow: hidden;
+  color: white;
+  font-size: 1.2rem;
+  font-weight: 700;
+  text-align: center;
+  padding-top: 2rem;
+`;
+
+const LyricsTitle = styled.div`
+  position: relative;
+  z-index: 2;
+  color: white;
+  font-size: 0.8rem;
+  font-weight: 500;
+  text-align: left;
+  padding-left: 2.5rem;
+  padding-right: 2.5rem;
+  padding-top: 2rem;
 `;
 
 const StyledDownloadIcon = styled(DownloadIcon)`
@@ -246,50 +250,25 @@ const StyledRow = styled.div`
   margin-bottom: 0.25rem;
 `;
 
-const styles = {
-  blockquote: {
-    margin: '2.5rem',
-    width: '20rem',
-    height: '33rem',
-    fontFamily: 'suit',
-    color: '#ffffff',
-  },
-  style1: {
-    position: 'relative',
-    background: '#350650',
-    boxShadow: '0 0 .5rem rgba(0,0,0,.2) inset',
-  },
-  style1Before: {
-    content: '""',
-    position: 'absolute',
-    bottom: 0,
-    right: 0,
-    width: '1rem',
-    height: '1rem',
-    borderTop: '1rem solid #60478f',
-    borderRight: '1rem solid #000000',
-    boxShadow: '-.2rem -.2rem .25rem rgba(0,0,0,.1)',
-  },
-  style1After: {
-    content: '""',
-    position: 'absolute',
-    bottom: 0,
-    right: 0,
-    width: '1rem',
-    height: '1rem',
-    borderBottom: '1rem solid #000000',
-    borderLeft: '1rem solid  #60478f',
-  },
-};
+const ProfileImage = styled.img`
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 3rem;
+  margin-top: 0.5rem;
+`;
+
+const VideoViews = styled.p`
+  font-size: 0.8rem;
+  color: white;
+  margin-right: auto;
+  margin-top: 0.3rem;
+`;
 
 const StyledButton = styled.button`
-  width: 4rem;
-  height: 4rem;
-  border-radius: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: #3b0547;
+  width: 3rem;
+  height: 2rem;
+  border-radius: 1rem;
+  background-color: #552e72;
   position: relative;
   border: none;
   cursor: pointer;
@@ -304,14 +283,31 @@ const StyledButton = styled.button`
 `;
 
 function Play() {
-  const { id } = useParams();
-  const [paused, setPaused] = useState(false);
+  const location = useLocation();
+
   const [lyricsVisible, setLyricsVisible] = useState(true);
   const [playData, setPlayData] = useState(null);
+  const [coverImage, setCoverImage] = useState('');
+
+  const getQueryParam = (param) => {
+    const params = new URLSearchParams(location.search);
+    return params.get(param);
+  };
+
+  const id = getQueryParam('id');
 
   useEffect(() => {
+    console.log('Current id:', id);
     if (id) {
-      GetPlay({ mv_id: id }).then((data) => setPlayData(data));
+      getPlay(id)
+        .then((data) => {
+          console.log('Fetched data:', data); // 데이터 로깅
+          setPlayData(data);
+          setCoverImage(data?.data?.cover_image || '');
+        })
+        .catch((error) => {
+          console.error('Error fetching data:', error);
+        });
     }
   }, [id]);
 
@@ -319,28 +315,41 @@ function Play() {
     setLyricsVisible(!lyricsVisible);
   };
 
-  const mainIconColor = '#fff';
-
   return (
     <BackLayout>
       <PlayBox expanded={lyricsVisible}>
         <VideoContainer>
-          <StyledVideo controls>
-            <source src="/media/cc0-videos/flower.webm" type="video/webm" />
-            <source src="/media/cc0-videos/flower.mp4" type="video/mp4" />
-            Download the
-            <a href="/media/cc0-videos/flower.webm">WEBM</a>
-            or
-            <a href="/media/cc0-videos/flower.mp4">MP4</a>
-            video.
-          </StyledVideo>
+          {playData?.data?.mv_file ? (
+            <StyledVideo controls>
+              <source src={playData.data.mv_file} type="video/mp4" />
+              Download the <a href={playData.data.mv_file}>MP4</a> video.
+            </StyledVideo>
+          ) : (
+            <div>No video available</div>
+          )}
         </VideoContainer>
         <StyledRow>
           <TextBox>
-            <Title>{playData ? playData.title : 'Loading...'}</Title>
+            <Title>{playData?.data?.subject || 'Loading...'}</Title>
             <UserInfo>
-              <PersonIcon sx={{ color: 'white', fontSize: '1rem' }} />
-              <Subtitle>{playData ? playData.artist : 'Loading...'}</Subtitle>
+              <ProfileImage
+                src={
+                  playData?.data?.profile_image ||
+                  'https://i.ibb.co/h8q8YgC/pro.jpg'
+                }
+                alt="Profile"
+              />
+              <UserInfo2>
+                <Subtitle>
+                  {playData?.data?.member_name || 'Loading...'}
+                </Subtitle>
+                <VideoViews>
+                  {playData?.data?.views !== null &&
+                  playData?.data?.views !== undefined
+                    ? `${playData.data.views} Views`
+                    : '0 Views'}
+                </VideoViews>
+              </UserInfo2>
             </UserInfo>
           </TextBox>
           <ShareBox>
@@ -364,41 +373,16 @@ function Play() {
             </ButtonBox>
           </ShareBox>
         </StyledRow>
-        <MusicPlayerSlider />
-
-        <IconBox>
-          <IconButton aria-label="previous song">
-            <FastRewindRounded fontSize="large" htmlColor={mainIconColor} />
-          </IconButton>
-          <IconButton
-            aria-label={paused ? 'play' : 'pause'}
-            onClick={() => setPaused(!paused)}
-          >
-            {paused ? (
-              <PlayArrowRounded
-                sx={{ fontSize: '3rem' }}
-                htmlColor={mainIconColor}
-              />
-            ) : (
-              <PauseRounded
-                sx={{ fontSize: '3rem' }}
-                htmlColor={mainIconColor}
-              />
-            )}
-          </IconButton>
-          <IconButton aria-label="next song">
-            <FastForwardRounded fontSize="large" htmlColor={mainIconColor} />
-          </IconButton>
-        </IconBox>
       </PlayBox>
+
       <LyricsBox expanded={lyricsVisible}>
-        <div>
-          <blockquote style={{ ...styles.blockquote, ...styles.style1 }}>
-            <div style={styles.style1Before}></div>
-            <div style={styles.style1After}></div>
-          </blockquote>
-        </div>
+        <LyricsBackground coverImage={coverImage} />
+        <LyricsContent>
+          {playData?.data?.subject || 'Loading...'}
+          <LyricsTitle>{playData?.data?.lyrics || 'Loading...'}</LyricsTitle>
+        </LyricsContent>
       </LyricsBox>
+
       <StyledButton onClick={toggleLyrics}>
         {lyricsVisible ? 'Hide Lyrics' : 'Show Lyrics'}
       </StyledButton>
