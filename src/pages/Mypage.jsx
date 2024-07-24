@@ -230,7 +230,7 @@ function Mypage() {
 
   const fetchData = async (pageNum) => {
     try {
-      const response = await getList(pageNum, 9, null, username);
+      const response = await getList(pageNum, 9, 'created_at', username);
       const newData = response.music_videos.filter(
         (video) => !fetchedVideoIds.flat().includes(video.id),
       );
@@ -392,7 +392,7 @@ function Mypage() {
               <AlbumCover
                 key={index}
                 data={item}
-                onClick={() => navigate(`/play/id=${item.id}`)}
+                onClick={() => navigate(`/play?id=${item.id}`)}
               />
             ))}
           {activeTab === 1 &&
