@@ -54,6 +54,7 @@ const TrendRoundCover = styled.button`
   border: none;
   padding: 0;
   flex-direction: column;
+  cursor: pointer;
 `;
 
 const RoundCover = styled.button`
@@ -65,6 +66,7 @@ const RoundCover = styled.button`
   align-items: center;
   position: relative;
   display: flex;
+  cursor: pointer;
 `;
 
 const TrendArrowFunction = styled(ArrowForwardIosIcon)`
@@ -168,8 +170,8 @@ const TrendImageOverlay = styled.div`
   height: 25%;
   background-color: rgba(0, 0, 0, 0.5);
   backdrop-filter: blur(4px);
-  border-bottom-left-radius: 0.8rem;
-  border-bottom-right-radius: 0.8rem;
+  border-bottom-left-radius: 0.5rem;
+  border-bottom-right-radius: 0.5rem;
   color: white;
   font-size: 0.8rem;
   display: flex;
@@ -251,6 +253,7 @@ function MainPageTest() {
     fetchMostViewList();
     fetchRecentList();
     fetchCountryList();
+    fetchShareList();  // 추가된 라인
   }, []);
 
   const fetchMostViewList = async () => {
@@ -293,7 +296,7 @@ function MainPageTest() {
 
   const fetchShareList = async () => {
     try {
-      const response = await shareList(sharePage, 6, 'shares');
+      const response = await getList(sharePage, 6, 'shares');
       if (response && response.music_videos) {
         setShareList((prevList) => [...prevList, ...response.music_videos]);
         setSharePage((prevPage) => prevPage + 1);
@@ -352,11 +355,15 @@ function MainPageTest() {
   };
 
   const shareHandleNext = () => {
-    if (shareIndex < countryList.length / 6 - 1) {
-      setCountryIndex(shareIndex + 1);
+    if (shareIndex < shareList.length / 6 - 1) {
+      setShareIndex(shareIndex + 1);
     } else {
       fetchShareList();
     }
+  };
+
+  const handleCoverClick = (id) => {
+    window.location.href = `http://localhost:4173/play?id=${id}`;
   };
 
   return (
@@ -373,7 +380,7 @@ function MainPageTest() {
           <ViewListBox index={mostViewIndex}>
             {mostViewList?.map((cover, index) => (
               <TrendCoverBox key={index}>
-                <TrendRoundCover src={cover.cover_image}>
+                <TrendRoundCover src={cover.cover_image} onClick={() => handleCoverClick(cover.id)}>
                   <TrendImageOverlay>
                     <FontMargin>
                       <SmallText>{cover.subject}</SmallText>
@@ -409,7 +416,7 @@ function MainPageTest() {
             {recentList?.map((cover, index) => (
               <CoverBox key={index}>
                 <CoverContainer>
-                  <RoundCover src={cover.cover_image} />
+                  <RoundCover src={cover.cover_image} onClick={() => handleCoverClick(cover.id)} />
                   <FontMargin2>
                   {cover.subject}
                   </FontMargin2>
@@ -421,7 +428,7 @@ function MainPageTest() {
         <ArrowFunction
           onClick={recentHandleNext}
           preved={true}
-          fontSize="small"
+          fontSize="large"
         />
       </Container2>
       <TitleStyle>My Country Trend</TitleStyle>
@@ -429,7 +436,7 @@ function MainPageTest() {
         <ArrowFunction
           onClick={countryHandlePrev}
           preved={false}
-          fontSize="small"
+          fontSize="large"
           disabled={countryIndex === 0}
         />
         <ViewContainer>
@@ -437,7 +444,7 @@ function MainPageTest() {
             {countryList?.map((cover, index) => (
               <CoverBox key={index}>
                 <CoverContainer>
-                  <RoundCover src={cover.cover_image} />
+                  <RoundCover src={cover.cover_image} onClick={() => handleCoverClick(cover.id)} />
                   <FontMargin2>
                       {cover.subject}
                       
@@ -450,7 +457,7 @@ function MainPageTest() {
         <ArrowFunction
           onClick={countryHandleNext}
           preved={true}
-          fontSize="small"
+          fontSize="large"
         />
       </Container2>
       <TitleStyle>Share</TitleStyle>
@@ -458,7 +465,7 @@ function MainPageTest() {
         <ArrowFunction
           onClick={shareHandlePrev}
           preved={false}
-          fontSize="small"
+          fontSize="large"
           disabled={shareIndex === 0}
         />
         <ViewContainer>
@@ -466,7 +473,7 @@ function MainPageTest() {
             {shareList?.map((cover, index) => (
               <CoverBox key={index}>
                 <CoverContainer>
-                  <RoundCover src={cover.cover_image} />
+                  <RoundCover src={cover.cover_image} onClick={() => handleCoverClick(cover.id)} />
                   <FontMargin2>
                       {cover.subject}
                   </FontMargin2>
@@ -478,7 +485,7 @@ function MainPageTest() {
         <ArrowFunction
           onClick={shareHandleNext}
           preved={true}
-          fontSize="small"
+          fontSize="large"
         />
       </Container2>
     </CreateContainer>
