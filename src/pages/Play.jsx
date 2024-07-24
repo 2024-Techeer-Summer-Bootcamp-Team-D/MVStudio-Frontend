@@ -5,65 +5,16 @@ import YouTubeIcon from '@mui/icons-material/YouTube';
 import InstagramIcon from '@mui/icons-material/Instagram';
 import ShareIcon from '@mui/icons-material/Share';
 import DownloadIcon from '@mui/icons-material/Download';
-import Box from '@mui/material/Box';
-import Slider from '@mui/material/Slider';
+import ReactPlayer from 'react-player'; // Import ReactPlayer
 import { getPlay } from '@/api/play';
 
+// Styled Components
 const BackLayout = styled.div`
   width: 100%;
   display: flex;
   flex-direction: row;
   margin-left: 18%;
 `;
-
-function MusicPlayerSlider() {
-  const duration = 200; // seconds
-  const [position, setPosition] = useState(32);
-
-  return (
-    <Box sx={{ width: '100%', overflow: 'hidden' }}>
-      <Slider
-        aria-label="time-indicator"
-        size="small"
-        value={position}
-        min={0}
-        step={1}
-        max={duration}
-        onChange={(_, value) => setPosition(value)}
-        sx={{
-          color: 'rgba(97, 11, 108, 0.87)',
-          height: 4,
-          '& .MuiSlider-thumb': {
-            width: 8,
-            height: 8,
-            transition: '0.3s cubic-bezier(.47,1.64,.41,.8)',
-            '&::before': {
-              boxShadow: '0 2px 12px 0 rgba(0,0,0,0.4)',
-            },
-            '&:hover, &.Mui-focusVisible': {
-              boxShadow: '0px 0px 0px 8px rgba(0,0,0,0.16)',
-            },
-            '&.Mui-active': {
-              width: 15,
-              height: 20,
-            },
-          },
-          '& .MuiSlider-rail': {
-            opacity: 0.28,
-          },
-        }}
-      />
-      <Box
-        sx={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          mt: -2,
-        }}
-      ></Box>
-    </Box>
-  );
-}
 
 const PlayBox = styled.div`
   width: ${({ expanded }) => (expanded ? '83%' : '70%')};
@@ -84,6 +35,7 @@ const TextBox = styled.div`
   display: flex;
   flex-direction: column;
   width: 50%;
+  margin-left: -33rem;
 `;
 
 const Title = styled.div`
@@ -101,7 +53,8 @@ const ButtonBox = styled.div`
   display: flex;
   flex-direction: row;
   gap: 1rem;
-  margin-top: 1rem;
+  margin-top: -5rem;
+  margin-right: -16rem;
 `;
 
 const Button = styled.button`
@@ -226,42 +179,17 @@ const LyricsTitle = styled.div`
   position: relative;
   z-index: 2;
   color: white;
-  font-size: 0.8rem;
+  font-size: 0.95rem;
   font-weight: 500;
   text-align: left;
   padding-left: 2.5rem;
   padding-right: 2.5rem;
   padding-top: 2rem;
+  line-height: 1.3;
 `;
 
 const StyledDownloadIcon = styled(DownloadIcon)`
   color: white;
-`;
-
-const StyledVideo = styled.video`
-  width: 100%;
-`;
-
-const StyledRow = styled.div`
-  width: 100%;
-  display: flex;
-  flex-direction: row;
-  margin-top: 0.25rem;
-  margin-bottom: 0.25rem;
-`;
-
-const ProfileImage = styled.img`
-  width: 2.5rem;
-  height: 2.5rem;
-  border-radius: 3rem;
-  margin-top: 0.5rem;
-`;
-
-const VideoViews = styled.p`
-  font-size: 0.8rem;
-  color: white;
-  margin-right: auto;
-  margin-top: 0.3rem;
 `;
 
 const StyledButton = styled.button`
@@ -282,12 +210,13 @@ const StyledButton = styled.button`
   }
 `;
 
+// Play Component
 function Play() {
   const location = useLocation();
-
   const [lyricsVisible, setLyricsVisible] = useState(true);
   const [playData, setPlayData] = useState(null);
   const [coverImage, setCoverImage] = useState('');
+  const playerRef = useRef(null);
 
   const getQueryParam = (param) => {
     const params = new URLSearchParams(location.search);
@@ -297,11 +226,9 @@ function Play() {
   const id = getQueryParam('id');
 
   useEffect(() => {
-    console.log('Current id:', id);
     if (id) {
       getPlay(id)
         .then((data) => {
-          console.log('Fetched data:', data); // 데이터 로깅
           setPlayData(data);
           setCoverImage(data?.data?.cover_image || '');
         })
@@ -320,66 +247,71 @@ function Play() {
       <PlayBox expanded={lyricsVisible}>
         <VideoContainer>
           {playData?.data?.mv_file ? (
-            <StyledVideo controls>
-              <source src={playData.data.mv_file} type="video/mp4" />
-              Download the <a href={playData.data.mv_file}>MP4</a> video.
-            </StyledVideo>
+            <ReactPlayer
+              url={playData.data.mv_file} // URL of the video
+              controls={true}
+              width="100%"
+              height="100%"
+            />
           ) : (
             <div>No video available</div>
           )}
         </VideoContainer>
-        <StyledRow>
-          <TextBox>
-            <Title>{playData?.data?.subject || 'Loading...'}</Title>
-            <UserInfo>
-              <ProfileImage
-                src={
-                  playData?.data?.profile_image ||
-                  'https://i.ibb.co/h8q8YgC/pro.jpg'
-                }
-                alt="Profile"
-              />
-              <UserInfo2>
-                <Subtitle>
-                  {playData?.data?.member_name || 'Loading...'}
-                </Subtitle>
-                <VideoViews>
-                  {playData?.data?.views !== null &&
-                  playData?.data?.views !== undefined
-                    ? `${playData.data.views} Views`
-                    : '0 Views'}
-                </VideoViews>
-              </UserInfo2>
-            </UserInfo>
-          </TextBox>
-          <ShareBox>
-            <ButtonBox>
-              <Button>
-                <StyledDownloadIcon fontSize="small" />
-                <Tooltip>Download</Tooltip>
-              </Button>
-              <Button>
-                <StyledShareIcon fontSize="small" />
-                <Tooltip>Share</Tooltip>
-              </Button>
-              <Button>
-                <StyledYouTubeIcon fontSize="small" />
-                <Tooltip>YouTube</Tooltip>
-              </Button>
-              <Button>
-                <StyledInstagramIcon fontSize="small" />
-                <Tooltip>Instagram</Tooltip>
-              </Button>
-            </ButtonBox>
-          </ShareBox>
-        </StyledRow>
+        <TextBox>
+          <Title>{playData?.data?.subject || 'Loading...'}</Title>
+          <UserInfo>
+            <img
+              src={
+                playData?.data?.profile_image ||
+                'https://i.ibb.co/h8q8YgC/pro.jpg'
+              }
+              alt="Profile"
+              style={{ width: '3rem', height: '3rem', borderRadius: '50%' }}
+            />
+            <UserInfo2>
+              <Subtitle>{playData?.data?.member_name || 'Loading...'}</Subtitle>
+              <div>
+                {playData?.data?.views !== null &&
+                playData?.data?.views !== undefined
+                  ? `${playData.data.views.toLocaleString()} Views`
+                  : '0 Views'}
+              </div>
+            </UserInfo2>
+          </UserInfo>
+        </TextBox>
+        <ShareBox>
+          <ButtonBox>
+            <Button>
+              <StyledDownloadIcon fontSize="small" />
+              <Tooltip>Download</Tooltip>
+            </Button>
+            <Button>
+              <StyledShareIcon fontSize="small" />
+              <Tooltip>Share</Tooltip>
+            </Button>
+            <Button>
+              <StyledYouTubeIcon fontSize="small" />
+              <Tooltip>YouTube</Tooltip>
+            </Button>
+            <Button>
+              <StyledInstagramIcon fontSize="small" />
+              <Tooltip>Instagram</Tooltip>
+            </Button>
+          </ButtonBox>
+        </ShareBox>
       </PlayBox>
 
       <LyricsBox expanded={lyricsVisible}>
         <LyricsBackground coverImage={coverImage} />
         <LyricsContent>
           {playData?.data?.subject || 'Loading...'}
-          <LyricsTitle>{playData?.data?.lyrics || 'Loading...'}</LyricsTitle>
+          <LyricsTitle>
+            <div
+              dangerouslySetInnerHTML={{
+                __html: playData?.data?.lyrics || 'Loading...',
+              }}
+            />
+          </LyricsTitle>
         </LyricsContent>
       </LyricsBox>
 
