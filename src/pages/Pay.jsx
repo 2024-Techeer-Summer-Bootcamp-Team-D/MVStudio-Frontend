@@ -82,8 +82,9 @@ const TopBox = styled.div`
   font-weight: 700;
   display: flex;
   justify-content: center;
-  align-items: flex-end;
-  padding-bottom: 2rem;
+  align-items: center;
+  font-size: 1.125rem;
+  color: white;
 `;
 
 const BottomBox = styled.div`
@@ -268,8 +269,16 @@ const Pay = () => {
               selected={selectedBox === index}
             >
               <TopBox>
-                <LargeTextBox>{item.credits}</LargeTextBox>
-                <MediumTextBox>&nbsp;Credits</MediumTextBox>
+                <div
+                  style={{
+                    display: 'flex',
+                    flexDirection: 'row',
+                    alignItems: 'end',
+                  }}
+                >
+                  <LargeTextBox>{item.credits}</LargeTextBox>
+                  &nbsp;Credits
+                </div>
               </TopBox>
               <BottomBox>
                 <CreditImage src={item.image} />
