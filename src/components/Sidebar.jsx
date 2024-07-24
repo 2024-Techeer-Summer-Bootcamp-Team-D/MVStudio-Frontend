@@ -27,10 +27,11 @@ const BackLayout = styled.div`
   border-right: 1px solid #1e003b;
   padding: 1rem;
   justify-content: space-between;
+  z-index: 10;
 `;
 
 const BackLayoutSpace = styled.div`
-  width: 15rem;
+  width: 16rem;
   height: 100%;
 `;
 
@@ -82,11 +83,33 @@ const ThumbnailContainer = styled.div`
   gap: 1rem;
   padding: 0.5rem;
   border-radius: 0.3rem;
-  transition: background-color 0.2s ease;
+  transition: all 0.2s ease;
   border-radius: 1rem;
+  background-image: ${({ backgroundImage }) => `url(${backgroundImage})`};
+  background-size: cover;
+  background-position: center;
+  position: relative;
 
-  &:hover {
-    background-color: rgba(255, 255, 255, 0.1);
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(5px);
+    transition: background-color 0.2s ease;
+    border-radius: 1rem;
+  }
+
+  &:hover::before {
+    background-color: rgba(0, 0, 0, 0.7);
+  }
+
+  > * {
+    position: relative;
+    z-index: 1;
   }
 `;
 
@@ -181,7 +204,10 @@ function Sidebar() {
             </MenuItem>
             <TrendingContainer isOpen={isOpen}>
               {trendingItems.map((item, index) => (
-                <ThumbnailContainer key={index}>
+                <ThumbnailContainer
+                  key={index}
+                  backgroundImage={item.cover_image}
+                >
                   <Thumbnail src={item.cover_image} alt={item.subject} />
                   <InfoContainer>
                     <ImageTitle>{item.subject}</ImageTitle>

@@ -23,8 +23,7 @@ const JellyButton = styled.button`
   height: 3.5rem;
   font-size: 1rem;
   font-weight: 500;
-  margin-bottom: 1rem;
-  /* border: 0.1rem solid #ffffff; */
+  margin-top: 3.2rem;
   background: linear-gradient(45deg, #b75dfd 30%, #ffa9a9 90%);
   color: white; /* 텍스트의 색상을 지정합니다 */
   border-radius: 1rem;
@@ -45,7 +44,6 @@ const CreateContainer = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  /* background-color: white; */
 `;
 
 const BigContainer = styled.div`
@@ -61,14 +59,12 @@ const BigContainer = styled.div`
 const LeftContainer = styled.div`
   display: flex;
   flex-direction: column;
-  /* width: 45%; */
-  height: 60vh;
+  height: 65vh;
   align-items: center;
   justify-content: center;
 `;
 
 const RightContainer = styled.div`
-  /* width: 55%; */
   height: 60vh;
   display: flex;
   flex-direction: column;
@@ -296,9 +292,7 @@ const ModalContainer = styled.div`
 const ModalText = styled.div`
   display: flex;
   flex-direction: column;
-  /* justify-content: space-between; */
   gap: 2rem;
-  /* height: 100%; */
   width: 100%;
   padding: 2rem;
 `;
@@ -369,7 +363,6 @@ const WarningContainer = styled.div`
   display: flex;
 `;
 const Create = () => {
-  // State 선언
   const [genreList, setGenreList] = useState([]);
   const [instrumentsList, setInstrumentsList] = useState([]);
   const [voice, setVoice] = useState('');
@@ -388,9 +381,8 @@ const Create = () => {
   const [currentStylesIndex, setCurrentStylesIndex] = useState(0);
   const [warningModalOpen, setWarningModalOpen] = useState(false);
 
-  // API 데이터 fetch
-
   useEffect(() => {
+    // 장르데이터 호출
     const fetchGenreData = async () => {
       try {
         const data = await getGenre();
@@ -435,7 +427,6 @@ const Create = () => {
     // 모달을 닫을 때 경고 메시지 숨기기
   };
 
-  // 핸들러 함수들
   const handleCreateClick = () => {
     if (!songTitle || !voice || !language || !tempo || !genreId || !stylesId) {
       setWarningModalOpen(true);
