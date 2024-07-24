@@ -61,7 +61,7 @@ const RoundCover = styled.button`
   background-size: cover;
   border-radius: 0.5rem;
   width: 12rem;
-  height: 7em;
+  height: 7.2em;
   align-items: center;
   position: relative;
   display: flex;
