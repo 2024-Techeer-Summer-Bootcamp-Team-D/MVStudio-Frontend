@@ -20,8 +20,18 @@ const BackLayout = styled.div`
 const ContentArea = styled.div`
   display: flex;
   flex-direction: row;
+  width: 100%;
   height: calc(100vh - 5rem);
   min-height: calc(100vh - 5rem);
+  position: relative;
+`;
+
+const ChildrenWrapper = styled.div`
+  display: flex;
+  width: 100%;
+  height: 100%;
+  min-height: 100%;
+  position: relative;
 `;
 
 function App({ children }) {
@@ -32,7 +42,7 @@ function App({ children }) {
       <ContentArea>
         <Sidebar />
         <Service />
-        {children}
+        <ChildrenWrapper>{children}</ChildrenWrapper>
       </ContentArea>
     </BackLayout>
   );

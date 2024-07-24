@@ -24,11 +24,13 @@ const BackLayout = styled.div`
   border-right: 1px solid #1e003b;
   padding: 1rem;
   justify-content: space-between;
+  background-color: #05000a;
 `;
 
 const BackLayoutSpace = styled.div`
-  width: 15rem;
+  min-width: 15rem;
   height: 100%;
+  display: flex;
 `;
 
 const MenuItem = styled.button`

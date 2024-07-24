@@ -9,7 +9,7 @@ import SearchIcon from '@mui/icons-material/Search';
 const BackLayout = styled.div`
   width: 100%;
   height: 5rem;
-  /* background-color: #05000a; */
+  background-color: #05000a;
   display: flex;
   justify-content: center;
   align-items: center; /* 수직 중앙 정렬 */
