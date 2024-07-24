@@ -1,33 +1,42 @@
 import React, { useState, useEffect } from 'react';
 import styled, { css } from 'styled-components';
-import { useNavigate } from 'react-router-dom';
-import { useLocation } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
+import CircularProgress from '@mui/material/CircularProgress';
 import { postLyrics, postVideos } from '../api/musicVideos';
+import Swal from 'sweetalert2';
 
 const BigContainer = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
+  height: 100%;
+  justify-content: center;
+  align-items: center;
 `;
 
 const OtherContainer = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: center;
-  padding-right: 8rem;
-  gap: 3.4rem;
+  gap: 5%;
+  height: 60%;
+  width: 100%;
+  padding-left: 5%;
+  padding-right: 5%;
 `;
 
 const Title = styled.p`
-  font-size: 1.5rem;
+  font-size: 2rem;
   color: #ffffff;
-  margin-left: 11.5%;
+  width: 75%;
+  display: flex;
+  text-align: start;
   margin-bottom: 2rem;
 `;
 
 const LyricsContainer = styled.div`
-  width: 18rem;
-  height: 30rem;
+  width: 25%;
+  height: 100%;
   padding: 2rem;
   background-image: linear-gradient(
     to right,
@@ -39,6 +48,7 @@ const LyricsContainer = styled.div`
   border-radius: 1rem;
   display: flex;
   flex-direction: column;
+  justify-content: center;
   align-items: center;
   cursor: pointer;
   box-shadow: 0 4px 15px 0 rgba(81, 39, 139, 0.75);
@@ -61,15 +71,15 @@ const LyricsContainer = styled.div`
 `;
 
 const Button = styled.button`
-  width: 8rem;
-  height: 3rem;
-  font-size: 1rem;
+  width: 15%;
+  height: 5%;
+  font-size: 1.25rem;
   font-weight: 600;
   color: #fff;
   cursor: pointer;
-  margin-top: 2rem;
+  margin-top: 5rem;
   text-align: center;
-  margin-left: 5rem;
+
   border: none;
   border-radius: 3rem;
   transition: all 0.4s ease-in-out;
@@ -93,36 +103,28 @@ const Button = styled.button`
 `;
 
 const Text = styled.div`
-  font-size: 1rem;
+  font-size: 1.25rem;
   font-family: 'suit';
   color: white;
+  line-height: 1.75;
 `;
 
-const ButtonContainer = styled.div`
-  margin-top: 2rem;
-  width: 100%;
-  flex-direction: column;
-  justify-content: center;
-  display: flex;
-  padding-left: 35%;
-`;
-
-// `task_id`를 localStorage에서 로드하는 함수
 const loadTaskIdsFromLocalStorage = () => {
-  const storedTaskIds = localStorage.getItem('task_ids');
-  return storedTaskIds ? JSON.parse(storedTaskIds) : [];
+  const taskIds = localStorage.getItem('taskId');
+  return taskIds ? JSON.parse(taskIds) : [];
 };
 
-// `task_id`를 localStorage에 저장하는 함수
 const saveTaskIdToLocalStorage = (taskId) => {
   const existingTaskIds = loadTaskIdsFromLocalStorage();
   existingTaskIds.push(taskId);
   localStorage.setItem('taskId', JSON.stringify(existingTaskIds));
 };
 
+
+
 function LyricsSelect() {
-  const [selectedLyrics, setSelectedLyrics] = useState('');
   const [lyricsList, setLyricsList] = useState([]);
+  const [lyricsIndex, setLyricsIndex] = useState();
   const location = useLocation();
   const { state } = location;
   const navigate = useNavigate();
@@ -130,8 +132,8 @@ function LyricsSelect() {
   useEffect(() => {
     const fetchLyrics = async () => {
       try {
-        const { voice, language, genre, songTitle } = state;
-        const lyrics = await postLyrics(songTitle, [genre], language, voice);
+        const { vocal, language, genres_ids, subject } = state;
+        const lyrics = await postLyrics(subject, [genres_ids], language, vocal);
         setLyricsList(lyrics);
       } catch (error) {
         console.error('Failed to fetch lyrics:', error);
@@ -141,60 +143,114 @@ function LyricsSelect() {
     fetchLyrics();
   }, [state]);
 
-  const handleClick = (lyrics) => {
-    setSelectedLyrics(lyrics);
-  };
-
-  const goMain = () => {
-    navigate('/mainPage');
-  };
-
-  const click = async () => {
-    try {
-      const {
-        member_id,
-        voice,
-        language,
-        tempo,
-        genres_ids,
-        instruments_ids,
-        songTitle,
-      } = state;
-      const response = await postVideos(
-        member_id,
-        songTitle,
-        genres_ids,
-        instruments_ids,
-        tempo,
-        language,
-        voice,
-        selectedLyrics,
-      );
-      const taskId = response.task_id;
-      saveTaskIdToLocalStorage(taskId); // 저장 함수 호출
-      goMain();
-    } catch (error) {
-      console.error('Failed to create video:', error);
-    }
-  };
-
   return (
     <BigContainer>
-      <Title>Select Lyrics</Title>
+      <Title>원하는 가사를 선택해주세요.</Title>
       <OtherContainer>
         {lyricsList?.lyrics_ori?.map((lyrics, index) => (
           <LyricsContainer
             key={index}
-            isSelected={selectedLyrics === lyrics}
-            onClick={() => handleClick(lyrics)}
+            isSelected={lyricsIndex === index}
+            onClick={() => setLyricsIndex(index)}
           >
-            <Text dangerouslySetInnerHTML={{ __html: lyrics }} />
+            {lyricsList?.lyrics_ori[index] ? (
+              <Text
+                dangerouslySetInnerHTML={{
+                  __html: lyricsList?.lyrics_ori[index],
+                }}
+              />
+            ) : (
+              <CircularProgress />
+            )}
           </LyricsContainer>
         ))}
+
+        {!lyricsList && (
+          <>
+            <LyricsContainer>
+              <CircularProgress />
+            </LyricsContainer>
+
+            <LyricsContainer>
+              <CircularProgress />
+            </LyricsContainer>
+
+            <LyricsContainer>
+              <CircularProgress />
+            </LyricsContainer>
+          </>
+        )}
       </OtherContainer>
-      <ButtonContainer>
-        <Button onClick={click}>Create</Button>
-      </ButtonContainer>
+
+      <Button
+        onClick={async () => {
+          try {
+            const {
+              subject,
+              genres_ids,
+              instruments_ids,
+              style_id,
+              tempo,
+              language,
+              vocal,
+            } = state;
+
+            // state 객체 로그로 확인
+            console.log('State:', [genres_ids]);
+
+            if (!subject) {
+              throw new Error('Subject is missing');
+            }
+            Swal.fire({
+              title: '뮤직 비디오 생성',
+              text: '뮤직 비디오를 생성하시겠습니까?',
+              icon: 'info',
+              showCancelButton: true,
+              confirmButtonColor: '#3085d6',
+              cancelButtonColor: '#d33',
+              confirmButtonText: '생성',
+              cancelButtonText: '취소',
+            }).then(async (result) => {
+              if (result.isConfirmed) {
+                try {
+                  const data = await postVideos(
+                    subject,
+                    [genres_ids],
+                    instruments_ids,
+                    style_id,
+                    tempo,
+                    language,
+                    vocal,
+                    lyricsList.lyrics_ori[lyricsIndex],
+                    lyricsList.lyrics_eng[lyricsIndex],
+                  );
+                  const taskId = data.task_id;
+                  if (!taskId) {
+                    throw new Error('task_id가 응답에 포함되어 있지 않습니다.');
+                  }
+                  saveTaskIdToLocalStorage(taskId);
+                  navigate('/main');
+                } catch (error) {
+                  throw new Error('비디오 생성에 실패했습니다.');
+                }
+                Swal.fire({
+                  title: '뮤직 비디오 제작 시작!',
+                  text: '뮤직 비디오 제작이 시작되었습니다. 5분 정도 기다려주세요!',
+                  icon: 'success',
+                });
+              }
+            });
+          } catch (error) {
+            // 비디오 생성 실패 시 에러 메시지 출력
+            console.error(
+              'Failed to create video:',
+              error.message ? error.message : error,
+            );
+          }
+        }}
+      >
+        Create
+      </Button>
     </BigContainer>
   );
 }

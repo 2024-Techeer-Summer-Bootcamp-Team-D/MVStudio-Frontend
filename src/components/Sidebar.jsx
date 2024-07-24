@@ -21,7 +21,7 @@ const BackLayout = styled.div`
   width: 15rem;
   height: calc(100% - 5rem);
   position: fixed;
-  border-right: 1px solid #380272;
+  border-right: 1px solid #1e003b;
   padding: 1rem;
   justify-content: space-between;
 `;
@@ -252,8 +252,8 @@ function Sidebar() {
             }).then((result) => {
               if (result.isConfirmed) {
                 Swal.fire({
-                  title: 'Deleted!',
-                  text: 'Your file has been deleted.',
+                  title: '로그아웃 완료!',
+                  text: '로그아웃 되었습니다.',
                   icon: 'success',
                 });
                 postLogout().then(() => navigate('/auth'));
