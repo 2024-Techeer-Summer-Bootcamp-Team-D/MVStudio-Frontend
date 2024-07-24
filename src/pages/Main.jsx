@@ -5,7 +5,7 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 import { getList } from '@/api/musicVideos';
 
 const CreateContainer = styled.div`
-  width: 100%;
+  width: 90%;
   height: 100%;
   display: flex;
   flex-direction: column;
@@ -23,17 +23,17 @@ const TitleStyle = styled.p`
 
 const TrendCoverBox = styled.div`
   transition: transform 0.5s ease-in-out;
-  width: 26%;
+  width: 20%;
   height: 26%;
-  flex: 0 0 26%;
+  flex: 0 0 25.5%;
 `;
 
 const CoverBox = styled.div`
   transition: transform 0.5s ease-in-out;
   width: 16.8%;
   height: 16.8%;
-  flex: 0 0 16.8%;
-  /* width: 14rem;
+  flex: 0 0 17%;
+  /* width: 12rem;
   height: 10rem;
   display: flex;
   justify-content: center;
@@ -44,9 +44,9 @@ const CoverBox = styled.div`
 const TrendRoundCover = styled.button`
   background-image: url(${(props) => props.src});
   background-size: cover;
-  border-radius: 1.2rem;
-  width: 18rem;
-  height: 11rem;
+  border-radius: 0.5rem;
+  width: 19rem;
+  height: 12rem;
   position: relative;
   display: flex;
   justify-content: flex-end;
@@ -59,7 +59,7 @@ const TrendRoundCover = styled.button`
 const RoundCover = styled.button`
   background-image: url(${(props) => props.src});
   background-size: cover;
-  border-radius: 1.2rem;
+  border-radius: 0.5rem;
   width: 12rem;
   height: 7em;
   align-items: center;
@@ -70,7 +70,7 @@ const RoundCover = styled.button`
 const TrendArrowFunction = styled(ArrowForwardIosIcon)`
   display: flex;
   width: 3rem;
-  margin-top: 7.8%;
+  margin-top: 7%;
   cursor: pointer;
   color: ${(props) => (props.disabled ? 'transparent' : '#7b7b7b')};
   transform: ${(props) => (props.preved ? 'rotate(0deg)' : 'rotate(180deg)')};
@@ -91,16 +91,26 @@ const Container = styled.div`
   flex-direction: row;
   align-items: flex-start;
   width: 100%;
-  height: 13rem;
+  height: 15rem;
+  justify-content: center;
+`;
+
+const Container2 = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  width: 100%;
+  height: 11rem;
   justify-content: center;
 `;
 
 const TrendViewContainer = styled.div`
   margin-top: 2rem;
   width: 90%;
-  height: 20rem;
+  height: 16.5rem;
   display: flex;
   align-items: flex-start;
+  justify-content:center;
   overflow: hidden;
 `;
 
@@ -119,7 +129,7 @@ const ViewListBox = styled.div`
   width: 100%;
   height: 8rem;
   transition: transform 0.5s ease-in-out;
-  transform: ${({ index }) => `translateX(-${index * 26}%)`};
+  transform: ${({ index }) => `translateX(-${index * 25.5}%)`};
   position: relative;
 `;
 
@@ -129,7 +139,7 @@ const RecentListBox = styled.div`
   width: 100%;
   height: 8rem;
   transition: transform 0.5s ease-in-out;
-  transform: ${({ index }) => `translateX(-${index * 16.5}%)`};
+  transform: ${({ index }) => `translateX(-${index * 17}%)`};
   position: relative;
 `;
 
@@ -139,7 +149,7 @@ const CountryListBox = styled.div`
   width: 100%;
   height: 8rem;
   transition: transform 0.5s ease-in-out;
-  transform: ${({ index }) => `translateX(-${index * 16.8}%)`};
+  transform: ${({ index }) => `translateX(-${index * 17}%)`};
   position: relative;
 `;
 
@@ -149,7 +159,7 @@ const ShareListBox = styled.div`
   width: 100%;
   height: 8rem;
   transition: transform 0.5s ease-in-out;
-  transform: ${({ index }) => `translateX(-${index * 16.8}%)`};
+  transform: ${({ index }) => `translateX(-${index * 17}%)`};
   position: relative;
 `;
 
@@ -158,8 +168,8 @@ const TrendImageOverlay = styled.div`
   height: 25%;
   background-color: rgba(0, 0, 0, 0.5);
   backdrop-filter: blur(4px);
-  border-bottom-left-radius: 1.2rem;
-  border-bottom-right-radius: 1.2rem;
+  border-bottom-left-radius: 0.8rem;
+  border-bottom-right-radius: 0.8rem;
   color: white;
   font-size: 0.8rem;
   display: flex;
@@ -189,7 +199,7 @@ const FontMargin2 = styled.div`
   width: 12em;
   height: 100%;
   font-size: 0.7rem;
-  margin-top: 1rem;
+  margin-top: 0.5rem;
 `;
 const SmallText = styled.div`
   display: flex;
@@ -387,7 +397,7 @@ function MainPageTest() {
         />
       </Container>
       <TitleStyle>Recent Upload</TitleStyle>
-      <Container>
+      <Container2>
         <ArrowFunction
           onClick={recentHandlePrev}
           preved={false}
@@ -401,17 +411,7 @@ function MainPageTest() {
                 <CoverContainer>
                   <RoundCover src={cover.cover_image} />
                   <FontMargin2>
-                    <div
-                      style={{
-                        display: 'flex',
-                        flexDirection: 'row',
-                      }}
-                    >
-                      {cover.subject}
-                      <SmallText>{cover.username}</SmallText>
-                      <ViewIcon sx={{ color: '#ffffff', fontSize: '0.8rem' }} />
-                      <ViewNumber>{cover.views}</ViewNumber>
-                    </div>
+                  {cover.subject}
                   </FontMargin2>
                 </CoverContainer>
               </CoverBox>
@@ -423,9 +423,9 @@ function MainPageTest() {
           preved={true}
           fontSize="small"
         />
-      </Container>
+      </Container2>
       <TitleStyle>My Country Trend</TitleStyle>
-      <Container>
+      <Container2>
         <ArrowFunction
           onClick={countryHandlePrev}
           preved={false}
@@ -439,17 +439,8 @@ function MainPageTest() {
                 <CoverContainer>
                   <RoundCover src={cover.cover_image} />
                   <FontMargin2>
-                    <div
-                      style={{
-                        display: 'flex',
-                        flexDirection: 'row',
-                      }}
-                    >
                       {cover.subject}
-                      <SmallText>{cover.username}</SmallText>
-                      <ViewIcon sx={{ color: '#ffffff', fontSize: '0.8rem' }} />
-                      <ViewNumber>{cover.views}</ViewNumber>
-                    </div>
+                      
                   </FontMargin2>
                 </CoverContainer>
               </CoverBox>
@@ -461,9 +452,9 @@ function MainPageTest() {
           preved={true}
           fontSize="small"
         />
-      </Container>
+      </Container2>
       <TitleStyle>Share</TitleStyle>
-      <Container>
+      <Container2>
         <ArrowFunction
           onClick={shareHandlePrev}
           preved={false}
@@ -477,18 +468,7 @@ function MainPageTest() {
                 <CoverContainer>
                   <RoundCover src={cover.cover_image} />
                   <FontMargin2>
-                    <div
-                      style={{
-                        display: 'flex',
-                        flexDirection: 'row',
-                        marginTop: '1rem',
-                      }}
-                    >
                       {cover.subject}
-                      <SmallText>{cover.username}</SmallText>
-                      <ViewIcon sx={{ color: '#ffffff', fontSize: '0.8rem' }} />
-                      <ViewNumber>{cover.views}</ViewNumber>
-                    </div>
                   </FontMargin2>
                 </CoverContainer>
               </CoverBox>
@@ -500,7 +480,7 @@ function MainPageTest() {
           preved={true}
           fontSize="small"
         />
-      </Container>
+      </Container2>
     </CreateContainer>
   );
 }
