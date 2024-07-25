@@ -226,7 +226,6 @@ function Mypage() {
   const [page, setPage] = useState(1);
   const [fetchedVideoIds, setFetchedVideoIds] = useState([]);
   const myUserName = useUser((state) => state.username);
-  const fetchUsername = useUser((state) => state.fetchUsername);
 
   const fetchData = async (pageNum) => {
     try {
@@ -261,7 +260,6 @@ function Mypage() {
     setMyVideos([]);
     fetchData(1);
     fetchRecent(1);
-    fetchUsername();
   }, [username]);
 
   // 멤버 정보 가져오기

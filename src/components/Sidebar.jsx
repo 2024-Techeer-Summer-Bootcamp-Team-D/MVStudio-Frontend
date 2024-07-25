@@ -1,12 +1,11 @@
 /* eslint-disable react/prop-types */
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import ignorePath from '../utils/igonerePath';
 import { useUser } from '@/libs/stores/userStore';
 import { postLogout } from '@/api/member';
 import Swal from 'sweetalert2';
-import { getList } from '@/api/musicVideos';
 
 // Material-UI
 import AddIcon from '@mui/icons-material/Add';
@@ -27,12 +26,12 @@ const BackLayout = styled.div`
   border-right: 1px solid #1e003b;
   padding: 1rem;
   justify-content: space-between;
-  z-index: 10;
 `;
 
 const BackLayoutSpace = styled.div`
-  width: 16rem;
+  width: 15rem;
   height: 100%;
+  display: flex;
 `;
 
 const MenuItem = styled.button`
@@ -147,20 +146,7 @@ function Sidebar() {
   const [trendingItems, setTrendingItems] = useState([]);
   const navigate = useNavigate();
   const username = useUser((state) => state.username);
-  const fetchUsername = useUser((state) => state.fetchUsername);
-
-  useEffect(() => {
-    const fetchTrendingItems = async () => {
-      try {
-        const response = await getList(1, 6, 'recently_viewed');
-        setTrendingItems(response.music_videos);
-      } catch (error) {
-        console.error('Error fetching trending items:', error);
-      }
-    };
-
-    fetchTrendingItems();
-  }, []);
+  console.log('username :', username);
 
   if (ignorePath().includes(location.pathname)) {
     return null;
@@ -183,7 +169,6 @@ function Sidebar() {
 
           <MenuItem
             onClick={async () => {
-              await fetchUsername();
               navigate(`/users/${username}`);
             }}
           >
@@ -191,7 +176,12 @@ function Sidebar() {
             <MenuTitle>My Studio</MenuTitle>
           </MenuItem>
 
-          <MenuItem onClick={() => navigate(`/chart`)}>
+          {/* Chart 버튼 */}
+          <MenuItem
+            onClick={async () => {
+              navigate('/chart');
+            }}
+          >
             <EqualizerIcon fontSize="small" />
             <MenuTitle>Statics</MenuTitle>
           </MenuItem>

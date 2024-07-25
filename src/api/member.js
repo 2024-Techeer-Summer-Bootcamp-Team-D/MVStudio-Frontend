@@ -120,3 +120,15 @@ export const postLogout = async () => {
     return new Error('Logout failed');
   }
 };
+
+export const kakaoPayment = async (credits, price) => {
+  try {
+    const response = await jsonAxios.post('/members/payments', {
+      credits,
+      price,
+    });
+    return response.data;
+  } catch (error) {
+    throw new Error('Payment failed');
+  }
+};

@@ -95,7 +95,6 @@ function EditProfile() {
   });
   const [countryList, setCountryList] = useState([]);
   const username = useUser((state) => state.username);
-  const fetchUsername = useUser((state) => state.fetchUsername);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -107,7 +106,6 @@ function EditProfile() {
       }
     };
     fetchData();
-    fetchUsername();
   }, []);
 
   useEffect(() => {

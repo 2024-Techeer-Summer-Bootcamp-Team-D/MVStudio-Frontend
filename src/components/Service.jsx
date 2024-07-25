@@ -74,7 +74,6 @@ function Service() {
   const gifRef = useRef(null);
   const navigate = useNavigate();
   const username = useUser((state) => state.username);
-  const fetchUsername = useUser((state) => state.fetchUsername);
 
   const fetchTaskStatuses = async () => {
     const taskIds = JSON.parse(localStorage.getItem('taskId')) || [];
@@ -107,7 +106,6 @@ function Service() {
   };
 
   useEffect(() => {
-    fetchUsername();
     fetchTaskStatuses(); // 즉시 상태 가져오기
     const intervalId = setInterval(fetchTaskStatuses, 5000); // 5초마다 상태 업데이트
 

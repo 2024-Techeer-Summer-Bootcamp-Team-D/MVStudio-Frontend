@@ -51,8 +51,6 @@ const BigContainer = styled.div`
   gap: 3.4rem;
   display: flex;
   flex-direction: row;
-  justify-content: center;
-  align-content: center;
   padding: 1rem;
 `;
 
@@ -727,70 +725,75 @@ const Create = () => {
           </ToThePadding>
         </RightContainer>
         {/* 생성 버튼 */}
+
+        {/* 모달 */}
+        {isModalOpen && (
+          <>
+            <Overlay />
+            <ModalContainer>
+              <ArrowBackIcon cursor="pointer" onClick={handleCloseModal} />
+              <ModalText>
+                <GroupText>
+                  <ModalItem>Title : </ModalItem>
+                  <ModalValue>{songTitle}</ModalValue>
+                </GroupText>
+                <GroupText>
+                  <ModalItem>Voice :</ModalItem>{' '}
+                  <ModalValue>{voice}</ModalValue>
+                </GroupText>
+                <GroupText>
+                  <ModalItem>Language :</ModalItem>
+                  <ModalValue>{language}</ModalValue>
+                </GroupText>
+                <GroupText>
+                  <ModalItem>Tempo :</ModalItem>{' '}
+                  <ModalValue>{tempo}</ModalValue>
+                </GroupText>
+                <GroupText>
+                  <ModalItem>Genre :</ModalItem>
+                  <ModalValue>{genreList[genreId - 1]?.genre_name}</ModalValue>
+                </GroupText>
+                <GroupText>
+                  <InstrumentItem>Instrument :</InstrumentItem>
+                  <ModalValue>{selectedInstruments.join(', ')}</ModalValue>
+                </GroupText>
+                <GroupText>
+                  <ModalItem>style :</ModalItem>
+                  <ModalValue>
+                    {stylesList[stylesId - 1]?.style_name}
+                  </ModalValue>
+                </GroupText>
+                {shouldShowWarning && (
+                  <WarningContainer>
+                    <WarningMessage>
+                      너무 많은 옵션을 선택할 시 선택한 옵션 반영이 잘 되지 않을
+                      수 있습니다.
+                    </WarningMessage>
+                  </WarningContainer>
+                )}
+              </ModalText>
+              <SubmitButton
+                onClick={() => {
+                  handleSubmit();
+                }}
+              >
+                Submit
+              </SubmitButton>
+            </ModalContainer>
+          </>
+        )}
+
+        {/* 경고 모달 */}
+        {warningModalOpen && (
+          <WarningBox>
+            <ArrowBackIcon cursor="pointer" onClick={handleWarningCloseModal} />
+            <WarningMessage>
+              title, voice, language, tempo, genre, style은 필수 선택
+              요소입니다.
+            </WarningMessage>
+          </WarningBox>
+        )}
       </BigContainer>
-
-      {/* 모달 */}
-      {isModalOpen && (
-        <>
-          <Overlay />
-          <ModalContainer>
-            <ArrowBackIcon cursor="pointer" onClick={handleCloseModal} />
-            <ModalText>
-              <GroupText>
-                <ModalItem>Title : </ModalItem>
-                <ModalValue>{songTitle}</ModalValue>
-              </GroupText>
-              <GroupText>
-                <ModalItem>Voice :</ModalItem> <ModalValue>{voice}</ModalValue>
-              </GroupText>
-              <GroupText>
-                <ModalItem>Language :</ModalItem>
-                <ModalValue>{language}</ModalValue>
-              </GroupText>
-              <GroupText>
-                <ModalItem>Tempo :</ModalItem> <ModalValue>{tempo}</ModalValue>
-              </GroupText>
-              <GroupText>
-                <ModalItem>Genre :</ModalItem>
-                <ModalValue>{genreList[genreId - 1]?.genre_name}</ModalValue>
-              </GroupText>
-              <GroupText>
-                <InstrumentItem>Instrument :</InstrumentItem>
-                <ModalValue>{selectedInstruments.join(', ')}</ModalValue>
-              </GroupText>
-              <GroupText>
-                <ModalItem>style :</ModalItem>
-                <ModalValue>{stylesList[stylesId - 1]?.style_name}</ModalValue>
-              </GroupText>
-              {shouldShowWarning && (
-                <WarningContainer>
-                  <WarningMessage>
-                    너무 많은 옵션을 선택할 시 선택한 옵션 반영이 잘 되지 않을
-                    수 있습니다.
-                  </WarningMessage>
-                </WarningContainer>
-              )}
-            </ModalText>
-            <SubmitButton
-              onClick={() => {
-                handleSubmit();
-              }}
-            >
-              Submit
-            </SubmitButton>
-          </ModalContainer>
-        </>
-      )}
-
-      {/* 경고 모달 */}
-      {warningModalOpen && (
-        <WarningBox>
-          <ArrowBackIcon cursor="pointer" onClick={handleWarningCloseModal} />
-          <WarningMessage>
-            title, voice, language, tempo, genre, style은 필수 선택 요소입니다.
-          </WarningMessage>
-        </WarningBox>
-      )}
     </CreateContainer>
   );
 };
