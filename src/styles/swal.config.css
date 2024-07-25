@@ -1,22 +1,38 @@
+/* 팝업의 전체 배경색과 텍스트 색상 */
 .swal2-popup {
-  background-color: #111; /* 팝업 배경색 검은색 */
-  color: white; /* 텍스트 색상 흰색 */
+  background-color: #111 !important; /* 팝업 배경색 검은색 */
+  color: white !important; /* 텍스트 색상 흰색 */
 }
 
+/* 제목 텍스트 색상 */
 .swal2-title {
-  color: white; /* 제목 텍스트 색상 흰색 */
+  color: white !important; /* 제목 텍스트 색상 흰색 */
 }
 
+/* 내용 텍스트 색상 */
 .swal2-content {
-  color: white; /* 내용 텍스트 색상 흰색 */
+  color: white !important; /* 내용 텍스트 색상 흰색 */
 }
 
+/* 확인 버튼 배경색과 텍스트 색상 */
 .swal2-styled.swal2-confirm {
-  background-color: #4caf50; /* 확인 버튼 배경색 */
-  color: white; /* 확인 버튼 텍스트 색상 */
+  background-color: #4caf50 !important; /* 확인 버튼 배경색 */
+  color: white !important; /* 확인 버튼 텍스트 색상 */
 }
 
+/* 취소 버튼 배경색과 텍스트 색상 */
 .swal2-styled.swal2-cancel {
-  background-color: #f44336; /* 취소 버튼 배경색 */
-  color: white; /* 취소 버튼 텍스트 색상 */
+  background-color: #f44336 !important; /* 취소 버튼 배경색 */
+  color: white !important; /* 취소 버튼 텍스트 색상 */
+}
+
+/* 토스트 배경색과 텍스트 색상 */
+.swal2-toast {
+  background-color: #111111 !important; /* 배경색을 검정색으로 변경 */
+  color: #ffffff !important; /* 텍스트 색상을 흰색으로 변경 */
+}
+
+/* 토스트 메시지 텍스트 색상 */
+.swal2-toast .swal2-toast-message {
+  color: #ffffff !important; /* 메시지 텍스트 색상을 흰색으로 변경 */
 }

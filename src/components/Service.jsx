@@ -181,31 +181,29 @@ function Service() {
             />
             {showModal && (
               <Modal>
-                {taskStatuses.map(
-                  ({ taskId, mvSubject, message, isCompleted }) => (
-                    <TaskStatusItem key={taskId}>
-                      <div
-                        style={{
-                          display: 'flex',
-                          flexDirection: 'column',
-                          alignItems: 'flex-start',
-                        }}
-                      >
-                        <p>
-                          {mvSubject}: {message}
-                        </p>
-                      </div>
-                      {!isCompleted ? (
-                        <LoadingSpinner />
-                      ) : (
-                        <StyledCheckIcon
-                          sx={{ color: green[500] }}
-                          onClick={() => handleTaskClick(taskId)}
-                        />
-                      )}
-                    </TaskStatusItem>
-                  ),
-                )}
+                {taskStatuses.map(({ taskId, mvSubject, message, status }) => (
+                  <TaskStatusItem key={taskId}>
+                    <div
+                      style={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'flex-start',
+                      }}
+                    >
+                      <p>
+                        {mvSubject}: {message}
+                      </p>
+                    </div>
+                    {status === 200 ? (
+                      <LoadingSpinner />
+                    ) : (
+                      <StyledCheckIcon
+                        sx={{ color: green[500] }}
+                        onClick={() => handleTaskClick(taskId)}
+                      />
+                    )}
+                  </TaskStatusItem>
+                ))}
               </Modal>
             )}
           </div>
