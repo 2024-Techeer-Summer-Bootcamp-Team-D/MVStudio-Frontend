@@ -182,7 +182,7 @@ const LyricsContent = styled.div`
   font-size: 1.5rem;
   font-weight: 700;
   text-align: left;
-  padding-left: 3rem;
+  padding-left: 2.5rem;
   padding-top: 3rem;
 `;
 
@@ -190,10 +190,10 @@ const LyricsTitle = styled.div`
   position: relative;
   z-index: 2;
   color: white;
-  font-size: 1rem;
+  font-size: 0.9rem;
   font-weight: 500;
   text-align: left;
-  padding-right: 3rem;
+  padding-right: 2rem;
   padding-top: 2rem;
   line-height: 2;
 `;
