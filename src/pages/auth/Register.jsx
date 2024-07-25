@@ -371,6 +371,8 @@ const RegisterForm = () => {
               '',
               '',
               gender,
+              '',
+              '',
             ).then((response) => {
               if (response.status === 200) {
                 navigate('/main');
