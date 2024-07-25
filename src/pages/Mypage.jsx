@@ -230,7 +230,7 @@ function Mypage() {
 
   const fetchData = async (pageNum) => {
     try {
-      const response = await getList(pageNum, 9, 'created_at', username);
+      const response = await getList(pageNum, 9, 'null', username);
       const newData = response.music_videos.filter(
         (video) => !fetchedVideoIds.flat().includes(video.id),
       );
@@ -267,9 +267,12 @@ function Mypage() {
     const fetchMemberInfo = async () => {
       try {
         const response = await getMemberInfo(username);
-        setUserInfo(response.data);
+        if (response.status === 200) {
+          setUserInfo(response.data);
+        }
       } catch (error) {
         console.error('회원 조회 오류', error);
+        setUserInfo(null);
       }
     };
     fetchMemberInfo();
