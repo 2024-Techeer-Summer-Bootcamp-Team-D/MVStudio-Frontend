@@ -15,14 +15,13 @@ const BackLayout = styled.div`
   width: 90%;
   display: flex;
   flex-direction: row;
-  margin-left: 5%;
+  margin-left: 7%;
 `;
 
 const PlayBox = styled.div`
-  width: ${({ expanded }) => (expanded ? '70%' : '88vw')};
-  height: ${({ expanded }) => (expanded ? '80%' : '100vh')};
-  margin-top: ${({ expanded }) => (expanded ? '0rem' : '-3rem')};
-  margin-left: ${({ expanded }) => (expanded ? '0rem' : '8.2%')};
+  width: ${({ expanded }) => (expanded ? '71%' : '74.4vw')};
+  margin-top: ${({ expanded }) => (expanded ? '1rem' : '-4rem')};
+  margin-left: ${({ expanded }) => (expanded ? '-1rem' : 'rem')};
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -41,8 +40,10 @@ const TextBox = styled.div`
   color: #ffffff;
   display: flex;
   flex-direction: column;
-  margin-left: -33rem;
+  margin-left: -50%;
+  margin-bottom: 2%;
   width: 50%;
+  position: relative;
 `;
 
 const Title = styled.div`
@@ -60,8 +61,8 @@ const ButtonBox = styled.div`
   display: flex;
   flex-direction: row;
   gap: 1rem;
-  margin-top: -5rem;
-  margin-right: -17rem;
+  margin-top: -17%;
+  margin-right: -48%;
 `;
 
 const ShareButton = styled.button`
@@ -125,7 +126,6 @@ const VideoContainer = styled.div`
   height: 100%;
   margin-top: 3rem;
   position: relative;
-  /* Adjust the container to fit your needs */
 `;
 
 const UserInfo = styled.div`
@@ -143,13 +143,13 @@ const UserInfo2 = styled.div`
 `;
 
 const LyricsBox = styled.div`
-  width: ${({ expanded }) => (expanded ? '23%' : '0%')};
-  height: ${({ expanded }) => (expanded ? '41.6rem' : '0')};
+  width: ${({ expanded }) => (expanded ? '24%' : '0%')};
+  height: ${({ expanded }) => (expanded ? '75.5%' : '0')};
   display: flex;
   justify-content: start;
   align-items: start;
   margin-left: 2rem;
-  margin-top: 3rem;
+  margin-top: 4rem;
   position: relative;
   overflow: hidden;
   transition:
@@ -385,7 +385,7 @@ function Play() {
             <div>No video available</div>
           )}
         </VideoContainer>
-        <TextBox expanded={lyricsVisible}>
+        <TextBox>
           <Title>{playData?.data?.subject || 'Loading...'}</Title>
           <UserInfo>
             <img
@@ -407,8 +407,8 @@ function Play() {
             </UserInfo2>
           </UserInfo>
         </TextBox>
-        <ShareBox expanded={lyricsVisible}>
-          <ButtonBox expanded={lyricsVisible}>
+        <ShareBox>
+          <ButtonBox>
             <ShareButton onClick={handleCopyToClipboard}>
               <LinkIcon
                 sx={{
