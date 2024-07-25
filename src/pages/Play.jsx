@@ -1,27 +1,34 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
 import styled from 'styled-components';
-import YouTubeIcon from '@mui/icons-material/YouTube';
-import InstagramIcon from '@mui/icons-material/Instagram';
-import ShareIcon from '@mui/icons-material/Share';
-import DownloadIcon from '@mui/icons-material/Download';
-import ReactPlayer from 'react-player'; // Import ReactPlayer
-import { getPlay } from '@/api/play';
+import ReactPlayer from 'react-player';
+import Swal from 'sweetalert2';
+import LinkIcon from '@mui/icons-material/Link';
+import {
+  getPlay,
+  postHistory,
+  patchHistoryUpdate,
+  postYoutubeUpload,
+} from '@/api/play';
 
-// Styled Components
 const BackLayout = styled.div`
-  width: 100%;
+  width: 90%;
   display: flex;
   flex-direction: row;
-  margin-left: 18%;
+  margin-left: 5%;
 `;
 
 const PlayBox = styled.div`
-  width: ${({ expanded }) => (expanded ? '83%' : '70%')};
-  height: 100%;
+  width: ${({ expanded }) => (expanded ? '70%' : '88vw')};
+  height: ${({ expanded }) => (expanded ? '80%' : '100vh')};
+  margin-top: ${({ expanded }) => (expanded ? '0rem' : '-3rem')};
+  margin-left: ${({ expanded }) => (expanded ? '0rem' : '8.2%')};
   display: flex;
   flex-direction: column;
   align-items: center;
+  transition:
+    width 0.5s ease,
+    height 0.5s ease;
 `;
 
 const ShareBox = styled.div`
@@ -34,8 +41,8 @@ const TextBox = styled.div`
   color: #ffffff;
   display: flex;
   flex-direction: column;
-  width: 50%;
   margin-left: -33rem;
+  width: 50%;
 `;
 
 const Title = styled.div`
@@ -45,7 +52,7 @@ const Title = styled.div`
 `;
 
 const Subtitle = styled.div`
-  font-size: 0.8rem;
+  font-size: 1rem;
   display: flex;
 `;
 
@@ -54,72 +61,71 @@ const ButtonBox = styled.div`
   flex-direction: row;
   gap: 1rem;
   margin-top: -5rem;
-  margin-right: -16rem;
+  margin-right: -17rem;
 `;
 
-const Button = styled.button`
-  width: 2rem;
-  height: 2rem;
-  border-radius: 100%;
+const ShareButton = styled.button`
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 2.5rem;
+  background-color: #552e72;
+  border: none;
+  color: white;
+  font-size: 0.8rem;
+  cursor: pointer;
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #552e72;
-  position: relative;
-  border: none;
-  cursor: pointer;
-  &:hover span {
+  transition: background-color 0.3s ease;
+
+  &:hover {
+    background-color: #6a3d8d;
+  }
+
+  &:hover .tooltip {
     visibility: visible;
     opacity: 1;
-    bottom: -1.5rem;
+    transition: opacity 0.3s ease;
   }
 `;
 
-const Tooltip = styled.span`
-  visibility: hidden;
-  width: 6rem;
-  background-color: #000;
-  color: #fff;
-  text-align: center;
-  border-radius: 0.5rem;
-  padding: 0.5rem;
-  position: absolute;
-  z-index: 1;
-  top: 125%;
-  left: 50%;
-  margin-left: -3rem;
-  opacity: 0;
-  transition:
-    opacity 0.3s,
-    bottom 0.3s;
-  font-size: 1rem;
-  &::after {
-    content: '';
-    position: absolute;
-    bottom: 100%;
-    left: 50%;
-    margin-left: -0.5rem;
-    border-width: 0.5rem;
-    border-style: solid;
-    border-color: transparent transparent #000 transparent;
+const YoutubeButton = styled.button`
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 2.5rem;
+  background-color: #552e72;
+  border: none;
+  cursor: pointer;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.3s ease;
+
+  &:hover {
+    background-color: #6a3d8d;
+  }
+
+  &:hover .tooltip {
+    visibility: visible;
+    opacity: 1;
+    transition: opacity 0.3s ease;
   }
 `;
 
-const StyledYouTubeIcon = styled(YouTubeIcon)`
-  color: white;
-`;
-
-const StyledInstagramIcon = styled(InstagramIcon)`
-  color: white;
-`;
-
-const StyledShareIcon = styled(ShareIcon)`
-  color: white;
+const YoutubeLogo = styled.img`
+  width: 2rem;
+  height: 1.5rem;
+  content: url('https://i.ibb.co/k3SxGcT/youtubelogo.png');
 `;
 
 const VideoContainer = styled.div`
   width: 100%;
+  height: 100%;
   margin-top: 3rem;
+  position: relative;
+  /* Adjust the container to fit your needs */
 `;
 
 const UserInfo = styled.div`
@@ -132,19 +138,23 @@ const UserInfo2 = styled.div`
   display: flex;
   flex-direction: column;
   margin-left: 0.8rem;
-  margin-top: 0.7rem;
+  margin-top: 0.2rem;
+  gap: 0.5rem;
 `;
 
 const LyricsBox = styled.div`
-  width: ${({ expanded }) => (expanded ? '30%' : '0%')};
-  height: 39.95rem;
+  width: ${({ expanded }) => (expanded ? '23%' : '0%')};
+  height: ${({ expanded }) => (expanded ? '41.6rem' : '0')};
   display: flex;
   justify-content: start;
   align-items: start;
   margin-left: 2rem;
   margin-top: 3rem;
   position: relative;
-  overflow: hidden; /* Ensure content does not overflow */
+  overflow: hidden;
+  transition:
+    width 0.5s ease,
+    height 0.5s ease;
 `;
 
 const LyricsBackground = styled.div`
@@ -155,7 +165,7 @@ const LyricsBackground = styled.div`
     coverImage ? `url(${coverImage})` : 'none'};
   background-size: cover;
   background-position: center;
-  filter: blur(1.7rem);
+  filter: blur(1.7rem) brightness(50%);
   position: absolute;
   z-index: 1;
 `;
@@ -169,53 +179,89 @@ const LyricsContent = styled.div`
   box-sizing: border-box;
   overflow: hidden;
   color: white;
-  font-size: 1.2rem;
+  font-size: 1.5rem;
   font-weight: 700;
-  text-align: center;
-  padding-top: 2rem;
+  text-align: left;
+  padding-left: 3rem;
+  padding-top: 3rem;
 `;
 
 const LyricsTitle = styled.div`
   position: relative;
   z-index: 2;
   color: white;
-  font-size: 0.95rem;
+  font-size: 1rem;
   font-weight: 500;
   text-align: left;
-  padding-left: 2.5rem;
-  padding-right: 2.5rem;
+  padding-right: 3rem;
   padding-top: 2rem;
-  line-height: 1.3;
-`;
-
-const StyledDownloadIcon = styled(DownloadIcon)`
-  color: white;
+  line-height: 2;
 `;
 
 const StyledButton = styled.button`
   width: 3rem;
-  height: 2rem;
-  border-radius: 1rem;
-  background-color: #552e72;
-  position: relative;
+  height: 3rem;
+  border-radius: 3rem;
+  background-color: #552e728f;
+  position: fixed;
+  top: 6rem;
+  right: 1rem;
   border: none;
   cursor: pointer;
   transition: background-color 0.3s ease;
-  margin-right: 2rem;
   font-size: 0.5rem;
   color: #ffffff;
+  z-index: 1000;
 
   &:hover {
     background-color: #7e4394;
   }
 `;
 
-// Play Component
+const StyledWatchedSeconds = styled.div`
+  font-size: 1rem;
+`;
+
+const ViewsCount = styled.div`
+  font-size: 0.8rem;
+  color: #ffffff;
+`;
+
+const Tooltip = styled.span`
+  position: absolute;
+  bottom: -1.2rem;
+  background-color: #333;
+  color: #fff;
+  padding: 0.2rem 0.5rem;
+  border-radius: 0.3rem;
+  font-size: 0.7rem;
+  visibility: hidden;
+  transition:
+    opacity 0.3s ease,
+    visibility 0.1s ease;
+`;
+
+// Toast configuration for Swal
+const copiedToast = Swal.mixin({
+  toast: true,
+  position: 'top-end',
+  showConfirmButton: false,
+  timer: 1500,
+  timerProgressBar: true,
+  didOpen: (toast) => {
+    toast.onmouseenter = Swal.stopTimer;
+    toast.onmouseleave = Swal.resumeTimer;
+  },
+});
+
 function Play() {
   const location = useLocation();
   const [lyricsVisible, setLyricsVisible] = useState(true);
   const [playData, setPlayData] = useState(null);
   const [coverImage, setCoverImage] = useState('');
+  const [watchedSeconds, setWatchedSeconds] = useState(0);
+  const [historyId, setHistoryId] = useState(null);
+  const [lastPatchedTime, setLastPatchedTime] = useState(0);
   const playerRef = useRef(null);
 
   const getQueryParam = (param) => {
@@ -223,41 +269,123 @@ function Play() {
     return params.get(param);
   };
 
+  // Fetch the `id` from URL query params
   const id = getQueryParam('id');
 
   useEffect(() => {
-    if (id) {
-      getPlay(id)
-        .then((data) => {
+    const fetchData = async () => {
+      try {
+        if (id) {
+          const data = await getPlay(id);
           setPlayData(data);
           setCoverImage(data?.data?.cover_image || '');
-        })
-        .catch((error) => {
-          console.error('Error fetching data:', error);
-        });
-    }
+
+          const postResponse = await postHistory(id);
+          if (postResponse?.history_id) {
+            setHistoryId(postResponse.history_id);
+          }
+        }
+      } catch (error) {
+        console.error('Error fetching data or posting history:', error);
+      }
+    };
+
+    fetchData();
   }, [id]);
+
+  useEffect(() => {
+    if (!historyId) return;
+
+    const intervalId = setInterval(() => {
+      if (playerRef.current) {
+        const currentTime = Math.floor(playerRef.current.getCurrentTime());
+
+        if (currentTime - lastPatchedTime >= 5) {
+          patchHistoryUpdate(historyId, currentTime)
+            .then((response) => {
+              console.log('Patch response:', response);
+              setWatchedSeconds(currentTime);
+              setLastPatchedTime(currentTime);
+            })
+            .catch((error) => {
+              console.error('Error updating history:', error);
+            });
+        }
+      }
+    }, 500);
+
+    return () => clearInterval(intervalId);
+  }, [historyId, lastPatchedTime]);
 
   const toggleLyrics = () => {
     setLyricsVisible(!lyricsVisible);
   };
 
+  const handleCopyToClipboard = () => {
+    navigator.clipboard
+      .writeText(window.location.href)
+      .then(() => {
+        copiedToast.fire({
+          icon: 'success',
+          title: 'URL 복사 완료!',
+          text: '친구에게 공유해보세요!',
+        });
+      })
+      .catch((err) => {
+        console.error('Failed to copy URL: ', err);
+      });
+  };
+
+  const youtubeUpload = async () => {
+    try {
+      if (id) {
+        // Using `id` as `mv_id`
+        const response = await postYoutubeUpload(id);
+        console.log('YouTube upload response:', response);
+        Swal.fire({
+          icon: 'success',
+          title: 'YouTube 업로드 성공!',
+          text: 'YouTube로 업로드되었습니다.',
+        });
+      } else {
+        Swal.fire({
+          icon: 'error',
+          title: '업로드 실패',
+          text: '업로드할 ID를 찾을 수 없습니다.',
+        });
+      }
+    } catch (error) {
+      Swal.fire({
+        icon: 'error',
+        title: '업로드 실패',
+        text: 'YouTube 업로드 중 오류가 발생했습니다.',
+      });
+    }
+  };
+
   return (
-    <BackLayout>
+    <BackLayout expanded={lyricsVisible}>
       <PlayBox expanded={lyricsVisible}>
         <VideoContainer>
           {playData?.data?.mv_file ? (
-            <ReactPlayer
-              url={playData.data.mv_file} // URL of the video
-              controls={true}
-              width="100%"
-              height="100%"
-            />
+            <div className="player-container">
+              <ReactPlayer
+                ref={playerRef}
+                url={playData.data.mv_file}
+                controls={true}
+                width="100%"
+                height="100%"
+                onProgress={(state) => {
+                  const currentTime = Math.floor(state.playedSeconds);
+                  setWatchedSeconds(currentTime);
+                }}
+              />
+            </div>
           ) : (
             <div>No video available</div>
           )}
         </VideoContainer>
-        <TextBox>
+        <TextBox expanded={lyricsVisible}>
           <Title>{playData?.data?.subject || 'Loading...'}</Title>
           <UserInfo>
             <img
@@ -270,35 +398,33 @@ function Play() {
             />
             <UserInfo2>
               <Subtitle>{playData?.data?.member_name || 'Loading...'}</Subtitle>
-              <div>
+              <ViewsCount>
                 {playData?.data?.views !== null &&
                 playData?.data?.views !== undefined
                   ? `${playData.data.views.toLocaleString()} Views`
                   : '0 Views'}
-              </div>
+              </ViewsCount>
             </UserInfo2>
           </UserInfo>
         </TextBox>
-        <ShareBox>
-          <ButtonBox>
-            <Button>
-              <StyledDownloadIcon fontSize="small" />
-              <Tooltip>Download</Tooltip>
-            </Button>
-            <Button>
-              <StyledShareIcon fontSize="small" />
-              <Tooltip>Share</Tooltip>
-            </Button>
-            <Button>
-              <StyledYouTubeIcon fontSize="small" />
-              <Tooltip>YouTube</Tooltip>
-            </Button>
-            <Button>
-              <StyledInstagramIcon fontSize="small" />
-              <Tooltip>Instagram</Tooltip>
-            </Button>
+        <ShareBox expanded={lyricsVisible}>
+          <ButtonBox expanded={lyricsVisible}>
+            <ShareButton onClick={handleCopyToClipboard}>
+              <LinkIcon
+                sx={{
+                  transform: 'rotate(-45deg)',
+                }}
+              />
+              <Tooltip className="tooltip">URL</Tooltip>
+            </ShareButton>
+
+            <YoutubeButton onClick={youtubeUpload}>
+              <YoutubeLogo />
+              <Tooltip className="tooltip">Youtube</Tooltip>
+            </YoutubeButton>
           </ButtonBox>
         </ShareBox>
+        <StyledWatchedSeconds>{watchedSeconds}</StyledWatchedSeconds>
       </PlayBox>
 
       <LyricsBox expanded={lyricsVisible}>
