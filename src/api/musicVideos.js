@@ -113,6 +113,7 @@ export const getTask = async (taskId) => {
     console.error('errorcode:', error);
   }
 };
+
 export const getStyles = async () => {
   try {
     const response = await jsonAxios.get('/music-videos/styles');

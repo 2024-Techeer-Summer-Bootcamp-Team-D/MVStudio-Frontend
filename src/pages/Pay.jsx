@@ -1,6 +1,8 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled, { css } from 'styled-components';
 import Swal from 'sweetalert2';
+import { kakaoPayment } from '@/api/member';
+import { useLocation } from 'react-router-dom';
 
 const BackLayout = styled.div`
   height: 100%;
@@ -104,11 +106,6 @@ const SmallTextBox = styled.p`
   color: white;
 `;
 
-const MediumTextBox = styled.p`
-  font-size: 1.5rem;
-  color: white;
-`;
-
 const LargeTextBox = styled.p`
   font-size: 2rem;
   color: white;
@@ -182,12 +179,26 @@ const CreditImage = styled.img`
 `;
 
 const Pay = () => {
-  const [selectedBox, setSelectedBox] = useState();
+  const [selectedBox, setSelectedBox] = useState({});
   const [selectedPayment, setSelectedPayment] = useState();
+  const location = useLocation();
+  const status = new URLSearchParams(location.search).get('status');
 
-  const handleClick = (index) => {
-    setSelectedBox(index);
-  };
+  useEffect(() => {
+    if (status === 'success') {
+      Swal.fire({
+        icon: 'success',
+        title: '결제가 완료되었습니다.',
+        text: 'Credit이 충전되었습니다.',
+      });
+    } else if (status === 'fail') {
+      Swal.fire({
+        icon: 'error',
+        title: '결제에 실패하였습니다.',
+        text: '다시 시도해주세요.',
+      });
+    }
+  }, [status]);
 
   const handlePaymentButtonClick = (method) => {
     if (method === 'KakaoPay') {
@@ -198,39 +209,6 @@ const Pay = () => {
         title: 'Oops...',
         text: `죄송합니다. 지금은 ${method}로 결제할 수 없습니다.`,
       });
-    }
-  };
-
-  const handlePayment = () => {
-    if (!selectedPayment) {
-      alert('Please select a payment method.');
-      return;
-    }
-
-    let credits = null;
-    switch (selectedBox) {
-      case 0:
-        credits = 20;
-        break;
-      case 1:
-        credits = 50;
-        break;
-      case 2:
-        credits = 100;
-        break;
-      case 3:
-        credits = 200;
-        break;
-      default:
-        break;
-    }
-
-    if (credits !== null) {
-      alert(
-        `Payment for ${credits} Credits selected using ${selectedPayment}.`,
-      );
-    } else {
-      alert('Please select the number of credits to purchase.');
     }
   };
 
@@ -265,8 +243,14 @@ const Pay = () => {
           ].map((item, index) => (
             <SelectBox
               key={index}
-              onClick={() => handleClick(index)}
-              selected={selectedBox === index}
+              onClick={() =>
+                setSelectedBox({
+                  index: index,
+                  credits: item.credits,
+                  price: item.price,
+                })
+              }
+              selected={selectedBox.index === index}
             >
               <TopBox>
                 <div
@@ -336,9 +320,10 @@ const Pay = () => {
             Credit의 유효기간은 1시간 입니다. <br />
             현재 결제는{' '}
             <span style={{ fontWeight: '900', color: '#d68787' }}>
-              테스트결제
+              테스트 결제
             </span>
-            로 실제로 결제가 진행되지 않습니다. <br />
+            로 진행되며, 실제 결제가 이루어지지 않고 Credit도 충전되지 않습니다.{' '}
+            <br />
             실제로 Credit 충전을 원하시면 jinoo0306@naver.com로 문의 주세요.
             <br />
           </Caution>
@@ -348,7 +333,20 @@ const Pay = () => {
           <PaymentButton
             bgColor="green"
             text="white"
-            onClick={handlePayment}
+            onClick={() => {
+              if (!selectedPayment) {
+                console.log(selectedBox);
+                alert('Please select a payment method.');
+                return;
+              }
+              kakaoPayment(selectedBox.credits, selectedBox.price).then(
+                (res) => {
+                  if (res.status === 201) {
+                    window.location.href = res.next_redirect_pc_url;
+                  }
+                },
+              );
+            }}
             style={{ width: '48rem' }}
           >
             동의하고 결제하기
