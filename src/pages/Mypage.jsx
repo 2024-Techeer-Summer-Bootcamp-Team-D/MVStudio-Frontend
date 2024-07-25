@@ -254,13 +254,15 @@ function Mypage() {
       console.error('뮤비 목록 조회 오류', error);
     }
   };
+  console.log('myVideos: ', myVideos);
 
   // 컴포넌트가 마운트될 때 초기 데이터 가져오기
   useEffect(() => {
+    setMyVideos([]);
     fetchData(1);
     fetchRecent(1);
     fetchUsername();
-  }, []);
+  }, [username]);
 
   // 멤버 정보 가져오기
   useEffect(() => {
