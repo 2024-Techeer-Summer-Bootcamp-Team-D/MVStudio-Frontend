@@ -1,20 +1,20 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import App from '@/App';
-import Auth from './auth/Auth';
-import Create from './Create';
-import EditProfile from './user/EditProfile';
-import LyricsSelect from './LyricsSelect';
-import Main from '@/pages/Main';
-import Mypage from './user/Mypage';
-import OnBoardingPage from './OnBoardingPage';
-import Pay from './Pay';
-import Play from './Play';
-import Register from './auth/Register';
-import SaveTokens from './auth/SaveTokens';
-import Search from './Search';
-import ViewChart from './ViewChart';
-import YtChannelRegister from './user/YtChannelRegister';
+import App from './App';
+import Auth from './pages/auth/Auth';
+import Create from './pages/create/Create';
+import EditProfile from './pages/user/EditProfile';
+import LyricsSelect from './pages/create/LyricsSelect';
+import Main from './pages/Main';
+import Mypage from './pages/user/Mypage';
+import OnBoardingPage from './pages/OnBoardingPage';
+import Pay from './pages/Pay';
+import Play from './pages/Play';
+import Register from './pages/auth/Register';
+import SaveTokens from './pages/auth/SaveTokens';
+import Search from './pages/Search';
+import ViewChart from './pages/ViewChart';
+import YtChannelRegister from './pages/user/YtChannelRegister';
 
 function AppRouter() {
   return (

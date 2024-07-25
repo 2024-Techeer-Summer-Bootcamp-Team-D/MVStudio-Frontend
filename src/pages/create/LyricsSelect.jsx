@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import styled, { css } from 'styled-components';
 import { useNavigate, useLocation } from 'react-router-dom';
 import CircularProgress from '@mui/material/CircularProgress';
-import { postLyrics, postVideos } from '../api/musicVideos';
+import { postLyrics, postVideos } from '@/api/musicVideos';
 import Swal from 'sweetalert2';
 
 const BigContainer = styled.div`
@@ -119,8 +119,6 @@ const saveTaskIdToLocalStorage = (taskId) => {
   existingTaskIds.push(taskId);
   localStorage.setItem('taskId', JSON.stringify(existingTaskIds));
 };
-
-
 
 function LyricsSelect() {
   const [lyricsList, setLyricsList] = useState([]);

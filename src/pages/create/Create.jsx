@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import styled, { css, keyframes } from 'styled-components';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import { getGenre, getInstruments, getStyles } from '../api/musicVideos';
+import { getGenre, getInstruments, getStyles } from '@/api/musicVideos';
 import { useNavigate } from 'react-router-dom';
 
 const jellyAnimation = keyframes`
