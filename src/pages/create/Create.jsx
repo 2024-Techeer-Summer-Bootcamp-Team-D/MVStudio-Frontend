@@ -35,39 +35,52 @@ const JellyButton = styled.button`
   }
 `;
 
-const CreateContainer = styled.div`
+const BackLayout = styled.div`
   width: 100%;
+  background-image: url(https://i.ibb.co/pZL9ccY/image.png);
+  background-attachment: fixed;
+  background-size: cover;
   height: calc(100vh - 5rem);
   min-height: calc(100vh - 5rem);
   background-color: #05000a;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   justify-content: center;
   align-items: center;
 `;
 
-const BigContainer = styled.div`
+const Blur = styled.div`
+  position: absolute;
   width: 100%;
-  gap: 3.4rem;
+  height: 100%;
+  background-color: rgba(5, 0, 10, 0.95);
+`;
+
+const NoBlur = styled.div`
+  position: relative;
+  width: 100%;
+  height: 100%;
   display: flex;
   flex-direction: row;
-  padding: 1rem;
+  justify-content: center;
+  align-items: center;
+  gap: 2rem;
 `;
 
 const LeftContainer = styled.div`
   display: flex;
   flex-direction: column;
-  height: 65vh;
   align-items: center;
   justify-content: center;
+  gap: 2rem;
 `;
 
 const RightContainer = styled.div`
-  height: 60vh;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  gap: 2rem;
 `;
 
 const TitleStyle1 = styled.p`
@@ -75,7 +88,7 @@ const TitleStyle1 = styled.p`
   font-size: 1.4rem;
   color: #ffffff;
   margin-bottom: 1rem;
-  margin-top: 0.5rem;
+  margin-top: 1.5rem;
   font-weight: 700;
 `;
 
@@ -83,7 +96,8 @@ const TitleStyle2 = styled.p`
   font-family: 'SUIT', sans-serif;
   font-size: 1.4rem;
   color: #ffffff;
-  margin-top: 0.5rem;
+  margin-top: 1.5rem;
+
   font-weight: 700;
 `;
 const Button = styled.button`
@@ -533,8 +547,9 @@ const Create = () => {
   const navigate = useNavigate();
 
   return (
-    <CreateContainer>
-      <BigContainer>
+    <BackLayout>
+      <Blur />
+      <NoBlur>
         {/* 좌측 컨테이너 */}
         <LeftContainer>
           {/* ToThePadding 컴포넌트 */}
@@ -793,8 +808,8 @@ const Create = () => {
             </WarningMessage>
           </WarningBox>
         )}
-      </BigContainer>
-    </CreateContainer>
+      </NoBlur>
+    </BackLayout>
   );
 };
 
