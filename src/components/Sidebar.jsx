@@ -30,6 +30,7 @@ const BackLayout = styled.div`
 
 const BackLayoutSpace = styled.div`
   width: 15rem;
+  min-width: 15rem;
   height: 100%;
   display: flex;
 `;
