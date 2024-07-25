@@ -9,7 +9,6 @@ const CreateContainer = styled.div`
   height: 100%;
   display: flex;
   flex-direction: column;
-  overflow: hidden;
 `;
 
 const TitleStyle = styled.p`
@@ -391,6 +390,7 @@ function MainPageTest() {
                         <ViewNumber>{cover.views}</ViewNumber>
                       </IconBox>
                     </FontMargin>
+                    <SmallText>{cover.member_name}</SmallText>
                   </TrendImageOverlay>
                 </TrendRoundCover>
               </TrendCoverBox>
@@ -493,3 +493,4 @@ function MainPageTest() {
 }
 
 export default MainPageTest;
+
