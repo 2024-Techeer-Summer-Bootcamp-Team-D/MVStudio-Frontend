@@ -1,10 +1,13 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ignorePath from '../utils/igonerePath';
 import styled, { keyframes } from 'styled-components';
+import { useUser } from '@/libs/stores/userStore';
 
 // Material-UI
 import SearchIcon from '@mui/icons-material/Search';
+import AddIcon from '@mui/icons-material/Add';
+import { IconButton } from '@mui/material';
 
 const BackLayout = styled.div`
   width: 100%;
@@ -59,6 +62,16 @@ const Logo = styled.div`
   }
 `;
 
+const Profile = styled.div`
+  position: absolute;
+  right: 2rem;
+  display: flex;
+  width: 30%;
+  height: 100%;
+  justify-content: flex-end;
+  align-items: center;
+`;
+
 const LogoImage = styled.img`
   height: 1.5rem;
   margin-right: 0.5rem;
@@ -81,6 +94,21 @@ const Icon = styled(SearchIcon)`
 
 function Navbar() {
   const navigate = useNavigate();
+  const username = useUser((state) => state.username);
+  const setUsername = useUser((state) => state.setUsername);
+  const credits = useUser((state) => state.credits);
+  const fetchUser = useUser((state) => state.fetchUser);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      if (!username) {
+        await fetchUser();
+      }
+      setUsername(username);
+    };
+
+    fetchData();
+  }, [credits]);
 
   const handleSearch = (event) => {
     if (event.key === 'Enter') {
@@ -112,6 +140,27 @@ function Navbar() {
             onKeyDown={handleSearch} // 검색어 입력 시 이벤트 핸들러 추가
           />
         </Searchbar>
+        <Profile>
+          <img
+            src="https://i.ibb.co/bLBN9sb/credit.png"
+            alt="credit"
+            style={{
+              height: '1.25rem',
+              marginRight: '0.5rem',
+              marginBottom: '0.2rem',
+            }}
+          />
+          <span style={{ color: 'white', fontSize: '1.25rem' }}>{credits}</span>
+          <IconButton>
+            <AddIcon
+              sx={{
+                color: 'white',
+                fontSize: '1rem',
+              }}
+              onClick={() => navigate('/payment')}
+            />
+          </IconButton>
+        </Profile>
       </BackLayout>
     </>
   );

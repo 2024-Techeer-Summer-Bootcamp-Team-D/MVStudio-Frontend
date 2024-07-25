@@ -137,7 +137,7 @@ const MenuContainer = styled.div`
 function Sidebar() {
   const navigate = useNavigate();
   const username = useUser((state) => state.username);
-  const fetchUsername = useUser((state) => state.fetchUsername);
+  const fetchUser = useUser((state) => state.fetchUser);
 
   if (ignorePath().includes(location.pathname)) {
     return null;
@@ -163,7 +163,7 @@ function Sidebar() {
           {/* My Studio 버튼 */}
           <MenuItem
             onClick={async () => {
-              await fetchUsername();
+              await fetchUser();
               navigate(`/users/${username}`);
             }}
           >
@@ -174,7 +174,7 @@ function Sidebar() {
           {/* Chart 버튼 */}
           <MenuItem
             onClick={async () => {
-              await fetchUsername();
+              await fetchUser();
               navigate(`/charts/${username}`);
             }}
           >

@@ -72,11 +72,9 @@ function Service() {
   const gifRef = useRef(null);
   const navigate = useNavigate();
   const username = useUser((state) => state.username);
-  const fetchUsername = useUser((state) => state.fetchUsername);
   console.log('User:', username);
 
   useEffect(() => {
-    fetchUsername();
     const intervalId = setInterval(async () => {
       const taskIds = JSON.parse(localStorage.getItem('taskId')) || [];
       const mvSubjects = JSON.parse(localStorage.getItem('mvSubject')) || [];
