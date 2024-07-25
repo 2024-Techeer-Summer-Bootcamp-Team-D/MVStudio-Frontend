@@ -1,0 +1,44 @@
+/* player-styles.css */
+.player-container {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  background-color: #000;
+  border: 2px solid #e0b0ff;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+/* 기본 플레이어 컨트롤 숨기기 */
+.react-player .play-button,
+.react-player .pause-button,
+.react-player .volume-button,
+.react-player .progress-bar {
+  display: none !important;
+}
+
+/* 사용자 정의 컨트롤 스타일링 */
+.custom-control {
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+  display: flex;
+  gap: 10px;
+}
+
+.custom-button {
+  width: 40px;
+  height: 40px;
+  border: none;
+  border-radius: 50%;
+  background-color: #e0b0ff;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.custom-button:hover {
+  background-color: #d07cfc;
+}
