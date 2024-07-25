@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 // import { useParams } from 'react-router-dom';
-import { getMemberInfo, getCountries } from '../api/member';
+import { getMemberInfo, getCountries, patchMemberInfo } from '@/api/member';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
@@ -11,7 +11,6 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import dayjs from 'dayjs';
 import CameraAltIcon from '@mui/icons-material/CameraAlt';
-import { patchMemberInfo } from '../api/member';
 import { useUser } from '@/libs/stores/userStore';
 import Swal from 'sweetalert2';
 import { useNavigate } from 'react-router-dom';
@@ -166,6 +165,8 @@ function EditProfile() {
         userInfo.profile_image_file,
         userInfo.email,
         userInfo.sex,
+        '',
+        '',
       );
       console.log('Successfully patched member info:', response);
     } catch (error) {

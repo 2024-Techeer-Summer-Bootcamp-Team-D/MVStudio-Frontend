@@ -73,6 +73,8 @@ export const patchMemberInfo = async (
   profile_image,
   email,
   gender,
+  youtubeUrl,
+  instagramUrl,
 ) => {
   const formData = new FormData();
 
@@ -97,6 +99,12 @@ export const patchMemberInfo = async (
   }
   if (profile_image) {
     formData.append('profile_image', profile_image);
+  }
+  if (youtubeUrl) {
+    formData.append('youtube_account', youtubeUrl);
+  }
+  if (instagramUrl) {
+    formData.append('instagram_account', instagramUrl);
   }
 
   try {

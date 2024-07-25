@@ -1,17 +1,19 @@
-/* eslint-disable react/prop-types */
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
+import { useParams, useNavigate } from 'react-router-dom';
+import { getList, getHistory } from '@/api/musicVideos';
+import { getMemberInfo, patchMemberInfo } from '@/api/member';
+import { useUser } from '@/libs/stores/userStore';
+
+// Components
+import BasicTabs from '@/components/BasicTaps';
+import InfiniteScroll from 'react-infinite-scroll-component';
+import Swal from 'sweetalert2';
+
+// Material UI
 import ChatOutlinedIcon from '@mui/icons-material/ChatOutlined';
 import YouTubeIcon from '@mui/icons-material/YouTube';
 import InstagramIcon from '@mui/icons-material/Instagram';
-// import VisibilityIcon from '@mui/icons-material/Visibility';
-import { getList, getHistory } from '../api/musicVideos';
-import { getMemberInfo } from '../api/member';
-import { useParams } from 'react-router-dom';
-import { useNavigate } from 'react-router-dom';
-import BasicTabs from '../components/BasicTaps';
-import InfiniteScroll from 'react-infinite-scroll-component';
-import { useUser } from '@/libs/stores/userStore';
 import EditIcon from '@mui/icons-material/Edit';
 
 const BigContainer = styled.div`
@@ -141,7 +143,7 @@ const OverlayText = styled.p`
   gap: 0.5rem;
 `;
 
-const AlbumCover = ({ data, onClick }) => (
+const AlbumCover = (data, onClick) => (
   <AlbumCoverContainer onClick={onClick}>
     <AlbumCoverImage src={data.cover_image} alt={data.subject} />
     <Overlay className="overlay">
@@ -263,18 +265,18 @@ function Mypage() {
   }, [username]);
 
   // 멤버 정보 가져오기
-  useEffect(() => {
-    const fetchMemberInfo = async () => {
-      try {
-        const response = await getMemberInfo(username);
-        if (response.status === 200) {
-          setUserInfo(response.data);
-        }
-      } catch (error) {
-        console.error('회원 조회 오류', error);
-        setUserInfo(null);
+  const fetchMemberInfo = async () => {
+    try {
+      const response = await getMemberInfo(username);
+      if (response.status === 200) {
+        setUserInfo(response.data);
       }
-    };
+    } catch (error) {
+      console.error('회원 조회 오류', error);
+      setUserInfo(null);
+    }
+  };
+  useEffect(() => {
     fetchMemberInfo();
   }, [username]);
 
@@ -313,15 +315,7 @@ function Mypage() {
 
   // 프로필 수정 페이지로 이동
   const navigateToEdit = () => {
-    navigate(`/edit`);
-  };
-
-  const handleIconClick = (url) => {
-    if (url === null) {
-      return;
-    } else {
-      window.open(url, '_blank');
-    }
+    navigate('/edit');
   };
 
   const isOwner = myUserName === username;
@@ -358,11 +352,105 @@ function Mypage() {
           <ExtraFunction>
             <YouTubeIconEdit
               fontSize="medium"
-              onClick={() => handleIconClick(userInfo?.youtube_account)}
+              onClick={() => {
+                if (userInfo.youtube_account) {
+                  window.open(userInfo.youtube_account, '_blank');
+                } else if (isOwner) {
+                  // 유튜브 계정이 없을 때 등록 할거냐고 물어봄
+                  Swal.fire({
+                    title: '유튜브 계정 등록',
+                    text: '유튜브 계정 등록 후 변경할 수 없습니다. 계속하시겠습니까?',
+                    icon: 'info',
+                    showCancelButton: true,
+                    confirmButtonText: '등록',
+                    cancelButtonText: '취소',
+                  }).then((result) => {
+                    if (result.isConfirmed) {
+                      window.location.href = `${import.meta.env.VITE_REACT_APP_BASE_URL}/api/v1/oauth/youtube-channel`;
+                    }
+                  });
+                } else {
+                  Swal.fire({
+                    title: '유튜브 계정 없음',
+                    text: '사용자가 유튜브 계정을 등록하지 않았습니다.',
+                    icon: 'error',
+                    confirmButtonText: '확인',
+                  });
+                }
+              }}
             />
             <InstagramIconEdit
               fontSize="medium"
-              onClick={() => handleIconClick(userInfo?.instagram_account)}
+              onClick={() => {
+                if (userInfo.instagram_account) {
+                  window.open(
+                    `https://www.instagra.com/${userInfo.instagram_account}`,
+                    '_blank',
+                  );
+                } else if (isOwner) {
+                  // 인스타그램 계정이 없을 때 등록 할거냐고 물어봄
+                  Swal.fire({
+                    title: '인스타그램 계정 등록',
+                    text: '인스타그램 계정 등록 후 변경할 수 없습니다. 계속하시겠습니까?',
+                    icon: 'info',
+                    showCancelButton: true,
+                    confirmButtonText: '등록',
+                    cancelButtonText: '취소',
+                  }).then((result) => {
+                    if (result.isConfirmed) {
+                      const registerInstagram = async () => {
+                        const { value: id } = await Swal.fire({
+                          title: '인스타그램 계정 등록',
+                          input: 'text',
+                          inputLabel: '인스타그램 ID를 입력하세요',
+                          inputPlaceholder: 'Enter the Instagram ID',
+                        });
+                        if (id) {
+                          Swal.fire({
+                            title: '인스타그램 계정 등록',
+                            text: `${id}로 인스타그램 계정을 등록하시겠습니까?`,
+                            icon: 'info',
+                            showCancelButton: true,
+                            confirmButtonText: '등록',
+                            cancelButtonText: '취소',
+                          }).then((result) => {
+                            if (result.isConfirmed) {
+                              patchMemberInfo(
+                                username,
+                                null,
+                                null,
+                                null,
+                                null,
+                                null,
+                                null,
+                                null,
+                                null,
+                                id,
+                              ).then(() => {
+                                fetchMemberInfo();
+                                Swal.fire({
+                                  title: '인스타그램 계정 등록 완료',
+                                  text: '인스타그램 계정이 등록되었습니다.',
+                                  icon: 'success',
+                                  confirmButtonText: '확인',
+                                });
+                              });
+                            }
+                          });
+                        }
+                      };
+                      registerInstagram();
+                    }
+                  });
+                } else {
+                  Swal.fire({
+                    title: '인스타그램 계정 없음',
+                    text: '사용자가 인스타그램 계정을 등록하지 않았습니다.',
+                    icon: 'error',
+                    confirmButtonText: '확인',
+                  });
+                }
+              }}
             />
           </ExtraFunction>
         </InfoContainer>
