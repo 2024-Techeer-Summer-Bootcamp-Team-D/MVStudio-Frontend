@@ -39,11 +39,31 @@ const CreateContainer = styled.div`
   width: 100%;
   height: calc(100vh - 5rem);
   min-height: calc(100vh - 5rem);
-  background-color: #05000a;
+  /* background-image: url('https://i.ibb.co/BfrvSHb/Voice.gif'); */
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  position: relative;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.3);
+    /* backdrop-filter: blur(5px); */
+  }
+
+  > * {
+    position: relative;
+    z-index: 1;
+  }
 `;
 
 const BigContainer = styled.div`
@@ -52,11 +72,13 @@ const BigContainer = styled.div`
   display: flex;
   flex-direction: row;
   padding: 1rem;
+  margin-right: 5%;
 `;
 
 const LeftContainer = styled.div`
   display: flex;
   flex-direction: column;
+  width: 70%;
   height: 65vh;
   align-items: center;
   justify-content: center;
