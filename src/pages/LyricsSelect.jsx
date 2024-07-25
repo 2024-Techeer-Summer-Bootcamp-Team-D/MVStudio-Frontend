@@ -120,6 +120,8 @@ const saveTaskIdToLocalStorage = (taskId) => {
   localStorage.setItem('taskId', JSON.stringify(existingTaskIds));
 };
 
+
+
 function LyricsSelect() {
   const [lyricsList, setLyricsList] = useState([]);
   const [lyricsIndex, setLyricsIndex] = useState();

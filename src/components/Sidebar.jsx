@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import ignorePath from '../utils/igonerePath';
@@ -14,6 +14,8 @@ import WhatshotIcon from '@mui/icons-material/Whatshot';
 import EqualizerIcon from '@mui/icons-material/Equalizer';
 import MovieIcon from '@mui/icons-material/Movie';
 import LogoutIcon from '@mui/icons-material/Logout';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 
 const BackLayout = styled.div`
   display: flex;
@@ -24,11 +26,10 @@ const BackLayout = styled.div`
   border-right: 1px solid #1e003b;
   padding: 1rem;
   justify-content: space-between;
-  background-color: #05000a;
 `;
 
 const BackLayoutSpace = styled.div`
-  min-width: 15rem;
+  width: 15rem;
   height: 100%;
   display: flex;
 `;
@@ -40,6 +41,8 @@ const MenuItem = styled.button`
   align-items: center;
   color: white;
   cursor: pointer;
+  background: none;
+  border: none;
   &:hover {
     background-color: #333333;
     border-radius: 0.5rem;
@@ -48,85 +51,89 @@ const MenuItem = styled.button`
 
 const MenuTitle = styled.div`
   margin-left: 0.625rem;
+  flex-grow: 1;
+  text-align: left;
 `;
 
-const TrendingText = styled.p`
-  margin-left: 0.625rem;
-  padding-right: 2.5rem;
-  font-weight: 500;
-  font-size: 1.2rem;
+const TrendingWrapper = styled.div`
+  position: relative;
+  flex-grow: inherit;
 `;
 
 const TrendingContainer = styled.div`
-  padding: 1.25rem;
+  border-radius: 0.5rem;
+  width: 100%;
+  height: 100%;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
-  transition:
-    max-height 0.5s ease,
-    opacity 0.5s ease;
+  gap: 1rem;
+  margin-top: 0.5rem;
+  transition: all 0.7s ease;
+  max-height: ${({ isOpen }) => (isOpen ? '300px' : '0')};
+  opacity: ${({ isOpen }) => (isOpen ? '1' : '0')};
+  visibility: ${({ isOpen }) => (isOpen ? 'visible' : 'hidden')};
+`;
+
+const ThumbnailContainer = styled.div`
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.5rem;
+  border-radius: 0.3rem;
+  transition: all 0.2s ease;
+  border-radius: 1rem;
+  background-image: ${({ backgroundImage }) => `url(${backgroundImage})`};
+  background-size: cover;
+  background-position: center;
+  position: relative;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(5px);
+    transition: background-color 0.2s ease;
+    border-radius: 1rem;
+  }
+
+  &:hover::before {
+    background-color: rgba(0, 0, 0, 0.7);
+  }
+
+  > * {
+    position: relative;
+    z-index: 1;
+  }
 `;
 
 const Thumbnail = styled.img`
-  width: 2.5rem;
-  height: 2.5rem;
+  width: 3rem;
+  height: 3rem;
   border-radius: 50%;
+  object-fit: cover;
 `;
 
 const InfoContainer = styled.div`
   display: flex;
   flex-direction: column;
-`;
-
-const ThumbnailContainer = styled.div`
-  display: flex;
-  align-items: column;
-  gap: 1rem; /* Adjust spacing between image and text */
+  gap: 0.25rem;
 `;
 
 const ImageTitle = styled.div`
   font-weight: bold;
-  font-size: 1.1rem;
+  font-size: 0.9rem;
+  color: #ffffff;
 `;
 
 const Uploader = styled.div`
-  font-size: 0.7rem;
+  font-size: 0.8rem;
   color: #a4a4a4;
-`;
-
-const EditMovieIcon = styled(MovieIcon)`
-  margin-right: 0.6rem;
-`;
-
-const EditEqualizerIcon = styled(EqualizerIcon)`
-  margin-right: 0.6rem;
-`;
-
-const LogoutContainer = styled.div`
-  display: flex;
-  width: 100%;
-  align-items: end;
-  justify-content: start;
-  margin-left: 1rem;
-  margin-right: 1rem;
-  padding-left: 0.25rem;
-  color: white;
-  background-color: #a2a2a2;
-`;
-
-const LogoutButton = styled.button`
-  display: flex;
-  height: 3rem;
-  align-items: center;
-  margin-left: 1rem;
-  margin-right: 1rem;
-  padding-left: 0.25rem;
-  color: white;
-  cursor: pointer;
-  &:hover {
-    background-color: #333333;
-    border-radius: 0.5rem;
-  }
 `;
 
 const MenuContainer = styled.div`
@@ -135,9 +142,11 @@ const MenuContainer = styled.div`
 `;
 
 function Sidebar() {
+  const [isOpen, setIsOpen] = useState(false);
+  const [trendingItems, setTrendingItems] = useState([]);
   const navigate = useNavigate();
   const username = useUser((state) => state.username);
-  const fetchUser = useUser((state) => state.fetchUser);
+  console.log('username :', username);
 
   if (ignorePath().includes(location.pathname)) {
     return null;
@@ -148,22 +157,18 @@ function Sidebar() {
       <BackLayoutSpace />
       <BackLayout>
         <MenuContainer>
-          {/* Home 버튼 */}
           <MenuItem onClick={() => navigate('/main')}>
             <HomeIcon fontSize="small" />
             <MenuTitle>Home</MenuTitle>
           </MenuItem>
 
-          {/* Create 버튼 */}
           <MenuItem onClick={() => navigate('/create')}>
             <AddIcon fontSize="small" />
             <MenuTitle>Create</MenuTitle>
           </MenuItem>
 
-          {/* My Studio 버튼 */}
           <MenuItem
             onClick={async () => {
-              await fetchUser();
               navigate(`/users/${username}`);
             }}
           >
@@ -174,72 +179,35 @@ function Sidebar() {
           {/* Chart 버튼 */}
           <MenuItem
             onClick={async () => {
-              await fetchUser();
-              navigate(`/charts/${username}`);
+              navigate('/chart');
             }}
           >
             <EqualizerIcon fontSize="small" />
             <MenuTitle>Statics</MenuTitle>
           </MenuItem>
 
-          {/* Trending 리스트 */}
-          <MenuItem>
-            <WhatshotIcon fontSize="small" />
-            <MenuTitle>Trending</MenuTitle>
-          </MenuItem>
+          <TrendingWrapper>
+            <MenuItem onClick={() => setIsOpen(!isOpen)}>
+              <WhatshotIcon fontSize="small" />
+              <MenuTitle>Trending</MenuTitle>
+              {isOpen ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+            </MenuItem>
+            <TrendingContainer isOpen={isOpen}>
+              {trendingItems.map((item, index) => (
+                <ThumbnailContainer
+                  key={index}
+                  backgroundImage={item.cover_image}
+                >
+                  <Thumbnail src={item.cover_image} alt={item.subject} />
+                  <InfoContainer>
+                    <ImageTitle>{item.subject}</ImageTitle>
+                    <Uploader>{item.member_name}</Uploader>
+                  </InfoContainer>
+                </ThumbnailContainer>
+              ))}
+            </TrendingContainer>
+          </TrendingWrapper>
         </MenuContainer>
-        {/* Trending 리스트 확장 */}
-        <TrendingContainer>
-          {/* <ThumbnailContainer>
-          <Thumbnail src="https://i.ibb.co/Jn12dqF/unnamed.jpg" alt="alt" />
-          <InfoContainer>
-            <ImageTitle>Title</ImageTitle>
-            <Uploader>Uploader</Uploader>
-          </InfoContainer>
-        </ThumbnailContainer>
-        <ThumbnailContainer>
-          <Thumbnail src="https://i.ibb.co/Jn12dqF/unnamed.jpg" alt="alt" />
-          <InfoContainer>
-            <ImageTitle>Title</ImageTitle>
-            <Uploader>Uploader</Uploader>
-          </InfoContainer>
-        </ThumbnailContainer>
-        <ThumbnailContainer>
-          <Thumbnail src="https://i.ibb.co/Jn12dqF/unnamed.jpg" alt="alt" />
-          <InfoContainer>
-            <ImageTitle>Title</ImageTitle>
-            <Uploader>Uploader</Uploader>
-          </InfoContainer>
-        </ThumbnailContainer>
-        <ThumbnailContainer>
-          <Thumbnail src="https://i.ibb.co/Jn12dqF/unnamed.jpg" alt="alt" />
-          <InfoContainer>
-            <ImageTitle>Title</ImageTitle>
-            <Uploader>Uploader</Uploader>
-          </InfoContainer>
-        </ThumbnailContainer>
-        <ThumbnailContainer>
-          <Thumbnail src="https://i.ibb.co/Jn12dqF/unnamed.jpg" alt="alt" />
-          <InfoContainer>
-            <ImageTitle>Title</ImageTitle>
-            <Uploader>Uploader</Uploader>
-          </InfoContainer>
-        </ThumbnailContainer>
-        <ThumbnailContainer>
-          <Thumbnail src="https://i.ibb.co/Jn12dqF/unnamed.jpg" alt="alt" />
-          <InfoContainer>
-            <ImageTitle>Title</ImageTitle>
-            <Uploader>Uploader</Uploader>
-          </InfoContainer>
-        </ThumbnailContainer>
-        <ThumbnailContainer>
-          <Thumbnail src="https://i.ibb.co/Jn12dqF/unnamed.jpg" alt="alt" />
-          <InfoContainer>
-            <ImageTitle>Title</ImageTitle>
-            <Uploader>Uploader</Uploader>
-          </InfoContainer>
-        </ThumbnailContainer> */}
-        </TrendingContainer>
 
         <MenuItem
           onClick={() => {
