@@ -1,10 +1,13 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ignorePath from '../utils/igonerePath';
 import styled, { keyframes } from 'styled-components';
+import { useUser } from '@/libs/stores/userStore';
 
 // Material-UI
 import SearchIcon from '@mui/icons-material/Search';
+import AddIcon from '@mui/icons-material/Add';
+import { IconButton } from '@mui/material';
 
 const BackLayout = styled.div`
   width: 100%;
@@ -13,7 +16,7 @@ const BackLayout = styled.div`
   display: flex;
   justify-content: center;
   align-items: center; /* 수직 중앙 정렬 */
-  border-bottom: 1px solid #380272;
+  border-bottom: 1px solid #1e003b;
   z-index: 3;
   position: fixed;
 `;
@@ -31,6 +34,7 @@ const Searchbar = styled.div`
   display: flex;
   align-items: center; /* 수직 중앙 정렬 */
   padding-left: 0.5rem; /* 패딩 추가하여 오른쪽 정렬 시 입력상자와 가장자리 간격 확보 */
+  margin-left: 12rem;
 `;
 
 const shakeAnimation = keyframes`
@@ -59,6 +63,16 @@ const Logo = styled.div`
   }
 `;
 
+const Profile = styled.div`
+  position: absolute;
+  right: 2rem;
+  display: flex;
+  width: 30%;
+  height: 100%;
+  justify-content: flex-end;
+  align-items: center;
+`;
+
 const LogoImage = styled.img`
   height: 1.5rem;
   margin-right: 0.5rem;
@@ -81,6 +95,19 @@ const Icon = styled(SearchIcon)`
 
 function Navbar() {
   const navigate = useNavigate();
+  const username = useUser((state) => state.username);
+  const credits = useUser((state) => state.credits);
+  const fetchUser = useUser((state) => state.fetchUser);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      if (!username) {
+        await fetchUser();
+      }
+    };
+
+    fetchData();
+  }, [credits]);
 
   const handleSearch = (event) => {
     if (event.key === 'Enter') {
@@ -112,6 +139,27 @@ function Navbar() {
             onKeyDown={handleSearch} // 검색어 입력 시 이벤트 핸들러 추가
           />
         </Searchbar>
+        <Profile>
+          <img
+            src="https://i.ibb.co/bLBN9sb/credit.png"
+            alt="credit"
+            style={{
+              height: '1.25rem',
+              marginRight: '0.5rem',
+              marginBottom: '0.2rem',
+            }}
+          />
+          <span style={{ color: 'white', fontSize: '1.25rem' }}>{credits}</span>
+          <IconButton>
+            <AddIcon
+              sx={{
+                color: 'white',
+                fontSize: '1rem',
+              }}
+              onClick={() => navigate('/payment')}
+            />
+          </IconButton>
+        </Profile>
       </BackLayout>
     </>
   );

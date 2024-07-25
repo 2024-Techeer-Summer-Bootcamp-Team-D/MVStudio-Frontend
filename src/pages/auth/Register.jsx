@@ -230,8 +230,6 @@ const RegisterForm = () => {
   const [birthday, setBirthday] = useState(dayjs());
 
   const username = useUser((state) => state.username);
-  const fetchUsername = useUser((state) => state.fetchUsername);
-  // console.log('username:', username);
 
   const navigate = useNavigate();
 
@@ -245,7 +243,6 @@ const RegisterForm = () => {
       }
     };
     fetchData();
-    fetchUsername();
   }, []);
 
   return (
@@ -374,6 +371,8 @@ const RegisterForm = () => {
               '',
               '',
               gender,
+              '',
+              '',
             ).then((response) => {
               if (response.status === 200) {
                 navigate('/main');

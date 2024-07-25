@@ -82,13 +82,10 @@ const ViewChart = () => {
   const [ageData, setAgeData] = useState(null);
   const [countryData, setCountryData] = useState(null);
   const [value, setValue] = useState(0);
-  const username = 'genie';
-  // const username = useUser((state) => state.username);
-  // const fetchUsername = useUser((state) => state.fetchUsername);
-  // useEffect(() => {
-  //   fetchUsername();
-  // }, []);
-  // console.log('유저네임:', username);
+  // const username = 'genie';
+  const username = useUser((state) => state.username);
+
+  console.log('유저네임:', username);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -155,8 +152,8 @@ const ViewChart = () => {
           (data) => (data.gender_number / genderViews) * 100,
         ),
         fill: false,
-        backgroundColor: ['rgba(54, 162, 235, 1)', 'rgba(255, 99, 132, 0.5)'],
-        borderColor: ['rgba(54, 162, 235, 1)', 'rgba(255, 99, 132, 0.5)'],
+        backgroundColor: ['rgba(54, 162, 235, 0.5)', 'rgba(255, 99, 132, 0.5)'],
+        borderColor: ['rgba(54, 162, 235, 0.5)', 'rgba(255, 99, 132, 0.5)'],
         borderWidth: 1,
       },
     ],
@@ -264,7 +261,7 @@ const ViewChart = () => {
       padding: {
         top: 0,
         right: 20,
-        bottom: 40,
+        bottom: 120,
         left: 20,
       },
     },
@@ -325,7 +322,7 @@ const ViewChart = () => {
       padding: {
         top: 0,
         right: 20,
-        bottom: 40,
+        bottom: 120,
         left: 20,
       },
     },

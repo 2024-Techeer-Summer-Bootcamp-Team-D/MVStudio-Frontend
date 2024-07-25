@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import VisibilityIcon from '@mui/icons-material/Visibility';
-// import { getList } from '../api/musicVideos';
+import { getList } from '@/api/musicVideos';
 
 const CreateContainer = styled.div`
   width: 100%;
@@ -15,11 +15,13 @@ const CreateContainer = styled.div`
 `;
 
 const TitleStyle = styled.p`
+  margin-top: 3rem;
   font-family: 'SUIT', sans-serif;
   font-size: 1.5rem;
   color: #ffffff;
   font-weight: 700;
   margin-left: 3.2rem;
+  margin-bottom: 1rem;
 `;
 
 const TitleStyle2 = styled.p`
@@ -29,6 +31,7 @@ const TitleStyle2 = styled.p`
   font-weight: 700;
   margin-top: -3.5rem;
   margin-left: 3.2rem;
+  margin-bottom: 1rem;
 `;
 
 const TrendCoverBox = styled.div`
@@ -115,7 +118,7 @@ const TrendArrowFunction = styled(ArrowForwardIosIcon)`
   margin-top: 7.8%;
   cursor: pointer;
   color: ${(props) => (props.disabled ? 'transparent' : '#7b7b7b')};
-  transform: ${(props) => (props.isPrev ? 'rotate(0deg)' : 'rotate(180deg)')};
+  transform: ${(props) => (props.preved ? 'rotate(0deg)' : 'rotate(180deg)')};
   z-index: 2;
 `;
 
@@ -124,7 +127,7 @@ const ArrowFunction = styled(ArrowForwardIosIcon)`
   margin-top: 4.5%;
   cursor: pointer;
   color: ${(props) => (props.disabled ? 'transparent' : '#7b7b7b')};
-  transform: ${(props) => (props.isPrev ? 'rotate(0deg)' : 'rotate(180deg)')};
+  transform: ${(props) => (props.preved ? 'rotate(0deg)' : 'rotate(180deg)')};
   z-index: 2;
 `;
 
@@ -134,6 +137,7 @@ const TrendContainer = styled.div`
   overflow: hidden;
   width: 100%;
   margin-left: 1rem;
+  margin-bottom: 7rem;
 `;
 
 const Container = styled.div`
@@ -142,6 +146,7 @@ const Container = styled.div`
   overflow: hidden;
   width: 100%;
   margin-left: 2rem;
+  margin-bottom: 7rem;
 `;
 
 const TrendViewContainer = styled.div`
@@ -150,7 +155,6 @@ const TrendViewContainer = styled.div`
   gap: 2rem;
   display: flex;
   overflow: hidden;
-  /* margin-left: -1rem; */
 `;
 
 const ViewContainer = styled.div`
@@ -160,33 +164,43 @@ const ViewContainer = styled.div`
   overflow: hidden;
 `;
 
-const TrendList = styled.div`
+const ViewListBox = styled.div`
   display: flex;
   flex-direction: row;
   width: 100%;
   height: 8rem;
   transition: transform 0.5s ease-in-out;
-  transform: ${({ currentIndex }) => `translateX(-${currentIndex * 26}%)`};
+  transform: ${({ index }) => `translateX(-${index * 26}%)`};
   position: relative;
 `;
 
-const Array2List = styled.div`
+const RecentListBox = styled.div`
   display: flex;
   flex-direction: row;
   width: 100%;
   height: 8rem;
   transition: transform 0.5s ease-in-out;
-  transform: ${({ optionIndex }) => `translateX(-${optionIndex * 14.75}%)`};
+  transform: ${({ index }) => `translateX(-${index * 14.75}%)`};
   position: relative;
 `;
 
-const Array3List = styled.div`
+const CountryListBox = styled.div`
   display: flex;
   flex-direction: row;
   width: 100%;
   height: 8rem;
   transition: transform 0.5s ease-in-out;
-  transform: ${({ array3Index }) => `translateX(-${array3Index * 14.75}%)`};
+  transform: ${({ index }) => `translateX(-${index * 14.75}%)`};
+  position: relative;
+`;
+
+const ShareListBox = styled.div`
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  height: 8rem;
+  transition: transform 0.5s ease-in-out;
+  transform: ${({ index }) => `translateX(-${index * 14.75}%)`};
   position: relative;
 `;
 
@@ -227,250 +241,257 @@ const ViewIcon = styled(VisibilityIcon)`
   margin-top: 0.6rem;
 `;
 
-const TitleText1 = styled.div`
-  color: white;
-  font-size: 0.7rem;
-  position: relative;
-  font-weight: 700;
-  font-family: 'suit';
-  margin-top: 0.5rem;
-  margin-left: 0.3rem;
-`;
-
-const TitleSmallText = styled.div`
-  color: white;
-  font-size: 0.5rem;
-  position: relative;
-  font-weight: 700;
-  font-family: 'suit';
-`;
-
-// const Array4List = styled.div`
-//   display: flex;
-//   flex-direction: row;
-//   width: 100%;
-//   height: 8rem;
-//   transition: transform 0.5s ease-in-out;
-//   transform: ${({ array4Index }) => `translateX(-${array4Index * 14.75}%)`};
-//   position: relative;
-// `;
-
 function MainPageTest() {
-  const TrendArray = [
-    { src: 'https://i.ibb.co/Fn93yzJ/1.webp' },
-    { src: 'https://i.ibb.co/vVhY1w6/2.webp' },
-    { src: 'https://i.ibb.co/g6vLFDV/3.webp' },
-    { src: 'https://i.ibb.co/99cZ04Y/4.webp' },
-    { src: 'https://i.ibb.co/zxwxR63/5.webp' },
-    { src: 'https://i.ibb.co/Fn93yzJ/1.webp' },
-    { src: 'https://i.ibb.co/vVhY1w6/2.webp' },
-    { src: 'https://i.ibb.co/g6vLFDV/3.webp' },
-    { src: 'https://i.ibb.co/99cZ04Y/4.webp' },
-    { src: 'https://i.ibb.co/zxwxR63/5.webp' },
-  ];
+  const [mostViewList, setMostViewList] = useState([]);
+  const [recentList, setRecentList] = useState([]);
+  const [countryList, setCountryList] = useState([]);
+  const [shareList, setShareList] = useState([]);
 
-  const Array1 = [
-    { src: 'https://i.ibb.co/jZC1m8q/g.webp' },
-    { src: 'https://i.ibb.co/7YxZwtQ/f.webp' },
-    { src: 'https://i.ibb.co/SN6BBnq/aquaman-jps.jpg' },
-    { src: 'https://i.ibb.co/vj4N7Kg/b.webp' },
-    { src: 'https://i.ibb.co/cxwzVrb/cat.jpg' },
-    { src: 'https://i.ibb.co/wQs8HBx/d.webp' },
-    { src: 'https://i.ibb.co/wLF0GfS/c.webp' },
-    { src: 'https://i.ibb.co/g6vLFDV/3.webp' },
-    { src: 'https://i.ibb.co/99cZ04Y/4.webp' },
-    { src: 'https://i.ibb.co/zxwxR63/5.webp' },
-  ];
+  const [mostViewPage, setMostViewPage] = useState(1);
+  const [recentPage, setRecentPage] = useState(1);
+  const [countryPage, setCountryPage] = useState(1);
+  const [sharePage, setSharePage] = useState(1);
 
-  const Array2 = [
-    { src: 'https://i.ibb.co/mtJwVKQ/jknk.webp' },
-    { src: 'https://i.ibb.co/q9W2Qhx/b1.webp' },
-    { src: 'https://i.ibb.co/ryzdP1R/a.webp' },
-    { src: 'https://i.ibb.co/NYthwKK/3c.webp' },
-    { src: 'https://i.ibb.co/DkxF5fF/qwd-jpb.webp' },
-    { src: 'https://i.ibb.co/rm30n24/efm.webp' },
-    { src: 'https://i.ibb.co/cxwzVrb/cat.jpg' },
-    { src: 'https://i.ibb.co/g6vLFDV/3.webp' },
-    { src: 'https://i.ibb.co/99cZ04Y/4.webp' },
-    { src: 'https://i.ibb.co/zxwxR63/5.webp' },
-  ];
+  const [mostViewIndex, setMostViewIndex] = useState(0);
+  const [recentIndex, setRecentIndex] = useState(0);
+  const [countryIndex, setCountryIndex] = useState(0);
+  const [shareIndex, setShareIndex] = useState(0);
 
-  //   const Array3 = [
-  //     { src: 'https://i.ibb.co/Fn93yzJ/1.webp' },
-  //     { src: 'https://i.ibb.co/vVhY1w6/2.webp' },
-  //     { src: 'https://i.ibb.co/g6vLFDV/3.webp' },
-  //     { src: 'https://i.ibb.co/99cZ04Y/4.webp' },
-  //     { src: 'https://i.ibb.co/zxwxR63/5.webp' },
-  //     { src: 'https://i.ibb.co/Fn93yzJ/1.webp' },
-  //     { src: 'https://i.ibb.co/vVhY1w6/2.webp' },
-  //     { src: 'https://i.ibb.co/g6vLFDV/3.webp' },
-  //     { src: 'https://i.ibb.co/99cZ04Y/4.webp' },
-  //     { src: 'https://i.ibb.co/zxwxR63/5.webp' },
-  //   ];
+  useEffect(() => {
+    fetchMostViewList();
+    fetchRecentList();
+    fetchCountryList();
+  }, []);
 
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [optionIndex, setOptionIndex] = useState(0);
-  const [array3Index, setarray3Index] = useState(0);
-  //   const [array4Index, setarray4Index] = useState(0);
-
-  const trendhandlePrev = () => {
-    if (currentIndex > 0) {
-      setCurrentIndex(currentIndex - 1);
+  const fetchMostViewList = async () => {
+    try {
+      const response = await getList(mostViewPage, 4, 'views');
+      if (response && response.music_videos) {
+        setMostViewList((prevList) => [...prevList, ...response.music_videos]);
+        setMostViewPage((prevPage) => prevPage + 1);
+      }
+    } catch (error) {
+      console.error('Failed to fetch most viewed list:', error);
     }
   };
 
-  const trendhandleNext = () => {
-    if (currentIndex < TrendArray.length - 5) {
-      setCurrentIndex(currentIndex + 1);
+  const fetchRecentList = async () => {
+    try {
+      const response = await getList(recentPage, 6, 'recently_viewed');
+      if (response && response.music_videos) {
+        setRecentList((prevList) => [...prevList, ...response.music_videos]);
+        setRecentPage((prevPage) => prevPage + 1);
+      }
+    } catch (error) {
+      console.error('Failed to fetch recent list:', error);
     }
   };
 
-  const moreOption = () => {
-    if (optionIndex < Array1.length - 5) {
-      setOptionIndex(optionIndex + 1);
+  const fetchCountryList = async () => {
+    try {
+      const response = await getList(countryPage, 6, 'countries');
+      if (response && response.music_videos) {
+        setCountryList((prevList) => [...prevList, ...response.music_videos]);
+        setCountryPage((prevPage) => prevPage + 1);
+      }
+    } catch (error) {
+      console.error('Failed to fetch country list:', error);
     }
   };
 
-  const prevOption = () => {
-    if (optionIndex > 0) {
-      setOptionIndex(optionIndex - 1);
-    }
-  };
-  const array3Next = () => {
-    if (array3Index < Array1.length - 5) {
-      setarray3Index(array3Index + 1);
+  const fetchShareList = async () => {
+    try {
+      const response = await shareList(sharePage, 6, 'shares');
+      if (response && response.music_videos) {
+        setShareList((prevList) => [...prevList, ...response.music_videos]);
+        setSharePage((prevPage) => prevPage + 1);
+      }
+    } catch (error) {
+      console.error('Failed to fetch share list:', error);
     }
   };
 
-  const array3Pre = () => {
-    if (array3Index > 0) {
-      setarray3Index(array3Index - 1);
+  const viewHandlePrev = () => {
+    if (mostViewIndex > 0) {
+      setMostViewIndex(mostViewIndex - 1);
     }
   };
-  //   const array4Next = () => {
-  //     if (array4Index < Array1.length - 5) {
-  //       setarray4Index(array4Index + 1);
-  //     }
-  //   };
 
-  //   const array4Pre = () => {
-  //     if (array4Index > 0) {
-  //       setarray4Index(array4Index - 1);
-  //     }
-  //   };
+  const viewHandleNext = () => {
+    if (mostViewIndex < mostViewList.length / 4 - 1) {
+      setMostViewIndex(mostViewIndex + 1);
+    } else {
+      fetchMostViewList();
+    }
+  };
 
+  const recentHandlePrev = () => {
+    if (recentIndex > 0) {
+      setRecentIndex(recentIndex - 1);
+    }
+  };
+
+  const recentHandleNext = () => {
+    if (recentIndex < recentList.length / 6 - 1) {
+      setRecentIndex(recentIndex + 1);
+    } else {
+      fetchRecentList();
+    }
+  };
+
+  const countryHandlePrev = () => {
+    if (countryIndex > 0) {
+      setCountryIndex(countryIndex - 1);
+    }
+  };
+
+  const countryHandleNext = () => {
+    if (countryIndex < countryList.length / 6 - 1) {
+      setCountryIndex(countryIndex + 1);
+    } else {
+      fetchCountryList();
+    }
+  };
+
+  const shareHandlePrev = () => {
+    if (shareIndex > 0) {
+      setShareIndex(shareIndex - 1);
+    }
+  };
+
+  const shareHandleNext = () => {
+    if (shareIndex < countryList.length / 6 - 1) {
+      setCountryIndex(shareIndex + 1);
+    } else {
+      fetchShareList();
+    }
+  };
   return (
     <CreateContainer>
       <TitleStyle>Most View</TitleStyle>
       <TrendContainer>
         <TrendArrowFunction
-          onClick={trendhandlePrev}
-          isPrev={false}
+          onClick={viewHandlePrev}
+          preved={false}
           fontSize="large"
-          disabled={currentIndex === 0}
+          disabled={mostViewIndex === 0}
         />
         <TrendViewContainer>
-          <TrendList currentIndex={currentIndex}>
-            {TrendArray.map((cover, index) => (
+          <ViewListBox index={mostViewIndex}>
+            {mostViewList?.map((cover, index) => (
               <TrendCoverBox key={index}>
-                <TrendRoundCover src={cover.src} />
+                <TrendRoundCover src={cover.cover_image} />
                 <TrendImageOverlay>
                   <FontMargin>
-                    La Vie en Rose
-                    <SmallText>IZ*ONE</SmallText>
+                    {cover.subject}
+                    <SmallText>{cover.username}</SmallText>
                   </FontMargin>
                   <ViewIcon sx={{ color: '#ffffff', fontSize: '0.8rem' }} />
-                  <ViewNumber>1,027</ViewNumber>
+                  <ViewNumber>{cover.views}</ViewNumber>
                 </TrendImageOverlay>
               </TrendCoverBox>
             ))}
-          </TrendList>
+          </ViewListBox>
         </TrendViewContainer>
         <TrendArrowFunction
-          onClick={trendhandleNext}
-          isPrev={true}
+          onClick={viewHandleNext}
+          preved={true}
           fontSize="large"
-          disabled={currentIndex === TrendArray.length - 5}
         />
       </TrendContainer>
-      <TitleStyle>Recent Upload</TitleStyle>
+      <TitleStyle2>Recent Upload</TitleStyle2>
       <Container>
         <ArrowFunction
-          onClick={prevOption}
-          isPrev={false}
+          onClick={recentHandlePrev}
+          preved={false}
           fontSize="small"
-          disabled={optionIndex === 0}
+          disabled={recentIndex === 0}
         />
         <ViewContainer>
-          <Array2List optionIndex={optionIndex}>
-            {Array1.map((cover, index) => (
+          <RecentListBox index={recentIndex}>
+            {recentList?.map((cover, index) => (
               <CoverBox key={index}>
-                <RoundCover src={cover.src} />
-                <TitleText1>
-                  Title<TitleSmallText>Artist</TitleSmallText>
-                </TitleText1>
+                <RoundCover src={cover.cover_image} />
+                <TrendImageOverlay>
+                  <FontMargin>
+                    {cover.subject}
+                    <SmallText>{cover.username}</SmallText>
+                  </FontMargin>
+                  <ViewIcon sx={{ color: '#ffffff', fontSize: '0.8rem' }} />
+                  <ViewNumber>{cover.views}</ViewNumber>
+                </TrendImageOverlay>
               </CoverBox>
             ))}
-          </Array2List>
+          </RecentListBox>
         </ViewContainer>
         <ArrowFunction
-          onClick={moreOption}
-          isPrev={true}
+          onClick={recentHandleNext}
+          preved={true}
           fontSize="small"
-          disabled={optionIndex === Array1.length - 5}
         />
       </Container>
       <TitleStyle2>My Country Trend</TitleStyle2>
       <Container>
         <ArrowFunction
-          onClick={array3Pre}
-          isPrev={false}
+          onClick={countryHandlePrev}
+          preved={false}
           fontSize="small"
-          disabled={array3Index === 0}
+          disabled={countryIndex === 0}
         />
         <ViewContainer>
-          <Array3List array3Index={array3Index}>
-            {Array2.map((cover, index) => (
+          <CountryListBox index={countryIndex}>
+            {countryList?.map((cover, index) => (
               <CoverBox key={index}>
-                <RoundCover src={cover.src} />
-                <TitleText1>
-                  Title<TitleSmallText>Artist</TitleSmallText>
-                </TitleText1>
+                <RoundCover src={cover.cover_image} />
+                <TrendImageOverlay>
+                  <FontMargin>
+                    {cover.subject}
+                    <SmallText>{cover.username}</SmallText>
+                  </FontMargin>
+                  <ViewIcon sx={{ color: '#ffffff', fontSize: '0.8rem' }} />
+                  <ViewNumber>{cover.views}</ViewNumber>
+                </TrendImageOverlay>
               </CoverBox>
             ))}
-          </Array3List>
+          </CountryListBox>
         </ViewContainer>
         <ArrowFunction
-          onClick={array3Next}
-          isPrev={true}
+          onClick={countryHandleNext}
+          preved={true}
           fontSize="small"
-          disabled={array3Index === Array2.length - 5}
         />
       </Container>
-      {/* <TitleStyle2>Array3</TitleStyle2>
-      <TrendContainer>
+      <TitleStyle2>Share</TitleStyle2>
+      <Container>
         <ArrowFunction
-          onClick={array4Pre}
-          isPrev={false}
+          onClick={shareHandlePrev}
+          preved={false}
           fontSize="small"
-          disabled={array4Index === 0}
+          disabled={countryIndex === 0}
         />
         <ViewContainer>
-          <Array4List array4Index={array4Index}>
-            {Array3.map((cover, index) => (
+          <ShareListBox index={shareIndex}>
+            {shareList?.map((cover, index) => (
               <CoverBox key={index}>
-                <RoundCover src={cover.src} label={cover.label} />
+                <RoundCover src={cover.cover_image} />
+                <TrendImageOverlay>
+                  <FontMargin>
+                    {cover.subject}
+                    <SmallText>{cover.username}</SmallText>
+                  </FontMargin>
+                  <ViewIcon sx={{ color: '#ffffff', fontSize: '0.8rem' }} />
+                  <ViewNumber>{cover.views}</ViewNumber>
+                </TrendImageOverlay>
               </CoverBox>
             ))}
-          </Array4List>
+          </ShareListBox>
         </ViewContainer>
         <ArrowFunction
-          onClick={array4Next}
-          isPrev={true}
+          onClick={shareHandleNext}
+          preved={true}
           fontSize="small"
-          disabled={array4Index === Array3.length - 5}
         />
-      </TrendContainer> */}
+      </Container>
     </CreateContainer>
   );
 }

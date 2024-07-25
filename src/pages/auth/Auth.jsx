@@ -214,7 +214,6 @@ const StyledInput = styled.input`
 `;
 
 const Overlay = styled.div`
-  /* background-color: rgba(37, 6, 46, 1); */
   background-image: url('https://i.ibb.co/72bmVLd/Group-1457.png');
   background-repeat: no-repeat;
   background-size: cover;
