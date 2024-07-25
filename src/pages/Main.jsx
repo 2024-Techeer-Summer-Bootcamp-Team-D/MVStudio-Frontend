@@ -5,10 +5,11 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 import { getList } from '@/api/musicVideos';
 
 const CreateContainer = styled.div`
-  width: 90%;
+  width: 85%;
   height: 100%;
   display: flex;
   flex-direction: column;
+  align-items: start;
 `;
 
 const TitleStyle = styled.p`
@@ -32,12 +33,6 @@ const CoverBox = styled.div`
   width: 16.8%;
   height: 16.8%;
   flex: 0 0 17%;
-  /* width: 12rem;
-  height: 10rem;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column; */
 `;
 
 const TrendRoundCover = styled.button`
@@ -72,7 +67,7 @@ const TrendArrowFunction = styled(ArrowForwardIosIcon)`
   display: flex;
   width: 3rem;
   margin-top: 7%;
-  cursor: pointer;
+  cursor: ${(props) => (props.disabled ? 'default' : 'pointer')};
   color: ${(props) => (props.disabled ? 'transparent' : '#7b7b7b')};
   transform: ${(props) => (props.preved ? 'rotate(0deg)' : 'rotate(180deg)')};
   z-index: 2;
@@ -81,7 +76,7 @@ const TrendArrowFunction = styled(ArrowForwardIosIcon)`
 const ArrowFunction = styled(ArrowForwardIosIcon)`
   display: flex;
   margin-top: 4.5%;
-  cursor: pointer;
+  cursor: ${(props) => (props.disabled ? 'default' : 'pointer')};
   color: ${(props) => (props.disabled ? 'transparent' : '#7b7b7b')};
   transform: ${(props) => (props.preved ? 'rotate(0deg)' : 'rotate(180deg)')};
   z-index: 2;
@@ -111,7 +106,7 @@ const TrendViewContainer = styled.div`
   height: 16.5rem;
   display: flex;
   align-items: flex-start;
-  justify-content:center;
+  justify-content: center;
   overflow: hidden;
 `;
 
@@ -174,9 +169,10 @@ const TrendImageOverlay = styled.div`
   color: white;
   font-size: 0.8rem;
   display: flex;
+  flex-direction: column;
   padding: 0;
   justify-content: center;
-  align-items: center;
+  align-items: start;
 `;
 
 const FontMargin = styled.div`
@@ -188,7 +184,7 @@ const FontMargin = styled.div`
   width: 100%;
   height: 100%;
   font-size: 0.7rem;
-  padding: 0.75rem;
+  padding: 0.5rem 0.5rem 0rem 0.5rem;
 `;
 
 const FontMargin2 = styled.div`
@@ -196,23 +192,30 @@ const FontMargin2 = styled.div`
   margin-left: 0.2rem;
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
   width: 12em;
   height: 100%;
   font-size: 0.7rem;
   margin-top: 0.5rem;
 `;
+
 const SmallText = styled.div`
   display: flex;
-  font-size: 0.7rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: white;
+`;
+
+const SmallText2 = styled.div`
+  display: flex;
+  font-size: 0.5rem;
   color: white;
   margin-bottom: 0.5rem;
+  margin-left: 0.5rem;
 `;
 
 const ViewNumber = styled.div`
   font-size: 0.7rem;
   text-align: right;
-  // margin-right: 1rem;
   color: white;
   display: flex;
 `;
@@ -227,11 +230,11 @@ const CoverContainer = styled.div`
   flex-direction: column;
   align-items: flex-start;
 `;
+
 const IconBox = styled.div`
   display: flex;
   flex-direction: row;
 `;
-
 function MainPageTest() {
   const [mostViewList, setMostViewList] = useState([]);
   const [recentList, setRecentList] = useState([]);
@@ -248,19 +251,36 @@ function MainPageTest() {
   const [countryIndex, setCountryIndex] = useState(0);
   const [shareIndex, setShareIndex] = useState(0);
 
+  const [mostViewTotalItems, setMostViewTotalItems] = useState(0);
+  const [recentTotalItems, setRecentTotalItems] = useState(0);
+  const [countryTotalItems, setCountryTotalItems] = useState(0);
+  const [shareTotalItems, setShareTotalItems] = useState(0);
+
+  const [mostViewDisabled, setMostViewDisabled] = useState(false);
+  const [recentDisabled, setRecentDisabled] = useState(false);
+  const [countryDisabled, setCountryDisabled] = useState(false);
+  const [shareDisabled, setShareDisabled] = useState(false);
+
   useEffect(() => {
     fetchMostViewList();
     fetchRecentList();
     fetchCountryList();
-    fetchShareList();  // 추가된 라인
+    fetchShareList();
   }, []);
 
   const fetchMostViewList = async () => {
     try {
       const response = await getList(mostViewPage, 4, 'views');
       if (response && response.music_videos) {
-        setMostViewList((prevList) => [...prevList, ...response.music_videos]);
+        setMostViewList((prevList) => [
+          ...prevList,
+          ...response.music_videos.filter(
+            (item) => !prevList.some((prev) => prev.id === item.id)
+          ),
+        ]);
+        setMostViewTotalItems(response.pagination.total_items);
         setMostViewPage((prevPage) => prevPage + 1);
+        setMostViewDisabled(response.pagination.last_page);
       }
     } catch (error) {
       console.error('Failed to fetch most viewed list:', error);
@@ -271,10 +291,15 @@ function MainPageTest() {
     try {
       const response = await getList(recentPage, 6, 'recently_viewed');
       if (response && response.music_videos) {
-        // 정확한 개수만 추가하도록 합니다
-        const newMusicVideos = response.music_videos.slice(0, 6);
-        setRecentList((prevList) => [...prevList, ...newMusicVideos]);
+        setRecentList((prevList) => [
+          ...prevList,
+          ...response.music_videos.filter(
+            (item) => !prevList.some((prev) => prev.id === item.id)
+          ),
+        ]);
+        setRecentTotalItems(response.pagination.total_items);
         setRecentPage((prevPage) => prevPage + 1);
+        setRecentDisabled(response.pagination.last_page);
       }
     } catch (error) {
       console.error('Failed to fetch recent list:', error);
@@ -285,8 +310,15 @@ function MainPageTest() {
     try {
       const response = await getList(countryPage, 6, 'countries');
       if (response && response.music_videos) {
-        setCountryList((prevList) => [...prevList, ...response.music_videos]);
+        setCountryList((prevList) => [
+          ...prevList,
+          ...response.music_videos.filter(
+            (item) => !prevList.some((prev) => prev.id === item.id)
+          ),
+        ]);
+        setCountryTotalItems(response.pagination.total_items);
         setCountryPage((prevPage) => prevPage + 1);
+        setCountryDisabled(response.pagination.last_page);
       }
     } catch (error) {
       console.error('Failed to fetch country list:', error);
@@ -297,67 +329,70 @@ function MainPageTest() {
     try {
       const response = await getList(sharePage, 6, 'shares');
       if (response && response.music_videos) {
-        setShareList((prevList) => [...prevList, ...response.music_videos]);
+        setShareList((prevList) => [
+          ...prevList,
+          ...response.music_videos.filter(
+            (item) => !prevList.some((prev) => prev.id === item.id)
+          ),
+        ]);
+        setShareTotalItems(response.pagination.total_items);
         setSharePage((prevPage) => prevPage + 1);
+        setShareDisabled(response.pagination.last_page);
       }
     } catch (error) {
       console.error('Failed to fetch share list:', error);
     }
   };
 
-  const viewHandlePrev = () => {
-    if (mostViewIndex > 0) {
-      setMostViewIndex(mostViewIndex - 1);
-    }
-  };
-
-  const viewHandleNext = () => {
-    if (mostViewIndex < mostViewList.length / 4 - 1) {
-      setMostViewIndex(mostViewIndex + 1);
-    } else {
-      fetchMostViewList();
-    }
-  };
-
-  const recentHandlePrev = () => {
-    if (recentIndex > 0) {
-      setRecentIndex(recentIndex - 1);
-    }
-  };
-
-  const recentHandleNext = () => {
-    if (recentIndex < recentList.length / 6 - 1) {
-      setRecentIndex(recentIndex + 1);
-    } else {
-      fetchRecentList();
-    }
-  };
-
-  const countryHandlePrev = () => {
-    if (countryIndex > 0) {
-      setCountryIndex(countryIndex - 1);
-    }
-  };
-
-  const countryHandleNext = () => {
-    if (countryIndex < countryList.length / 6 - 1) {
-      setCountryIndex(countryIndex + 1);
-    } else {
-      fetchCountryList();
-    }
-  };
-
-  const shareHandlePrev = () => {
-    if (shareIndex > 0) {
-      setShareIndex(shareIndex - 1);
-    }
-  };
-
-  const shareHandleNext = () => {
-    if (shareIndex < shareList.length / 6 - 1) {
-      setShareIndex(shareIndex + 1);
-    } else {
-      fetchShareList();
+  const handleArrowClick = (type, direction) => {
+    if (type === 'mostView') {
+      if (direction === 'next') {
+        if (mostViewIndex < Math.floor(mostViewList.length / 4) - 1) {
+          setMostViewIndex(mostViewIndex + 1);
+        } else if (!mostViewDisabled) {
+          fetchMostViewList();
+        }
+      } else {
+        if (mostViewIndex > 0) {
+          setMostViewIndex(mostViewIndex - 1);
+        }
+      }
+    } else if (type === 'recent') {
+      if (direction === 'next') {
+        if (recentIndex < Math.floor(recentList.length / 6) - 1) {
+          setRecentIndex(recentIndex + 1);
+        } else if (!recentDisabled) {
+          fetchRecentList();
+        }
+      } else {
+        if (recentIndex > 0) {
+          setRecentIndex(recentIndex - 1);
+        }
+      }
+    } else if (type === 'country') {
+      if (direction === 'next') {
+        if (countryIndex < Math.floor(countryList.length / 6) - 1) {
+          setCountryIndex(countryIndex + 1);
+        } else if (!countryDisabled) {
+          fetchCountryList();
+        }
+      } else {
+        if (countryIndex > 0) {
+          setCountryIndex(countryIndex - 1);
+        }
+      }
+    } else if (type === 'share') {
+      if (direction === 'next') {
+        if (shareIndex < Math.floor(shareList.length / 6) - 1) {
+          setShareIndex(shareIndex + 1);
+        } else if (!shareDisabled) {
+          fetchShareList();
+        }
+      } else {
+        if (shareIndex > 0) {
+          setShareIndex(shareIndex - 1);
+        }
+      }
     }
   };
 
@@ -370,7 +405,7 @@ function MainPageTest() {
       <TitleStyle>Most View</TitleStyle>
       <Container>
         <TrendArrowFunction
-          onClick={viewHandlePrev}
+          onClick={() => handleArrowClick('mostView', 'prev')}
           preved={false}
           fontSize="large"
           disabled={mostViewIndex === 0}
@@ -384,13 +419,11 @@ function MainPageTest() {
                     <FontMargin>
                       <SmallText>{cover.subject}</SmallText>
                       <IconBox>
-                        <ViewIcon
-                          sx={{ color: '#ffffff', fontSize: '0.8rem' }}
-                        />
+                        <ViewIcon sx={{ color: '#ffffff', fontSize: '0.8rem' }} />
                         <ViewNumber>{cover.views}</ViewNumber>
                       </IconBox>
                     </FontMargin>
-                    <SmallText>{cover.member_name}</SmallText>
+                    <SmallText2>{cover.member_name}</SmallText2>
                   </TrendImageOverlay>
                 </TrendRoundCover>
               </TrendCoverBox>
@@ -398,15 +431,16 @@ function MainPageTest() {
           </ViewListBox>
         </TrendViewContainer>
         <TrendArrowFunction
-          onClick={viewHandleNext}
+          onClick={() => handleArrowClick('mostView', 'next')}
           preved={true}
           fontSize="large"
+          disabled={mostViewDisabled}
         />
       </Container>
       <TitleStyle>Recent Upload</TitleStyle>
       <Container2>
         <ArrowFunction
-          onClick={recentHandlePrev}
+          onClick={() => handleArrowClick('recent', 'prev')}
           preved={false}
           fontSize="small"
           disabled={recentIndex === 0}
@@ -417,24 +451,24 @@ function MainPageTest() {
               <CoverBox key={index}>
                 <CoverContainer>
                   <RoundCover src={cover.cover_image} onClick={() => handleCoverClick(cover.id)} />
-                  <FontMargin2>
-                  {cover.subject}
-                  </FontMargin2>
+                  <FontMargin2>{cover.subject}</FontMargin2>
+                  <SmallText2>{cover.member_name}</SmallText2>
                 </CoverContainer>
               </CoverBox>
             ))}
           </RecentListBox>
         </ViewContainer>
         <ArrowFunction
-          onClick={recentHandleNext}
+          onClick={() => handleArrowClick('recent', 'next')}
           preved={true}
           fontSize="large"
+          disabled={recentDisabled}
         />
       </Container2>
       <TitleStyle>My Country Trend</TitleStyle>
       <Container2>
         <ArrowFunction
-          onClick={countryHandlePrev}
+          onClick={() => handleArrowClick('country', 'prev')}
           preved={false}
           fontSize="large"
           disabled={countryIndex === 0}
@@ -445,25 +479,23 @@ function MainPageTest() {
               <CoverBox key={index}>
                 <CoverContainer>
                   <RoundCover src={cover.cover_image} onClick={() => handleCoverClick(cover.id)} />
-                  <FontMargin2>
-                      {cover.subject}
-                      
-                  </FontMargin2>
+                  <FontMargin2>{cover.subject}</FontMargin2>
                 </CoverContainer>
               </CoverBox>
             ))}
           </CountryListBox>
         </ViewContainer>
         <ArrowFunction
-          onClick={countryHandleNext}
+          onClick={() => handleArrowClick('country', 'next')}
           preved={true}
           fontSize="large"
+          disabled={countryDisabled}
         />
       </Container2>
       <TitleStyle>Share</TitleStyle>
       <Container2>
         <ArrowFunction
-          onClick={shareHandlePrev}
+          onClick={() => handleArrowClick('share', 'prev')}
           preved={false}
           fontSize="large"
           disabled={shareIndex === 0}
@@ -474,18 +506,17 @@ function MainPageTest() {
               <CoverBox key={index}>
                 <CoverContainer>
                   <RoundCover src={cover.cover_image} onClick={() => handleCoverClick(cover.id)} />
-                  <FontMargin2>
-                      {cover.subject}
-                  </FontMargin2>
+                  <FontMargin2>{cover.subject}</FontMargin2>
                 </CoverContainer>
               </CoverBox>
             ))}
           </ShareListBox>
         </ViewContainer>
         <ArrowFunction
-          onClick={shareHandleNext}
+          onClick={() => handleArrowClick('share', 'next')}
           preved={true}
           fontSize="large"
+          disabled={shareDisabled}
         />
       </Container2>
     </CreateContainer>
@@ -493,4 +524,3 @@ function MainPageTest() {
 }
 
 export default MainPageTest;
-
