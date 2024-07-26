@@ -245,7 +245,7 @@ function Mypage() {
 
   const fetchData = async (pageNum) => {
     try {
-      const response = await getList(pageNum, 9, 'null', username);
+      const response = await getList(pageNum, 9, '', username);
       const newData = response.music_videos.filter(
         (video) => !fetchedVideoIds.flat().includes(video.id),
       );
