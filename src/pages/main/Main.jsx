@@ -1,5 +1,6 @@
+/* eslint-disable react/display-name */
 /* eslint-disable react/prop-types */
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, memo, useCallback } from 'react';
 import styled from 'styled-components';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import { getList } from '@/api/musicVideos';
@@ -111,7 +112,7 @@ const VideoHoverContainer = styled.div`
   position: absolute;
   top: 0;
   opacity: 0;
-  transition: opacity 0.2s ease-in-out;
+  transition: opacity 1s ease-in-out;
   &:hover {
     opacity: 1;
   }
@@ -140,27 +141,27 @@ const sort = (title) => {
   }
 };
 
-const VideoHover = ({ src, size }) => {
+function VideoHover({ src, size }) {
   const videoRef = useRef(null);
   const timeoutRef = useRef(null);
 
-  const handleMouseEnter = () => {
+  const handleMouseEnter = useCallback(() => {
     timeoutRef.current = setTimeout(() => {
       if (videoRef.current) {
-        videoRef.current.currentTime = 0;
-        videoRef.current.volume = 0.2; // 소리 30%
+        videoRef.current.load(); // 비디오를 다시 로드하여 초기화
+        videoRef.current.volume = 0.2; // 소리 20%
         videoRef.current.play();
       }
     }, 1000); // 1초 지연
-  };
+  }, []);
 
-  const handleMouseLeave = () => {
+  const handleMouseLeave = useCallback(() => {
     clearTimeout(timeoutRef.current);
     if (videoRef.current) {
       videoRef.current.pause();
       videoRef.current.currentTime = 0;
     }
-  };
+  }, []);
 
   return (
     <VideoHoverContainer
@@ -171,11 +172,12 @@ const VideoHover = ({ src, size }) => {
       <video
         ref={videoRef}
         src={src}
+        preload="auto" // 비디오 미리 로드
         style={{ width: '100%', height: '100%' }}
       />
     </VideoHoverContainer>
   );
-};
+}
 
 function VideoList({ title }) {
   const navigate = useNavigate();

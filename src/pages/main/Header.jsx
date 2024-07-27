@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import { useQuery } from '@tanstack/react-query';
 import { getList } from '@/api/musicVideos';
+import WhatshotIcon from '@mui/icons-material/Whatshot';
 
 const BackLayout = styled.div`
   display: flex;
@@ -35,6 +36,7 @@ const VideoWrapper = styled.div`
   height: 100%;
   background-color: black;
   color: white;
+  gap: 1rem;
 `;
 
 const Video = styled.video`
@@ -42,55 +44,27 @@ const Video = styled.video`
   width: 100%;
   height: auto;
 `;
-const VideoBlur = styled.div`
+
+const VideoBlur = styled.h2`
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: end;
   padding: 3%;
   position: absolute;
   width: 100%;
   height: 100%;
   background: linear-gradient(to bottom, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 1));
-  backdrop-filter: blur(0.5rem);
+  padding-bottom: 6%;
+  gap: 0.25rem;
 `;
 
-const VideoRank = styled.div`
+const RankComment = styled.div`
   display: flex;
-  flex-direction: row;
-  align-items: end;
-
-  color: black;
-  font-size: 10rem;
-`;
-
-const VideoCover = styled.img`
-  width: calc(16.6% - 0.4rem);
-  min-width: calc(16.6% - 0.4rem);
-  aspect-ratio: 10 / 6;
-  border-radius: 0.5rem;
-  justify-content: center;
   align-items: center;
   z-index: 5;
-  position: absolute;
-`;
-
-const VideoTitle = styled.div`
-  display: flex;
-  justify-content: start;
-  margin-top: 1rem;
-  align-items: center;
-  font-size: 1.5rem;
-  font-weight: bold;
-  z-index: 5;
-`;
-
-const RankNum = styled.span`
-  color: white;
-  z-index: 6;
-  /* margin-bottom: -2rem; */
-  -webkit-text-stroke: 0.25rem #555; /* 테두리 색과 두께 설정 */
-  font-size: 6rem; /* 원하는 글자 크기 설정 */
-  font-weight: 900; /* 원하는 글자 두께 설정 */
+  gap: 0.5rem;
+  font-size: 1rem;
+  margin-bottom: 0.5rem;
 `;
 
 function Header() {
@@ -139,11 +113,21 @@ function Header() {
               autoPlay={index === currentIndex}
             />
             <VideoBlur>
-              <VideoRank>
-                <RankNum>{index + 1}</RankNum>
-                <VideoCover src={video.cover_image} />
-              </VideoRank>
-              <VideoTitle>{video.subject}</VideoTitle>
+              <RankComment>
+                <WhatshotIcon
+                  fontSize="medium"
+                  sx={{
+                    display: 'flex',
+                    marginTop: '-0.15rem',
+                    color: 'red',
+                  }}
+                />
+                <span style={{ fontWeight: 'bold', fontSize: '1.25rem' }}>
+                  # {index + 1}
+                </span>{' '}
+                Trending Music Video
+              </RankComment>
+              {video.subject}
             </VideoBlur>
           </VideoWrapper>
         </VideoContainer>
