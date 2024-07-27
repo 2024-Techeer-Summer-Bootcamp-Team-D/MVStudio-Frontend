@@ -7,6 +7,7 @@ import { useInfiniteQuery } from '@tanstack/react-query';
 import { IconButton } from '@mui/material';
 import { defaultProfile } from '@/assets/image';
 import { useNavigate } from 'react-router-dom';
+import Header from './Header';
 
 const BackLayout = styled.div`
   display: flex;
@@ -15,11 +16,12 @@ const BackLayout = styled.div`
   overflow-x: hidden;
 `;
 
-const Title = styled.h2`
+export const Title = styled.h2`
   color: white;
   margin-top: 5rem;
   margin-bottom: 1rem;
   margin-left: 3%;
+  z-index: 6;
 `;
 
 const VideoLayout = styled.div`
@@ -169,7 +171,7 @@ const VideoHover = ({ src, size }) => {
       <video
         ref={videoRef}
         src={src}
-        style={{ width: '120%', height: '100%' }}
+        style={{ width: '100%', height: '100%' }}
       />
     </VideoHoverContainer>
   );
@@ -194,7 +196,7 @@ function VideoList({ title }) {
       }
     },
   });
-  console.log(sort(title), 'data:', data);
+
   return (
     <VideoLayout>
       <Title>{title}</Title>
@@ -291,6 +293,9 @@ function VideoList({ title }) {
 function Main() {
   return (
     <BackLayout>
+      {/* 헤더 */}
+      <Header />
+
       {/* 조회순 */}
       <VideoList title="Top Hits" />
 

@@ -14,7 +14,6 @@ export const getList = async (page, size, sort, username) => {
     }
 
     const response = await jsonAxios.get(`/music-videos?${params.toString()}`);
-    console.log(`/music-videos?${params.toString()}`);
     return response.data;
   } catch (error) {
     console.error('errorcode:', error);
