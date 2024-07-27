@@ -6,7 +6,7 @@ import Create from './Create';
 import EditProfile from './user/EditProfile';
 import LyricsSelect from './LyricsSelect';
 import Main from '@/pages/main/Main';
-import Mypage from './Mypage';
+import Mypage from './user/Mypage';
 import OnBoardingPage from './OnBoardingPage';
 import Pay from './Pay';
 import Play from './Play';

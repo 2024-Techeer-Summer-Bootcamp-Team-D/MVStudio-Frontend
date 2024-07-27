@@ -15,6 +15,7 @@ import ChatOutlinedIcon from '@mui/icons-material/ChatOutlined';
 import YouTubeIcon from '@mui/icons-material/YouTube';
 import InstagramIcon from '@mui/icons-material/Instagram';
 import EditIcon from '@mui/icons-material/Edit';
+import { defaultProfile } from '@/assets/image';
 
 const BigContainer = styled.div`
   display: flex;
@@ -331,7 +332,7 @@ function Mypage() {
       <Profile>Profile</Profile>
       <MyContainer>
         <ProImg
-          src={userInfo?.profile_image || 'https://i.ibb.co/nB2HMyf/image.png'}
+          src={userInfo?.profile_image || defaultProfile}
           alt={userInfo?.login_id}
         />
         <InfoContainer>

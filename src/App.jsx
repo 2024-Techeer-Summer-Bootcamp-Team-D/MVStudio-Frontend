@@ -22,7 +22,6 @@ const ContentArea = styled.div`
   display: flex;
   flex-direction: row;
   width: 100%;
-  height: calc(100vh - 5rem);
   min-height: calc(100vh - 5rem);
   position: relative;
 `;
@@ -30,6 +29,7 @@ const ContentArea = styled.div`
 const ChildrenWrapper = styled.div`
   display: flex;
   width: 100%;
+  max-width: calc(100% - 15rem);
   height: 100%;
   min-height: 100%;
   position: relative;
