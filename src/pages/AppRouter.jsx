@@ -5,8 +5,8 @@ import Auth from './auth/Auth';
 import Create from './Create';
 import EditProfile from './user/EditProfile';
 import LyricsSelect from './LyricsSelect';
-import Main from '@/pages/Main';
-import Mypage from './user/Mypage';
+import Main from '@/pages/main/Main';
+import Mypage from './Mypage';
 import OnBoardingPage from './OnBoardingPage';
 import Pay from './Pay';
 import Play from './Play';
@@ -15,6 +15,7 @@ import SaveTokens from './auth/SaveTokens';
 import Search from './Search';
 import ViewChart from './ViewChart';
 import YtChannelRegister from './user/YtChannelRegister';
+import MainBackup from './MainBackUp';
 
 function AppRouter() {
   return (
@@ -27,6 +28,7 @@ function AppRouter() {
           <Route path="/auth" element={<Auth />} />
           <Route path="/main" element={<Main />} />
           <Route path="/users" element={<YtChannelRegister />} />
+          <Route path="/mainb" element={<MainBackup />} />
           <Route path="/users/:username" element={<Mypage />} />
           <Route path="/search" element={<Search />} />
           <Route path="/create" element={<Create />} />

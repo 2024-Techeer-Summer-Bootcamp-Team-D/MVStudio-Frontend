@@ -1,13 +1,12 @@
 import { jsonAxios } from './axios.config';
 
-export const getList = async (page, size, sort = null, username = null) => {
+export const getList = async (page, size, sort, username) => {
   try {
     const response = await jsonAxios.get(
-      `/music-videos?page=${page}&size=${size}` +
-        (sort ? `&sort=${sort}` : '') +
-        (username ? `&username=${username}` : ''),
+      `/music-videos?page=${page}&size=${size}`,
+      sort ? `&sort=${sort}` : `&username=${username}`,
     );
-    console.log('겟리스트:', response.data);
+    // console.log('겟리스트:', response.data);
     return response.data;
   } catch (error) {
     console.error('errorcode:', error);

@@ -7,6 +7,7 @@ import Sidebar from './components/Sidebar';
 import Navbar from './components/Navbar';
 import GlobalStyles from './styles/GlobalStyles';
 import Service from './components/Service';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 const BackLayout = styled.div`
   background-color: #05000a;
@@ -36,15 +37,17 @@ const ChildrenWrapper = styled.div`
 
 function App({ children }) {
   return (
-    <BackLayout>
-      <GlobalStyles />
-      <Navbar />
-      <ContentArea>
-        <Sidebar />
-        <Service />
-        <ChildrenWrapper>{children}</ChildrenWrapper>
-      </ContentArea>
-    </BackLayout>
+    <QueryClientProvider client={new QueryClient()}>
+      <BackLayout>
+        <GlobalStyles />
+        <Navbar />
+        <ContentArea>
+          <Sidebar />
+          <Service />
+          <ChildrenWrapper>{children}</ChildrenWrapper>
+        </ContentArea>
+      </BackLayout>
+    </QueryClientProvider>
   );
 }
 
