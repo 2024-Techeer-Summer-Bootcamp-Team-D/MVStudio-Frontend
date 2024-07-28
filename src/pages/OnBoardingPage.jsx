@@ -1,8 +1,8 @@
+/* eslint-disable react/prop-types */
 import React, { useEffect, useRef, useState } from 'react';
 import styled, { keyframes } from 'styled-components';
 import { useNavigate } from 'react-router-dom';
-import '../styles/slider.css';
-import Slider from 'react-slick';
+import { getOnboarding } from '@/api/onboarding';
 
 const WholeContainer = styled.div`
   height: 100%;
@@ -115,7 +115,7 @@ const Section = styled.div`
   scroll-snap-align: start;
   animation: ${(props) =>
       props.visible ? (props.direction === 'up' ? slideDown : slideUp) : 'none'}
-    1s forwards;
+    forwards;
 `;
 
 const Pagination = styled.div`
@@ -264,72 +264,81 @@ const Button = styled.button`
   }
 `;
 
-// const MusicVideoListContainer = styled.div`
-//   width: 97%;
-//   height: 100%;
-//   display: flex;
-//   flex-direction: column;
-//   text-align: center;
-//   justify-content: flex-end;
-//   overflow: hidden;
-// `;
+const MusicVideoListContainer = styled.div`
+  width: 97%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  justify-content: flex-end;
+  overflow: hidden;
+`;
 
-// const scrollLeft = keyframes`
-//   0% {
-//     transform: translateX(0);
-//   }
-//   100% {
-//     transform: translateX(-100%);
-//   }
-// `;
-
-// const scrollRight = keyframes`
-//   0% {
-//     transform: translateX(0);
-//   }
-//   100% {
-//     transform: translateX(100%);
-//   }
-// `;
-
-// const MusicVideoList = styled.div`
-//   width: 100%;
-//   height: 15%;
-//   display: flex;
-//   gap: 1rem;
-//   margin-bottom: 2rem;
-//   animation: ${(props) =>
-//       props.direction === 'right' ? scrollRight : scrollLeft}
-//     30s linear infinite;
-// `;
-
-// const MusicVideoListCenter = styled.div`
-//   width: 100%;
-//   height: 15%;
-//   display: flex;
-//   gap: 1rem;
-//   margin-bottom: 2rem;
-//   animation: ${(props) =>
-//       props.direction === 'right' ? scrollRight : scrollLeft}
-//     30s linear infinite;
-// `;
-
-// const MusicVideoListBox = styled.img`
-//   width: 15rem;
-//   height: 9rem;
-//   background-color: white;
-//   border-radius: 0.4rem;
-//   flex-shrink: 0;
-// `;
+const MusicVideoListBox = styled.img`
+  width: 15rem;
+  height: 9rem;
+  background-color: white;
+  border-radius: 0.4rem;
+  flex-shrink: 0;
+  margin-left: 2rem;
+`;
 
 const FifthSectionText = styled.p`
-  font-size: 3rem;
+  font-size: 3.5rem;
   color: white;
   font-family: suit;
   font-weight: 700;
   line-height: 1.5;
-  margin-bottom: 2rem;
+  margin-bottom: 5rem;
 `;
+
+const MusicVideoList = ({ direction, urls }) => {
+  const listRef = useRef();
+
+  useEffect(() => {
+    const list = listRef.current;
+    let scrollAmount = 0;
+    const speed = 0.7;
+
+    const scrollStep = () => {
+      scrollAmount += direction === 'right' ? speed : -speed;
+      list.scrollLeft = scrollAmount;
+      if (scrollAmount >= list.scrollWidth / 2) {
+        scrollAmount = 0;
+      } else if (scrollAmount <= 0) {
+        scrollAmount = list.scrollWidth / 2;
+      }
+      requestAnimationFrame(scrollStep);
+    };
+
+    requestAnimationFrame(scrollStep);
+
+    return () => {
+      cancelAnimationFrame(scrollStep);
+    };
+  }, [direction]);
+
+  return (
+    <div
+      ref={listRef}
+      style={{
+        display: 'flex',
+        overflow: 'hidden',
+        width: '100%',
+        height: '20%',
+      }}
+    >
+      <div style={{ display: 'flex', flexShrink: 0 }}>
+        {urls.map((url, idx) => (
+          <MusicVideoListBox key={idx} src={url} />
+        ))}
+        {urls.map((url, idx) => (
+          <MusicVideoListBox key={idx + urls.length} src={url} />
+        ))}
+      </div>
+    </div>
+  );
+};
 
 const OnBoardingPage = () => {
   const navigate = useNavigate();
@@ -337,13 +346,27 @@ const OnBoardingPage = () => {
   const [currentSection, setCurrentSection] = useState(0);
   const [scrollDirection, setScrollDirection] = useState(null);
 
-  const settings = {
-    focusOnSelect: true,
-    infinite: true,
-    slidesToShow: 10,
-    slidesToScroll: 1,
-    speed: 500,
-  };
+  const [musicVideos1, setMusicVideos1] = useState([]);
+  const [musicVideos2, setMusicVideos2] = useState([]);
+  const [musicVideos3, setMusicVideos3] = useState([]);
+
+  useEffect(() => {
+    const fetchMusicVideos = async () => {
+      try {
+        const data1 = await getOnboarding(1, 14);
+        const data2 = await getOnboarding(2, 14);
+        const data3 = await getOnboarding(3, 14);
+
+        setMusicVideos1(data1.music_videos.map((data) => data.cover_image));
+        setMusicVideos2(data2.music_videos.map((data) => data.cover_image));
+        setMusicVideos3(data3.music_videos.map((data) => data.cover_image));
+      } catch (error) {
+        console.error('뮤직비디오 정보를 가져오는 중 오류 발생:', error);
+      }
+    };
+
+    fetchMusicVideos();
+  }, []);
 
   const scrollToSection = (index) => {
     const section = sectionsRef.current[index];
@@ -382,57 +405,6 @@ const OnBoardingPage = () => {
   useEffect(() => {
     scrollToSection(currentSection);
   }, [currentSection]);
-
-  // const musicVideos1 = [
-  //   'https://i.ibb.co/c2q533c/dummy9.webp',
-  //   'https://i.ibb.co/ysNfRP7/dummy8.webp',
-  //   'https://i.ibb.co/ck4s16h/dummy7.webp',
-  //   'https://i.ibb.co/wr0Qf1d/dummy6.webp',
-  //   'https://i.ibb.co/RjCyvNX/dummy5.webp',
-  //   'https://i.ibb.co/Bfvtv9S/dummy4.webp',
-  //   'https://i.ibb.co/zRvDs4n/dummy3.webp',
-  //   'https://i.ibb.co/8rR2GNY/dummy2.webp',
-  //   'https://i.ibb.co/XjFTCNZ/dummy1.webp',
-  //   'https://i.ibb.co/D9152b6/dummy12.webp',
-  //   'https://i.ibb.co/ZTZ402V/dummy11.webp',
-  //   'https://i.ibb.co/QQWHDWn/dummy10.webp',
-  //   'https://i.ibb.co/DkxF5fF/qwd-jpb.webp',
-  //   'https://i.ibb.co/rm30n24/efm.webp',
-  // ];
-
-  // const musicVideos2 = [
-  //   'https://i.ibb.co/c2q533c/dummy9.webp',
-  //   'https://i.ibb.co/ysNfRP7/dummy8.webp',
-  //   'https://i.ibb.co/ck4s16h/dummy7.webp',
-  //   'https://i.ibb.co/wr0Qf1d/dummy6.webp',
-  //   'https://i.ibb.co/RjCyvNX/dummy5.webp',
-  //   'https://i.ibb.co/Bfvtv9S/dummy4.webp',
-  //   'https://i.ibb.co/zRvDs4n/dummy3.webp',
-  //   'https://i.ibb.co/8rR2GNY/dummy2.webp',
-  //   'https://i.ibb.co/XjFTCNZ/dummy1.webp',
-  //   'https://i.ibb.co/D9152b6/dummy12.webp',
-  //   'https://i.ibb.co/ZTZ402V/dummy11.webp',
-  //   'https://i.ibb.co/QQWHDWn/dummy10.webp',
-  //   'https://i.ibb.co/DkxF5fF/qwd-jpb.webp',
-  //   'https://i.ibb.co/rm30n24/efm.webp',
-  // ];
-
-  // const musicVideos3 = [
-  //   'https://i.ibb.co/jZC1m8q/g.webp',
-  //   'https://i.ibb.co/7YxZwtQ/f.webp',
-  //   'https://i.ibb.co/vj4N7Kg/b.webp',
-  //   'https://i.ibb.co/wQs8HBx/d.webp',
-  //   'https://i.ibb.co/wLF0GfS/c.webp',
-  //   'https://i.ibb.co/q9W2Qhx/b1.webp',
-  //   'https://i.ibb.co/ryzdP1R/a.webp',
-  //   'https://i.ibb.co/NYthwKK/3c.webp',
-  //   'https://i.ibb.co/Rb0nDnb/k.webp',
-  //   'https://i.ibb.co/GnpZFsB/k2.webp',
-  //   'https://i.ibb.co/1XjWb1Y/k3.webp',
-  //   'https://i.ibb.co/zGQRpRk/new1.webp',
-  //   'https://i.ibb.co/GkKxH84/new2.jpg',
-  //   'https://i.ibb.co/Wxxs7Sj/new3.webp',
-  // ];
 
   return (
     <WholeContainer>
@@ -512,48 +484,22 @@ const OnBoardingPage = () => {
           )}
           {index === 4 && (
             <FifthSection>
-              {/* <MusicVideoListContainer> */}
-              <FifthSectionText>
-                당신을 기다리는
-                <br />
-                수많은 뮤직비디오
-              </FifthSectionText>
-              <div className="slider-container">
-                <Slider {...settings}>
-                  <div>
-                    <h3>1 2 3 4 </h3>
-                  </div>
-                  <div>
-                    <h3>2</h3>
-                  </div>
-                  <div>
-                    <h3>3</h3>
-                  </div>
-                  <div>
-                    <h3>4</h3>
-                  </div>
-                  <div>
-                    <h3></h3>
-                  </div>
-                </Slider>
-              </div>
-              {/* <MusicVideoList direction="left">
-                  {musicVideos1.map((url, idx) => (
-                    <MusicVideoListBox key={idx} src={url} />
-                  ))}
-                </MusicVideoList>
-                <MusicVideoListCenter direction="right">
-                  {[...musicVideos2].reverse().map((url, idx) => (
-                    <MusicVideoListBox key={idx} src={url} />
-                  ))}
-                </MusicVideoListCenter>
+              <MusicVideoListContainer>
+                <FifthSectionText>
+                  당신을 기다리는
+                  <br />
+                  수많은 뮤직비디오
+                </FifthSectionText>
 
-                <MusicVideoList direction="left">
-                  {musicVideos3.map((url, idx) => (
-                    <MusicVideoListBox key={idx} src={url} />
-                  ))}
-                </MusicVideoList>
-              </MusicVideoListContainer> */}
+                {/* 첫 번째 커버 */}
+                <MusicVideoList direction="left" urls={musicVideos1} />
+
+                {/* 두 번째 커버 */}
+                <MusicVideoList direction="right" urls={musicVideos2} />
+
+                {/* 세 번째 커버 */}
+                <MusicVideoList direction="left" urls={musicVideos3} />
+              </MusicVideoListContainer>
             </FifthSection>
           )}
           {index === 5 && (
