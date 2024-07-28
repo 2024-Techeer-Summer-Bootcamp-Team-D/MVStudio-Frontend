@@ -1,6 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
 import styled, { keyframes } from 'styled-components';
 import { useNavigate } from 'react-router-dom';
+import '../styles/slider.css';
+import Slider from 'react-slick';
 
 const WholeContainer = styled.div`
   height: 100%;
@@ -18,7 +20,7 @@ const WholeContainer = styled.div`
     background: url('https://i.ibb.co/k0wLXnC/Sound-Wave.gif') no-repeat center
       center fixed;
     background-size: cover;
-    filter: blur(0.5rem) brightness(50%);
+    filter: blur(0.7rem) brightness(40%);
   }
 `;
 
@@ -262,60 +264,71 @@ const Button = styled.button`
   }
 `;
 
-const MusicVideoListContainer = styled.div`
-  width: 97%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  text-align: center;
-  justify-content: flex-end;
-  overflow: hidden;
-`;
+// const MusicVideoListContainer = styled.div`
+//   width: 97%;
+//   height: 100%;
+//   display: flex;
+//   flex-direction: column;
+//   text-align: center;
+//   justify-content: flex-end;
+//   overflow: hidden;
+// `;
 
-const scrollLeft = keyframes`
-  0% {
-    transform: translateX(0);
-  }
-  100% {
-    transform: translateX(-100%);
-  }
-`;
+// const scrollLeft = keyframes`
+//   0% {
+//     transform: translateX(0);
+//   }
+//   100% {
+//     transform: translateX(-100%);
+//   }
+// `;
 
-const scrollRight = keyframes`
-  0% {
-    transform: translateX(0);
-  }
-  100% {
-    transform: translateX(100%);
-  }
-`;
+// const scrollRight = keyframes`
+//   0% {
+//     transform: translateX(0);
+//   }
+//   100% {
+//     transform: translateX(100%);
+//   }
+// `;
 
-const MusicVideoList = styled.div`
-  width: 100%;
-  height: 15%;
-  display: flex;
-  gap: 1rem;
-  margin-bottom: 2rem;
-  animation: ${(props) =>
-      props.direction === 'right' ? scrollRight : scrollLeft}
-    30s linear infinite;
-`;
+// const MusicVideoList = styled.div`
+//   width: 100%;
+//   height: 15%;
+//   display: flex;
+//   gap: 1rem;
+//   margin-bottom: 2rem;
+//   animation: ${(props) =>
+//       props.direction === 'right' ? scrollRight : scrollLeft}
+//     30s linear infinite;
+// `;
 
-const MusicVideoListBox = styled.img`
-  width: 15rem;
-  height: 9rem;
-  background-color: white;
-  border-radius: 0.4rem;
-  flex-shrink: 0;
-`;
+// const MusicVideoListCenter = styled.div`
+//   width: 100%;
+//   height: 15%;
+//   display: flex;
+//   gap: 1rem;
+//   margin-bottom: 2rem;
+//   animation: ${(props) =>
+//       props.direction === 'right' ? scrollRight : scrollLeft}
+//     30s linear infinite;
+// `;
+
+// const MusicVideoListBox = styled.img`
+//   width: 15rem;
+//   height: 9rem;
+//   background-color: white;
+//   border-radius: 0.4rem;
+//   flex-shrink: 0;
+// `;
 
 const FifthSectionText = styled.p`
   font-size: 3rem;
   color: white;
   font-family: suit;
   font-weight: 700;
-  margin-bottom: 8rem;
   line-height: 1.5;
+  margin-bottom: 2rem;
 `;
 
 const OnBoardingPage = () => {
@@ -323,6 +336,14 @@ const OnBoardingPage = () => {
   const sectionsRef = useRef([]);
   const [currentSection, setCurrentSection] = useState(0);
   const [scrollDirection, setScrollDirection] = useState(null);
+
+  const settings = {
+    focusOnSelect: true,
+    infinite: true,
+    slidesToShow: 10,
+    slidesToScroll: 1,
+    speed: 500,
+  };
 
   const scrollToSection = (index) => {
     const section = sectionsRef.current[index];
@@ -362,56 +383,56 @@ const OnBoardingPage = () => {
     scrollToSection(currentSection);
   }, [currentSection]);
 
-  const musicVideos1 = [
-    'https://i.ibb.co/c2q533c/dummy9.webp',
-    'https://i.ibb.co/ysNfRP7/dummy8.webp',
-    'https://i.ibb.co/ck4s16h/dummy7.webp',
-    'https://i.ibb.co/wr0Qf1d/dummy6.webp',
-    'https://i.ibb.co/RjCyvNX/dummy5.webp',
-    'https://i.ibb.co/Bfvtv9S/dummy4.webp',
-    'https://i.ibb.co/zRvDs4n/dummy3.webp',
-    'https://i.ibb.co/8rR2GNY/dummy2.webp',
-    'https://i.ibb.co/XjFTCNZ/dummy1.webp',
-    'https://i.ibb.co/D9152b6/dummy12.webp',
-    'https://i.ibb.co/ZTZ402V/dummy11.webp',
-    'https://i.ibb.co/QQWHDWn/dummy10.webp',
-    'https://i.ibb.co/DkxF5fF/qwd-jpb.webp',
-    'https://i.ibb.co/rm30n24/efm.webp',
-  ];
+  // const musicVideos1 = [
+  //   'https://i.ibb.co/c2q533c/dummy9.webp',
+  //   'https://i.ibb.co/ysNfRP7/dummy8.webp',
+  //   'https://i.ibb.co/ck4s16h/dummy7.webp',
+  //   'https://i.ibb.co/wr0Qf1d/dummy6.webp',
+  //   'https://i.ibb.co/RjCyvNX/dummy5.webp',
+  //   'https://i.ibb.co/Bfvtv9S/dummy4.webp',
+  //   'https://i.ibb.co/zRvDs4n/dummy3.webp',
+  //   'https://i.ibb.co/8rR2GNY/dummy2.webp',
+  //   'https://i.ibb.co/XjFTCNZ/dummy1.webp',
+  //   'https://i.ibb.co/D9152b6/dummy12.webp',
+  //   'https://i.ibb.co/ZTZ402V/dummy11.webp',
+  //   'https://i.ibb.co/QQWHDWn/dummy10.webp',
+  //   'https://i.ibb.co/DkxF5fF/qwd-jpb.webp',
+  //   'https://i.ibb.co/rm30n24/efm.webp',
+  // ];
 
-  const musicVideos2 = [
-    'https://i.ibb.co/c2q533c/dummy9.webp',
-    'https://i.ibb.co/ysNfRP7/dummy8.webp',
-    'https://i.ibb.co/ck4s16h/dummy7.webp',
-    'https://i.ibb.co/wr0Qf1d/dummy6.webp',
-    'https://i.ibb.co/RjCyvNX/dummy5.webp',
-    'https://i.ibb.co/Bfvtv9S/dummy4.webp',
-    'https://i.ibb.co/zRvDs4n/dummy3.webp',
-    'https://i.ibb.co/8rR2GNY/dummy2.webp',
-    'https://i.ibb.co/XjFTCNZ/dummy1.webp',
-    'https://i.ibb.co/D9152b6/dummy12.webp',
-    'https://i.ibb.co/ZTZ402V/dummy11.webp',
-    'https://i.ibb.co/QQWHDWn/dummy10.webp',
-    'https://i.ibb.co/DkxF5fF/qwd-jpb.webp',
-    'https://i.ibb.co/rm30n24/efm.webp',
-  ];
+  // const musicVideos2 = [
+  //   'https://i.ibb.co/c2q533c/dummy9.webp',
+  //   'https://i.ibb.co/ysNfRP7/dummy8.webp',
+  //   'https://i.ibb.co/ck4s16h/dummy7.webp',
+  //   'https://i.ibb.co/wr0Qf1d/dummy6.webp',
+  //   'https://i.ibb.co/RjCyvNX/dummy5.webp',
+  //   'https://i.ibb.co/Bfvtv9S/dummy4.webp',
+  //   'https://i.ibb.co/zRvDs4n/dummy3.webp',
+  //   'https://i.ibb.co/8rR2GNY/dummy2.webp',
+  //   'https://i.ibb.co/XjFTCNZ/dummy1.webp',
+  //   'https://i.ibb.co/D9152b6/dummy12.webp',
+  //   'https://i.ibb.co/ZTZ402V/dummy11.webp',
+  //   'https://i.ibb.co/QQWHDWn/dummy10.webp',
+  //   'https://i.ibb.co/DkxF5fF/qwd-jpb.webp',
+  //   'https://i.ibb.co/rm30n24/efm.webp',
+  // ];
 
-  const musicVideos3 = [
-    'https://i.ibb.co/c2q533c/dummy9.webp',
-    'https://i.ibb.co/ysNfRP7/dummy8.webp',
-    'https://i.ibb.co/ck4s16h/dummy7.webp',
-    'https://i.ibb.co/wr0Qf1d/dummy6.webp',
-    'https://i.ibb.co/RjCyvNX/dummy5.webp',
-    'https://i.ibb.co/Bfvtv9S/dummy4.webp',
-    'https://i.ibb.co/zRvDs4n/dummy3.webp',
-    'https://i.ibb.co/8rR2GNY/dummy2.webp',
-    'https://i.ibb.co/XjFTCNZ/dummy1.webp',
-    'https://i.ibb.co/D9152b6/dummy12.webp',
-    'https://i.ibb.co/ZTZ402V/dummy11.webp',
-    'https://i.ibb.co/QQWHDWn/dummy10.webp',
-    'https://i.ibb.co/DkxF5fF/qwd-jpb.webp',
-    'https://i.ibb.co/rm30n24/efm.webp',
-  ];
+  // const musicVideos3 = [
+  //   'https://i.ibb.co/jZC1m8q/g.webp',
+  //   'https://i.ibb.co/7YxZwtQ/f.webp',
+  //   'https://i.ibb.co/vj4N7Kg/b.webp',
+  //   'https://i.ibb.co/wQs8HBx/d.webp',
+  //   'https://i.ibb.co/wLF0GfS/c.webp',
+  //   'https://i.ibb.co/q9W2Qhx/b1.webp',
+  //   'https://i.ibb.co/ryzdP1R/a.webp',
+  //   'https://i.ibb.co/NYthwKK/3c.webp',
+  //   'https://i.ibb.co/Rb0nDnb/k.webp',
+  //   'https://i.ibb.co/GnpZFsB/k2.webp',
+  //   'https://i.ibb.co/1XjWb1Y/k3.webp',
+  //   'https://i.ibb.co/zGQRpRk/new1.webp',
+  //   'https://i.ibb.co/GkKxH84/new2.jpg',
+  //   'https://i.ibb.co/Wxxs7Sj/new3.webp',
+  // ];
 
   return (
     <WholeContainer>
@@ -491,29 +512,48 @@ const OnBoardingPage = () => {
           )}
           {index === 4 && (
             <FifthSection>
-              <MusicVideoListContainer>
-                <FifthSectionText>
-                  당신을 기다리는
-                  <br />
-                  수많은 뮤직비디오
-                </FifthSectionText>
-                <MusicVideoList direction="left">
+              {/* <MusicVideoListContainer> */}
+              <FifthSectionText>
+                당신을 기다리는
+                <br />
+                수많은 뮤직비디오
+              </FifthSectionText>
+              <div className="slider-container">
+                <Slider {...settings}>
+                  <div>
+                    <h3>1 2 3 4 </h3>
+                  </div>
+                  <div>
+                    <h3>2</h3>
+                  </div>
+                  <div>
+                    <h3>3</h3>
+                  </div>
+                  <div>
+                    <h3>4</h3>
+                  </div>
+                  <div>
+                    <h3></h3>
+                  </div>
+                </Slider>
+              </div>
+              {/* <MusicVideoList direction="left">
                   {musicVideos1.map((url, idx) => (
                     <MusicVideoListBox key={idx} src={url} />
                   ))}
                 </MusicVideoList>
-                <MusicVideoList direction="right">
+                <MusicVideoListCenter direction="right">
                   {[...musicVideos2].reverse().map((url, idx) => (
                     <MusicVideoListBox key={idx} src={url} />
                   ))}
-                </MusicVideoList>
+                </MusicVideoListCenter>
 
                 <MusicVideoList direction="left">
                   {musicVideos3.map((url, idx) => (
                     <MusicVideoListBox key={idx} src={url} />
                   ))}
                 </MusicVideoList>
-              </MusicVideoListContainer>
+              </MusicVideoListContainer> */}
             </FifthSection>
           )}
           {index === 5 && (
