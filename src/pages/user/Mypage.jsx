@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { useParams, useNavigate } from 'react-router-dom';
@@ -98,15 +99,26 @@ const AlbumContainer = styled.div`
   grid-template-columns: repeat(3, 1fr);
   gap: 1rem;
   width: 100%;
-  padding-left: 1rem;
-  padding-right: 1rem;
+  padding: 1rem;
   margin-top: 1rem;
   transition: 0.3s;
+
+  @media (max-width: 768px) {
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  }
+
+  @media (max-width: 480px) {
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  }
 `;
 
 const AlbumCoverContainer = styled.div`
   position: relative;
   cursor: pointer;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  border-radius: 0.5rem;
+  transition: transform 0.3s ease;
 
   &:hover .overlay {
     opacity: 1;
@@ -115,9 +127,7 @@ const AlbumCoverContainer = styled.div`
 
 const AlbumCoverImage = styled.img`
   width: 100%;
-  height: auto;
-  border-radius: 0.5rem;
-  aspect-ratio: 5 / 3;
+  height: 100%;
   object-fit: cover;
 `;
 
@@ -127,29 +137,33 @@ const Overlay = styled.div`
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.7);
+  background: rgba(0, 0, 0, 0.3);
   color: #fff;
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  border-radius: 0.5rem;
   opacity: 0;
   transition: opacity 0.3s ease-in-out;
 `;
-
 const OverlayText = styled.p`
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
+  margin: 0.5rem 0;
+  text-align: center;
+  font-size: 0.9rem;
+
+  @media (max-width: 480px) {
+    font-size: 0.8rem;
+  }
 `;
 
-const AlbumCover = (data, onClick) => (
+const AlbumCover = ({ data, onClick }) => (
   <AlbumCoverContainer onClick={onClick}>
     <AlbumCoverImage src={data.cover_image} alt={data.subject} />
     <Overlay className="overlay">
       <OverlayText>{data.subject}</OverlayText>
-      <OverlayText>{/* <VisibilityIcon /> {data.views} */}</OverlayText>
+      <OverlayText>
+        {/* 여기에 조회수 등 추가 정보를 넣을 수 있습니다 */}
+      </OverlayText>
     </Overlay>
   </AlbumCoverContainer>
 );
@@ -232,7 +246,7 @@ function Mypage() {
 
   const fetchData = async (pageNum) => {
     try {
-      const response = await getList(pageNum, 9, 'null', username);
+      const response = await getList(pageNum, 9, '', username);
       const newData = response.music_videos.filter(
         (video) => !fetchedVideoIds.flat().includes(video.id),
       );
