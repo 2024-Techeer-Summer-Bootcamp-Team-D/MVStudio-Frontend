@@ -17,7 +17,7 @@ const BackLayout = styled.div`
   justify-content: center;
   align-items: center; /* 수직 중앙 정렬 */
   border-bottom: 1px solid #1e003b;
-  z-index: 3;
+  z-index: 100;
   position: fixed;
 `;
 

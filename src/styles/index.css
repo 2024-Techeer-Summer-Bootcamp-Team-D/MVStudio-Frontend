@@ -11,3 +11,29 @@ body {
   font-family: 'SUIT';
   src: url('../src/assets/font/SUIT-Variable.ttf') format('truetype');
 }
+
+::-webkit-scrollbar {
+  width: 0.5rem;
+  height: 0.5rem;
+}
+
+::-webkit-scrollbar-track {
+  background: none;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #555;
+  border-radius: 0.375rem;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #888;
+}
+
+::-webkit-scrollbar-button {
+  background: #888;
+}
+
+::-webkit-scrollbar-corner {
+  background: #888;
+}

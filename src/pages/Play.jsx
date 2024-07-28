@@ -10,6 +10,7 @@ import {
   patchHistoryUpdate,
   postYoutubeUpload,
 } from '@/api/play';
+import { defaultProfile } from '@/assets/image';
 
 const BackLayout = styled.div`
   width: 90%;
@@ -389,12 +390,9 @@ function Play() {
           <Title>{playData?.data?.subject || 'Loading...'}</Title>
           <UserInfo>
             <img
-              src={
-                playData?.data?.profile_image ||
-                'https://i.ibb.co/h8q8YgC/pro.jpg'
-              }
+              src={playData?.data?.profile_image || defaultProfile}
               alt="Profile"
-              style={{ width: '3rem', height: '3rem', borderRadius: '50%' }}
+              style={{ width: '3rem', height: '3rem', borderRadius: '100%' }}
             />
             <UserInfo2>
               <Subtitle>{playData?.data?.member_name || 'Loading...'}</Subtitle>

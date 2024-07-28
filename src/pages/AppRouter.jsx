@@ -5,7 +5,7 @@ import Auth from './auth/Auth';
 import Create from './Create';
 import EditProfile from './user/EditProfile';
 import LyricsSelect from './LyricsSelect';
-import Main from '@/pages/Main';
+import Main from '@/pages/main/Main';
 import Mypage from './user/Mypage';
 import OnBoardingPage from './OnBoardingPage';
 import Pay from './Pay';

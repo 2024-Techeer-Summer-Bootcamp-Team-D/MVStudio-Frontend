@@ -1,13 +1,19 @@
 import { jsonAxios } from './axios.config';
 
-export const getList = async (page, size, sort = null, username = null) => {
+export const getList = async (page, size, sort, username) => {
   try {
-    const response = await jsonAxios.get(
-      `/music-videos?page=${page}&size=${size}` +
-        (sort ? `&sort=${sort}` : '') +
-        (username ? `&username=${username}` : ''),
-    );
-    console.log('겟리스트:', response.data);
+    const params = new URLSearchParams({
+      page: page,
+      size: size,
+    });
+
+    if (sort) {
+      params.append('sort', sort);
+    } else if (username) {
+      params.append('username', username);
+    }
+
+    const response = await jsonAxios.get(`/music-videos?${params.toString()}`);
     return response.data;
   } catch (error) {
     console.error('errorcode:', error);
