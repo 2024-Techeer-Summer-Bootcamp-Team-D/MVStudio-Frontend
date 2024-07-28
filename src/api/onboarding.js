@@ -3,7 +3,7 @@ import { jsonAxios } from './axios.config';
 export const getOnboarding = async (page, size) => {
   try {
     const response = await jsonAxios.get(
-      `/music-videos?&page=${page}&size=${size}`,
+      `/music-videos/cover-images?&page=${page}&size=${size}`,
     );
 
     console.log('Response data:', response.data);

@@ -275,8 +275,8 @@ const MusicVideoListContainer = styled.div`
 `;
 
 const MusicVideoListBox = styled.img`
-  width: 15rem;
-  height: 9rem;
+  width: 5%;
+  height: 80%;
   background-color: white;
   border-radius: 0.4rem;
   flex-shrink: 0;
@@ -357,9 +357,9 @@ const OnBoardingPage = () => {
         const data2 = await getOnboarding(2, 14);
         const data3 = await getOnboarding(3, 14);
 
-        setMusicVideos1(data1.music_videos.map((data) => data.cover_image));
-        setMusicVideos2(data2.music_videos.map((data) => data.cover_image));
-        setMusicVideos3(data3.music_videos.map((data) => data.cover_image));
+        setMusicVideos1(data1.cover_images.map((data) => data.cover_image));
+        setMusicVideos2(data2.cover_images.map((data) => data.cover_image));
+        setMusicVideos3(data3.cover_images.map((data) => data.cover_image));
       } catch (error) {
         console.error('뮤직비디오 정보를 가져오는 중 오류 발생:', error);
       }
