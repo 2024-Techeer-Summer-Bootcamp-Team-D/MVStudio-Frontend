@@ -26,7 +26,8 @@ const PlayerWrapper = styled.div`
   width: 100%;
   aspect-ratio: 10 / 6;
   border-radius: 8px;
-  max-height: calc(100vh - 5rem);
+  max-height: ${({ expanded }) =>
+    expanded ? 'calc(100vh - 10rem)' : 'calc(100vh - 5rem)'};
   overflow: hidden;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
   &:hover .controls {
@@ -344,7 +345,11 @@ const VideoPlayer = ({ src, id, toggleLyrics, setToggleLyrics, subject }) => {
   };
 
   return (
-    <PlayerWrapper onClick={togglePlayPause} ref={playerWrapperRef}>
+    <PlayerWrapper
+      expanded={toggleLyrics}
+      onClick={togglePlayPause}
+      ref={playerWrapperRef}
+    >
       {/* {!playerRef.current && playing && (
         <RefreshPlay
           onClick={(event) => {
