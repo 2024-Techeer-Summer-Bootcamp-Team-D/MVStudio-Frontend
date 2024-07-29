@@ -15,6 +15,7 @@ import SaveTokens from './auth/SaveTokens';
 import Search from './Search';
 import ViewChart from './ViewChart';
 import YtChannelRegister from './user/YtChannelRegister';
+import Upload from './Upload';
 
 function AppRouter() {
   return (
@@ -35,6 +36,7 @@ function AppRouter() {
           <Route path="/chart" element={<ViewChart />} />
           <Route path="/edit" element={<EditProfile />} />
           <Route path="/payment" element={<Pay />} />
+          <Route path="/upload" element={<Upload />} />
         </Routes>
       </App>
     </Router>
