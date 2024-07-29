@@ -303,11 +303,11 @@ const Overlay = styled.div`
 
 const ModalContainer = styled.div`
   position: absolute;
-  top: 40%;
+  top: 30%;
   left: 50%;
   transform: translate(-50%, -50%);
   width: 40rem;
-  height: 60%;
+  height: 30rem;
   background-color: #240b38;
   color: white;
   border-radius: 2rem;
