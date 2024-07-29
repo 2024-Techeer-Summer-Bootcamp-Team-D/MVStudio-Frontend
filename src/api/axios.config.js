@@ -50,7 +50,7 @@ jsonAxios.interceptors.response.use(
     const originalRequest = error.config;
     if (
       error.response &&
-      (error.response.status === 403 || error.response.status === 401) &&
+      error.response.status === 401 &&
       !originalRequest._retry
     ) {
       originalRequest._retry = true;
@@ -68,7 +68,7 @@ jsonAxios.interceptors.response.use(
       } catch (reissueError) {
         if (
           window.location.pathname !== '/auth' &&
-          (error.response.status === 403 || error.response.status === 401)
+          error.response.status === 401
         ) {
           window.location.href = '/auth';
         }
@@ -110,7 +110,7 @@ formAxios.interceptors.response.use(
     const originalRequest = error.config;
     if (
       error.response &&
-      (error.response.status === 403 || error.response.status === 401) &&
+      error.response.status === 401 &&
       !originalRequest._retry
     ) {
       originalRequest._retry = true;
@@ -128,7 +128,7 @@ formAxios.interceptors.response.use(
       } catch (reissueError) {
         if (
           window.location.pathname !== '/auth' &&
-          (error.response.status === 403 || error.response.status === 401)
+          error.response.status === 401
         ) {
           window.location.href = '/auth';
         }

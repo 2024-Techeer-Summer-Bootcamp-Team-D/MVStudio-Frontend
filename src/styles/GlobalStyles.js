@@ -44,18 +44,12 @@ const GlobalStyles = createGlobalStyle`
     }
   }
 
-  img, div {
+  img {
     user-select: none;
     -moz-user-select: none;
     -webkit-user-drag: none;
     -webkit-user-select: none;
     -ms-user-select: none;
-  }
-
-  body {
-    line-height: 1;
-    font-family: 'bmjua', sans-serif;
-    background-color: #05000a;
   }
 
   ol, ul {

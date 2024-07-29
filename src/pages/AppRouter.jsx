@@ -9,7 +9,7 @@ import Main from '@/pages/main/Main';
 import Mypage from './user/Mypage';
 import OnBoardingPage from './OnBoardingPage';
 import Pay from './Pay';
-import Play from './Play';
+import Play from './play/Play';
 import Register from './auth/Register';
 import SaveTokens from './auth/SaveTokens';
 import Search from './Search';

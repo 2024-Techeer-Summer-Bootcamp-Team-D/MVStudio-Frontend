@@ -16,19 +16,11 @@ export const postHistory = async (mv_id) => {
     const url = `/music-videos/histories/create/${mv_id}`;
     const response = await jsonAxios.post(url);
 
-    // 응답 본문 출력
-    console.log('Response data:', response.data);
-
     return response.data;
   } catch (error) {
-    console.error('Error code:', error.response?.status);
-    console.error('Error message:', error.message);
-    console.error('Error response data:', error.response?.data);
-
     if (error.response?.data?.history_id) {
-      return { history_id: error.response.data.history_id };
+      return error.response.data;
     }
-
     throw error;
   }
 };
