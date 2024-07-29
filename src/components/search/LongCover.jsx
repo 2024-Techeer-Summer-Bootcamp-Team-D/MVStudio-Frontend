@@ -12,8 +12,6 @@ const BigContainer = styled.div`
   flex-direction: row;
   align-items: start;
   border-radius: 2rem;
-  margin-left: 18.8rem;
-  margin-top: 1rem;
 `;
 
 const ReaderContainer = styled.div`
