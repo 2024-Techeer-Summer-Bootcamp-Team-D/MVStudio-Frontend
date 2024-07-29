@@ -3,7 +3,8 @@
 import React, { useState } from 'react';
 import styled, { createGlobalStyle } from 'styled-components';
 import { useNavigate } from 'react-router-dom';
-import { setCookie } from '@/utils/cookies';
+import { removeCookie, setCookie } from '@/utils/cookies';
+import { useUser } from '@/libs/stores/userStore';
 
 // Material-UI
 import GoogleIcon from '@mui/icons-material/Google';
@@ -594,10 +595,24 @@ const TearGlass2 = styled.img`
 const Auth = () => {
   const [panelActive, setPanelActive] = useState('');
   const navigate = useNavigate();
-  const successLogin = (accessToken) => {
-    console.log('함수 실행됌');
-    // localStorage.setItem('memberId', id);
-    setCookie('accessToken', accessToken);
+  const setUsername = useUser((state) => state.setUsername);
+  const fetchUsername = useUser((state) => state.fetchUser);
+  const fetchCredits = useUser((state) => state.fetchCredits);
+  const successLogin = async (accessToken) => {
+    removeCookie('accessToken');
+    setUsername('');
+
+    // 쿠키 설정을 동기적으로 처리
+    await new Promise((resolve) => {
+      setCookie('accessToken', accessToken);
+      resolve();
+    });
+
+    // 쿠키 설정 후 사용자 이름을 가져오는 fetchUsername 함수 호출
+    fetchUsername();
+    fetchCredits();
+
+    // fetchUsername 함수 호출 후 페이지 이동
     navigate('/main');
   };
 
