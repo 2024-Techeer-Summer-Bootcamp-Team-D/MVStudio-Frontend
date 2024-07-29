@@ -283,11 +283,8 @@ const SocialLogin = styled.div`
   color: white;
   cursor: pointer;
 `;
-const handleSocialLogin = () => {
-  window.location.href = `${import.meta.env.VITE_REACT_APP_BASE_URL}/api/v1/oauth/login/google`;
-};
 
-const SignUpForm = ({ successLogin }) => {
+const SignUpForm = ({ successLogin, handleSocialLogin }) => {
   const [idValue, setIdValue] = useState('');
   const [emailValue, setEmailValue] = useState('');
   const [passwordValue, setPasswordValue] = useState('');
@@ -440,7 +437,7 @@ const SignUpForm = ({ successLogin }) => {
   );
 };
 
-const SignInForm = ({ successLogin }) => {
+const SignInForm = ({ successLogin, handleSocialLogin }) => {
   const [idValue, setIdValue] = useState('');
   const [passwordValue, setPasswordValue] = useState('');
   const [loginError, setLoginError] = useState('');
@@ -619,6 +616,13 @@ const Auth = () => {
     }
   };
 
+  const handleSocialLogin = () => {
+    removeCookie('accessToken');
+    setUsername('');
+
+    window.location.href = `${import.meta.env.VITE_REACT_APP_BASE_URL}/api/v1/oauth/login/google`;
+  };
+
   return (
     <BackLayout>
       <CircleGlass src="https://i.ibb.co/f2gnqxw/image.png" />
@@ -629,10 +633,16 @@ const Auth = () => {
       <GlobalStyle />
       <Container>
         <SignUpContainer active={panelActive}>
-          <SignUpForm successLogin={successLogin} />
+          <SignUpForm
+            successLogin={successLogin}
+            handleSocialLogin={handleSocialLogin}
+          />
         </SignUpContainer>
         <SignInContainer active={panelActive}>
-          <SignInForm successLogin={successLogin} />
+          <SignInForm
+            successLogin={successLogin}
+            handleSocialLogin={handleSocialLogin}
+          />
         </SignInContainer>
         <OverlayContainer active={panelActive}>
           <Overlay active={panelActive}>
