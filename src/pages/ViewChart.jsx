@@ -1,14 +1,14 @@
+/* eslint-disable no-useless-catch */
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { Line, Bar, Pie, Doughnut } from 'react-chartjs-2';
-import 'chart.js/auto'; // Import the necessary chart.js components
+import 'chart.js/auto';
 import Box from '@mui/material/Box';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import { useUser } from '@/libs/stores/userStore';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import { Chart } from 'chart.js';
-// import { getUsername } from '@/api/member';
 Chart.register(ChartDataLabels);
 import {
   getGenderData,
@@ -20,7 +20,7 @@ import {
 const Statistics = styled.button`
   width: 6rem;
   height: 2rem;
-  font-size: 1.7rem;
+  font-size: 1.32rem;
   color: #ffffff;
   background-color: rgba(255, 255, 255, 0);
   border: none;
@@ -43,38 +43,83 @@ const ChartContainer = styled.div`
 const TotalBox = styled.div`
   text-align: left;
   margin-left: 1rem;
+  margin-top: 0.5rem;
   position: relative;
 `;
 
 const TotalText = styled.p`
   color: white;
-  font-size: 1.3rem;
-  margin-top: 1rem;
+  font-size: 0.9rem;
   margin-bottom: 1rem;
   position: relative;
-  /* border-right: 1px solid #a4a4a4; */
 `;
 
 const StudioText = styled.p`
   color: white;
-  font-size: 1.3rem;
+  font-size: 1rem;
   margin-top: 1rem;
   margin-bottom: 1rem;
   position: relative;
 `;
 
 const ChartSizeSetting = styled.div`
-  width: 90%;
-  height: 90%;
+  width: 80%;
+  height: 64%;
   display: flex;
   justify-content: center;
   align-items: center;
+  margin-left: 8%;
+  background-color: rgba(30, 29, 29, 0.3);
+  border-radius: 20px;
+  border: 1px solid rgba(199, 199, 199, 0.5);
+  padding: 20px;
 `;
 const InfoBox = styled.div`
   display: flex;
   flex-direction: row;
-  gap: 5rem;
+  gap: 2.5rem;
 `;
+const customCanvasBackgroundColor = {
+  id: 'customCanvasBackgroundColor',
+  beforeDraw: (chart, args, options) => {
+    const { ctx } = chart;
+    ctx.save();
+    ctx.globalCompositeOperation = 'destination-over';
+
+    // 배경 색상 설정
+    ctx.fillStyle = options.color || '#99ffff';
+
+    // 배경에 border-radius 적용
+    const width = chart.width;
+    const height = chart.height + 5;
+    const radius = options.borderRadius || 0; // 기본값 0
+    const borderWidth = options.borderWidth || 0; // 기본값 0
+    const borderColor = options.borderColor || '#000'; // 기본값 검정색
+
+    ctx.beginPath();
+    ctx.moveTo(radius, 0);
+    ctx.lineTo(width - radius, 0);
+    ctx.quadraticCurveTo(width, 0, width, radius);
+    ctx.lineTo(width, height - radius);
+    ctx.quadraticCurveTo(width, height, width - radius, height);
+    ctx.lineTo(radius, height);
+    ctx.quadraticCurveTo(0, height, 0, height - radius);
+    ctx.lineTo(0, radius);
+    ctx.quadraticCurveTo(0, 0, radius, 0);
+    ctx.closePath();
+
+    ctx.fill();
+
+    // 테두리 설정
+    if (borderWidth > 0) {
+      ctx.lineWidth = borderWidth;
+      ctx.strokeStyle = borderColor;
+      ctx.stroke();
+    }
+
+    ctx.restore();
+  },
+};
 
 const ViewChart = () => {
   const [viewData, setViewData] = useState(null);
@@ -82,10 +127,7 @@ const ViewChart = () => {
   const [ageData, setAgeData] = useState(null);
   const [countryData, setCountryData] = useState(null);
   const [value, setValue] = useState(0);
-  // const username = 'genie';
   const username = useUser((state) => state.username);
-
-  console.log('유저네임:', username);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -96,36 +138,32 @@ const ViewChart = () => {
       try {
         const response = await getViewData(username);
         setViewData(response);
-        console.log('조회수 정보:', response);
       } catch (error) {
-        console.log('조회수 조회 오류', error);
+        throw error;
       }
     };
     const fetchGenderData = async () => {
       try {
         const response = await getGenderData(username);
         setGenderData(response);
-        console.log('젠더 정보:', response);
       } catch (error) {
-        console.log('조회수 조회 오류', error);
+        throw error;
       }
     };
     const fetchCountryData = async () => {
       try {
         const response = await getCountriesData(username);
         setCountryData(response);
-        console.log('나라 정보:', response);
       } catch (error) {
-        console.log('조회수 조회 오류', error);
+        throw error;
       }
     };
     const fetchAgeData = async () => {
       try {
         const response = await getAgesData(username);
         setAgeData(response);
-        console.log('연령별 정보:', response);
       } catch (error) {
-        console.log('조회수 조회 오류', error);
+        throw error;
       }
     };
     fetchAgeData();
@@ -208,10 +246,11 @@ const ViewChart = () => {
       {
         label: '일일 조회수',
         data: viewData?.daily_views.map((view) => view.daily_views_views),
-        fill: false,
-        backgroundColor: 'rgba(255, 99, 132, 0.5)',
+        fill: true,
+        backgroundColor: 'rgba(255, 99, 132, 0.2)',
         borderColor: 'rgba(255, 99, 132, 0.5)',
         borderWidth: 1,
+        tension: 0.3,
       },
     ],
   };
@@ -235,6 +274,7 @@ const ViewChart = () => {
         backgroundColor: 'rgba(70, 0, 190, 0.5)',
         borderColor: 'rgba(70, 0, 190, 1)',
         borderWidth: 1,
+        borderRadius: 7,
       },
     ],
   };
@@ -242,7 +282,9 @@ const ViewChart = () => {
   const viewChartOptions = {
     scales: {
       x: {
+        display: true,
         ticks: {
+          // display: false,
           font: {
             size: 14,
           },
@@ -254,6 +296,12 @@ const ViewChart = () => {
           font: {
             size: 14,
           },
+          count: 5,
+        },
+        grid: {
+          display: true,
+          color: 'rgba(224, 218, 231, 0.206)',
+          drawBorder: false,
         },
       },
     },
@@ -261,8 +309,10 @@ const ViewChart = () => {
       padding: {
         top: 0,
         right: 20,
-        bottom: 120,
         left: 20,
+      },
+      margin: {
+        bottom: 120,
       },
     },
     plugins: {
@@ -271,9 +321,16 @@ const ViewChart = () => {
         align: 'end',
       },
       datalabels: {
-        display: false, // 명시적으로 datalabels 비활성화
+        display: false,
+      },
+      customCanvasBackgroundColor: {
+        color: 'rgba(30, 29, 29, 0.3)',
+        borderRadius: 15,
+        borderWidth: 1,
+        borderColor: 'rgba(199, 199, 199, 0.5)',
       },
     },
+    maintainAspectRatio: false,
   };
 
   const ageChartOptions = {
@@ -290,10 +347,8 @@ const ViewChart = () => {
         ticks: {
           font: {
             size: 14,
-            callback: function (value) {
-              return value + '%';
-            },
           },
+          count: 5,
         },
       },
     },
@@ -315,17 +370,26 @@ const ViewChart = () => {
         align: 'end',
       },
       datalabels: {
-        display: false, // 명시적으로 datalabels 비활성화
+        display: false,
+      },
+      customCanvasBackgroundColor: {
+        color: 'rgba(30, 29, 29, 0.3)',
+        borderRadius: 20,
+        borderWidth: 1,
+        borderColor: 'rgba(199, 199, 199, 0.5)',
       },
     },
     layout: {
       padding: {
         top: 0,
         right: 20,
-        bottom: 120,
         left: 20,
       },
+      margin: {
+        bottom: 120,
+      },
     },
+    maintainAspectRatio: false,
   };
   const pieDoughnut = {
     scales: {
@@ -349,6 +413,12 @@ const ViewChart = () => {
       },
     },
     plugins: {
+      legend: {
+        position: 'right',
+        labels: {
+          padding: 20, // 범례와 차트 사이의 간격 설정
+        },
+      },
       tooltip: {
         callbacks: {
           label: function (context) {
@@ -369,7 +439,7 @@ const ViewChart = () => {
         },
         formatter: (value, ctx) => {
           if (value === 0 || value === null || value === undefined) {
-            return null; // 값이 없으면 라벨을 표시하지 않음
+            return null;
           }
           const label = ctx.chart.data.labels[ctx.dataIndex];
           return label;
@@ -379,21 +449,30 @@ const ViewChart = () => {
           return value > 0; // 값이 0보다 큰 경우에만 라벨 표시
         },
       },
+      customCanvasBackgroundColor: {
+        color: 'rgba(30, 29, 29, 0.3)',
+        borderRadius: 20,
+        borderWidth: 1,
+        borderColor: 'rgba(199, 199, 199, 0.5)',
+      },
     },
     layout: {
       padding: {
         top: 0,
         right: 20,
-        bottom: 200,
         left: 20,
       },
+      margin: {
+        bottom: 200,
+      },
     },
-  };
+    maintainAspectRatio: false,
+  }; // country와 gender 의 차트가 어떻게 보이는지 옵션
 
   return (
     <ChartContainer>
       <Statistics>My&nbsp;Statistics</Statistics>
-      <Box sx={{ width: '100%', bgcolor: 'black' }}>
+      <Box sx={{ width: '100%', bgcolor: 'black', height: '2rem' }}>
         <Tabs
           value={value}
           onChange={handleChange}
@@ -402,11 +481,19 @@ const ViewChart = () => {
           TabIndicatorProps={{
             style: {
               backgroundColor: '#a4a4a4', // 인디케이터 색상
+              top: '2.7rem', // 인디케이터의 위치를 위로 조정
+              height: '1px',
             },
           }}
           sx={{
+            '& .MuiTabs-flexContainer': {
+              bgcolor: '#05000a', // 전체 탭 컨테이너의 배경색 설정
+            },
             '& .MuiTab-root': {
               color: '#a4a4a4', // 탭의 기본 글자 색상
+              fontSize: '0.8rem', // 탭의 폰트 크기 설정
+              bgcolor: '#05000a', // 탭의 기본 배경색 설정
+              height: '2rem',
             },
             '& .Mui-selected': {
               color: '#ffffff', // 선택된 탭의 글자 색상
@@ -419,24 +506,46 @@ const ViewChart = () => {
           <Tab label="성별 통계" />
         </Tabs>
       </Box>
+
       <TotalBox>
         <StudioText>{viewData.member_name} 님 스튜디오</StudioText>
         <InfoBox>
           <TotalText>Total View : {viewData.total_views}</TotalText>
-          {/* <TotalText>|</TotalText> */}
+          <TotalText>|</TotalText>
           <TotalText>Total Video : {viewData.total_mv}</TotalText>
+          <TotalText>|</TotalText>
           <TotalText>Most View Video: {viewData.popular_mv_subject}</TotalText>
         </InfoBox>
       </TotalBox>
       <ChartSizeSetting>
         {value === 0 && (
-          <Line data={viewChartData} options={viewChartOptions} />
+          <Line
+            data={viewChartData}
+            options={viewChartOptions}
+            // plugins={[customCanvasBackgroundColor]}
+          />
         )}
-        {value === 1 && <Bar data={viewAgeData} options={ageChartOptions} />}
+        {value === 1 && (
+          <Bar
+            data={viewAgeData}
+            options={ageChartOptions}
+            // plugins={[customCanvasBackgroundColor]}
+          />
+        )}
         {value === 2 && (
-          <Doughnut data={countryChartData} options={pieDoughnut} />
+          <Doughnut
+            data={countryChartData}
+            options={pieDoughnut}
+            // plugins={[customCanvasBackgroundColor]}
+          />
         )}
-        {value === 3 && <Pie data={gentderChartData} options={pieDoughnut} />}
+        {value === 3 && (
+          <Pie
+            data={gentderChartData}
+            options={pieDoughnut}
+            // plugins={[customCanvasBackgroundColor]}
+          />
+        )}
       </ChartSizeSetting>
     </ChartContainer>
   );
