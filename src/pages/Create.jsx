@@ -4,28 +4,29 @@ import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { getGenre, getInstruments, getStyles } from '../api/musicVideos';
 import { useNavigate } from 'react-router-dom';
+import ArrowBackBackIcon from '@mui/icons-material/ArrowBack';
+import Swal from 'sweetalert2';
 
 const jellyAnimation = keyframes`
   25% {
     transform: scale(0.9, 1.1);
   }
-
   50% {
     transform: scale(1.1, 0.9);
   }
-
   75% {
     transform: scale(0.95, 1.05);
   }
 `;
+
 const JellyButton = styled.button`
   width: 9rem;
   height: 3.5rem;
   font-size: 1rem;
   font-weight: 500;
   margin-top: 3.2rem;
-  background: linear-gradient(45deg, #b75dfd 30%, #ffa9a9 90%);
-  color: white; /* 텍스트의 색상을 지정합니다 */
+  background:#7C6BDD;
+  color: white;
   border-radius: 1rem;
   cursor: pointer;
   transition: background-color 0.3s ease;
@@ -67,47 +68,64 @@ const CreateContainer = styled.div`
 `;
 
 const BigContainer = styled.div`
-  width: 100%;
+  width: 80%;
+  height:70%;
   gap: 3.4rem;
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
+  align-items: center;
   padding: 1rem;
-  margin-right: 5%;
+`;
+const ProgressBarContainer = styled.div`
+width:100%;
+height:30%;
+display:flex;
+justify-content:center;
+flex-direction:column;
+align-items:center;
 `;
 
-const LeftContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  width: 70%;
-  height: 65vh;
-  align-items: center;
-  justify-content: center;
+
+const ProgressBar = styled.div`
+  width: 80%;
+  height: 1rem;
+  background: #444;
+  border-radius: 0.5rem;
+  margin-bottom: 1rem;
+  position: relative;
 `;
 
-const RightContainer = styled.div`
-  height: 60vh;
-  display: flex;
+const Progress = styled.div`
+  height: 100%;
+  background:#7C6BDD;
+  border-radius: 0.5rem;
+  transition: width 0.3s ease;
+  width: ${(props) => props.width}%;
+`;
+
+const StepContainer = styled.div`
+  width: 80%;
+  display: ${(props) => (props.active ? 'flex' : 'none')};
   flex-direction: column;
   align-items: center;
-  justify-content: center;
 `;
 
 const TitleStyle1 = styled.p`
   font-family: 'SUIT', sans-serif;
   font-size: 1.4rem;
   color: #ffffff;
-  margin-bottom: 1rem;
-  margin-top: 0.5rem;
+  margin-bottom: 0.8rem;
   font-weight: 700;
 `;
 
 const TitleStyle2 = styled.p`
   font-family: 'SUIT', sans-serif;
-  font-size: 1.4rem;
-  color: #ffffff;
-  margin-top: 0.5rem;
-  font-weight: 700;
+  font-size: 0.7rem;
+  color: #c0c0c0;
+  font-weight: 500;
+  margin-bottom:2rem;
 `;
+
 const Button = styled.button`
   width: 10rem;
   font-size: 1rem;
@@ -134,7 +152,7 @@ const Button = styled.button`
   }
 
   &:focus {
-    outline: none;
+    outline:#8270DB;
   }
 
   ${(props) =>
@@ -145,11 +163,9 @@ const Button = styled.button`
 `;
 
 const TitleInput = styled.input`
-  display: flex;
-  word-break: break-all;
-  background-image: linear-gradient(to right, #140421, #2a0650);
-  width: 100%;
-  height: 8rem;
+  background-color:#29064D;
+  width: 80%;
+  height: 4rem;
   outline: none;
   border-radius: 0.7rem;
   border: none;
@@ -158,26 +174,20 @@ const TitleInput = styled.input`
   font-weight: 600;
   font-size: 1.2rem;
   padding: 1rem;
-  position: relative;
-  overflow-wrap: break-word;
-  text-align: left;
-  vertical-align: top;
-  padding-bottom: 4rem;
 
   ::placeholder {
-    position: absolute;
-    top: 1rem;
-    right: 1rem;
     color: #000000;
     font-size: 1.1rem;
     font-family: 'SUIT', sans-serif;
-    max-width: calc(100% - 2rem);
   }
 `;
+
 const ChooseOption = styled.div`
   display: flex;
   flex-direction: row;
   gap: 0.8rem;
+  flex-wrap: wrap;
+  justify-content: center;
 `;
 
 const CoverBox = styled.div`
@@ -187,7 +197,6 @@ const CoverBox = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: flex-end;
 `;
 
 const RoundCover = styled.button`
@@ -221,65 +230,66 @@ const CoverLabel = styled.span`
   margin-top: 0.5rem;
 `;
 
-const CardList = styled.div`
-  display: flex;
-  flex-direction: row;
-  width: 100%;
-  height: 8rem;
-  transition: transform 0.5s ease-in-out;
-  transform: ${({ currentIndex }) => `translateX(-${currentIndex * 16.73}%)`};
-  position: relative;
-`;
-
-const ArrowFunction = styled(ArrowForwardIosIcon)`
-  display: flex;
-  width: 5%;
-  margin-top: 3rem;
-  cursor: pointer;
-  color: ${(props) => (props.disabled ? 'transparent' : '#7b7b7b')};
-  transform: ${(props) => (props.isPrev ? 'rotate(0deg)' : 'rotate(180deg)')};
-  z-index: 2;
-`;
-
 const GenreContainer = styled.div`
   display: flex;
   flex-direction: row;
   overflow: hidden;
   width: 100%;
+  justify-content: space-between;
+  align-items: center;
 `;
 
+const ArrowFunction = styled(ArrowForwardIosIcon)`
+display: flex;
+align-items:center;
+width: 5%;
+cursor: pointer;
+color: ${(props) => (props.disabled ? 'transparent' : '#7b7b7b')};
+transform: ${(props) => (props.isPrev ? 'rotate(0deg)' : 'rotate(180deg)')};
+z-index: 2;
+`;
+const BackButtonContainer = styled.div`
+  width: 80%;
+  height:1.5rem;
+  margin-bottom:1rem;
+`;
+
+const BackButton = styled(ArrowBackBackIcon)`
+
+display: flex;
+width: 3rem;
+height:1.5rem;
+
+cursor: pointer;
+color: white;
+justify-content:flex-start;
+align-items:flex-start;
+`;
 const ViewContainer = styled.div`
-  width: 50rem;
+  width: 80%;
   display: flex;
   overflow: hidden;
 `;
 
-const InstrumentList = styled.div`
+const CardList = styled.div`
   display: flex;
   flex-direction: row;
   width: 100%;
-  height: 8rem;
   transition: transform 0.5s ease-in-out;
-  transform: ${({ optionIndex }) => `translateX(-${optionIndex * 16.73}%)`};
-  position: relative;
+  transform: ${({ currentIndex }) => `translateX(-${currentIndex * 16.73}%)`};
 `;
 
-const StylesList = styled.div`
-  display: flex;
-  flex-direction: row;
-  width: 100%;
-  height: 8rem;
-  transition: transform 0.5s ease-in-out;
-  transform: ${({ optionIndex }) => `translateX(-${optionIndex * 16.73}%)`};
-  position: relative;
+const SubmitButton = styled.button`
+  background:#7C6BDD;
+  border-radius: 1rem;
+  width: 8rem;
+  height: 3rem;
+  font-size: 1rem;
+  color: white;
+  font-family: 'SUIT', sans-serif;
+  margin-top: 2.5rem;
+  font-weight: 550;
 `;
-const ToThePadding = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  height: 100%;
-`;
-
 const Overlay = styled.div`
   position: fixed;
   top: 0;
@@ -321,7 +331,7 @@ const GroupText = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
-  gap: 0.7rem;
+  gap: 0.5rem;
 `;
 
 const ModalItem = styled.p`
@@ -353,42 +363,45 @@ const ModalValue = styled.p`
   font-weight: 500;
 `;
 
-const SubmitButton = styled.button`
+const InstrumentList = styled.div`
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  height: 8rem;
+  transition: transform 0.5s ease-in-out;
+  transform: ${({ optionIndex }) => `translateX(-${optionIndex * 16.73}%)`};
+  position: relative;
+`;
+
+const StylesList = styled.div`
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  height: 8rem;
+  transition: transform 0.5s ease-in-out;
+  transform: ${({ optionIndex }) => `translateX(-${optionIndex * 16.73}%)`};
+  position: relative;
+`;
+const ConfirmButton = styled.button`
   background: linear-gradient(45deg, #b75dfd 30%, #ffa9a9 90%);
   border-radius: 1rem;
   width: 8rem;
   height: 3rem;
   font-size: 1rem;
   color: white;
-  text-transform: none;
   font-family: 'SUIT', sans-serif;
-  margin-left: 14.5rem;
-  margin-top: 2.5rem;
-  font-size: 1.2rem;
   font-weight: 550;
-  font-family: 'SUIT', sans-serif;
+  align-self: flex-end;
+  cursor: pointer;
 `;
 
-const WarningMessage = styled.div`
-  color: #ff0000;
-  font-size: 1rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-left: 3rem;
-  margin-top: 1rem;
-`;
-
-const WarningContainer = styled.div`
-  display: flex;
-`;
 const Create = () => {
   const [genreList, setGenreList] = useState([]);
   const [instrumentsList, setInstrumentsList] = useState([]);
   const [voice, setVoice] = useState('');
   const [language, setLanguage] = useState('');
   const [tempo, setTempo] = useState('');
-
+  const [instrumentLimitExceeded, setInstrumentLimitExceeded] = useState(false);
   const [selectedInstruments, setSelectedInstruments] = useState([]);
   const [songTitle, setSongTitle] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -399,7 +412,8 @@ const Create = () => {
   const [stylesId, setStylesId] = useState();
   const [stylesList, setStylesList] = useState([]);
   const [currentStylesIndex, setCurrentStylesIndex] = useState(0);
-  const [warningModalOpen, setWarningModalOpen] = useState(false);
+  const [step, setStep] = useState(1);
+  const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
     // 장르데이터 호출
@@ -441,50 +455,53 @@ const Create = () => {
     fetchStylesData();
   }, []);
 
-  // handleSelectCloseModal 함수 수정
-  const handleWarningCloseModal = () => {
-    setWarningModalOpen(false);
-    // 모달을 닫을 때 경고 메시지 숨기기
-  };
 
   const handleCreateClick = () => {
-    if (!songTitle || !voice || !language || !tempo || !genreId || !stylesId) {
-      setWarningModalOpen(true);
-    } else {
       setIsModalOpen(true);
-    }
   };
 
   const handleCloseModal = () => {
     setIsModalOpen(false);
   };
 
-  const handleVoiceClick = (label) => {
-    setVoice(label);
-  };
-
-  const handleLanguageClick = (label) => {
-    setLanguage(label);
-  };
-
-  const handleTempoClick = (label) => {
-    setTempo(label);
-  };
-
   const handleInstrumentClick = (label, id) => {
-    if (selectedInstruments.includes(label)) {
-      setSelectedInstruments(
-        selectedInstruments.filter((instrument) => instrument !== label),
-      );
+    const isSelected = selectedInstruments.includes(label);
+    if (isSelected) {
+      setSelectedInstruments(selectedInstruments.filter(item => item !== label));
+      setInstrumentsId(instrumentsId.filter(instrumentId => instrumentId !== id));
     } else {
-      setSelectedInstruments([...selectedInstruments, label]);
-      setInstrumentsId([...instrumentsId, id]);
-    }
-  };
+      if (selectedInstruments.length < 2) {
+        setSelectedInstruments([...selectedInstruments, label]);
+        setInstrumentsId([...instrumentsId, id]);
+      } else{
+          Swal.fire({
+            icon: 'error',
+            title: '악기는 두개이상 선택불가합니다.',
+          }).then(() => {
+            setInstrumentLimitExceeded(false);
+          });
+        }
+        return;
+      }
+      };
+  
+  const handleSubmit = () => {
+    const userPreferences = {
+      genres_ids: genreId,
+      instruments_ids: instrumentsId,
+      style_id: stylesId,
+      subject: songTitle,
+      vocal: voice,
+      language,
+      tempo,
+    };
 
-  const handleSongTitleChange = (event) => {
-    setSongTitle(event.target.value);
+    navigate('/create/lyrics', { state: userPreferences });
   };
+  const navigate = useNavigate();
+
+ 
+ 
 
   const instrumentsCount = selectedInstruments.length;
   const shouldShowWarning = instrumentsCount >= 3;
@@ -524,300 +541,322 @@ const Create = () => {
       setCurrentStylesIndex(currentStylesIndex + 1);
     }
   };
+  const handleNextStep = () => {
+    if (step === 1 && !genreId) {
+      {
+        Swal.fire({
+          icon: 'error',
+          title: '필수 선택 옵션입니다.',
+        }).then(() => {
+          setIsOpen(false);
+        });
+      }
+      return;
+    }
 
-  const WarningBox = styled.div`
-    position: absolute;
-    width: 50%;
-    height: 50%;
-    background-color: #1f0534;
-    color: white;
-    border-radius: 2rem;
-    padding: 2rem;
-    display: flex;
-    flex-direction: row;
-    align-items: start;
-    z-index: 99999;
-  `;
 
-  const handleSubmit = () => {
-    const userPreferences = {
-      genres_ids: genreId,
-      instruments_ids: instrumentsId,
-      style_id: stylesId,
-      subject: songTitle,
-      vocal: voice,
-      language,
-      tempo,
-    };
-
-    navigate('/create/lyrics', { state: userPreferences });
+    if (step === 3 && !stylesId) {
+      {
+        Swal.fire({
+          icon: 'error',
+          title: '필수 선택 옵션입니다.',
+        }).then(() => {
+          setIsOpen(false);
+        });
+      }
+      return;
+    }
+    if (step === 4 && !songTitle) {
+      {
+        Swal.fire({
+          icon: 'error',
+          title: '필수 선택 옵션입니다.',
+        }).then(() => {
+          setIsOpen(false);
+        });
+      }
+      return;
+    }
+    if (step === 5 && !voice) {
+      {
+        Swal.fire({
+          icon: 'error',
+          title: '필수 선택 옵션입니다.',
+        }).then(() => {
+          setIsOpen(false);
+        });
+      }
+      return;
+    }
+    if (step === 6 && !language) {
+      {
+        Swal.fire({
+          icon: 'error',
+          title: '필수 선택 옵션입니다.',
+        }).then(() => {
+          setIsOpen(false);
+        });
+      }
+      return;
+    }
+    if (step === 7 && !tempo) {
+      {
+        Swal.fire({
+          icon: 'error',
+          title: '필수 선택 옵션입니다.',
+        }).then(() => {
+          setIsOpen(false);
+        });
+      }
+      return;
+    }
+    setStep((prevStep) => prevStep + 1);
   };
-  const navigate = useNavigate();
+
+  const handlePrevStep = () => {
+    setStep((prevStep) => prevStep - 1);
+  };
 
   return (
     <CreateContainer>
+      <ProgressBarContainer>
+       <BackButtonContainer>
+       {step > 1 && (
+    <BackButton onClick={handlePrevStep} />
+  )}
+      </BackButtonContainer>
+      
+      <ProgressBar>
+        <Progress width={(step / 7) * 100} />
+      </ProgressBar>
+      </ProgressBarContainer>
+  
       <BigContainer>
-        {/* 좌측 컨테이너 */}
-        <LeftContainer>
-          {/* ToThePadding 컴포넌트 */}
-          <ToThePadding>
-            <div>
-              <TitleStyle1>Title</TitleStyle1>
-              <TitleInput
-                placeholder="Please enter a title"
-                onChange={handleSongTitleChange}
-              />
-            </div>
-            <div>
-              <TitleStyle1>Voice</TitleStyle1>
-              <ChooseOption>
-                <Button
-                  clicked={voice === 'Female'}
-                  onClick={() => handleVoiceClick('Female')}
-                >
-                  Female
-                </Button>
-                <Button
-                  clicked={voice === 'Male'}
-                  onClick={() => handleVoiceClick('Male')}
-                >
-                  Male
-                </Button>
-              </ChooseOption>
-            </div>
-            <div>
-              <TitleStyle1>Language</TitleStyle1>
-              <ChooseOption>
-                <Button
-                  clicked={language === 'English'}
-                  onClick={() => handleLanguageClick('English')}
-                >
-                  English
-                </Button>
-                <Button
-                  clicked={language === 'Korean'}
-                  onClick={() => handleLanguageClick('Korean')}
-                >
-                  한국어
-                </Button>
-                <Button
-                  clicked={language === 'Japanese'}
-                  onClick={() => handleLanguageClick('Japanese')}
-                >
-                  日本語
-                </Button>
-              </ChooseOption>
-            </div>
-            <div>
-              <TitleStyle1>Tempo</TitleStyle1>
-              <ChooseOption>
-                <Button
-                  clicked={tempo === 'Slow'}
-                  onClick={() => handleTempoClick('Slow')}
-                >
-                  Slow
-                </Button>
-                <Button
-                  clicked={tempo === 'Normal'}
-                  onClick={() => handleTempoClick('Normal')}
-                >
-                  Normal
-                </Button>
-                <Button
-                  clicked={tempo === 'Fast'}
-                  onClick={() => handleTempoClick('Fast')}
-                >
-                  Fast
-                </Button>
-              </ChooseOption>
-            </div>
-          </ToThePadding>
-        </LeftContainer>
-
-        {/* 우측 컨테이너 */}
-        <RightContainer>
-          <ToThePadding>
-            {/* Genre 관련 컴포넌트 */}
-            <div>
-              <TitleStyle2>Genre</TitleStyle2>
-              <GenreContainer>
-                <ArrowFunction
-                  onClick={handleGenrePrevClick}
-                  disabled={currentGenreIndex === 0}
-                />
-                <ViewContainer>
-                  <CardList currentIndex={currentGenreIndex}>
-                    {genreList?.map((option, index) => (
-                      <CoverBox key={index}>
-                        <RoundCover
-                          src={option.genre_image_url}
-                          selected={genreId - 1 === index}
-                          onClick={() => {
-                            setGenreId(index + 1);
-                          }}
-                        />
-                        <CoverLabel>{option.genre_name}</CoverLabel>
-                      </CoverBox>
-                    ))}
-                  </CardList>
-                </ViewContainer>
-                <ArrowFunction
-                  onClick={handleGenreNextClick}
-                  disabled={currentGenreIndex === genreList?.length - 6}
-                  isPrev={true}
-                />
-              </GenreContainer>
-            </div>
-
-            {/* ToTheMargin 컴포넌트 */}
-            <div>
-              {/* Instrument 관련 컴포넌트 */}
-              <TitleStyle2>Instrument</TitleStyle2>
-              <GenreContainer>
-                <ArrowFunction
-                  onClick={handleInstrumentPrevClick}
-                  disabled={currentInstrumentIndex === 0}
-                />
-
-                <ViewContainer>
-                  <InstrumentList optionIndex={currentInstrumentIndex}>
-                    {instrumentsList?.map((option, index) => (
-                      <CoverBox key={index}>
-                        <RoundCover
-                          src={option.instrument_image_url}
-                          selected={selectedInstruments.includes(
-                            option.instrument_name,
-                          )}
-                          onClick={() =>
-                            handleInstrumentClick(
-                              option.instrument_name,
-                              option.instrument_id,
-                            )
-                          }
-                        />
-                        <CoverLabel>{option.instrument_name}</CoverLabel>
-                      </CoverBox>
-                    ))}
-                  </InstrumentList>
-                </ViewContainer>
-                <ArrowFunction
-                  onClick={handleInstrumentNextClick}
-                  disabled={
-                    currentInstrumentIndex === instrumentsList?.length - 6
-                  }
-                  isPrev={true}
-                />
-              </GenreContainer>
-            </div>
-
-            {/* Style 관련 컴포넌트 */}
-            <div>
-              <TitleStyle2>Style</TitleStyle2>
-              <GenreContainer>
-                <ArrowFunction
-                  onClick={handleStylesPrevClick}
-                  disabled={currentStylesIndex === 0}
-                />
-                <ViewContainer>
-                  <StylesList optionIndex={currentStylesIndex}>
-                    {stylesList?.map((option, index) => (
-                      <CoverBox key={index}>
-                        <RoundCover
-                          src={option.style_image_url}
-                          selected={stylesId - 1 === index}
-                          onClick={() => setStylesId(index + 1)}
-                        />
-                        <CoverLabel>{option.style_name}</CoverLabel>
-                      </CoverBox>
-                    ))}
-                  </StylesList>
-                </ViewContainer>
-                <ArrowFunction
-                  onClick={handleStylesNextClick}
-                  disabled={currentStylesIndex === stylesList.length - 6}
-                  isPrev
-                />
-              </GenreContainer>
-            </div>
-            <div
-              style={{ width: '100%', display: 'flex', justifyContent: 'end' }}
-            >
-              <JellyButton onClick={handleCreateClick}>Create Song</JellyButton>
-            </div>
-          </ToThePadding>
-        </RightContainer>
-        {/* 생성 버튼 */}
-
-        {/* 모달 */}
-        {isModalOpen && (
-          <>
-            <Overlay />
-            <ModalContainer>
-              <ArrowBackIcon cursor="pointer" onClick={handleCloseModal} />
-              <ModalText>
-                <GroupText>
-                  <ModalItem>Title : </ModalItem>
-                  <ModalValue>{songTitle}</ModalValue>
-                </GroupText>
-                <GroupText>
-                  <ModalItem>Voice :</ModalItem>{' '}
-                  <ModalValue>{voice}</ModalValue>
-                </GroupText>
-                <GroupText>
-                  <ModalItem>Language :</ModalItem>
-                  <ModalValue>{language}</ModalValue>
-                </GroupText>
-                <GroupText>
-                  <ModalItem>Tempo :</ModalItem>{' '}
-                  <ModalValue>{tempo}</ModalValue>
-                </GroupText>
-                <GroupText>
-                  <ModalItem>Genre :</ModalItem>
-                  <ModalValue>{genreList[genreId - 1]?.genre_name}</ModalValue>
-                </GroupText>
-                <GroupText>
-                  <InstrumentItem>Instrument :</InstrumentItem>
-                  <ModalValue>{selectedInstruments.join(', ')}</ModalValue>
-                </GroupText>
-                <GroupText>
-                  <ModalItem>style :</ModalItem>
-                  <ModalValue>
-                    {stylesList[stylesId - 1]?.style_name}
-                  </ModalValue>
-                </GroupText>
-                {shouldShowWarning && (
-                  <WarningContainer>
-                    <WarningMessage>
-                      너무 많은 옵션을 선택할 시 선택한 옵션 반영이 잘 되지 않을
-                      수 있습니다.
-                    </WarningMessage>
-                  </WarningContainer>
-                )}
-              </ModalText>
-              <SubmitButton
-                onClick={() => {
-                  handleSubmit();
-                }}
+      
+        <StepContainer active={step === 1}>
+          <TitleStyle1>장르를 선택해주세요</TitleStyle1>
+          <TitleStyle2>*필수선택옵션입니다</TitleStyle2>
+          <GenreContainer>
+            <ArrowFunction
+              onClick={handleGenrePrevClick}
+              disabled={currentGenreIndex === 0}
+            />
+            <ViewContainer>
+              <CardList currentIndex={currentGenreIndex}>
+                {genreList?.map((option, index) => (
+                  <CoverBox key={index}>
+                    <RoundCover
+                      src={option.genre_image_url}
+                      selected={genreId - 1 === index}
+                      onClick={() => {
+                        setGenreId(index + 1);
+                      }}
+                    />
+                    <CoverLabel>{option.genre_name}</CoverLabel>
+                  </CoverBox>
+                ))}
+              </CardList>
+            </ViewContainer>
+            <ArrowFunction
+              onClick={handleGenreNextClick}
+              disabled={currentGenreIndex === genreList?.length - 6}
+              isPrev={true}
+            />
+          </GenreContainer>
+          <JellyButton onClick={handleNextStep}>다음</JellyButton>
+        </StepContainer>
+  
+        <StepContainer active={step === 2}>
+          <TitleStyle1>악기를 선택해주세요</TitleStyle1>
+          <TitleStyle2>*중복선택가능</TitleStyle2>
+          <GenreContainer>
+            <ArrowFunction
+              onClick={handleInstrumentPrevClick}
+              disabled={currentInstrumentIndex === 0}
+            />
+  
+            <ViewContainer>
+              <InstrumentList optionIndex={currentInstrumentIndex}>
+                {instrumentsList?.map((option, index) => (
+                  <CoverBox key={index}>
+                    <RoundCover
+                      src={option.instrument_image_url}
+                      selected={selectedInstruments.includes(
+                        option.instrument_name,
+                      )}
+                      onClick={() =>
+                        handleInstrumentClick(
+                          option.instrument_name,
+                          option.instrument_id,
+                        )
+                      }
+                    />
+                    <CoverLabel>{option.instrument_name}</CoverLabel>
+                  </CoverBox>
+                ))}
+              </InstrumentList>
+            </ViewContainer>
+            <ArrowFunction
+              onClick={handleInstrumentNextClick}
+              disabled={
+                currentInstrumentIndex === instrumentsList?.length - 6
+              }
+              isPrev={true}
+            />
+          </GenreContainer>
+          <JellyButton onClick={handleNextStep}>다음</JellyButton>
+        </StepContainer>
+        
+        <StepContainer active={step === 3}>
+          <TitleStyle1>스타일을 선택해주세요</TitleStyle1>
+          <TitleStyle2>*필수선택옵션입니다</TitleStyle2>
+          <GenreContainer>
+            <ArrowFunction
+              onClick={handleStylesPrevClick}
+              disabled={currentStylesIndex === 0}
+            />
+            <ViewContainer>
+              <StylesList optionIndex={currentStylesIndex}>
+                {stylesList?.map((option, index) => (
+                  <CoverBox key={index}>
+                    <RoundCover
+                      src={option.style_image_url}
+                      selected={stylesId - 1 === index}
+                      onClick={() => setStylesId(index + 1)}
+                    />
+                    <CoverLabel>{option.style_name}</CoverLabel>
+                  </CoverBox>
+                ))}
+              </StylesList>
+            </ViewContainer>
+            <ArrowFunction
+              onClick={handleStylesNextClick}
+              disabled={currentStylesIndex === stylesList.length - 6}
+              isPrev
+            />
+          </GenreContainer>
+          <JellyButton onClick={handleNextStep}>다음</JellyButton>
+        </StepContainer>
+  
+        <StepContainer active={step === 4}>
+          <TitleStyle1>곡 제목을 입력해주세요</TitleStyle1>
+          <TitleStyle2>*필수선택옵션입니다</TitleStyle2>
+          <TitleInput
+            type="text"
+            placeholder="곡 제목"
+            value={songTitle}
+            onChange={(e) => setSongTitle(e.target.value)}
+          />
+          <JellyButton onClick={handleNextStep}>다음</JellyButton>
+        </StepContainer>
+  
+        <StepContainer active={step === 5}>
+          <TitleStyle1>보이스를 선택해주세요</TitleStyle1>
+          <TitleStyle2>*필수선택옵션입니다</TitleStyle2>
+          <ChooseOption>
+            {['여성 보컬', '남성 보컬'].map((option) => (
+              <Button
+                key={option}
+                clicked={voice === option}
+                onClick={() => setVoice(option)}
               >
-                Submit
-              </SubmitButton>
-            </ModalContainer>
-          </>
-        )}
+                {option}
+              </Button>
+              
+            ))}
+          </ChooseOption>
+          <JellyButton onClick={handleNextStep}>다음</JellyButton>
+        </StepContainer>
+  
+        <StepContainer active={step === 6}>
+          <TitleStyle1>언어를 선택해주세요</TitleStyle1>
+          <TitleStyle2>*필수선택옵션입니다</TitleStyle2>
+          <ChooseOption>
+            {['한국어', '영어', '일본어'].map((option) => (
+              <Button
+                key={option}
+                clicked={language === option}
+                onClick={() => setLanguage(option)}
+              >
+                {option}
+              </Button>
+            ))}
+          </ChooseOption>
+          <JellyButton onClick={handleNextStep}>다음</JellyButton>
+        </StepContainer>
+  
+        <StepContainer active={step === 7}>
+          <TitleStyle1>템포를 선택해주세요</TitleStyle1>
+          <TitleStyle2>*필수선택옵션입니다</TitleStyle2>
+          <ChooseOption>
+            {['느림', '보통', '빠름'].map((option) => (
+              <Button
+                key={option}
+                clicked={tempo === option}
+                onClick={() => setTempo(option)}
+              >
+                {option}
+              </Button>
+            ))}
+          </ChooseOption>
+          <SubmitButton onClick={handleCreateClick}>완료</SubmitButton>
+        </StepContainer>
+        {isModalOpen && (
+       <>
+      <Overlay />
+      <ModalContainer>
+        <ArrowBackIcon cursor="pointer" onClick={handleCloseModal} />
+        <ModalText>
+          <GroupText>
+            <ModalItem>Title : </ModalItem>
+            <ModalValue>{songTitle}</ModalValue>
+          </GroupText>
+          <GroupText>
+            <ModalItem>Voice :</ModalItem>{' '}
+            <ModalValue>{voice}</ModalValue>
+          </GroupText>
+          <GroupText>
+            <ModalItem>Language :</ModalItem>
+            <ModalValue>{language}</ModalValue>
+          </GroupText>
+          <GroupText>
+            <ModalItem>Tempo :</ModalItem>{' '}
+            <ModalValue>{tempo}</ModalValue>
+          </GroupText>
+          <GroupText>
+            <ModalItem>Genre :</ModalItem>
+            <ModalValue>{genreList[genreId - 1]?.genre_name}</ModalValue>
+          </GroupText>
+          <GroupText>
+            <InstrumentItem>Instrument :</InstrumentItem>
+            <ModalValue>{selectedInstruments.join(', ')}</ModalValue>
+          </GroupText>
+          <GroupText>
+            <ModalItem>style :</ModalItem>
+            <ModalValue>
+              {stylesList[stylesId - 1]?.style_name}
+            </ModalValue>
+          </GroupText>
+          {shouldShowWarning && (
+            // 추가 로직이 필요한 경우 여기에 작성
+            null
+          )}
+        </ModalText>
+        <ConfirmButton
+          onClick={() => {
+            handleSubmit();
+          }}
+        >
+          Submit
+        </ConfirmButton>
+      </ModalContainer>
+    </>
+  )}
+  {(isOpen || instrumentLimitExceeded)}
 
-        {/* 경고 모달 */}
-        {warningModalOpen && (
-          <WarningBox>
-            <ArrowBackIcon cursor="pointer" onClick={handleWarningCloseModal} />
-            <WarningMessage>
-              title, voice, language, tempo, genre, style은 필수 선택
-              요소입니다.
-            </WarningMessage>
-          </WarningBox>
-        )}
       </BigContainer>
     </CreateContainer>
+
   );
 };
-
 export default Create;
