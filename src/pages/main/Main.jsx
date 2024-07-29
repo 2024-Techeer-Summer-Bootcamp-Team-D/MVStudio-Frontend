@@ -96,8 +96,8 @@ function VideoList({ title }) {
     queryFn: ({ pageParam = 1 }) =>
       getList(pageParam, size, sortCriteria, undefined),
     getNextPageParam: (lastPage) => {
-      if (lastPage.pagination.next_page) {
-        return lastPage.pagination.current_page + 1;
+      if (lastPage?.pagination?.next_page) {
+        return lastPage?.pagination?.current_page + 1;
       } else {
         return undefined;
       }
@@ -145,7 +145,7 @@ function VideoList({ title }) {
                 fetchNextPage();
               }
               if (
-                data.pages[0].pagination.total_items >
+                data?.pages[0]?.pagination.total_items >
                 pageSize * (pageIndex + 1)
               ) {
                 setPageIndex((prev) => prev + 1);
