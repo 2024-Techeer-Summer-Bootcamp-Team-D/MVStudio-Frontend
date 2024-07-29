@@ -17,13 +17,16 @@ import { IconButton, Slider } from '@mui/material';
 import SettingsIcon from '@mui/icons-material/Settings';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import LinkIcon from '@mui/icons-material/Link';
+import CropSquareIcon from '@mui/icons-material/CropSquare';
+import AspectRatioIcon from '@mui/icons-material/AspectRatio';
 
 const PlayerWrapper = styled.div`
   position: relative;
   background: #000000;
-  max-width: 100%;
-  margin: 0 auto;
+  width: 100%;
+  aspect-ratio: 10 / 6;
   border-radius: 8px;
+  max-height: calc(100vh - 5rem);
   overflow: hidden;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
   &:hover .controls {
@@ -43,6 +46,11 @@ const Controls = styled.div`
   color: white;
   opacity: 0;
   transition: opacity 0.3s;
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.5) 0%,
+    rgba(0, 0, 0, 0) 100%
+  );
 `;
 
 const ControlGroup = styled.div`
@@ -146,7 +154,20 @@ const RefreshPlay = styled.button`
 `;
 */
 
-const VideoPlayer = ({ src, id, lyricsToggle, setLyricsToggle }) => {
+const PlayTime = styled.div`
+  font-size: 1rem;
+  margin-left: 1rem;
+  margin-right: 1rem;
+  color: white;
+`;
+
+const formatTime = (seconds) => {
+  const minutes = Math.floor(seconds / 60);
+  const remainingSeconds = Math.floor(seconds % 60);
+  return `${minutes}:${remainingSeconds < 10 ? '0' : ''}${remainingSeconds}`;
+};
+
+const VideoPlayer = ({ src, id, toggleLyrics, setToggleLyrics, subject }) => {
   const playerRef = useRef(null);
   const playerWrapperRef = useRef(null);
   const [playing, setPlaying] = useState(true);
@@ -158,13 +179,19 @@ const VideoPlayer = ({ src, id, lyricsToggle, setLyricsToggle }) => {
   const [historyId, setHistoryId] = useState(null);
   const [lastPatchedTime, setLastPatchedTime] = useState(0);
 
+  const [currentTime, setCurrentTime] = useState(0);
+  const [duration, setDuration] = useState(0);
+
   useEffect(() => {
     const fetchData = async () => {
       try {
         if (id) {
           const postResponse = await postHistory(id);
-          if (postResponse?.history_id) {
-            setHistoryId(postResponse.history_id);
+          setHistoryId(postResponse.history_id);
+          if (postResponse.current_play_time < 70) {
+            playerRef.current.seekTo(postResponse.current_play_time, 'seconds');
+            setCurrentTime(postResponse.current_play_time);
+            setPlayed(postResponse.current_play_time / postResponse.duration);
           }
         }
       } catch (error) {
@@ -181,17 +208,11 @@ const VideoPlayer = ({ src, id, lyricsToggle, setLyricsToggle }) => {
     const intervalId = setInterval(() => {
       if (playerRef.current && playing) {
         const currentTime = Math.floor(playerRef.current.getCurrentTime());
-        console.log('Current time:', currentTime);
 
         if (currentTime - lastPatchedTime >= 5) {
-          patchHistoryUpdate(historyId, currentTime)
-            .then((response) => {
-              console.log('Patch response:', response);
-              setLastPatchedTime(currentTime);
-            })
-            .catch((error) => {
-              console.error('Error updating history:', error);
-            });
+          patchHistoryUpdate(historyId, currentTime).then(() => {
+            setLastPatchedTime(currentTime);
+          });
         }
       }
     }, 5000);
@@ -209,11 +230,13 @@ const VideoPlayer = ({ src, id, lyricsToggle, setLyricsToggle }) => {
           newTime = playerRef.current.getCurrentTime() + 5;
           playerRef.current.seekTo(newTime, 'seconds');
           setPlayed(newTime / playerRef.current.getDuration());
+          setCurrentTime(newTime);
           break;
         case 'ArrowLeft':
           newTime = playerRef.current.getCurrentTime() - 5;
           playerRef.current.seekTo(newTime, 'seconds');
           setPlayed(newTime / playerRef.current.getDuration());
+          setCurrentTime(newTime);
           break;
         case ' ':
           event.preventDefault(); // 스페이스바 기본 스크롤 방지
@@ -308,7 +331,7 @@ const VideoPlayer = ({ src, id, lyricsToggle, setLyricsToggle }) => {
 
   const handleProgress = (state) => {
     setPlayed(state.played);
-    console.log('Played:', state.played);
+    setCurrentTime(state.playedSeconds);
   };
 
   const handleClickProgressBar = (event) => {
@@ -343,18 +366,22 @@ const VideoPlayer = ({ src, id, lyricsToggle, setLyricsToggle }) => {
         height="100%"
         pip={true}
         onProgress={(e) => handleProgress(e)}
+        onDuration={(duration) => setDuration(duration)}
+        style={{ maxHeight: 'calc(100vh - 5rem)' }}
       />
-      <MenuWrapper
-        show={showMenu}
-        onClick={(event) => {
-          event.stopPropagation();
-          setShowMenu(false);
-        }}
-      >
+      <MenuWrapper show={showMenu}>
+        <div
+          style={{ width: '100%', height: '100%', position: 'fixed' }}
+          onClick={(event) => {
+            event.stopPropagation();
+            setShowMenu(false);
+          }}
+        />
         <Menu>
           {/* 비디오 파일 다운로드 */}
           <MenuItem
-            onClick={() => {
+            onClick={(event) => {
+              event.stopPropagation();
               const fileUrl = src;
               axios
                 .get(fileUrl, { responseType: 'blob' })
@@ -364,7 +391,7 @@ const VideoPlayer = ({ src, id, lyricsToggle, setLyricsToggle }) => {
                   );
                   const a = document.createElement('a');
                   a.href = url;
-                  a.download = 'jinoo.mp4'; // 다운로드 파일명을 하드코딩
+                  a.download = `MVStudio ${subject}.mp4`; // 다운로드 파일명을 하드코딩
                   document.body.appendChild(a);
                   a.click();
                   window.URL.revokeObjectURL(url);
@@ -373,6 +400,7 @@ const VideoPlayer = ({ src, id, lyricsToggle, setLyricsToggle }) => {
                 .catch((error) => {
                   console.error('파일 다운로드 오류:', error);
                 });
+              setShowMenu(false);
             }}
           >
             <FileDownloadIcon />
@@ -381,7 +409,8 @@ const VideoPlayer = ({ src, id, lyricsToggle, setLyricsToggle }) => {
 
           {/* 링크 복사 */}
           <MenuItem
-            onClick={() => {
+            onClick={(event) => {
+              event.stopPropagation();
               const copiedToast = Swal.mixin({
                 toast: true,
                 position: 'top-end',
@@ -406,6 +435,7 @@ const VideoPlayer = ({ src, id, lyricsToggle, setLyricsToggle }) => {
                 .catch((err) => {
                   console.error('Failed to copy URL: ', err);
                 });
+              setShowMenu(false);
             }}
           >
             <LinkIcon
@@ -427,6 +457,7 @@ const VideoPlayer = ({ src, id, lyricsToggle, setLyricsToggle }) => {
           </MenuItem>
         </Menu>
       </MenuWrapper>
+
       <Controls
         onClick={(event) => {
           event.stopPropagation();
@@ -437,6 +468,7 @@ const VideoPlayer = ({ src, id, lyricsToggle, setLyricsToggle }) => {
           <ProgressFill played={played} />
         </ProgressBar>
         <ControlGroup>
+          {/* 재생 및 일시정지 버튼 */}
           <IconButton onClick={togglePlayPause} color="inherit">
             {playing ? (
               <PauseIcon style={{ fontSize: '2rem' }} />
@@ -444,6 +476,13 @@ const VideoPlayer = ({ src, id, lyricsToggle, setLyricsToggle }) => {
               <PlayArrowIcon style={{ fontSize: '2rem' }} />
             )}
           </IconButton>
+
+          {/* 영상 시간 */}
+          <PlayTime>
+            {formatTime(currentTime)} / {formatTime(duration)}
+          </PlayTime>
+
+          {/* 볼륨 조절 */}
           <VolumeControl>
             <IconButton onClick={toggleMute} color="inherit">
               {muted ? <VolumeOffIcon /> : <VolumeUpIcon />}
@@ -459,6 +498,12 @@ const VideoPlayer = ({ src, id, lyricsToggle, setLyricsToggle }) => {
           </VolumeControl>
         </ControlGroup>
         <div>
+          <IconButton
+            onClick={() => setToggleLyrics(!toggleLyrics)}
+            color="inherit"
+          >
+            {toggleLyrics ? <AspectRatioIcon /> : <CropSquareIcon />}
+          </IconButton>
           <IconButton onClick={() => setShowMenu(!showMenu)} color="inherit">
             <SettingsIcon />
           </IconButton>

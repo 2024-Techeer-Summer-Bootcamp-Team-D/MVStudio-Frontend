@@ -8,32 +8,49 @@ import { defaultProfile } from '@/assets/image';
 import VideoPlayer from './VideoPlayer';
 
 const BackLayout = styled.div`
-  width: 90%;
+  width: 100%;
   display: flex;
-  flex-direction: row;
-  margin-left: 7%;
+  flex-direction: column;
+  overflow-x: hidden;
 `;
 
 const PlayBox = styled.div`
-  width: ${({ expanded }) => (expanded ? '71%' : '74.4vw')};
-  margin-top: ${({ expanded }) => (expanded ? '1rem' : '-4rem')};
-  margin-left: ${({ expanded }) => (expanded ? '-1rem' : 'rem')};
+  width: 100%;
+  max-height: calc(100% - 5rem);
+  margin-top: ${({ expanded }) => (expanded ? '0rem' : '-5rem')};
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
+  justify-content: center;
+  margin-bottom: 3rem;
+  gap: 2%;
+`;
+
+const VideoContainer = styled.div`
+  width: ${({ expanded }) => (expanded ? 'calc(94% - 20rem);' : '100%')};
+  max-height: calc(100% - 5rem);
+  position: relative;
+`;
+
+const LyricsBox = styled.div`
+  width: 20rem;
+  height: 100%;
+  display: ${({ expanded }) => (expanded ? 'flex' : 'none')};
+  margin-top: 5rem;
+  position: relative;
+  overflow: hidden;
   transition:
     width 0.5s ease,
-    height 0.5s ease;
+    height 0.5s ease,
+    margin 0.5s ease;
 `;
 
 const TextBox = styled.div`
   color: #ffffff;
   display: flex;
   flex-direction: column;
-  margin-left: -50%;
-  margin-bottom: 2%;
-  width: 50%;
-  position: relative;
+  width: 100%;
+  margin-left: 2%;
 `;
 
 const Title = styled.div`
@@ -45,13 +62,6 @@ const Title = styled.div`
 const Subtitle = styled.div`
   font-size: 1rem;
   display: flex;
-`;
-
-const VideoContainer = styled.div`
-  width: 100%;
-  height: 100%;
-  margin-top: 3rem;
-  position: relative;
 `;
 
 const UserInfo = styled.div`
@@ -66,21 +76,6 @@ const UserInfo2 = styled.div`
   margin-left: 0.8rem;
   margin-top: 0.2rem;
   gap: 0.5rem;
-`;
-
-const LyricsBox = styled.div`
-  width: ${({ expanded }) => (expanded ? '24%' : '0%')};
-  height: ${({ expanded }) => (expanded ? '75.5%' : '0')};
-  display: flex;
-  justify-content: start;
-  align-items: start;
-  margin-left: 2rem;
-  margin-top: 4rem;
-  position: relative;
-  overflow: hidden;
-  transition:
-    width 0.5s ease,
-    height 0.5s ease;
 `;
 
 const LyricsBackground = styled.div`
@@ -129,6 +124,12 @@ const ViewsCount = styled.div`
   color: #ffffff;
 `;
 
+const VideoPlayerWrapper = styled.div`
+  width: 100%;
+  height: 100%;
+  z-index: 2;
+`;
+
 function Play() {
   const location = useLocation();
   const [toggleLyrics, setToggleLyrics] = useState(true);
@@ -146,53 +147,55 @@ function Play() {
   return (
     <BackLayout>
       <PlayBox expanded={toggleLyrics}>
-        <VideoContainer>
+        <VideoContainer expanded={toggleLyrics}>
           {data?.data?.mv_file ? (
-            <div className="player-container">
+            <VideoPlayerWrapper open={toggleLyrics}>
               <VideoPlayer
                 src={data?.data.mv_file}
                 id={id}
                 toggleLyrics={toggleLyrics}
                 setToggleLyrics={setToggleLyrics}
+                subject={data?.data?.subject}
               />
-            </div>
+            </VideoPlayerWrapper>
           ) : (
             <div>No video available</div>
           )}
         </VideoContainer>
-        <TextBox>
-          <Title>{data?.data?.subject || 'Loading...'}</Title>
-          <UserInfo>
-            <img
-              src={data?.data?.profile_image || defaultProfile}
-              alt="Profile"
-              style={{ width: '3rem', height: '3rem', borderRadius: '100%' }}
-            />
-            <UserInfo2>
-              <Subtitle>{data?.data?.member_name || 'no name user'}</Subtitle>
-              <ViewsCount>
-                {data?.data?.views !== null && data?.data?.views !== undefined
-                  ? `${data.data.views.toLocaleString()} Views`
-                  : '0 Views'}
-              </ViewsCount>
-            </UserInfo2>
-          </UserInfo>
-        </TextBox>
+
+        <LyricsBox expanded={toggleLyrics}>
+          <LyricsBackground coverImage={data?.data?.cover_image} />
+          <LyricsContent>
+            {data?.data?.subject || 'Loading...'}
+            <LyricsTitle>
+              <div
+                dangerouslySetInnerHTML={{
+                  __html: data?.data?.lyrics || 'Loading...',
+                }}
+              />
+            </LyricsTitle>
+          </LyricsContent>
+        </LyricsBox>
       </PlayBox>
 
-      <LyricsBox expanded={toggleLyrics}>
-        <LyricsBackground coverImage={data?.data?.cover_image} />
-        <LyricsContent>
-          {data?.data?.subject || 'Loading...'}
-          <LyricsTitle>
-            <div
-              dangerouslySetInnerHTML={{
-                __html: data?.data?.lyrics || 'Loading...',
-              }}
-            />
-          </LyricsTitle>
-        </LyricsContent>
-      </LyricsBox>
+      <TextBox>
+        <Title>{data?.data?.subject || 'Loading...'}</Title>
+        <UserInfo>
+          <img
+            src={data?.data?.profile_image || defaultProfile}
+            alt="Profile"
+            style={{ width: '3rem', height: '3rem', borderRadius: '100%' }}
+          />
+          <UserInfo2>
+            <Subtitle>{data?.data?.member_name || 'no name user'}</Subtitle>
+            <ViewsCount>
+              {data?.data?.views !== null && data?.data?.views !== undefined
+                ? `${data.data.views.toLocaleString()} Views`
+                : '0 Views'}
+            </ViewsCount>
+          </UserInfo2>
+        </UserInfo>
+      </TextBox>
     </BackLayout>
   );
 }
