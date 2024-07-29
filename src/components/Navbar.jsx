@@ -101,7 +101,7 @@ function Navbar() {
 
   useEffect(() => {
     const fetchData = async () => {
-      if (!username) {
+      if (!username || username === undefined) {
         await fetchUser();
       }
     };

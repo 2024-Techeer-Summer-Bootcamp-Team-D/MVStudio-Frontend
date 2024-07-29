@@ -62,8 +62,8 @@ jsonAxios.interceptors.response.use(
         }
         setCookie('accessToken', newAccessToken); // 새로운 액세스 토큰을 쿠키에 저장합니다.
         jsonAxios.defaults.headers.common['Authorization'] =
-          `Bearer ${newAccessToken}`;
-        originalRequest.headers['Authorization'] = `Bearer ${newAccessToken}`;
+          `${newAccessToken}`;
+        originalRequest.headers['Authorization'] = `${newAccessToken}`;
         return jsonAxios(originalRequest); // 원래 요청을 새로운 토큰으로 재시도합니다.
       } catch (reissueError) {
         if (
@@ -122,8 +122,8 @@ formAxios.interceptors.response.use(
         }
         setCookie('accessToken', newAccessToken); // 새로운 액세스 토큰을 쿠키에 저장합니다.
         jsonAxios.defaults.headers.common['Authorization'] =
-          `Bearer ${newAccessToken}`;
-        originalRequest.headers['Authorization'] = `Bearer ${newAccessToken}`;
+          `${newAccessToken}`;
+        originalRequest.headers['Authorization'] = `${newAccessToken}`;
         return jsonAxios(originalRequest); // 원래 요청을 새로운 토큰으로 재시도합니다.
       } catch (reissueError) {
         if (
