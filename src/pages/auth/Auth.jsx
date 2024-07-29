@@ -422,7 +422,8 @@ const SignUpForm = ({ successLogin }) => {
             postRegister(idValue, emailValue, passwordValue)
               .then((resp) => {
                 if (resp.status === 201 && resp.code === 'A001') {
-                  successLogin(resp.id);
+                  // console.log('resp :', resp);
+                  successLogin(resp.access_token, 'SU');
                 } else if (resp.status === 200) {
                   setLoginError('입력하신 id가 이미 있어요!');
                 }
@@ -531,7 +532,7 @@ const SignInForm = ({ successLogin }) => {
           postLogin(idValue, passwordValue)
             .then((resp) => {
               if (resp.access_token) {
-                successLogin(resp.access_token);
+                successLogin(resp.access_token, 'SI');
               } else {
                 setLoginError('아이디와 비밀번호를 다시한번 확인해주세요!');
               }
@@ -597,8 +598,7 @@ const Auth = () => {
   const navigate = useNavigate();
   const setUsername = useUser((state) => state.setUsername);
   const fetchUsername = useUser((state) => state.fetchUser);
-  const fetchCredits = useUser((state) => state.fetchCredits);
-  const successLogin = async (accessToken) => {
+  const successLogin = async (accessToken, type) => {
     removeCookie('accessToken');
     setUsername('');
 
@@ -607,13 +607,16 @@ const Auth = () => {
       setCookie('accessToken', accessToken);
       resolve();
     });
-
+    console.log('type :', type);
     // 쿠키 설정 후 사용자 이름을 가져오는 fetchUsername 함수 호출
     fetchUsername();
-    fetchCredits();
 
     // fetchUsername 함수 호출 후 페이지 이동
-    navigate('/main');
+    if (type === 'SU') {
+      navigate('/auth/register');
+    } else if (type === 'SI') {
+      navigate('/main');
+    }
   };
 
   return (
