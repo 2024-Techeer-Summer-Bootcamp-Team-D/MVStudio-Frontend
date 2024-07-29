@@ -98,7 +98,7 @@ function Sidebar() {
             }}
           >
             <EqualizerIcon fontSize="small" />
-            <MenuTitle>Statics</MenuTitle>
+            <MenuTitle>Analysis</MenuTitle>
           </MenuItem>
         </MenuContainer>
 

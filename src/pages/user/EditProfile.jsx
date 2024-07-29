@@ -147,6 +147,13 @@ function EditProfile() {
     }));
   };
 
+  const handleCountrychange = (data) => {
+    setUserInfo((prevState) => ({
+      ...prevState,
+      country: data.id,
+    }));
+  };
+
   const handleDateChange = (date) => {
     setUserInfo((prevState) => ({
       ...prevState,
@@ -242,7 +249,11 @@ function EditProfile() {
           sx={{ border: 'none' }}
         >
           {countryList.map((data) => (
-            <MenuItem key={data.id} value={data.id}>
+            <MenuItem
+              key={data.id}
+              value={data.name}
+              onChange={handleCountrychange}
+            >
               {data.name}
             </MenuItem>
           ))}
