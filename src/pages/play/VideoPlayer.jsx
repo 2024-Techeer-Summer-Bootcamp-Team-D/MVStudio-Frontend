@@ -5,6 +5,8 @@ import ReactPlayer from 'react-player';
 import styled from 'styled-components';
 import axios from 'axios';
 import Swal from 'sweetalert2';
+import { deleteVideo } from '@/api/musicVideos';
+import { useUser } from '@/libs/stores/userStore';
 
 // Material-UI
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
@@ -19,6 +21,7 @@ import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import LinkIcon from '@mui/icons-material/Link';
 import CropSquareIcon from '@mui/icons-material/CropSquare';
 import AspectRatioIcon from '@mui/icons-material/AspectRatio';
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 
 const PlayerWrapper = styled.div`
   position: relative;
@@ -123,7 +126,7 @@ const Menu = styled.div`
 `;
 
 const MenuItem = styled.div`
-  padding: 1rem;
+  padding: 0.75rem;
   cursor: pointer;
   transition: background 0.3s;
   display: flex;
@@ -132,6 +135,7 @@ const MenuItem = styled.div`
   gap: 0.25rem;
   padding-right: 2rem;
   padding-left: 2rem;
+  font-size: 0.75rem;
 
   &:hover {
     background: rgba(255, 255, 255, 0.3);
@@ -168,7 +172,7 @@ const formatTime = (seconds) => {
   return `${minutes}:${remainingSeconds < 10 ? '0' : ''}${remainingSeconds}`;
 };
 
-const VideoPlayer = ({ src, id, toggleLyrics, setToggleLyrics, subject }) => {
+const VideoPlayer = ({ mvData, id, toggleLyrics, setToggleLyrics }) => {
   const playerRef = useRef(null);
   const playerWrapperRef = useRef(null);
   const [playing, setPlaying] = useState(true);
@@ -182,6 +186,9 @@ const VideoPlayer = ({ src, id, toggleLyrics, setToggleLyrics, subject }) => {
 
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
+
+  const username = useUser((state) => state.username);
+  const isOwner = mvData?.username === username;
 
   useEffect(() => {
     const fetchData = async () => {
@@ -362,7 +369,7 @@ const VideoPlayer = ({ src, id, toggleLyrics, setToggleLyrics, subject }) => {
       )} */}
       <ReactPlayer
         ref={playerRef} // ReactPlayer에 ref 설정
-        url={src}
+        url={mvData?.mv_file}
         playing={playing}
         muted={muted}
         volume={volume}
@@ -383,11 +390,51 @@ const VideoPlayer = ({ src, id, toggleLyrics, setToggleLyrics, subject }) => {
           }}
         />
         <Menu>
+          {/* 비디오 삭제 */}
+          {isOwner && (
+            <MenuItem
+              onClick={(event) => {
+                event.stopPropagation();
+                Swal.fire({
+                  title: '비디오 삭제',
+                  text: '정말 삭제하시겠습니까?',
+                  icon: 'warning',
+                  showCancelButton: true,
+                  confirmButtonText: '삭제',
+                  cancelButtonText: '취소',
+                }).then((result) => {
+                  if (result.isConfirmed) {
+                    deleteVideo(id)
+                      .then(() => {
+                        Swal.fire({
+                          title: '삭제 완료',
+                          text: '비디오가 삭제되었습니다.',
+                          icon: 'success',
+                          showConfirmButton: true,
+                          confirmButtonText: '확인',
+                        }).then(() => {
+                          window.location.href = '/';
+                        });
+                      })
+
+                      .catch((error) => {
+                        console.error('비디오 삭제 오류:', error);
+                      });
+                  }
+                });
+                setShowMenu(false);
+              }}
+            >
+              <DeleteForeverIcon />
+              Delete
+            </MenuItem>
+          )}
+
           {/* 비디오 파일 다운로드 */}
           <MenuItem
             onClick={(event) => {
               event.stopPropagation();
-              const fileUrl = src;
+              const fileUrl = mvData?.mv_file;
               axios
                 .get(fileUrl, { responseType: 'blob' })
                 .then((response) => {
@@ -396,7 +443,7 @@ const VideoPlayer = ({ src, id, toggleLyrics, setToggleLyrics, subject }) => {
                   );
                   const a = document.createElement('a');
                   a.href = url;
-                  a.download = `MVStudio ${subject}.mp4`; // 다운로드 파일명을 하드코딩
+                  a.download = `MVStudio ${mvData?.subject}.mp4`;
                   document.body.appendChild(a);
                   a.click();
                   window.URL.revokeObjectURL(url);
@@ -452,14 +499,35 @@ const VideoPlayer = ({ src, id, toggleLyrics, setToggleLyrics, subject }) => {
           </MenuItem>
 
           {/* 유튜브 업로드 */}
-          <MenuItem>
-            <FileDownloadIcon
-              sx={{
-                transform: 'rotate(180deg)',
+
+          {isOwner && (
+            <MenuItem
+              onClick={(event) => {
+                event.stopPropagation();
+                Swal.fire({
+                  title: 'Upload to Youtube',
+                  text: '페이지가 새로 열립니다. 계속하시겠습니까?',
+                  icon: 'info',
+                  showCancelButton: true,
+                  confirmButtonText: '업로드',
+                  cancelButtonText: '취소',
+                }).then((result) => {
+                  if (result.isConfirmed) {
+                    window.open(
+                      `${import.meta.env.VITE_REACT_APP_BASE_URL}/api/v1/oauth/youtube/${id}`,
+                    );
+                  }
+                });
               }}
-            />{' '}
-            Upload to Youtube
-          </MenuItem>
+            >
+              <FileDownloadIcon
+                sx={{
+                  transform: 'rotate(180deg)',
+                }}
+              />{' '}
+              Upload to Youtube
+            </MenuItem>
+          )}
         </Menu>
       </MenuWrapper>
 

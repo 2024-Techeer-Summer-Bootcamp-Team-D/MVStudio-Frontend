@@ -151,11 +151,10 @@ function Play() {
           {data?.data?.mv_file ? (
             <VideoPlayerWrapper open={toggleLyrics}>
               <VideoPlayer
-                src={data?.data.mv_file}
+                mvData={data?.data}
                 id={id}
                 toggleLyrics={toggleLyrics}
                 setToggleLyrics={setToggleLyrics}
-                subject={data?.data?.subject}
               />
             </VideoPlayerWrapper>
           ) : (

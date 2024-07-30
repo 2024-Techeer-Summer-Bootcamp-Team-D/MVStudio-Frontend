@@ -13,7 +13,7 @@ function YtChannelRegister() {
 
   useEffect(() => {
     console.log('channel url: ', ytChannelURL);
-    if (ytChannelURL) {
+    if (ytChannelURL && username) {
       patchMemberInfo(
         username,
         null,

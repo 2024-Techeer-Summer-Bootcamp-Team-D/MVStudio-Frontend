@@ -4,7 +4,9 @@ import styled from 'styled-components';
 import { useLocation } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { getPlay } from '@/api/play';
-import { youtubeLogin, youtubeUpload } from '@/api/musicVideos';
+import { youtubeUpload } from '@/api/musicVideos';
+import Swal from 'sweetalert2';
+import withReactContent from 'sweetalert2-react-content';
 
 const BackLayout = styled.div`
   width: 100%;
@@ -231,7 +233,7 @@ Don't forget to like, comment, and subscribe for more AI-generated content.
 
       {/* 설명 */}
       <Category style={{ height: '50%' }}>
-        <CategoryTitle style={{}}>설명</CategoryTitle>
+        <CategoryTitle>설명</CategoryTitle>
         <CategoryItem>
           <DescriptionInput
             image={data?.data.cover_image}
@@ -263,11 +265,32 @@ Don't forget to like, comment, and subscribe for more AI-generated content.
         <CategoryItem>
           <UploadButton
             onClick={() => {
-              window.location.href =
-                'http://127.0.0.1:8000/api/v1/oauth/youtube/15';
-              // youtubeLogin(15);
-              //   console.log('title:', title);
-              //   youtubeUpload('test', title, description, privacyStatus);
+              const UploadSwal = withReactContent(Swal);
+
+              UploadSwal.fire({
+                title: '업로드 중입니다...',
+                text: '잠시만 기다려 주세요.',
+                icon: 'info',
+                allowOutsideClick: false,
+                allowEscapeKey: false,
+                didOpen: () => {
+                  Swal.showLoading(); // 로딩 애니메이션 표시
+                },
+              });
+              youtubeUpload(mvId, title, description, privacyStatus).then(
+                (res) => {
+                  console.log('res', res);
+                  Swal.fire({
+                    icon: 'success',
+                    title: '업로드 완료!',
+                    text: '실제로 반영되기까지 시간이 소요될 수 있습니다.',
+                    showConfirmButton: true,
+                    confirmButtonText: '확인',
+                  }).then(() => {
+                    window.close();
+                  });
+                },
+              );
             }}
           >
             업로드
