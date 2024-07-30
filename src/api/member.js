@@ -94,7 +94,7 @@ export const patchMemberInfo = async (
     formData.append('comment', comment);
   }
   if (country) {
-    formData.append('country', country);
+    formData.append('country_id', country);
   }
   if (birthday) {
     formData.append('birthday', birthday);
