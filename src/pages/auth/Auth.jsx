@@ -417,16 +417,18 @@ const SignUpForm = ({ successLogin, handleSocialLogin }) => {
 
           if (validateInputs()) {
             postRegister(idValue, emailValue, passwordValue)
-              .then((resp) => {
-                if (resp.status === 201 && resp.code === 'A001') {
-                  // console.log('resp :', resp);
-                  successLogin(resp.access_token, 'SU');
-                } else if (resp.status === 200) {
-                  setLoginError('입력하신 id가 이미 있어요!');
+              .then((res) => {
+                console.log('res :', res);
+                if (res.status === 201 && res.code === 'A001') {
+                  successLogin(res.access_token, 'SU');
+                } else if (res.status === 409) {
+                  setLoginError(res.message);
+                } else {
+                  setLoginError('서버 오류입니다.');
                 }
               })
-              .catch((err) => {
-                console.log(err);
+              .catch(() => {
+                setLoginError('서버 오류입니다. (catch)');
               });
           }
         }}
