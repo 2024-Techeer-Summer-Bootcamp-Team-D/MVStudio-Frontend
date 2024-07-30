@@ -482,8 +482,6 @@ function Mypage() {
           activeTab === 0 ? fetchData(nextPage) : fetchRecent(nextPage);
         }}
         hasMore={hasMore}
-        loader={<h4>Loading...</h4>}
-        endMessage={<p>No more items</p>}
         style={{
           width: '100%',
           display: 'flex',

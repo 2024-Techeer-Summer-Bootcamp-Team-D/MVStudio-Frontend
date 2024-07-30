@@ -80,12 +80,6 @@ export default function BasicTabs({ value, handleChange, isOwner }) {
           {isOwner && <Tab label="Recently Viewed" {...a11yProps(1)} />}
         </StyledTabs>
       </Box>
-      <CustomTabPanel value={value} index={0}>
-        My Videos
-      </CustomTabPanel>
-      <CustomTabPanel value={value} index={1}>
-        Recently Viewed
-      </CustomTabPanel>
     </Box>
   );
 }
