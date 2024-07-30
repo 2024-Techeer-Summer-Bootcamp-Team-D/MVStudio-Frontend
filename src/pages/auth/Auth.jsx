@@ -515,23 +515,13 @@ const SignInForm = ({ successLogin, handleSocialLogin }) => {
         type="button"
         color="purple"
         onClick={() =>
-          // postLogin(idValue, passwordValue)
-          //   .then((resp) => {
-          //     if ((resp.status === 201) & (resp.code === 'A002')) {
-          //       successLogin(resp.id);
-          //     } else {
-          //       setLoginError('아이디와 비밀번호를 다시한번 확인해주세요!');
-          //     }
-          //   })
-          //   .catch(() => {
-          //     setLoginError('서버 오류입니다.');
-          //   })
           postLogin(idValue, passwordValue)
-            .then((resp) => {
-              if (resp.access_token) {
-                successLogin(resp.access_token, 'SI');
+            .then((res) => {
+              console.log('res :', res);
+              if (res.access_token) {
+                successLogin(res.access_token, 'SI');
               } else {
-                setLoginError('아이디와 비밀번호를 다시한번 확인해주세요!');
+                setLoginError(`${res.message}`);
               }
             })
             .catch(() => {
