@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import ArrowBackBackIcon from '@mui/icons-material/ArrowBack';
 import Swal from 'sweetalert2';
 import GenreSwiperComponent from '@/components/GenreSwiper';
+import StyleSwiperComponent from '@/components/StyleSwiper';
 
 const jellyAnimation = keyframes`
   25% {
@@ -684,28 +685,10 @@ const Create = () => {
           <TitleStyle1>스타일을 선택해주세요</TitleStyle1>
           <TitleStyle2>*필수선택옵션입니다</TitleStyle2>
           <GenreContainer>
-            <ArrowFunction
-              onClick={handleStylesPrevClick}
-              disabled={currentStylesIndex === 0}
-            />
-            <ViewContainer>
-              <StylesList optionIndex={currentStylesIndex}>
-                {stylesList?.map((option, index) => (
-                  <CoverBox key={index}>
-                    <RoundCover
-                      src={option.style_image_url}
-                      selected={stylesId - 1 === index}
-                      onClick={() => setStylesId(index + 1)}
-                    />
-                    <CoverLabel>{option.style_name}</CoverLabel>
-                  </CoverBox>
-                ))}
-              </StylesList>
-            </ViewContainer>
-            <ArrowFunction
-              onClick={handleStylesNextClick}
-              disabled={currentStylesIndex === stylesList.length - 6}
-              isPrev
+            <StyleSwiperComponent
+              options={stylesList}
+              selectedId={stylesId}
+              onSelect={(id) => setStylesId(id)}
             />
           </GenreContainer>
           <JellyButton onClick={handleNextStep}>다음</JellyButton>
