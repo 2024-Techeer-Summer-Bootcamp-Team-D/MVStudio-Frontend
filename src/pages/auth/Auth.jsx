@@ -13,6 +13,7 @@ import VpnKeyIcon from '@mui/icons-material/VpnKey';
 
 // API
 import { postLogin, postRegister } from '@/api/member';
+import Swal from 'sweetalert2';
 
 const GlobalStyle = createGlobalStyle`
   * {
@@ -404,6 +405,7 @@ const SignUpForm = ({ successLogin, handleSocialLogin }) => {
         color="purple"
         onClick={() => {
           const validateInputs = () => {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
             if (
               !idValue ||
               !emailValue ||
@@ -421,6 +423,11 @@ const SignUpForm = ({ successLogin, handleSocialLogin }) => {
 
             if (passwordValue !== passwordCheckValue) {
               setLoginError('비밀번호가 일치하지 않습니다.');
+              return false;
+            }
+
+            if (!emailRegex.test(emailValue)) {
+              setLoginError('Email 형식이 올바르지 않습니다.');
               return false;
             }
 
@@ -624,6 +631,13 @@ const Auth = () => {
 
     // fetchUsername 함수 호출 후 페이지 이동
     if (type === 'SU') {
+      Swal.fire({
+        icon: 'success',
+        title: 'Welcome!',
+        text: '환영합니다! 원활한 서비스 이용을 위해 몇가지 정보를 입력해주세요.',
+        showConfirmButton: true,
+        timer: 1500,
+      });
       navigate('/auth/register');
     } else if (type === 'SI') {
       navigate('/main');
@@ -639,12 +653,6 @@ const Auth = () => {
 
   return (
     <BackLayout>
-      {/* <CircleGlass src="https://i.ibb.co/f2gnqxw/image.png" />
-      <SecondCircleGlass1 src="https://i.ibb.co/f2gnqxw/image.png" />
-      <TwistGlass src="https://i.ibb.co/wLPMNtf/image.png" />
-      <TearGlass1 src="https://i.ibb.co/jL01sDq/image.png" />
-      <TearGlass2 src="https://i.ibb.co/jL01sDq/image.png" />
-      <StampGlass src="https://i.ibb.co/XXzYTfy/image.png" /> */}
       <GlobalStyle />
       <Container>
         <SignUpContainer active={panelActive}>

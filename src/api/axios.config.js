@@ -15,7 +15,7 @@ export const reissueToken = async () => {
     );
     return response.data.access_token;
   } catch (error) {
-    return new Error('Token reissue failed');
+    return Promise.reject(error);
   }
 };
 
@@ -58,13 +58,24 @@ jsonAxios.interceptors.response.use(
         const newAccessToken = await reissueToken();
         console.log('newAccessToken:', newAccessToken);
         if (newAccessToken === undefined) {
+          console.log('err:', newAccessToken);
           return Promise.reject(error);
         }
-        setCookie('accessToken', newAccessToken); // 새로운 액세스 토큰을 쿠키에 저장합니다.
-        jsonAxios.defaults.headers.common['Authorization'] =
-          `${newAccessToken}`;
-        originalRequest.headers['Authorization'] = `${newAccessToken}`;
-        return jsonAxios(originalRequest); // 원래 요청을 새로운 토큰으로 재시도합니다.
+        if (
+          newAccessToken === undefined ||
+          newAccessToken === null ||
+          newAccessToken === '{}'
+        ) {
+          return Promise.reject(error);
+        }
+        if (newAccessToken) {
+          setCookie('accessToken', newAccessToken); // 새로운 액세스 토큰을 쿠키에 저장합니다.
+          jsonAxios.defaults.headers.common['Authorization'] =
+            `${newAccessToken}`;
+          originalRequest.headers['Authorization'] = `${newAccessToken}`;
+          return jsonAxios(originalRequest); // 원래 요청을 새로운 토큰으로 재시도합니다.
+        }
+        return Promise.reject(error);
       } catch (reissueError) {
         if (
           window.location.pathname !== '/auth' &&
@@ -120,11 +131,14 @@ formAxios.interceptors.response.use(
         if (newAccessToken === undefined) {
           return Promise.reject(error);
         }
-        setCookie('accessToken', newAccessToken); // 새로운 액세스 토큰을 쿠키에 저장합니다.
-        jsonAxios.defaults.headers.common['Authorization'] =
-          `${newAccessToken}`;
-        originalRequest.headers['Authorization'] = `${newAccessToken}`;
-        return jsonAxios(originalRequest); // 원래 요청을 새로운 토큰으로 재시도합니다.
+        if (newAccessToken) {
+          setCookie('accessToken', newAccessToken); // 새로운 액세스 토큰을 쿠키에 저장합니다.
+          formAxios.defaults.headers.common['Authorization'] =
+            `${newAccessToken}`;
+          originalRequest.headers['Authorization'] = `${newAccessToken}`;
+          return formAxios(originalRequest); // 원래 요청을 새로운 토큰으로 재시도합니다.
+        }
+        return Promise.reject(error);
       } catch (reissueError) {
         if (
           window.location.pathname !== '/auth' &&
