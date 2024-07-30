@@ -147,7 +147,7 @@ const Overlay = styled.div`
   transition: opacity 0.3s ease-in-out;
 `;
 const OverlayText = styled.p`
-  margin: 0.5rem 0;
+  margin: 0;
   text-align: center;
   font-size: 0.9rem;
 
