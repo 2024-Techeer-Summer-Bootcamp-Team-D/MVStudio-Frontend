@@ -65,13 +65,13 @@ const ControlGroup = styled.div`
 const StyledSlider = styled(Slider)`
   width: 5rem !important;
   color: white !important;
-  margin-left: 10px; /* 아이콘과의 간격을 위해 추가 */
+  margin-left: 0.625rem; /* 아이콘과의 간격을 위해 추가 */
   opacity: 0;
   transition: opacity 0.3s;
 
   & .MuiSlider-thumb {
-    width: 12px; /* 조정 버튼의 너비 */
-    height: 12px; /* 조정 버튼의 높이 */
+    width: 0.75rem; /* 조정 버튼의 너비 */
+    height: 0.75rem; /* 조정 버튼의 높이 */
     background-color: white; /* 조정 버튼의 색상 */
   }
 `;

@@ -91,7 +91,7 @@ function VideoList({ title }) {
   const [pageIndex, setPageIndex] = useState(0);
   const sortCriteria = sort(title);
 
-  const { data, fetchNextPage, hasNextPage } = useInfiniteQuery({
+  const { data, fetchNextPage, hasNextPage, isLoading } = useInfiniteQuery({
     queryKey: ['musicVideos', { title }],
     queryFn: ({ pageParam = 1 }) =>
       getList(pageParam, size, sortCriteria, undefined),
@@ -103,6 +103,10 @@ function VideoList({ title }) {
       }
     },
   });
+
+  if (isLoading) {
+    return <div></div>;
+  }
 
   return (
     <VideoLayout>

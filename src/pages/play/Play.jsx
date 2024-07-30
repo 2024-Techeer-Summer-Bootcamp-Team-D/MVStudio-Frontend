@@ -39,6 +39,7 @@ const LyricsBox = styled.div`
   display: ${({ expanded }) => (expanded ? 'flex' : 'none')};
   position: relative;
   overflow: hidden;
+  max-width: 20rem;
   transition:
     width 0.5s ease,
     height 0.5s ease,
@@ -69,7 +70,7 @@ const TextBox = styled.div`
   color: #ffffff;
   display: flex;
   flex-direction: column;
-  margin-left: 2%;
+  margin-left: ${({ expanded }) => (expanded ? '2%' : '0%')};
 `;
 
 const Title = styled.div`
@@ -144,12 +145,12 @@ const LyricsTitle = styled.div`
   position: relative;
   z-index: 2;
   color: white;
-  /* font-size: 0.75rem; */
   font-weight: 500;
   text-align: left;
   padding-right: 2rem;
   padding-top: 2rem;
   line-height: 2;
+  flex-wrap: wrap;
 
   /* 반응형 폰트 크기 적용 */
   @media (max-width: 1200px) {
