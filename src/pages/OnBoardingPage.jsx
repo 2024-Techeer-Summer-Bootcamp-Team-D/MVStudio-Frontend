@@ -280,7 +280,7 @@ const MusicVideoListContainer = styled.div`
 `;
 
 const MusicVideoListBox = styled.img`
-  width: 1%;
+  width: 3%;
   height: 80%;
   background-color: white;
   border-radius: 0.4rem;
