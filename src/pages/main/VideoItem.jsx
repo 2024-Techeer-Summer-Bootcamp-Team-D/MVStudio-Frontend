@@ -40,9 +40,35 @@ const ProfileImage = styled.img`
   align-items: center;
   width: 2.25rem;
   aspect-ratio: 1 / 1; /* 정사각형 비율을 유지 */
-  overflow: hidden; /* 넘치는 부분을 잘라냄 */
   border-radius: 100%;
   margin-right: 0.5rem;
+  object-fit: cover;
+`;
+
+const TextContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  line-height: 1.5;
+  width: calc(100% - 2.75rem);
+  max-width: calc(100% - 2.75rem); // 프로필 이미지 공간을 제외한 나머지
+`;
+
+const VideoSubject = styled.p`
+  font-weight: bold;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding-right: 0.25rem;
+  margin: 0;
+`;
+
+const VideoMemberName = styled.p`
+  font-size: 0.875rem;
+  color: #cccccc;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin: 0;
 `;
 
 const VideoHover = memo(({ src, size }) => {
@@ -117,25 +143,10 @@ function VideoItem({ pageSize, video }) {
           alt="profile"
           // onClick={() => navigate(`/users?id=${video?.member_id}`)}
         />
-        <div
-          style={{
-            display: 'flex',
-            flexDirection: 'column',
-            lineHeight: '1.5',
-            width: '100%',
-          }}
-        >
-          <p
-            style={{
-              fontWeight: 'bold',
-            }}
-          >
-            {video?.subject}
-          </p>
-          <p style={{ fontSize: '0.875rem', color: '#cccccc' }}>
-            {video?.member_name || 'no name user'}
-          </p>
-        </div>
+        <TextContainer>
+         <VideoSubject>{video?.subject}</VideoSubject>
+         <VideoMemberName>{video?.member_name || 'no name user'}</VideoMemberName>
+        </TextContainer>
       </VideoBotInfo>
     </BackLayout>
   );
