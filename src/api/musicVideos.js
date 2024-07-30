@@ -20,10 +20,10 @@ export const getList = async (page, size, sort, username) => {
   }
 };
 
-export const getHistory = async (username, page, size) => {
+export const getHistory = async (page, size) => {
   try {
     const response = await jsonAxios.get(
-      `/music-videos/histories-list/${username}?page=${page}&size=${size}`,
+      `/music-videos/histories?page=${page}&size=${size}`,
     );
     console.log('기록 :', response.data);
     return response.data;

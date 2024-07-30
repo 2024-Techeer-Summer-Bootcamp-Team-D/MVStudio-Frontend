@@ -147,7 +147,7 @@ const Overlay = styled.div`
   transition: opacity 0.3s ease-in-out;
 `;
 const OverlayText = styled.p`
-  margin: 0.5rem 0;
+  margin: 0;
   text-align: center;
   font-size: 0.9rem;
 
@@ -296,7 +296,7 @@ function Mypage() {
 
   const fetchRecent = async (pageNum) => {
     try {
-      const response = await getHistory(username, pageNum, 9);
+      const response = await getHistory(pageNum, 9);
       const newData = response.music_videos.filter(
         (video) => !fetchedVideoIds.flat().includes(video.id),
       );
@@ -482,8 +482,6 @@ function Mypage() {
           activeTab === 0 ? fetchData(nextPage) : fetchRecent(nextPage);
         }}
         hasMore={hasMore}
-        loader={<h4>Loading...</h4>}
-        endMessage={<p>No more items</p>}
         style={{
           width: '100%',
           display: 'flex',

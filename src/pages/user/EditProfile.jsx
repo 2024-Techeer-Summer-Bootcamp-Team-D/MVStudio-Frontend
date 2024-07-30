@@ -71,15 +71,42 @@ const ProfileImage = styled.img`
   object-fit: cover;
 `;
 
-const CameraIcon = styled(CameraAltIcon)`
+const CameraIconWrapper = styled.div`
   position: absolute;
-  top: 0;
+  top: 10;
   right: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: end;
+  align-items: start;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  border-radius: 50%;
+  background-color: rgba(0, 0, 0, 0.3);
+
+  &:hover {
+    opacity: 1;
+  }
+`;
+
+const CameraIcon = styled(CameraAltIcon)`
+  margin-top: 0.2rem;
+  color: black;
   cursor: pointer;
 `;
 
 const ProfileImageInput = styled.input`
   display: none;
+`;
+
+const InputTitle = styled.p`
+  display: flex;
+  font-size: 0.7rem;
+  margin-bottom: -0.9rem;
+  margin-left: 1rem;
+  color: #585559;
+  z-index: 5;
 `;
 
 function EditProfile() {
@@ -192,24 +219,28 @@ function EditProfile() {
           }
           alt="Profile"
         />
-        <label>
-          <CameraIcon />
-          <ProfileImageInput
-            type="file"
-            accept="image/*"
-            onChange={handleProfileImageChange}
-          />
-        </label>
+        <CameraIconWrapper>
+          <label>
+            <CameraIcon />
+            <ProfileImageInput
+              type="file"
+              accept="image/*"
+              onChange={handleProfileImageChange}
+            />
+          </label>
+        </CameraIconWrapper>
       </ProfileImageWrapper>
       <FormControl sx={{ m: 1, minWidth: '90%' }}>
+        <InputTitle>Email</InputTitle>
         <StyledInput
-          id="nickname"
+          id="email"
           name="email"
           type="text"
-          placeholder="Enter your Nickname"
+          placeholder="Enter your email"
           value={userInfo.email}
           onChange={handleChange}
         />
+        <InputTitle>NickName</InputTitle>
         <StyledInput
           id="nickname"
           name="nickname"
@@ -218,6 +249,7 @@ function EditProfile() {
           value={userInfo.nickname}
           onChange={handleChange}
         />
+        <InputTitle>Comment</InputTitle>
         <StyledInput
           id="comment"
           name="comment"

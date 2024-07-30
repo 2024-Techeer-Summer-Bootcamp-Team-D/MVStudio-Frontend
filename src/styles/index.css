@@ -5,6 +5,7 @@ body {
   font-family: 'SUIT', sans-serif;
   width: 100%;
   height: 100vh;
+  background-color: #05000a;
 }
 
 @font-face {

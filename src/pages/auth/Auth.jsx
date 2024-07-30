@@ -18,6 +18,19 @@ const GlobalStyle = createGlobalStyle`
   * {
     box-sizing: border-box;
   }
+  .back-layout{
+    justify-content: center;
+    align-items: center;
+  }
+  .content-area{
+    justify-content: center; 
+    align-items: center; 
+  }
+  .children-wrapper{
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+  }
 `;
 
 const BackLayout = styled.div`
@@ -130,7 +143,7 @@ const Container = styled.div`
     0 10px 10px rgba(0, 0, 0, 0.22);
   position: relative;
   overflow: hidden;
-  width: 75%;
+  width: 80%;
   min-width: 60rem;
   height: 80%;
   min-height: 30rem;
@@ -537,50 +550,59 @@ const SignInForm = ({ successLogin, handleSocialLogin }) => {
   );
 };
 
-const CircleGlass = styled.img`
-  width: 10rem;
-  height: 10rem;
-  position: relative;
-  margin-left: -4rem;
-  margin-top: -45rem;
-  filter: blur(2px);
-`;
+// const CircleGlass = styled.img`
+//   width: 10rem;
+//   height: 10rem;
+//   position: fixed;
+//   margin-left: 30rem;
+//   margin-top: -60rem;
+//   filter: blur(2px);
+// `;
 
-const SecondCircleGlass1 = styled.img`
-  width: 8rem;
-  height: 8rem;
-  position: absolute;
-  margin-left: 20rem;
-  margin-top: -40rem;
-  filter: blur(2px);
-`;
+// const SecondCircleGlass1 = styled.img`
+//   width: 7rem;
+//   height: 7rem;
+//   position: fixed;
+//   margin-left: 105rem;
+//   margin-top: 10rem;
+//   filter: blur(2px);
+// `;
 
-const TwistGlass = styled.img`
-  width: 12rem;
-  height: 12rem;
-  position: absolute;
-  margin-left: -5rem;
-  margin-top: 52rem;
-  filter: blur(2px);
-`;
+// const TwistGlass = styled.img`
+//   width: 12rem;
+//   height: 12rem;
+//   position: fixed;
+//   margin-left: -20rem;
+//   margin-top: 60rem;
+//   filter: blur(2px);
+// `;
 
-const TearGlass1 = styled.img`
-  width: 5rem;
-  height: 5rem;
-  position: absolute;
-  margin-left: 80rem;
-  margin-top: 40rem;
-  filter: blur(2px);
-`;
+// const TearGlass1 = styled.img`
+//   width: 6rem;
+//   height: 6rem;
+//   position: fixed;
+//   margin-left: 100rem;
+//   margin-top: -20rem;
+//   filter: blur(2px);
+// `;
 
-const TearGlass2 = styled.img`
-  width: 5rem;
-  height: 5rem;
-  position: absolute;
-  margin-left: -80rem;
-  margin-top: 40rem;
-  filter: blur(2px);
-`;
+// const TearGlass2 = styled.img`
+//   width: 5rem;
+//   height: 5rem;
+//   position: fixed;
+//   margin-left: -115rem;
+//   margin-top: 40rem;
+//   filter: blur(2px);
+// `;
+
+// const StampGlass = styled.img`
+//   width: 8rem;
+//   height: 8rem;
+//   position: fixed;
+//   margin-left: -90rem;
+//   margin-top: -45rem;
+//   filter: blur(2px);
+// `
 
 const Auth = () => {
   const [panelActive, setPanelActive] = useState('');
@@ -617,11 +639,12 @@ const Auth = () => {
 
   return (
     <BackLayout>
-      <CircleGlass src="https://i.ibb.co/f2gnqxw/image.png" />
+      {/* <CircleGlass src="https://i.ibb.co/f2gnqxw/image.png" />
       <SecondCircleGlass1 src="https://i.ibb.co/f2gnqxw/image.png" />
       <TwistGlass src="https://i.ibb.co/wLPMNtf/image.png" />
       <TearGlass1 src="https://i.ibb.co/jL01sDq/image.png" />
       <TearGlass2 src="https://i.ibb.co/jL01sDq/image.png" />
+      <StampGlass src="https://i.ibb.co/XXzYTfy/image.png" /> */}
       <GlobalStyle />
       <Container>
         <SignUpContainer active={panelActive}>
