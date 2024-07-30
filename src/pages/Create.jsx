@@ -1,10 +1,22 @@
-import React, { useState, useEffect } from 'react';
+import * as React from 'react';
+import PropTypes from 'prop-types';
+import { styled as muiStyled } from '@mui/material/styles'; // 'styled'를 'muiStyled'로 변경
+import Stack from '@mui/material/Stack';
+import Stepper from '@mui/material/Stepper';
+import Step from '@mui/material/Step';
+import StepLabel from '@mui/material/StepLabel';
+import Check from '@mui/icons-material/Check';
+
+import StepConnector, {
+  stepConnectorClasses,
+} from '@mui/material/StepConnector';
+import { useState, useEffect, useCallback } from 'react'; // React로부터 useState와 useEffect 가져오기
 import styled, { css, keyframes } from 'styled-components';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { getGenre, getInstruments, getStyles } from '../api/musicVideos';
 import { useNavigate } from 'react-router-dom';
-import ArrowBackBackIcon from '@mui/icons-material/ArrowBack';
+
 import Swal from 'sweetalert2';
 import GenreSwiperComponent from '@/components/GenreSwiper';
 import StyleSwiperComponent from '@/components/StyleSwiper';
@@ -78,31 +90,6 @@ const BigContainer = styled.div`
   flex-direction: column;
   align-items: center;
   padding: 1rem;
-`;
-const ProgressBarContainer = styled.div`
-  width: 100%;
-  height: 30%;
-  display: flex;
-  justify-content: center;
-  flex-direction: column;
-  align-items: center;
-`;
-
-const ProgressBar = styled.div`
-  width: 80%;
-  height: 1rem;
-  background: #444;
-  border-radius: 0.5rem;
-  margin-bottom: 1rem;
-  position: relative;
-`;
-
-const Progress = styled.div`
-  height: 100%;
-  background: #7c6bdd;
-  border-radius: 0.5rem;
-  transition: width 0.3s ease;
-  width: ${(props) => props.width}%;
 `;
 
 const StepContainer = styled.div`
@@ -250,34 +237,11 @@ const ArrowFunction = styled(ArrowForwardIosIcon)`
   transform: ${(props) => (props.isPrev ? 'rotate(0deg)' : 'rotate(180deg)')};
   z-index: 2;
 `;
-const BackButtonContainer = styled.div`
-  width: 80%;
-  height: 1.5rem;
-  margin-bottom: 1rem;
-`;
 
-const BackButton = styled(ArrowBackBackIcon)`
-  display: flex;
-  width: 3rem;
-  height: 1.5rem;
-
-  cursor: pointer;
-  color: white;
-  justify-content: flex-start;
-  align-items: flex-start;
-`;
 const ViewContainer = styled.div`
   width: 80%;
   display: flex;
   overflow: hidden;
-`;
-
-const CardList = styled.div`
-  display: flex;
-  flex-direction: row;
-  width: 100%;
-  transition: transform 0.5s ease-in-out;
-  transform: ${({ currentIndex }) => `translateX(-${currentIndex * 16.73}%)`};
 `;
 
 const SubmitButton = styled.button`
@@ -396,6 +360,178 @@ const ConfirmButton = styled.button`
   cursor: pointer;
 `;
 
+//프로그래스바 디자인 옵션
+const StyledStepLabel = styled(StepLabel)`
+  .MuiStepLabel-label {
+    color: white !important;
+    font-size: 0.8rem;
+    font-family: suit;
+    margin: 3.5rem;
+  }
+`;
+
+const QontoStepIconRoot = muiStyled('div')(({ theme, ownerState }) => ({
+  color: theme.palette.mode === 'dark' ? theme.palette.grey[700] : '#eaeaf0',
+  display: 'flex',
+  height: 22,
+  alignItems: 'center',
+  ...(ownerState.active && {
+    color: '#784af4',
+  }),
+  '& .QontoStepIcon-completedIcon': {
+    color: '#784af4',
+    zIndex: 1,
+    fontSize: 18,
+  },
+  '& .QontoStepIcon-circle': {
+    width: 8,
+    height: 8,
+    borderRadius: '50%',
+    backgroundColor: 'currentColor',
+  },
+}));
+
+function QontoStepIcon(props) {
+  const { active, completed, className } = props;
+
+  return (
+    <QontoStepIconRoot ownerState={{ active }} className={className}>
+      {completed ? (
+        <Check className="QontoStepIcon-completedIcon" />
+      ) : (
+        <div className="QontoStepIcon-circle" />
+      )}
+    </QontoStepIconRoot>
+  );
+}
+
+QontoStepIcon.propTypes = {
+  /**
+   * Whether this step is active.
+   * @default false
+   */
+  active: PropTypes.bool,
+  className: PropTypes.string,
+  /**
+   * Mark the step as completed. Is passed to child components.
+   * @default false
+   */
+  completed: PropTypes.bool,
+};
+
+const ColorlibConnector = muiStyled(StepConnector)(({ theme }) => ({
+  [`&.${stepConnectorClasses.alternativeLabel}`]: {
+    top: 22,
+  },
+  [`&.${stepConnectorClasses.active}`]: {
+    [`& .${stepConnectorClasses.line}`]: {
+      backgroundImage:
+        'linear-gradient( 95deg,rgb(242,113,33) 0%,rgb(233,64,87) 50%,rgb(138,35,135) 100%)',
+    },
+  },
+  [`&.${stepConnectorClasses.completed}`]: {
+    [`& .${stepConnectorClasses.line}`]: {
+      backgroundImage:
+        'linear-gradient( 95deg,rgb(242,113,33) 0%,rgb(233,64,87) 50%,rgb(138,35,135) 100%)',
+    },
+  },
+  [`& .${stepConnectorClasses.line}`]: {
+    height: 3,
+    border: 0,
+    backgroundColor:
+      theme.palette.mode === 'dark' ? theme.palette.grey[800] : '#eaeaf0',
+    borderRadius: 1,
+  },
+}));
+
+const ColorlibStepIconRoot = muiStyled('div')(({ theme, ownerState }) => ({
+  backgroundColor:
+    theme.palette.mode === 'dark' ? theme.palette.grey[700] : '#ccc',
+  zIndex: 1,
+  color: '#fff',
+  width: 50,
+  height: 50,
+  display: 'flex',
+  borderRadius: '50%',
+  justifyContent: 'center',
+  alignItems: 'center',
+  cursor: 'pointer',
+  ...(ownerState.active && {
+    backgroundImage:
+      'linear-gradient( 136deg, rgb(242,113,33) 0%, rgb(233,64,87) 50%, rgb(138,35,135) 100%)',
+    boxShadow: '0 4px 10px 0 rgba(0,0,0,.25)',
+  }),
+  ...(ownerState.completed && {
+    backgroundImage:
+      'linear-gradient( 136deg, rgb(242,113,33) 0%, rgb(233,64,87) 50%, rgb(138,35,135) 100%)',
+  }),
+  '&:hover': {
+    backgroundColor:
+      theme.palette.mode === 'dark' ? theme.palette.grey[600] : '#aaa',
+    transform: 'scale(1.1)',
+    transition: 'transform 0.3s ease, background-color 0.3s ease',
+  },
+}));
+
+function ColorlibStepIcon(props) {
+  const { active, completed, className, icon, onClick } = props;
+
+  const icons = {
+    1: 1,
+    2: 2,
+    3: 3,
+    4: 4,
+    5: 5,
+    6: 6,
+    7: 7,
+  };
+
+  const handleClick = useCallback(() => {
+    if (onClick) {
+      onClick(icon);
+    }
+  }, [icon, onClick]);
+
+  return (
+    <ColorlibStepIconRoot
+      ownerState={{ completed, active }}
+      className={className}
+      onClick={handleClick} // 클릭 이벤트 추가
+    >
+      {icons[String(icon)]}
+    </ColorlibStepIconRoot>
+  );
+}
+
+ColorlibStepIcon.propTypes = {
+  /**
+   * Whether this step is active.
+   * @default false
+   */
+  active: PropTypes.bool,
+  className: PropTypes.string,
+  /**
+   * Mark the step as completed. Is passed to child components.
+   * @default false
+   */
+  completed: PropTypes.bool,
+  /**
+   * The label displayed in the step icon.
+   */
+  icon: PropTypes.node,
+  onClick: PropTypes.func,
+};
+
+const steps = [
+  'Genre',
+  'Instuctment',
+  'Style',
+  'Title',
+  'Vocal',
+  'Lnguage',
+  'Tempo',
+];
+
 const Create = () => {
   const [genreList, setGenreList] = useState([]);
   const [instrumentsList, setInstrumentsList] = useState([]);
@@ -406,7 +542,6 @@ const Create = () => {
   const [selectedInstruments, setSelectedInstruments] = useState([]);
   const [songTitle, setSongTitle] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [currentGenreIndex, setCurrentGenreIndex] = useState(0);
   const [currentInstrumentIndex, setCurrentInstrumentIndex] = useState(0);
   const [genreId, setGenreId] = useState();
   const [instrumentsId, setInstrumentsId] = useState([]);
@@ -534,18 +669,6 @@ const Create = () => {
   const instrumentsCount = selectedInstruments.length;
   const shouldShowWarning = instrumentsCount >= 3;
 
-  const handleGenrePrevClick = () => {
-    if (currentGenreIndex > 0) {
-      setCurrentGenreIndex(currentGenreIndex - 1);
-    }
-  };
-
-  const handleGenreNextClick = () => {
-    if (currentGenreIndex < genreList?.length - 6) {
-      setCurrentGenreIndex(currentGenreIndex + 1);
-    }
-  };
-
   const handleInstrumentPrevClick = () => {
     if (currentInstrumentIndex > 0) {
       setCurrentInstrumentIndex(currentInstrumentIndex - 1);
@@ -640,21 +763,35 @@ const Create = () => {
     setStep((prevStep) => prevStep + 1);
   };
 
-  const handlePrevStep = () => {
-    setStep((prevStep) => prevStep - 1);
+  const handleStepIconClick = (stepNumber) => {
+    setStep(stepNumber);
   };
 
   return (
     <CreateContainer>
-      <ProgressBarContainer>
-        <BackButtonContainer>
-          {step > 1 && <BackButton onClick={handlePrevStep} />}
-        </BackButtonContainer>
-
-        <ProgressBar>
-          <Progress width={(step / 7) * 100} />
-        </ProgressBar>
-      </ProgressBarContainer>
+      <Stack sx={{ width: '88%' }} spacing={4}>
+        <Stepper
+          alternativeLabel
+          activeStep={step - 1}
+          connector={<ColorlibConnector />}
+        >
+          {steps.map((label, index) => (
+            <Step key={label}>
+              <StyledStepLabel
+                StepIconComponent={(props) => (
+                  <ColorlibStepIcon
+                    {...props}
+                    icon={index + 1}
+                    onClick={handleStepIconClick}
+                  />
+                )}
+              >
+                <stepText>{label}</stepText>
+              </StyledStepLabel>
+            </Step>
+          ))}
+        </Stepper>
+      </Stack>
 
       <BigContainer>
         <StepContainer active={step === 1}>
