@@ -21,6 +21,7 @@ import Swal from 'sweetalert2';
 import GenreSwiperComponent from '@/components/GenreSwiper';
 import StyleSwiperComponent from '@/components/StyleSwiper';
 import InstSwiperComponent from '@/components/InstSwiper';
+import { color } from 'framer-motion';
 
 const jellyAnimation = keyframes`
   25% {
@@ -39,7 +40,6 @@ const JellyButton = styled.button`
   height: 3.5rem;
   font-size: 1rem;
   font-weight: 500;
-  margin-top: 3.2rem;
   background: #7c6bdd;
   color: white;
   border-radius: 1rem;
@@ -112,21 +112,22 @@ const TitleStyle2 = styled.p`
   font-size: 0.7rem;
   color: #c0c0c0;
   font-weight: 500;
-  margin-bottom: 2rem;
 `;
 
 const Button = styled.button`
-  width: 10rem;
-  font-size: 1rem;
+  background-image: url(${(props) => props.imageUrl});
+  width: 15rem;
+  height: 15rem;
+  font-size: 3rem;
   font-weight: 500;
   color: #fff;
   cursor: pointer;
-  height: 3.6rem;
+  margin-top: 2rem;
+  margin-bottom: 2rem;
   text-align: center;
   background-size: 300% 100%;
   border-radius: 0.7rem;
   transition: all 0.4s ease-in-out;
-  margin-bottom: 1.5rem;
   background-image: linear-gradient(
     to right,
     #140421,
@@ -163,6 +164,8 @@ const TitleInput = styled.input`
   font-weight: 600;
   font-size: 1.2rem;
   padding: 1rem;
+  margin-top: 2rem;
+  margin-bottom: 2rem;
 
   ::placeholder {
     color: #000000;
@@ -375,6 +378,7 @@ const QontoStepIconRoot = muiStyled('div')(({ theme, ownerState }) => ({
   display: 'flex',
   height: 22,
   alignItems: 'center',
+
   ...(ownerState.active && {
     color: '#784af4',
   }),
@@ -425,14 +429,12 @@ const ColorlibConnector = muiStyled(StepConnector)(({ theme }) => ({
   },
   [`&.${stepConnectorClasses.active}`]: {
     [`& .${stepConnectorClasses.line}`]: {
-      backgroundImage:
-        'linear-gradient( 95deg,rgb(242,113,33) 0%,rgb(233,64,87) 50%,rgb(138,35,135) 100%)',
+      backgroundColor: 'rgb(124, 107, 221)',
     },
   },
   [`&.${stepConnectorClasses.completed}`]: {
     [`& .${stepConnectorClasses.line}`]: {
-      backgroundImage:
-        'linear-gradient( 95deg,rgb(242,113,33) 0%,rgb(233,64,87) 50%,rgb(138,35,135) 100%)',
+      backgroundColor: 'rgb(124, 107, 221)',
     },
   },
   [`& .${stepConnectorClasses.line}`]: {
@@ -457,13 +459,11 @@ const ColorlibStepIconRoot = muiStyled('div')(({ theme, ownerState }) => ({
   alignItems: 'center',
   cursor: 'pointer',
   ...(ownerState.active && {
-    backgroundImage:
-      'linear-gradient( 136deg, rgb(242,113,33) 0%, rgb(233,64,87) 50%, rgb(138,35,135) 100%)',
+    backgroundColor: 'rgb(124, 107, 221)',
     boxShadow: '0 4px 10px 0 rgba(0,0,0,.25)',
   }),
   ...(ownerState.completed && {
-    backgroundImage:
-      'linear-gradient( 136deg, rgb(242,113,33) 0%, rgb(233,64,87) 50%, rgb(138,35,135) 100%)',
+    backgroundColor: 'rgb(124, 107, 221)',
   }),
   '&:hover': {
     backgroundColor:
@@ -854,6 +854,7 @@ const Create = () => {
             {['여성 보컬', '남성 보컬'].map((option) => (
               <Button
                 key={option}
+                imageUrl={`url/to/your/image/${option}.jpg`}
                 clicked={voice === option}
                 onClick={() => setVoice(option)}
               >
@@ -895,7 +896,7 @@ const Create = () => {
               </Button>
             ))}
           </ChooseOption>
-          <SubmitButton onClick={handleCreateClick}>완료</SubmitButton>
+          <JellyButton onClick={handleCreateClick}>완료</JellyButton>
         </StepContainer>
         {isModalOpen && (
           <>
@@ -937,13 +938,13 @@ const Create = () => {
                   // 추가 로직이 필요한 경우 여기에 작성
                   null}
               </ModalText>
-              <ConfirmButton
+              <SubmitButton
                 onClick={() => {
                   handleSubmit();
                 }}
               >
                 Submit
-              </ConfirmButton>
+              </SubmitButton>
             </ModalContainer>
           </>
         )}
