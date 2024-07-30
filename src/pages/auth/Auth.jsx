@@ -639,12 +639,6 @@ const Auth = () => {
 
   return (
     <BackLayout>
-      {/* <CircleGlass src="https://i.ibb.co/f2gnqxw/image.png" />
-      <SecondCircleGlass1 src="https://i.ibb.co/f2gnqxw/image.png" />
-      <TwistGlass src="https://i.ibb.co/wLPMNtf/image.png" />
-      <TearGlass1 src="https://i.ibb.co/jL01sDq/image.png" />
-      <TearGlass2 src="https://i.ibb.co/jL01sDq/image.png" />
-      <StampGlass src="https://i.ibb.co/XXzYTfy/image.png" /> */}
       <GlobalStyle />
       <Container>
         <SignUpContainer active={panelActive}>
