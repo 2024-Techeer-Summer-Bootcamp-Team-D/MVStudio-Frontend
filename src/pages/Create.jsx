@@ -8,6 +8,7 @@ import ArrowBackBackIcon from '@mui/icons-material/ArrowBack';
 import Swal from 'sweetalert2';
 import GenreSwiperComponent from '@/components/GenreSwiper';
 import StyleSwiperComponent from '@/components/StyleSwiper';
+import InstSwiperComponent from '@/components/InstSwiper';
 
 const jellyAnimation = keyframes`
   25% {
@@ -433,8 +434,10 @@ const Create = () => {
     const fetchInstrumentData = async () => {
       try {
         const data = await getInstruments();
-        setInstrumentsList(data.instruments);
-        console.log('response(instrument):', data.instruments);
+        const instruments = data.instruments;
+        const doubledInstruments = [...instruments, ...instruments]; // 데이터를 두 번 반복하여 20개로 만듦
+        setInstrumentsList(doubledInstruments);
+        console.log('response(instrument):', doubledInstruments);
       } catch {
         console.error('악기 데이터 조회 오류');
       }
@@ -446,8 +449,9 @@ const Create = () => {
     const fetchStylesData = async () => {
       try {
         const data = await getStyles();
-        console.log('response(style) : ', data.data);
-        setStylesList(data.data);
+        const styles = data.data;
+        const doubledStyles = [...styles, ...styles];
+        setStylesList(doubledStyles);
       } catch {
         console.error('스타일 데이터 조회 오류');
       }
@@ -456,7 +460,31 @@ const Create = () => {
   }, []);
 
   const handleCreateClick = () => {
-    setIsModalOpen(true);
+    Swal.fire({
+      title: 'Song Details',
+      html: `
+          <div>
+              <strong>Title:</strong> ${songTitle} <br>
+              <strong>Voice:</strong> ${voice} <br>
+              <strong>Language:</strong> ${language} <br>
+              <strong>Tempo:</strong> ${tempo} <br>
+              <strong>Genre:</strong> ${genreList[genreId - 1]?.genre_name} <br>
+              <strong>Instrument:</strong> ${selectedInstruments.join(', ')} <br>
+              <strong>Style:</strong> ${stylesList[stylesId - 1]?.style_name}
+          </div>
+      `,
+      icon: 'info', // 선택한 아이콘 (예: success, error, info, warning)
+      showCancelButton: true, // 취소 버튼을 보여줄지 여부
+      confirmButtonText: 'Submit',
+      cancelButtonText: 'Cancel',
+      customClass: {
+        container: 'custom-swal-container', // 필요에 따라 사용자 정의 클래스 추가 가능
+      },
+    }).then((result) => {
+      if (result.isConfirmed) {
+        handleSubmit(); // 버튼 클릭 시 호출될 함수
+      }
+    });
   };
 
   const handleCloseModal = () => {
@@ -634,6 +662,7 @@ const Create = () => {
           <TitleStyle2>*필수선택옵션입니다</TitleStyle2>
           <GenreContainer>
             <GenreSwiperComponent
+              key={`genreSwiper-${step}`}
               options={genreList}
               selectedId={genreId}
               onSelect={(id) => setGenreId(id)}
@@ -646,36 +675,11 @@ const Create = () => {
           <TitleStyle1>악기를 선택해주세요</TitleStyle1>
           <TitleStyle2>*중복선택가능</TitleStyle2>
           <GenreContainer>
-            <ArrowFunction
-              onClick={handleInstrumentPrevClick}
-              disabled={currentInstrumentIndex === 0}
-            />
-
-            <ViewContainer>
-              <InstrumentList optionIndex={currentInstrumentIndex}>
-                {instrumentsList?.map((option, index) => (
-                  <CoverBox key={index}>
-                    <RoundCover
-                      src={option.instrument_image_url}
-                      selected={selectedInstruments.includes(
-                        option.instrument_name,
-                      )}
-                      onClick={() =>
-                        handleInstrumentClick(
-                          option.instrument_name,
-                          option.instrument_id,
-                        )
-                      }
-                    />
-                    <CoverLabel>{option.instrument_name}</CoverLabel>
-                  </CoverBox>
-                ))}
-              </InstrumentList>
-            </ViewContainer>
-            <ArrowFunction
-              onClick={handleInstrumentNextClick}
-              disabled={currentInstrumentIndex === instrumentsList?.length - 6}
-              isPrev={true}
+            <InstSwiperComponent
+              options={instrumentsList}
+              selectedInstruments={selectedInstruments}
+              instrumentsId={instrumentsId}
+              onInstrumentClick={handleInstrumentClick}
             />
           </GenreContainer>
           <JellyButton onClick={handleNextStep}>다음</JellyButton>

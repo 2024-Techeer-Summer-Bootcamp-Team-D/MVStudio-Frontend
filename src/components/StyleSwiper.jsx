@@ -19,8 +19,8 @@ const SwiperContainer = styled.div`
 const SwiperSlide = styled.div`
   background-position: center;
   background-size: cover;
-  width: 15rem;
-  height: 15rem;
+  width: 20%;
+  height: 20%;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -38,7 +38,7 @@ const SlideImage = styled.img`
     props.selected &&
     `
     border: 3px solid #ffffff;
-    filter: brightness(0.5);
+    filter: brightness(0.7);
   `}
 `;
 
@@ -54,30 +54,41 @@ const StyleSwiperComponent = ({ options, selectedId, onSelect }) => {
   const swiperStlyeRef = useRef(null);
 
   useEffect(() => {
-    swiperStlyeRef.current = new Swiper('.myStyleSwiper', {
-      loop: true, // 무한 루프 활성화
-      loopAdditionalSlides: 123,
-      effect: 'coverflow',
-      grabCursor: true,
-      centeredSlides: true,
-      slidesPerView: 'auto',
-      coverflowEffect: {
-        rotate: 25,
-        stretch: 20,
-        depth: 0,
-        modifier: 1,
-        slideShadows: true,
-      },
-      //   pagination: {
-      //     el: '.swiper-pagination',
-      //     clickable: true,
-      //   },
-      navigation: {
-        nextEl: '.swiper-button-next',
-        prevEl: '.swiper-button-prev',
-      },
-      modules: [EffectCoverflow, Pagination, Navigation],
-    });
+    const initSwiper = () => {
+      swiperStlyeRef.current = new Swiper('.mySwiper', {
+        loop: true,
+        loopedSlides: 5, // 이 값을 슬라이드 개수에 따라 조정하세요
+        effect: 'coverflow',
+        grabCursor: true,
+        centeredSlides: true,
+        slidesPerView: 'auto',
+        initialSlide: 2, // 시작 슬라이드 위치 설정
+        coverflowEffect: {
+          rotate: 20,
+          stretch: 20,
+          depth: 100,
+          modifier: 1,
+          slideShadows: true,
+        },
+        navigation: {
+          nextEl: '.swiper-button-next',
+          prevEl: '.swiper-button-prev',
+        },
+        modules: [EffectCoverflow, Pagination, Navigation],
+        on: {
+          init: function () {
+            this.update(); // Swiper 초기화 후 업데이트
+          },
+        },
+      });
+    };
+
+    // 약간의 지연 후 Swiper 초기화
+    const timer = setTimeout(() => {
+      initSwiper();
+    }, 100);
+
+    return () => clearTimeout(timer);
   }, [options]);
 
   return (
