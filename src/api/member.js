@@ -32,7 +32,7 @@ export const postLogin = async (username, password) => {
     );
     return response.data;
   } catch (error) {
-    console.error('errorcode:', error);
+    return error.response.data;
   }
 };
 
@@ -43,10 +43,9 @@ export const postRegister = async (username, email, password) => {
       email,
       password,
     });
-    console.log('response:', response.data);
     return response.data;
   } catch (error) {
-    console.error('errorcode:', error);
+    return error.response.data;
   }
 };
 

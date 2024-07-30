@@ -136,7 +136,7 @@ export const youtubeLogin = async (id) => {
     console.log('response:', response);
     return response;
   } catch (error) {
-    console.log('errorcode:', error);
+    console.error('errorcode:', error);
   }
 };
 
