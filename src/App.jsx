@@ -38,13 +38,13 @@ const ChildrenWrapper = styled.div`
 function App({ children }) {
   return (
     <QueryClientProvider client={new QueryClient()}>
-      <BackLayout>
+      <BackLayout className="back-layout">
         <GlobalStyles />
         <Navbar />
-        <ContentArea>
+        <ContentArea className="content-area">
           <Sidebar />
           <Service />
-          <ChildrenWrapper>{children}</ChildrenWrapper>
+          <ChildrenWrapper className="children-wrapper">{children}</ChildrenWrapper>
         </ContentArea>
       </BackLayout>
     </QueryClientProvider>
