@@ -13,6 +13,7 @@ function YtChannelRegister() {
 
   useEffect(() => {
     console.log('channel url: ', ytChannelURL);
+    console.log('username: ', username);
     if (ytChannelURL && username) {
       patchMemberInfo(
         username,
@@ -34,8 +35,10 @@ function YtChannelRegister() {
           confirmButtonText: '확인',
         });
       });
+    } else {
+      // window.location.reload();
     }
-  }, []);
+  }, [username, ytChannelURL]);
 
   return <div>등록중입니다...</div>;
 }
