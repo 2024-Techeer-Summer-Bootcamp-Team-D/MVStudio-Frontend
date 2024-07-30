@@ -6,6 +6,12 @@ const BASE_URL = `${import.meta.env.VITE_REACT_APP_BASE_URL}/api/v1`;
 export const getUsername = async () => {
   try {
     const response = await jsonAxios.get('/members');
+    if (response.data.username === undefined) {
+      return {
+        username: '이거때문ㅇ',
+        credits: 0,
+      };
+    }
     return response.data;
   } catch (error) {
     console.error('errorcode:', error);
@@ -26,7 +32,7 @@ export const postLogin = async (username, password) => {
     );
     return response.data;
   } catch (error) {
-    console.error('errorcode:', error);
+    return error.response.data;
   }
 };
 
@@ -37,10 +43,9 @@ export const postRegister = async (username, email, password) => {
       email,
       password,
     });
-    console.log('response:', response.data);
     return response.data;
   } catch (error) {
-    console.error('errorcode:', error);
+    return error.response.data;
   }
 };
 

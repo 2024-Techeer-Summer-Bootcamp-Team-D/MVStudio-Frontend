@@ -69,8 +69,8 @@ const ItemArr = styled.div`
   max-width: 94%;
   gap: 0.4rem;
   transition: transform 0.5s ease-in-out;
-  transform: ${({ pageIndex }) =>
-    `translateX(calc(-${pageIndex * 100}% - ${pageIndex * 0.4}rem))`};
+  transform: ${({ pageIndex, view }) =>
+    `translateX(calc(-${pageIndex * 100}% - ${pageIndex * 0.4 * (view / 4)}rem))`};
 `;
 
 const sort = (title) => {
@@ -128,7 +128,7 @@ function VideoList({ title }) {
         </IconWrapper>
 
         {/* 비디오 아이템 */}
-        <ItemArr pageIndex={pageIndex}>
+        <ItemArr pageIndex={pageIndex} view={title === 'Top Hits' ? 4 : 6}>
           {data?.pages.map((page) =>
             page?.music_videos?.map((video, index) => (
               <VideoItem video={video} pageSize={pageSize} key={index} />

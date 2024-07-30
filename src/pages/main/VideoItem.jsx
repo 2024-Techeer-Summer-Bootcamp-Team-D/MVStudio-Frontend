@@ -126,8 +126,6 @@ const VideoHover = memo(({ src, size }) => {
 
 function VideoItem({ pageSize, video }) {
   const navigate = useNavigate();
-  console.log('video :', video);
-  console.log('pageSize :', pageSize);
   return (
     <BackLayout size={pageSize}>
       <div

@@ -129,3 +129,29 @@ export const getStyles = async () => {
     console.error('errorcode:', error);
   }
 };
+
+export const youtubeLogin = async (id) => {
+  try {
+    const response = await jsonAxios.get(`/oauth/youtube/${id}`);
+    console.log('response:', response);
+    return response;
+  } catch (error) {
+    console.error('errorcode:', error);
+  }
+};
+
+export const youtubeUpload = async (id, title, description, privacyStatus) => {
+  try {
+    const response = await jsonAxios.post(`/oauth/youtube/uploads/${id}`, {
+      title: title,
+      description: description,
+      tags: '',
+      privacyStatus: privacyStatus,
+    });
+
+    console.log('response:', response);
+    return response;
+  } catch (error) {
+    console.error('errorcode:', error);
+  }
+};

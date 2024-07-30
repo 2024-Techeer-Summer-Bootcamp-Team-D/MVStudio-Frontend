@@ -128,6 +128,7 @@ const ViewChart = () => {
   const [countryData, setCountryData] = useState(null);
   const [value, setValue] = useState(0);
   const username = useUser((state) => state.username);
+  console.log('username', username);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -152,6 +153,7 @@ const ViewChart = () => {
     };
     const fetchCountryData = async () => {
       try {
+        console.log('age username', username);
         const response = await getCountriesData(username);
         setCountryData(response);
       } catch (error) {
@@ -166,6 +168,9 @@ const ViewChart = () => {
         throw error;
       }
     };
+    if (!username) {
+      return;
+    }
     fetchAgeData();
     fetchCountryData();
     fetchGenderData();

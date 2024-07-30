@@ -6,6 +6,7 @@ import ignorePath from '../utils/igonerePath';
 import { useUser } from '@/libs/stores/userStore';
 import { postLogout } from '@/api/member';
 import Swal from 'sweetalert2';
+import { removeCookie } from '@/utils/cookies';
 
 // Material-UI
 import AddIcon from '@mui/icons-material/Add';
@@ -61,6 +62,9 @@ const MenuContainer = styled.div`
 function Sidebar() {
   const navigate = useNavigate();
   const username = useUser((state) => state.username);
+  const setUsername = useUser((state) => state.setUsername);
+  const setCredits = useUser((state) => state.setCredits);
+
   console.log('username :', username);
 
   if (ignorePath().includes(location.pathname)) {
@@ -119,7 +123,12 @@ function Sidebar() {
                   text: '로그아웃 되었습니다.',
                   icon: 'success',
                 });
-                postLogout().then(() => navigate('/auth'));
+                postLogout().then(() => {
+                  removeCookie('accessToken');
+                  setUsername('');
+                  setCredits(0);
+                  navigate('/auth');
+                });
               }
             });
           }}

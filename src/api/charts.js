@@ -12,7 +12,6 @@ export const getViewData = async (username) => {
 export const getAgesData = async (username) => {
   try {
     const response = await jsonAxios.get(`/charts/${username}/ages`);
-    console.log('response:', response.data);
     return response.data;
   } catch (error) {
     console.error('get countries error:', error);
