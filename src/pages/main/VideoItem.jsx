@@ -43,6 +43,7 @@ const ProfileImage = styled.img`
   border-radius: 100%;
   margin-right: 0.5rem;
   object-fit: cover;
+  cursor: pointer;
 `;
 
 const TextContainer = styled.div`
@@ -139,11 +140,13 @@ function VideoItem({ pageSize, video }) {
         <ProfileImage
           src={video?.profile_image || defaultProfile}
           alt="profile"
-          // onClick={() => navigate(`/users?id=${video?.member_id}`)}
+          onClick={() => navigate(`/users/${video?.username}`)}
         />
         <TextContainer>
-         <VideoSubject>{video?.subject}</VideoSubject>
-         <VideoMemberName>{video?.member_name || 'no name user'}</VideoMemberName>
+          <VideoSubject>{video?.subject}</VideoSubject>
+          <VideoMemberName>
+            {video?.member_name || 'no name user'}
+          </VideoMemberName>
         </TextContainer>
       </VideoBotInfo>
     </BackLayout>

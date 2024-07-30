@@ -6,6 +6,7 @@ import { getPlay } from '@/api/play';
 
 import { defaultProfile } from '@/assets/image';
 import VideoPlayer from './VideoPlayer';
+import { useNavigate } from 'react-router-dom';
 
 const BackLayout = styled.div`
   width: 100%;
@@ -139,6 +140,8 @@ function Play() {
   };
   const id = getQueryParam('id');
 
+  const navigate = useNavigate();
+
   const { data } = useQuery({
     queryKey: ['play', id],
     queryFn: () => getPlay(id),
@@ -183,7 +186,13 @@ function Play() {
           <img
             src={data?.data?.profile_image || defaultProfile}
             alt="Profile"
-            style={{ width: '3rem', height: '3rem', borderRadius: '100%' }}
+            style={{
+              width: '3rem',
+              height: '3rem',
+              borderRadius: '100%',
+              cursor: 'pointer',
+            }}
+            onClick={() => navigate(`/users/${data?.data?.username}`)}
           />
           <UserInfo2>
             <Subtitle>{data?.data?.member_name || 'no name user'}</Subtitle>
