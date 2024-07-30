@@ -20,10 +20,10 @@ export const getList = async (page, size, sort, username) => {
   }
 };
 
-export const getHistory = async (username, page, size) => {
+export const getHistory = async (page, size) => {
   try {
     const response = await jsonAxios.get(
-      `/music-videos/histories-list/${username}?page=${page}&size=${size}`,
+      `/music-videos/histories?page=${page}&size=${size}`,
     );
     console.log('기록 :', response.data);
     return response.data;
@@ -125,6 +125,32 @@ export const getStyles = async () => {
     const response = await jsonAxios.get('/music-videos/styles');
     console.log('response:', response.data);
     return response.data;
+  } catch (error) {
+    console.error('errorcode:', error);
+  }
+};
+
+export const youtubeLogin = async (id) => {
+  try {
+    const response = await jsonAxios.get(`/oauth/youtube/${id}`);
+    console.log('response:', response);
+    return response;
+  } catch (error) {
+    console.error('errorcode:', error);
+  }
+};
+
+export const youtubeUpload = async (id, title, description, privacyStatus) => {
+  try {
+    const response = await jsonAxios.post(`/oauth/youtube/uploads/${id}`, {
+      title: title,
+      description: description,
+      tags: '',
+      privacyStatus: privacyStatus,
+    });
+
+    console.log('response:', response);
+    return response;
   } catch (error) {
     console.error('errorcode:', error);
   }

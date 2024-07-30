@@ -41,10 +41,10 @@ function App({ children }) {
   const location = useLocation();
   return (
     <QueryClientProvider client={new QueryClient()}>
-      <BackLayout>
+      <BackLayout className="back-layout">
         <GlobalStyles />
         <Navbar />
-        <ContentArea>
+        <ContentArea className="content-area">
           <Sidebar />
           <Service />
 

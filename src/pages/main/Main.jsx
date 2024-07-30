@@ -69,8 +69,8 @@ const ItemArr = styled.div`
   max-width: 94%;
   gap: 0.4rem;
   transition: transform 0.5s ease-in-out;
-  transform: ${({ pageIndex }) =>
-    `translateX(calc(-${pageIndex * 100}% - ${pageIndex * 0.4}rem))`};
+  transform: ${({ pageIndex, view }) =>
+    `translateX(calc(-${pageIndex * 100}% - ${pageIndex * 0.4 * (view / 4)}rem))`};
 `;
 
 const sort = (title) => {
@@ -96,8 +96,8 @@ function VideoList({ title }) {
     queryFn: ({ pageParam = 1 }) =>
       getList(pageParam, size, sortCriteria, undefined),
     getNextPageParam: (lastPage) => {
-      if (lastPage.pagination.next_page) {
-        return lastPage.pagination.current_page + 1;
+      if (lastPage?.pagination?.next_page) {
+        return lastPage?.pagination?.current_page + 1;
       } else {
         return undefined;
       }
@@ -128,7 +128,7 @@ function VideoList({ title }) {
         </IconWrapper>
 
         {/* 비디오 아이템 */}
-        <ItemArr pageIndex={pageIndex}>
+        <ItemArr pageIndex={pageIndex} view={title === 'Top Hits' ? 4 : 6}>
           {data?.pages.map((page) =>
             page?.music_videos?.map((video, index) => (
               <VideoItem video={video} pageSize={pageSize} key={index} />
@@ -145,7 +145,7 @@ function VideoList({ title }) {
                 fetchNextPage();
               }
               if (
-                data.pages[0].pagination.total_items >
+                data?.pages[0]?.pagination.total_items >
                 pageSize * (pageIndex + 1)
               ) {
                 setPageIndex((prev) => prev + 1);
