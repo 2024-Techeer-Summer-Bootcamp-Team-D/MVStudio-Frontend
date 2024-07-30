@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import Swiper from 'swiper';
 import { EffectCoverflow, Pagination, Navigation } from 'swiper/modules';
@@ -50,20 +50,26 @@ const SlideLabel = styled.span`
   margin-top: 0.5rem;
 `;
 
-const GenreSwiperComponent = ({ options, selectedId, onSelect }) => {
-  const swiperRef = useRef(null);
+const InstSwiperComponent = ({
+  options,
+  selectedInstruments,
+  instrumentsId,
+  onInstrumentClick,
+}) => {
+  const swiperElRef = useRef(null);
+  const [isVisible, setIsVisible] = useState(false);
+  const [swiper, setSwiper] = useState(null);
 
   useEffect(() => {
-    const initSwiper = () => {
-      if (swiperRef.current) swiperRef.current.destroy(true, true);
-      swiperRef.current = new Swiper('.mySwiper', {
+    if (swiperElRef.current && !swiper) {
+      const swiperInstance = new Swiper(swiperElRef.current, {
         loop: true,
-        loopedSlides: 5, // 이 값을 슬라이드 개수에 따라 조정하세요
+        loopedSlides: 5,
         effect: 'coverflow',
         grabCursor: true,
         centeredSlides: true,
         slidesPerView: 'auto',
-        initialSlide: 2, // 시작 슬라이드 위치 설정
+        initialSlide: 2,
         coverflowEffect: {
           rotate: 20,
           stretch: 20,
@@ -76,34 +82,44 @@ const GenreSwiperComponent = ({ options, selectedId, onSelect }) => {
           prevEl: '.swiper-button-prev',
         },
         modules: [EffectCoverflow, Pagination, Navigation],
-        on: {
-          init: function () {
-            this.update(); // Swiper 초기화 후 업데이트
-          },
-        },
       });
+
+      setSwiper(swiperInstance);
+      setIsVisible(true);
+    }
+
+    return () => {
+      if (swiper) {
+        swiper.destroy();
+        setSwiper(null);
+      }
     };
+  }, []);
 
-    // 약간의 지연 후 Swiper 초기화
-    const timer = setTimeout(() => {
-      initSwiper();
-    }, 100);
-
-    return () => clearTimeout(timer);
-  }, [options]);
+  useEffect(() => {
+    if (swiper && options.length > 0) {
+      swiper.update();
+    }
+  }, [swiper, options]);
 
   return (
-    <SwiperContainer className="mySwiper">
+    <SwiperContainer
+      ref={swiperElRef}
+      className="mySwiper"
+      isVisible={isVisible}
+    >
       <div className="swiper-wrapper">
         {options?.map((option) => (
           <SwiperSlide key={option.id} className="swiper-slide">
             <SlideImage
-              src={option.genre_image_url}
-              alt={option.genre_name}
-              selected={selectedId === option.genre_id}
-              onClick={() => onSelect(option.genre_id)}
+              src={option.instrument_image_url}
+              alt={option.instrument_name}
+              selected={instrumentsId.includes(option.instrument_id)} // Check if this option is selected
+              onClick={() =>
+                onInstrumentClick(option.instrument_name, option.instrument_id)
+              }
             />
-            <SlideLabel>{option.genre_name}</SlideLabel>
+            <SlideLabel>{option.instrument_name}</SlideLabel>
           </SwiperSlide>
         ))}
       </div>
@@ -114,4 +130,4 @@ const GenreSwiperComponent = ({ options, selectedId, onSelect }) => {
   );
 };
 
-export default GenreSwiperComponent;
+export default InstSwiperComponent;

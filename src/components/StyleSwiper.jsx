@@ -50,13 +50,12 @@ const SlideLabel = styled.span`
   margin-top: 0.5rem;
 `;
 
-const GenreSwiperComponent = ({ options, selectedId, onSelect }) => {
-  const swiperRef = useRef(null);
+const StyleSwiperComponent = ({ options, selectedId, onSelect }) => {
+  const swiperStlyeRef = useRef(null);
 
   useEffect(() => {
     const initSwiper = () => {
-      if (swiperRef.current) swiperRef.current.destroy(true, true);
-      swiperRef.current = new Swiper('.mySwiper', {
+      swiperStlyeRef.current = new Swiper('.mySwiper', {
         loop: true,
         loopedSlides: 5, // 이 값을 슬라이드 개수에 따라 조정하세요
         effect: 'coverflow',
@@ -98,12 +97,12 @@ const GenreSwiperComponent = ({ options, selectedId, onSelect }) => {
         {options?.map((option) => (
           <SwiperSlide key={option.id} className="swiper-slide">
             <SlideImage
-              src={option.genre_image_url}
-              alt={option.genre_name}
-              selected={selectedId === option.genre_id}
-              onClick={() => onSelect(option.genre_id)}
+              src={option.style_image_url}
+              alt={option.style_name}
+              selected={selectedId === option.style_id}
+              onClick={() => onSelect(option.style_id)}
             />
-            <SlideLabel>{option.genre_name}</SlideLabel>
+            <SlideLabel>{option.style_name}</SlideLabel>
           </SwiperSlide>
         ))}
       </div>
@@ -114,4 +113,4 @@ const GenreSwiperComponent = ({ options, selectedId, onSelect }) => {
   );
 };
 
-export default GenreSwiperComponent;
+export default StyleSwiperComponent;
