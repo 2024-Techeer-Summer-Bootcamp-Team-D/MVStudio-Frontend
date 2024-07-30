@@ -58,12 +58,12 @@ const GenreSwiperComponent = ({ options, selectedId, onSelect }) => {
       if (swiperRef.current) swiperRef.current.destroy(true, true);
       swiperRef.current = new Swiper('.mySwiper', {
         loop: true,
-        loopedSlides: 5, // 이 값을 슬라이드 개수에 따라 조정하세요
+        loopedSlides: 0, // 이 값을 슬라이드 개수에 따라 조정하세요
         effect: 'coverflow',
         grabCursor: true,
         centeredSlides: true,
         slidesPerView: 'auto',
-        initialSlide: 2, // 시작 슬라이드 위치 설정
+        initialSlide: 1, // 시작 슬라이드 위치 설정
         coverflowEffect: {
           rotate: 20,
           stretch: 20,

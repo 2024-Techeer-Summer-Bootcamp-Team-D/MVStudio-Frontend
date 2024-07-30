@@ -662,7 +662,7 @@ const Create = () => {
           <TitleStyle2>*필수선택옵션입니다</TitleStyle2>
           <GenreContainer>
             <GenreSwiperComponent
-              key={`genreSwiper-${step}`}
+              // key={`genreSwiper-${step}`}
               options={genreList}
               selectedId={genreId}
               onSelect={(id) => setGenreId(id)}
@@ -676,6 +676,7 @@ const Create = () => {
           <TitleStyle2>*중복선택가능</TitleStyle2>
           <GenreContainer>
             <InstSwiperComponent
+              key={`genreSwiper-${step}`}
               options={instrumentsList}
               selectedInstruments={selectedInstruments}
               instrumentsId={instrumentsId}
@@ -690,6 +691,7 @@ const Create = () => {
           <TitleStyle2>*필수선택옵션입니다</TitleStyle2>
           <GenreContainer>
             <StyleSwiperComponent
+              key={`genreSwiper-${step}`}
               options={stylesList}
               selectedId={stylesId}
               onSelect={(id) => setStylesId(id)}
