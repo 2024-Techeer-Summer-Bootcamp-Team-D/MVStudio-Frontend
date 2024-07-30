@@ -57,12 +57,12 @@ const StyleSwiperComponent = ({ options, selectedId, onSelect }) => {
     const initSwiper = () => {
       swiperStlyeRef.current = new Swiper('.mySwiper', {
         loop: true,
-        loopedSlides: 5, // 이 값을 슬라이드 개수에 따라 조정하세요
+        loopedSlides: 1, // 이 값을 슬라이드 개수에 따라 조정하세요
         effect: 'coverflow',
         grabCursor: true,
         centeredSlides: true,
         slidesPerView: 'auto',
-        initialSlide: 2, // 시작 슬라이드 위치 설정
+        initialSlide: 8, // 시작 슬라이드 위치 설정
         coverflowEffect: {
           rotate: 20,
           stretch: 20,

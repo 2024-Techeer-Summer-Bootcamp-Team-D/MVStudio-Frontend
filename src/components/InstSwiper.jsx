@@ -52,7 +52,7 @@ const SlideLabel = styled.span`
 
 const InstSwiperComponent = ({
   options,
-  selectedInstruments,
+  //   selectedInstruments,
   instrumentsId,
   onInstrumentClick,
 }) => {
@@ -64,17 +64,17 @@ const InstSwiperComponent = ({
     if (swiperElRef.current && !swiper) {
       const swiperInstance = new Swiper(swiperElRef.current, {
         loop: true,
-        loopedSlides: 5,
+        loopedSlides: 3,
         effect: 'coverflow',
         grabCursor: true,
         centeredSlides: true,
         slidesPerView: 'auto',
-        initialSlide: 2,
+        initialSlide: 0,
         coverflowEffect: {
           rotate: 20,
           stretch: 20,
           depth: 100,
-          modifier: 1,
+          modifier: 0,
           slideShadows: true,
         },
         navigation: {
