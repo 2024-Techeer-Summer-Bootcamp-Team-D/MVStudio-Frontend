@@ -232,6 +232,23 @@ const EditButton = styled.button`
   }
 `;
 
+const LoadingContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  width: 100vw;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+`;
+
+const LoadingImage = styled.img`
+  width: 100px;
+  height: 100px;
+`;
+
 function Mypage() {
   const { username: username } = useParams('');
   const [activeTab, setActiveTab] = useState(0);
@@ -242,10 +259,12 @@ function Mypage() {
   const [hasMore, setHasMore] = useState(true);
   const [page, setPage] = useState(1);
   const [fetchedVideoIds, setFetchedVideoIds] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
   const myUserName = useUser((state) => state.username);
 
   const fetchData = async (pageNum) => {
     try {
+      setIsLoading(true);
       const response = await getList(pageNum, 9, '', username);
       const newData = response.music_videos.filter(
         (video) => !fetchedVideoIds.flat().includes(video.id),
@@ -268,19 +287,14 @@ function Mypage() {
       setHasMore(response.pagination.total_items > pageNum * 9);
     } catch (error) {
       console.error('뮤비 목록 조회 오류', error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
-  // 컴포넌트가 마운트될 때 초기 데이터 가져오기
-  useEffect(() => {
-    setMyVideos([]);
-    fetchData(1);
-    fetchRecent(1);
-  }, [username]);
-
-  // 멤버 정보 가져오기
   const fetchMemberInfo = async () => {
     try {
+      setIsLoading(true);
       const response = await getMemberInfo(username);
       if (response.status === 200) {
         setUserInfo(response.data);
@@ -288,14 +302,14 @@ function Mypage() {
     } catch (error) {
       console.error('회원 조회 오류', error);
       setUserInfo(null);
+    } finally {
+      setIsLoading(false);
     }
   };
-  useEffect(() => {
-    fetchMemberInfo();
-  }, [username]);
 
   const fetchRecent = async (pageNum) => {
     try {
+      setIsLoading(true);
       const response = await getHistory(pageNum, 9);
       const newData = response.music_videos.filter(
         (video) => !fetchedVideoIds.flat().includes(video.id),
@@ -307,7 +321,6 @@ function Mypage() {
           return newIds;
         });
         setRecentView((prevVideos) => {
-          // Filter out existing videos in prevVideos to avoid duplicates
           const filteredVideos = newData.filter(
             (video) =>
               !prevVideos.some((prevVideo) => prevVideo.id === video.id),
@@ -318,8 +331,20 @@ function Mypage() {
       setHasMore(response.pagination.total_items > pageNum * 9);
     } catch (error) {
       console.error('뮤비 조회 기록 오류', error);
+    } finally {
+      setIsLoading(false);
     }
   };
+
+  useEffect(() => {
+    setMyVideos([]);
+    fetchData(1);
+    fetchRecent(1);
+  }, [username]);
+
+  useEffect(() => {
+    fetchMemberInfo();
+  }, [username]);
 
   const handleChange = (event, newValue) => {
     setActiveTab(newValue);
@@ -327,14 +352,22 @@ function Mypage() {
   };
   const navigate = useNavigate();
 
-  // 프로필 수정 페이지로 이동
   const navigateToEdit = () => {
     navigate('/edit');
   };
 
   const isOwner = myUserName === username;
 
-  // const navigate = useNavigate();
+  if (isLoading) {
+    return (
+      <LoadingContainer>
+        <LoadingImage
+          src="https://i.ibb.co/jvXptkm/loading.gif"
+          alt="Loading"
+        />
+      </LoadingContainer>
+    );
+  }
 
   if (!userInfo) {
     return <EmptyContainer>조회하신 회원정보가 없습니다.</EmptyContainer>;
@@ -370,7 +403,6 @@ function Mypage() {
                 if (userInfo.youtube_account) {
                   window.open(userInfo.youtube_account, '_blank');
                 } else if (isOwner) {
-                  // 유튜브 계정이 없을 때 등록 할거냐고 물어봄
                   Swal.fire({
                     title: '유튜브 계정 등록',
                     text: '유튜브 계정 등록 후 변경할 수 없습니다. 계속하시겠습니까?',
@@ -402,7 +434,6 @@ function Mypage() {
                     '_blank',
                   );
                 } else if (isOwner) {
-                  // 인스타그램 계정이 없을 때 등록 할거냐고 물어봄
                   Swal.fire({
                     title: '인스타그램 계정 등록',
                     text: '인스타그램 계정 등록 후 변경할 수 없습니다. 계속하시겠습니까?',
