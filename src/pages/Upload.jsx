@@ -22,7 +22,6 @@ const BackLayout = styled.div`
 
 const Category = styled.div`
   width: 100%;
-  /* height: 100%; */
   display: flex;
   flex-direction: row;
   align-items: start;
@@ -82,11 +81,10 @@ const BackgroundImage = styled.div`
   left: 0;
   width: 100%;
   height: 100%;
-  /* background-image: ${({ image }) => (image ? `url(${image})` : 'none')}; */
   background-color: none;
   background-size: cover;
   background-position: center;
-  filter: brightness(0.3) blur(5px); /* 어둡고 흐리게 */
+  filter: brightness(0.3) blur(5px);
   z-index: 1;
 `;
 

@@ -53,7 +53,6 @@ const Search = () => {
     setLoading(true);
     try {
       const result = await getsearch(page, 3, keyword); // 페이지당 데이터 3개씩 가져오기
-      console.log('Response data:', result);
       if (result && result.music_videos) {
         setItems((prevItems) =>
           page === 1
@@ -92,7 +91,6 @@ const Search = () => {
           window.innerHeight + document.documentElement.scrollTop;
         const pageHeight = document.documentElement.offsetHeight;
         if (pageHeight - scrollPosition <= 10 * 16) {
-          // 10rem을 px로 환산
           // 스크롤이 끝에 도달했을 때 fetchData를 호출합니다.
           setCurrentPage((prevPage) => prevPage + 1);
         }
