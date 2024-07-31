@@ -9,7 +9,6 @@ const BackLayout = styled.div`
   width: 100%;
   display: flex;
   flex-direction: column;
-  /* align-items: center; */
   background-image: url('https://i.ibb.co/72bmVLd/Group-1457.png');
   background-size: cover;
 `;
@@ -33,7 +32,7 @@ const BoxContainer = styled.div`
   display: flex;
   flex-direction: row;
   padding: 1rem;
-  margin-bottom: 1rem; // Reduced margin-bottom
+  margin-bottom: 1rem;
   z-index: 2;
 `;
 
@@ -335,8 +334,10 @@ const Pay = () => {
             text="white"
             onClick={() => {
               if (!selectedPayment) {
-                console.log(selectedBox);
-                alert('Please select a payment method.');
+                Swal.fire({
+                  icon: 'error',
+                  title: '결제방식을 선택해주세요.',
+                });
                 return;
               }
               kakaoPayment(selectedBox.credits, selectedBox.price).then(

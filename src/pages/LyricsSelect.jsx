@@ -212,9 +212,6 @@ function LyricsSelect() {
               vocal,
             } = state;
 
-            // state 객체 로그로 확인
-            console.log('State:', [genres_ids]);
-
             if (!subject) {
               throw new Error('Subject is missing');
             }
@@ -263,7 +260,6 @@ function LyricsSelect() {
               }
             });
           } catch (error) {
-            // 비디오 생성 실패 시 에러 메시지 출력
             console.error(
               'Failed to create video:',
               error.message ? error.message : error,

@@ -95,12 +95,10 @@ const ViewChart = () => {
   const [countryData, setCountryData] = useState(null);
   const [value, setValue] = useState(0);
   const username = useUser((state) => state.username);
-  console.log('username', username);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
-
   useEffect(() => {
     const fetchViewData = async () => {
       try {
@@ -120,7 +118,6 @@ const ViewChart = () => {
     };
     const fetchCountryData = async () => {
       try {
-        console.log('age username', username);
         const response = await getCountriesData(username);
         setCountryData(response);
       } catch (error) {
@@ -256,7 +253,6 @@ const ViewChart = () => {
       x: {
         display: true,
         ticks: {
-          // display: false,
           font: {
             size: 14,
           },
