@@ -82,7 +82,6 @@ const CreateContainer = styled.div`
   width: 100%;
   height: calc(100vh - 5rem);
   min-height: calc(100vh - 5rem);
-  /* background-image: url('https://i.ibb.co/BfrvSHb/Voice.gif'); */
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -100,7 +99,6 @@ const CreateContainer = styled.div`
     right: 0;
     bottom: 0;
     background-color: rgba(0, 0, 0, 0.3);
-    /* backdrop-filter: blur(5px); */
   }
 
   > * {
@@ -427,7 +425,6 @@ const Create = () => {
   const [voice, setVoice] = useState('');
   const [language, setLanguage] = useState('');
   const [tempo, setTempo] = useState('');
-  const [instrumentLimitExceeded, setInstrumentLimitExceeded] = useState(false);
   const [selectedInstruments, setSelectedInstruments] = useState([]);
   const [songTitle, setSongTitle] = useState('');
   const [genreId, setGenreId] = useState();
@@ -435,7 +432,6 @@ const Create = () => {
   const [stylesId, setStylesId] = useState();
   const [stylesList, setStylesList] = useState([]);
   const [step, setStep] = useState(1);
-  const [isOpen, setIsOpen] = useState(false);
   const [activeStep, setActiveStep] = useState(1);
   const [previousStep, setPreviousStep] = useState(null);
 
@@ -548,11 +544,12 @@ const Create = () => {
       confirmButtonText: 'Submit',
       cancelButtonText: 'Cancel',
       customClass: {
-        container: 'custom-swal-container', // 필요에 따라 사용자 정의 클래스 추가 가능
+        container: 'custom-swal-container',
       },
     }).then((result) => {
       if (result.isConfirmed) {
         if (isOperate) {
+          // 이값에 따라 호출 될지 안될지 결정
           handleSubmit();
         }
       }
@@ -576,9 +573,7 @@ const Create = () => {
         Swal.fire({
           icon: 'error',
           title: '악기는 두개이상 선택불가합니다.',
-        }).then(() => {
-          setInstrumentLimitExceeded(false);
-        });
+        }).then(() => {});
       }
       return;
     }
@@ -605,9 +600,7 @@ const Create = () => {
         Swal.fire({
           icon: 'error',
           title: '필수 선택 옵션입니다.',
-        }).then(() => {
-          setIsOpen(false);
-        });
+        }).then(() => {});
       }
       return;
     }
@@ -617,9 +610,7 @@ const Create = () => {
         Swal.fire({
           icon: 'error',
           title: '필수 선택 옵션입니다.',
-        }).then(() => {
-          setIsOpen(false);
-        });
+        }).then(() => {});
       }
       return;
     }
@@ -628,9 +619,7 @@ const Create = () => {
         Swal.fire({
           icon: 'error',
           title: '필수 선택 옵션입니다.',
-        }).then(() => {
-          setIsOpen(false);
-        });
+        }).then(() => {});
       }
       return;
     }
@@ -639,9 +628,7 @@ const Create = () => {
         Swal.fire({
           icon: 'error',
           title: '필수 선택 옵션입니다.',
-        }).then(() => {
-          setIsOpen(false);
-        });
+        }).then(() => {});
       }
       return;
     }
@@ -650,9 +637,7 @@ const Create = () => {
         Swal.fire({
           icon: 'error',
           title: '필수 선택 옵션입니다.',
-        }).then(() => {
-          setIsOpen(false);
-        });
+        }).then(() => {});
       }
       return;
     }
@@ -661,9 +646,7 @@ const Create = () => {
         Swal.fire({
           icon: 'error',
           title: '필수 선택 옵션입니다.',
-        }).then(() => {
-          setIsOpen(false);
-        });
+        }).then(() => {});
       }
       return;
     }
@@ -716,7 +699,6 @@ const Create = () => {
           <TitleStyle2>*필수선택옵션입니다</TitleStyle2>
           <GenreContainer>
             <GenreSwiperComponent
-              // key={`genreSwiper-${step}`}
               options={genreList}
               selectedId={genreId}
               onSelect={(id) => setGenreId(id)}
