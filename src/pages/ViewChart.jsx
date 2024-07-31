@@ -29,6 +29,8 @@ const Statistics = styled.button`
   cursor: pointer;
   display: flex;
   margin-left: 0.5rem;
+  font-family: 'SUIT', sans-serif;
+  font-weight: bold;
 `;
 
 const ChartContainer = styled.div`
@@ -45,6 +47,8 @@ const TotalBox = styled.div`
   margin-left: 1rem;
   margin-top: 0.5rem;
   position: relative;
+  font-family: 'SUIT', sans-serif;
+  font-weight: bold;
 `;
 
 const TotalText = styled.p`
@@ -52,6 +56,8 @@ const TotalText = styled.p`
   font-size: 0.9rem;
   margin-bottom: 1rem;
   position: relative;
+  font-family: 'SUIT', sans-serif;
+  font-weight: bold;
 `;
 
 const StudioText = styled.p`
@@ -60,6 +66,7 @@ const StudioText = styled.p`
   margin-top: 1rem;
   margin-bottom: 1rem;
   position: relative;
+  font-family: 'SUIT', sans-serif;
 `;
 
 const ChartSizeSetting = styled.div`
@@ -78,48 +85,8 @@ const InfoBox = styled.div`
   display: flex;
   flex-direction: row;
   gap: 2.5rem;
+  font-family: 'SUIT', sans-serif;
 `;
-const customCanvasBackgroundColor = {
-  id: 'customCanvasBackgroundColor',
-  beforeDraw: (chart, args, options) => {
-    const { ctx } = chart;
-    ctx.save();
-    ctx.globalCompositeOperation = 'destination-over';
-
-    // 배경 색상 설정
-    ctx.fillStyle = options.color || '#99ffff';
-
-    // 배경에 border-radius 적용
-    const width = chart.width;
-    const height = chart.height + 5;
-    const radius = options.borderRadius || 0; // 기본값 0
-    const borderWidth = options.borderWidth || 0; // 기본값 0
-    const borderColor = options.borderColor || '#000'; // 기본값 검정색
-
-    ctx.beginPath();
-    ctx.moveTo(radius, 0);
-    ctx.lineTo(width - radius, 0);
-    ctx.quadraticCurveTo(width, 0, width, radius);
-    ctx.lineTo(width, height - radius);
-    ctx.quadraticCurveTo(width, height, width - radius, height);
-    ctx.lineTo(radius, height);
-    ctx.quadraticCurveTo(0, height, 0, height - radius);
-    ctx.lineTo(0, radius);
-    ctx.quadraticCurveTo(0, 0, radius, 0);
-    ctx.closePath();
-
-    ctx.fill();
-
-    // 테두리 설정
-    if (borderWidth > 0) {
-      ctx.lineWidth = borderWidth;
-      ctx.strokeStyle = borderColor;
-      ctx.stroke();
-    }
-
-    ctx.restore();
-  },
-};
 
 const ViewChart = () => {
   const [viewData, setViewData] = useState(null);
@@ -255,7 +222,7 @@ const ViewChart = () => {
         backgroundColor: 'rgba(255, 99, 132, 0.2)',
         borderColor: 'rgba(255, 99, 132, 0.5)',
         borderWidth: 1,
-        tension: 0.3,
+        tension: 0.2,
       },
     ],
   };
@@ -524,33 +491,13 @@ const ViewChart = () => {
       </TotalBox>
       <ChartSizeSetting>
         {value === 0 && (
-          <Line
-            data={viewChartData}
-            options={viewChartOptions}
-            // plugins={[customCanvasBackgroundColor]}
-          />
+          <Line data={viewChartData} options={viewChartOptions} />
         )}
-        {value === 1 && (
-          <Bar
-            data={viewAgeData}
-            options={ageChartOptions}
-            // plugins={[customCanvasBackgroundColor]}
-          />
-        )}
+        {value === 1 && <Bar data={viewAgeData} options={ageChartOptions} />}
         {value === 2 && (
-          <Doughnut
-            data={countryChartData}
-            options={pieDoughnut}
-            // plugins={[customCanvasBackgroundColor]}
-          />
+          <Doughnut data={countryChartData} options={pieDoughnut} />
         )}
-        {value === 3 && (
-          <Pie
-            data={gentderChartData}
-            options={pieDoughnut}
-            // plugins={[customCanvasBackgroundColor]}
-          />
-        )}
+        {value === 3 && <Pie data={gentderChartData} options={pieDoughnut} />}
       </ChartSizeSetting>
     </ChartContainer>
   );

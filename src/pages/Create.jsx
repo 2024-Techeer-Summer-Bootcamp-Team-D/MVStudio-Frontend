@@ -1,12 +1,47 @@
-import React, { useState, useEffect } from 'react';
+import * as React from 'react';
+import PropTypes from 'prop-types';
+import { styled as muiStyled } from '@mui/material/styles'; // 'styled'를 'muiStyled'로 변경
+import Stack from '@mui/material/Stack';
+import Stepper from '@mui/material/Stepper';
+import Step from '@mui/material/Step';
+import StepLabel from '@mui/material/StepLabel';
+import Check from '@mui/icons-material/Check';
+
+import StepConnector, {
+  stepConnectorClasses,
+} from '@mui/material/StepConnector';
+import { useState, useEffect, useCallback } from 'react'; // React로부터 useState와 useEffect 가져오기
 import styled, { css, keyframes } from 'styled-components';
-import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { getGenre, getInstruments, getStyles } from '../api/musicVideos';
 import { useNavigate } from 'react-router-dom';
-import ArrowBackBackIcon from '@mui/icons-material/ArrowBack';
-import Swal from 'sweetalert2';
 import { useUser } from '@/libs/stores/userStore';
+
+import Swal from 'sweetalert2';
+import GenreSwiperComponent from '@/components/GenreSwiper';
+import StyleSwiperComponent from '@/components/StyleSwiper';
+import InstSwiperComponent from '@/components/InstSwiper';
+
+const fadeOut = keyframes`
+  from {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateX(-100%);
+  }
+`;
+
+const slideIn = keyframes`
+  from {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+`;
 
 const jellyAnimation = keyframes`
   25% {
@@ -25,13 +60,12 @@ const JellyButton = styled.button`
   height: 3.5rem;
   font-size: 1rem;
   font-weight: 500;
-  margin-top: 3.2rem;
   background: #7c6bdd;
   color: white;
   border-radius: 1rem;
   cursor: pointer;
   transition: background-color 0.3s ease;
-
+  margin-top: 2rem;
   &:hover {
     animation: ${jellyAnimation} 0.5s both;
   }
@@ -69,45 +103,33 @@ const CreateContainer = styled.div`
 `;
 
 const BigContainer = styled.div`
-  width: 80%;
+  width: 100%;
   height: 70%;
   gap: 3.4rem;
   display: flex;
   flex-direction: column;
   align-items: center;
   padding: 1rem;
-`;
-const ProgressBarContainer = styled.div`
-  width: 100%;
-  height: 30%;
-  display: flex;
-  justify-content: center;
-  flex-direction: column;
-  align-items: center;
-`;
-
-const ProgressBar = styled.div`
-  width: 80%;
-  height: 1rem;
-  background: #444;
-  border-radius: 0.5rem;
-  margin-bottom: 1rem;
-  position: relative;
-`;
-
-const Progress = styled.div`
-  height: 100%;
-  background: #7c6bdd;
-  border-radius: 0.5rem;
-  transition: width 0.3s ease;
-  width: ${(props) => props.width}%;
+  overflow: hidden;
 `;
 
 const StepContainer = styled.div`
   width: 80%;
-  display: ${(props) => (props.active ? 'flex' : 'none')};
+  position: absolute;
+  animation: ${(props) =>
+    props.active
+      ? css`
+          ${slideIn} 0.5s ease-out
+        `
+      : props.leaving
+        ? css`
+            ${fadeOut} 0.5s ease-out
+          `
+        : 'none'};
+  display: ${(props) => (props.active || props.leaving ? 'flex' : 'none')};
   flex-direction: column;
   align-items: center;
+  opacity: ${(props) => (props.active ? 1 : 0)};
 `;
 
 const TitleStyle1 = styled.p`
@@ -123,42 +145,47 @@ const TitleStyle2 = styled.p`
   font-size: 0.7rem;
   color: #c0c0c0;
   font-weight: 500;
-  margin-bottom: 2rem;
 `;
 
 const Button = styled.button`
-  width: 10rem;
-  font-size: 1rem;
-  font-weight: 500;
-  color: #fff;
+  background-image: ${(props) =>
+    props.imageUrl ? `url(${props.imageUrl})` : 'none'};
+  width: 15rem;
+  height: 15rem;
   cursor: pointer;
-  height: 3.6rem;
+  margin-top: 2rem;
+  margin-bottom: 1rem;
   text-align: center;
-  background-size: 300% 100%;
+  background-size: cover;
   border-radius: 0.7rem;
-  transition: all 0.4s ease-in-out;
-  margin-bottom: 1.5rem;
-  background-image: linear-gradient(
-    to right,
-    #140421,
-    #2a0650,
-    #7200be,
-    #3b005a
-  );
-
-  &:hover {
-    background-position: 100% 0;
-    transition: all 0.4s ease-in-out;
-  }
-
-  &:focus {
-    outline: #8270db;
-  }
 
   ${(props) =>
     props.clicked &&
     css`
-      border: 0.1rem solid #ffffff;
+      border: 0.2rem solid #ffffff;
+      box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+      transition: all 0.2s ease-in-out;
+    `}
+`;
+const LanguageButton = styled.button`
+  background-image: ${(props) =>
+    props.imageUrl ? `url(${props.imageUrl})` : 'none'};
+  width: 18rem;
+  height: 12rem;
+  cursor: pointer;
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+  text-align: center;
+  background-size: cover;
+  background-position: center;
+  border-radius: 0.7rem;
+
+  ${(props) =>
+    props.clicked &&
+    css`
+      border: 0.2rem solid #ffffff;
+      box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+      transition: all 0.2s ease-in-out;
     `}
 `;
 
@@ -174,6 +201,8 @@ const TitleInput = styled.input`
   font-weight: 600;
   font-size: 1.2rem;
   padding: 1rem;
+  margin-top: 2rem;
+  margin-bottom: 2rem;
 
   ::placeholder {
     color: #000000;
@@ -185,49 +214,9 @@ const TitleInput = styled.input`
 const ChooseOption = styled.div`
   display: flex;
   flex-direction: row;
-  gap: 0.8rem;
+  gap: 5rem;
   flex-wrap: wrap;
   justify-content: center;
-`;
-
-const CoverBox = styled.div`
-  transition: transform 0.5s ease-in-out;
-  width: 16.7%;
-  flex: 0 0 16.7%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-`;
-
-const RoundCover = styled.button`
-  background-image: url(${(props) => props.src});
-  background-size: cover;
-  background-position: center;
-  border-radius: 50%;
-  width: 6rem;
-  height: 6rem;
-  overflow: hidden;
-  filter: brightness(0.8);
-
-  &:hover {
-    filter: brightness(0.6);
-  }
-
-  ${(props) =>
-    props.selected &&
-    css`
-      border: 0.3rem solid #ffffff;
-      filter: brightness(0.5);
-    `}
-`;
-
-const CoverLabel = styled.span`
-  color: white;
-  font-weight: bold;
-  font-size: 0.875rem;
-  text-align: center;
-  font-family: 'SUIT', sans-serif;
-  margin-top: 0.5rem;
 `;
 
 const GenreContainer = styled.div`
@@ -239,168 +228,190 @@ const GenreContainer = styled.div`
   align-items: center;
 `;
 
-const ArrowFunction = styled(ArrowForwardIosIcon)`
-  display: flex;
-  align-items: center;
-  width: 5%;
-  cursor: pointer;
-  color: ${(props) => (props.disabled ? 'transparent' : '#7b7b7b')};
-  transform: ${(props) => (props.isPrev ? 'rotate(0deg)' : 'rotate(180deg)')};
-  z-index: 2;
-`;
-const BackButtonContainer = styled.div`
-  width: 80%;
-  height: 1.5rem;
-  margin-bottom: 1rem;
+//프로그래스바 디자인 옵션
+const StyledStepLabel = styled(StepLabel)`
+  .MuiStepLabel-label {
+    color: white !important;
+    font-size: 0.8rem;
+    font-family: suit;
+    margin: 3.5rem;
+  }
 `;
 
-const BackButton = styled(ArrowBackBackIcon)`
-  display: flex;
-  width: 3rem;
-  height: 1.5rem;
+const QontoStepIconRoot = muiStyled('div')(({ theme, ownerState }) => ({
+  color: theme.palette.mode === 'dark' ? theme.palette.grey[700] : '#eaeaf0',
+  display: 'flex',
+  height: 22,
+  alignItems: 'center',
+  transition: 'all 0.6s ease-in-out',
 
-  cursor: pointer;
-  color: white;
-  justify-content: flex-start;
-  align-items: flex-start;
-`;
-const ViewContainer = styled.div`
-  width: 80%;
-  display: flex;
-  overflow: hidden;
-`;
+  ...(ownerState.active && {
+    color: '#784af4',
+  }),
+  '& .QontoStepIcon-completedIcon': {
+    color: '#784af4',
+    zIndex: 1,
+    fontSize: 18,
+  },
+  '& .QontoStepIcon-circle': {
+    width: 8,
+    height: 8,
+    borderRadius: '50%',
+    backgroundColor: 'currentColor',
+  },
+}));
 
-const CardList = styled.div`
-  display: flex;
-  flex-direction: row;
-  width: 100%;
-  transition: transform 0.5s ease-in-out;
-  transform: ${({ currentIndex }) => `translateX(-${currentIndex * 16.73}%)`};
-`;
+function QontoStepIcon(props) {
+  const { active, completed, className } = props;
 
-const SubmitButton = styled.button`
-  background: #7c6bdd;
-  border-radius: 1rem;
-  width: 8rem;
-  height: 3rem;
-  font-size: 1rem;
-  color: white;
-  font-family: 'SUIT', sans-serif;
-  margin-top: 2.5rem;
-  font-weight: 550;
-`;
-const Overlay = styled.div`
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background: rgba(0, 0, 0, 0.5);
-  backdrop-filter: blur(10px);
-  z-index: 9999;
-`;
+  return (
+    <QontoStepIconRoot ownerState={{ active }} className={className}>
+      {completed ? (
+        <Check className="QontoStepIcon-completedIcon" />
+      ) : (
+        <div className="QontoStepIcon-circle" />
+      )}
+    </QontoStepIconRoot>
+  );
+}
 
-const ModalContainer = styled.div`
-  position: absolute;
-  top: 30%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 40rem;
-  height: 30rem;
-  background-color: #240b38;
-  color: white;
-  border-radius: 2rem;
-  padding: 2rem;
+QontoStepIcon.propTypes = {
+  /**
+   * Whether this step is active.
+   * @default false
+   */
+  active: PropTypes.bool,
+  className: PropTypes.string,
+  /**
+   * Mark the step as completed. Is passed to child components.
+   * @default false
+   */
+  completed: PropTypes.bool,
+};
+
+const ColorlibConnector = muiStyled(StepConnector)(({ theme }) => ({
+  [`&.${stepConnectorClasses.alternativeLabel}`]: {
+    top: 22,
+  },
+  [`&.${stepConnectorClasses.active}`]: {
+    [`& .${stepConnectorClasses.line}`]: {
+      backgroundColor: 'rgb(124, 107, 221)',
+      transition: 'all 0.3s ease-in-out',
+    },
+  },
+  [`&.${stepConnectorClasses.completed}`]: {
+    [`& .${stepConnectorClasses.line}`]: {
+      backgroundColor: 'rgb(124, 107, 221)',
+      transition: 'all 0.3s ease-in-out',
+    },
+  },
+  [`& .${stepConnectorClasses.line}`]: {
+    height: 3,
+    border: 0,
+    backgroundColor:
+      theme.palette.mode === 'dark' ? theme.palette.grey[800] : '#eaeaf0',
+    borderRadius: 1,
+    transition: 'all 0.3s ease-in-out',
+  },
+}));
+
+const ColorlibStepIconRoot = muiStyled('div')(({ theme, ownerState }) => ({
+  backgroundColor:
+    theme.palette.mode === 'dark' ? theme.palette.grey[700] : '#ccc',
+  zIndex: 1,
+  color: '#fff',
+  width: 50,
+  height: 50,
+  display: 'flex',
+  borderRadius: '50%',
+  justifyContent: 'center',
+  alignItems: 'center',
+  cursor: 'pointer',
+  transition: 'all 0.3s ease-in-out',
+
+  ...(ownerState.active && {
+    backgroundColor: 'rgb(124, 107, 221)',
+    boxShadow: '0 4px 10px 0 rgba(0,0,0,.25)',
+    transition: 'all 0.3s ease-in-out',
+  }),
+  ...(ownerState.completed && {
+    backgroundColor: 'rgb(124, 107, 221)',
+    transition: 'all 0.6s ease-in-out',
+  }),
+  '&:hover': {
+    backgroundColor:
+      theme.palette.mode === 'dark' ? theme.palette.grey[600] : '#aaa',
+    transform: 'scale(1.1)',
+    transition: 'transform 0.3s ease, background-color 0.3s ease',
+  },
+}));
+
+function ColorlibStepIcon(props) {
+  const { active, completed, className, icon, onClick } = props;
+
+  const icons = {
+    1: 1,
+    2: 2,
+    3: 3,
+    4: 4,
+    5: 5,
+    6: 6,
+    7: 7,
+  };
+
+  const handleClick = useCallback(() => {
+    if (onClick) {
+      onClick(icon);
+    }
+  }, [icon, onClick]);
+
+  return (
+    <ColorlibStepIconRoot
+      ownerState={{ completed, active }}
+      className={className}
+      onClick={handleClick} // 클릭 이벤트 추가
+    >
+      {icons[String(icon)]}
+    </ColorlibStepIconRoot>
+  );
+}
+
+ColorlibStepIcon.propTypes = {
+  /**
+   * Whether this step is active.
+   * @default false
+   */
+  active: PropTypes.bool,
+  className: PropTypes.string,
+  /**
+   * Mark the step as completed. Is passed to child components.
+   * @default false
+   */
+  completed: PropTypes.bool,
+  /**
+   * The label displayed in the step icon.
+   */
+  icon: PropTypes.node,
+  onClick: PropTypes.func,
+};
+
+const steps = [
+  'Genre',
+  'Instuctment',
+  'Style',
+  'Title',
+  'Vocal',
+  'Language',
+  'Tempo',
+];
+
+const ButtonSetting = styled.div`
   display: flex;
   flex-direction: column;
-  align-items: start;
-  z-index: 99999;
-  justify-content: space-between;
-`;
-
-const ModalText = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 2rem;
-  width: 100%;
-  padding: 2rem;
-`;
-
-const GroupText = styled.div`
-  display: flex;
-  flex-direction: row;
   align-items: center;
-  gap: 0.5rem;
-`;
-
-const ModalItem = styled.p`
-  font-size: 1rem;
-  color: rgba(205, 112, 238, 0.8);
-  margin-left: 1rem;
-  font-family: 'SUIT', sans-serif;
-  display: flex;
-  align-items: center;
-  justify-content: start;
-  font-weight: 550;
-`;
-
-const InstrumentItem = styled.p`
-  font-size: 1rem;
-  color: rgba(205, 112, 238, 0.8);
-  margin-left: 1rem;
-  font-family: 'SUIT', sans-serif;
-  display: flex;
-  align-items: center;
-  justify-content: start;
-  font-weight: 550;
-`;
-
-const ModalValue = styled.p`
-  font-family: 'SUIT', sans-serif;
-  font-size: 1rem;
   color: #ffffff;
-  font-weight: 500;
-`;
-
-const InstrumentList = styled.div`
-  display: flex;
-  flex-direction: row;
-  width: 100%;
-  height: 8rem;
-  transition: transform 0.5s ease-in-out;
-  transform: ${({ optionIndex }) => `translateX(-${optionIndex * 16.73}%)`};
-  position: relative;
-`;
-
-const StylesList = styled.div`
-  display: flex;
-  flex-direction: row;
-  width: 100%;
-  height: 8rem;
-  transition: transform 0.5s ease-in-out;
-  transform: ${({ optionIndex }) => `translateX(-${optionIndex * 16.73}%)`};
-  position: relative;
-`;
-
-const ConfirmButton = styled.button`
-  background: ${(props) =>
-    props.disabled
-      ? 'linear-gradient(45deg, #ccc 30%, #999 90%)'
-      : 'linear-gradient(45deg, #b75dfd 30%, #ffa9a9 90%)'};
-  border-radius: 1rem;
-  width: 8rem;
-  height: 3rem;
-  font-size: 1rem;
-  color: ${(props) => (props.disabled ? '#666' : 'white')};
-  font-family: 'SUIT', sans-serif;
   font-weight: 550;
-  align-self: flex-end;
-  cursor: ${(props) => (props.disabled ? 'not-allowed' : 'pointer')};
-  opacity: ${(props) => (props.disabled ? 0.6 : 1)};
-  transition:
-    background 0.3s,
-    color 0.3s,
-    opacity 0.3s;
+  font-size: 1.1rem;
 `;
 
 const Create = () => {
@@ -412,21 +423,62 @@ const Create = () => {
   const [instrumentLimitExceeded, setInstrumentLimitExceeded] = useState(false);
   const [selectedInstruments, setSelectedInstruments] = useState([]);
   const [songTitle, setSongTitle] = useState('');
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [currentGenreIndex, setCurrentGenreIndex] = useState(0);
-  const [currentInstrumentIndex, setCurrentInstrumentIndex] = useState(0);
   const [genreId, setGenreId] = useState();
   const [instrumentsId, setInstrumentsId] = useState([]);
   const [stylesId, setStylesId] = useState();
   const [stylesList, setStylesList] = useState([]);
-  const [currentStylesIndex, setCurrentStylesIndex] = useState(0);
   const [step, setStep] = useState(1);
   const [isOpen, setIsOpen] = useState(false);
+  const [activeStep, setActiveStep] = useState(1);
+  const [previousStep, setPreviousStep] = useState(null);
+
+  const VoiceArr = [
+    {
+      label: '남성 보컬',
+      imageUrl: 'https://i.ibb.co/tm2441K/image.png',
+    },
+    {
+      label: '여성 보컬',
+      imageUrl: 'https://i.ibb.co/Lzd8D29/image.png',
+    },
+  ];
+  const CountryArr = [
+    {
+      label: 'English',
+      imageUrl: 'https://i.ibb.co/1Qx3LYb/IMG-0952.jpg',
+      value: 'eng',
+    },
+    {
+      label: '한국어',
+      imageUrl: 'https://i.ibb.co/4VK2ytf/IMG-0955.jpg',
+      value: 'Korean',
+    },
+    {
+      label: '日本語',
+      imageUrl: 'https://i.ibb.co/2h58CSp/IMG-0954.jpg',
+      value: 'Japanese',
+    },
+  ];
+  const TempoArr = [
+    {
+      label: 'Fast',
+      imageUrl: 'https://i.ibb.co/C97QxKg/1.png',
+    },
+    {
+      label: 'Normal',
+      imageUrl: 'https://i.ibb.co/9bQTV6G/image.png',
+    },
+    {
+      label: 'Slow',
+      imageUrl: 'https://i.ibb.co/hDnty3R/image.jpg',
+    },
+  ];
   const credits = useUser((state) => state.credits);
 
   const isEnoughCredits = credits >= 20;
 
   console.log('credits:', isEnoughCredits);
+  console.log('언어값 : ', language);
 
   useEffect(() => {
     // 장르데이터 호출
@@ -446,8 +498,10 @@ const Create = () => {
     const fetchInstrumentData = async () => {
       try {
         const data = await getInstruments();
-        setInstrumentsList(data.instruments);
-        console.log('response(instrument):', data.instruments);
+        const instruments = data.instruments;
+        const doubledInstruments = [...instruments, ...instruments];
+        setInstrumentsList(doubledInstruments);
+        console.log('response(instrument):', doubledInstruments);
       } catch {
         console.error('악기 데이터 조회 오류');
       }
@@ -459,8 +513,9 @@ const Create = () => {
     const fetchStylesData = async () => {
       try {
         const data = await getStyles();
-        console.log('response(style) : ', data.data);
-        setStylesList(data.data);
+        const styles = data.data;
+        const doubledStyles = [...styles, ...styles];
+        setStylesList(doubledStyles);
       } catch {
         console.error('스타일 데이터 조회 오류');
       }
@@ -469,11 +524,32 @@ const Create = () => {
   }, []);
 
   const handleCreateClick = () => {
-    setIsModalOpen(true);
-  };
-
-  const handleCloseModal = () => {
-    setIsModalOpen(false);
+    Swal.fire({
+      title: 'Song Details',
+      html: `
+          <div>
+              <strong>Title:</strong> ${songTitle} <br>
+              <strong>Voice:</strong> ${voice} <br>
+              <strong>Language:</strong> ${language} <br>
+              <strong>Tempo:</strong> ${tempo} <br>
+              <strong>Genre:</strong> ${genreList[genreId - 1]?.genre_name} <br>
+              <strong>Instrument:</strong> ${selectedInstruments.join(', ')} <br>
+              <strong>Style:</strong> ${stylesList[stylesId - 1]?.style_name}<br>
+              <strong>현재 데모버전이라 생성이 불가능합니다</strong>
+          </div>
+      `,
+      icon: 'info', // 선택한 아이콘 (예: success, error, info, warning)
+      showCancelButton: true, // 취소 버튼을 보여줄지 여부
+      confirmButtonText: 'Submit',
+      cancelButtonText: 'Cancel',
+      customClass: {
+        container: 'custom-swal-container', // 필요에 따라 사용자 정의 클래스 추가 가능
+      },
+    }).then((result) => {
+      if (result.isConfirmed) {
+        // handleSubmit();
+      }
+    });
   };
 
   const handleInstrumentClick = (label, id) => {
@@ -516,44 +592,6 @@ const Create = () => {
   };
   const navigate = useNavigate();
 
-  const instrumentsCount = selectedInstruments.length;
-  const shouldShowWarning = instrumentsCount >= 3;
-
-  const handleGenrePrevClick = () => {
-    if (currentGenreIndex > 0) {
-      setCurrentGenreIndex(currentGenreIndex - 1);
-    }
-  };
-
-  const handleGenreNextClick = () => {
-    if (currentGenreIndex < genreList?.length - 6) {
-      setCurrentGenreIndex(currentGenreIndex + 1);
-    }
-  };
-
-  const handleInstrumentPrevClick = () => {
-    if (currentInstrumentIndex > 0) {
-      setCurrentInstrumentIndex(currentInstrumentIndex - 1);
-    }
-  };
-
-  const handleInstrumentNextClick = () => {
-    if (currentInstrumentIndex < instrumentsList.length - 6) {
-      setCurrentInstrumentIndex(currentInstrumentIndex + 1);
-    }
-  };
-
-  const handleStylesPrevClick = () => {
-    if (currentStylesIndex > 0) {
-      setCurrentStylesIndex(currentStylesIndex - 1);
-    }
-  };
-
-  const handleStylesNextClick = () => {
-    if (currentStylesIndex < stylesList.length - 6) {
-      setCurrentStylesIndex(currentStylesIndex + 1);
-    }
-  };
   const handleNextStep = () => {
     if (step === 1 && !genreId) {
       {
@@ -623,129 +661,90 @@ const Create = () => {
       return;
     }
     setStep((prevStep) => prevStep + 1);
+    setPreviousStep(activeStep);
+    setActiveStep((prevStep) => prevStep + 1);
+    setTimeout(() => {
+      setPreviousStep(null);
+    }, 600);
   };
 
-  const handlePrevStep = () => {
-    setStep((prevStep) => prevStep - 1);
+  const handleStepIconClick = (stepNumber) => {
+    setPreviousStep(step);
+    setStep(stepNumber);
+    setActiveStep(stepNumber);
+    setTimeout(() => {
+      setPreviousStep(null);
+    }, 600);
   };
 
   return (
     <CreateContainer>
-      <ProgressBarContainer>
-        <BackButtonContainer>
-          {step > 1 && <BackButton onClick={handlePrevStep} />}
-        </BackButtonContainer>
-
-        <ProgressBar>
-          <Progress width={(step / 7) * 100} />
-        </ProgressBar>
-      </ProgressBarContainer>
+      <Stack sx={{ width: '88%' }} spacing={4}>
+        <Stepper
+          alternativeLabel
+          activeStep={step - 1}
+          connector={<ColorlibConnector />}
+        >
+          {steps.map((label, index) => (
+            <Step key={label}>
+              <StyledStepLabel
+                StepIconComponent={(props) => (
+                  <ColorlibStepIcon
+                    {...props}
+                    icon={index + 1}
+                    onClick={handleStepIconClick}
+                  />
+                )}
+              >
+                <stepText>{label}</stepText>
+              </StyledStepLabel>
+            </Step>
+          ))}
+        </Stepper>
+      </Stack>
 
       <BigContainer>
-        <StepContainer active={step === 1}>
+        <StepContainer active={step === 1} leaving={previousStep === 1}>
           <TitleStyle1>장르를 선택해주세요</TitleStyle1>
           <TitleStyle2>*필수선택옵션입니다</TitleStyle2>
           <GenreContainer>
-            <ArrowFunction
-              onClick={handleGenrePrevClick}
-              disabled={currentGenreIndex === 0}
-            />
-            <ViewContainer>
-              <CardList currentIndex={currentGenreIndex}>
-                {genreList?.map((option, index) => (
-                  <CoverBox key={index}>
-                    <RoundCover
-                      src={option.genre_image_url}
-                      selected={genreId - 1 === index}
-                      onClick={() => {
-                        setGenreId(index + 1);
-                      }}
-                    />
-                    <CoverLabel>{option.genre_name}</CoverLabel>
-                  </CoverBox>
-                ))}
-              </CardList>
-            </ViewContainer>
-            <ArrowFunction
-              onClick={handleGenreNextClick}
-              disabled={currentGenreIndex === genreList?.length - 6}
-              isPrev={true}
+            <GenreSwiperComponent
+              // key={`genreSwiper-${step}`}
+              options={genreList}
+              selectedId={genreId}
+              onSelect={(id) => setGenreId(id)}
             />
           </GenreContainer>
           <JellyButton onClick={handleNextStep}>다음</JellyButton>
         </StepContainer>
-
-        <StepContainer active={step === 2}>
+        <StepContainer active={step === 2} leaving={previousStep === 2}>
           <TitleStyle1>악기를 선택해주세요</TitleStyle1>
           <TitleStyle2>*중복선택가능</TitleStyle2>
           <GenreContainer>
-            <ArrowFunction
-              onClick={handleInstrumentPrevClick}
-              disabled={currentInstrumentIndex === 0}
-            />
-
-            <ViewContainer>
-              <InstrumentList optionIndex={currentInstrumentIndex}>
-                {instrumentsList?.map((option, index) => (
-                  <CoverBox key={index}>
-                    <RoundCover
-                      src={option.instrument_image_url}
-                      selected={selectedInstruments.includes(
-                        option.instrument_name,
-                      )}
-                      onClick={() =>
-                        handleInstrumentClick(
-                          option.instrument_name,
-                          option.instrument_id,
-                        )
-                      }
-                    />
-                    <CoverLabel>{option.instrument_name}</CoverLabel>
-                  </CoverBox>
-                ))}
-              </InstrumentList>
-            </ViewContainer>
-            <ArrowFunction
-              onClick={handleInstrumentNextClick}
-              disabled={currentInstrumentIndex === instrumentsList?.length - 6}
-              isPrev={true}
+            <InstSwiperComponent
+              key={`genreSwiper-${step}`}
+              options={instrumentsList}
+              selectedInstruments={selectedInstruments}
+              instrumentsId={instrumentsId}
+              onInstrumentClick={handleInstrumentClick}
             />
           </GenreContainer>
           <JellyButton onClick={handleNextStep}>다음</JellyButton>
         </StepContainer>
-
-        <StepContainer active={step === 3}>
+        <StepContainer active={step === 3} leaving={previousStep === 3}>
           <TitleStyle1>스타일을 선택해주세요</TitleStyle1>
           <TitleStyle2>*필수선택옵션입니다</TitleStyle2>
           <GenreContainer>
-            <ArrowFunction
-              onClick={handleStylesPrevClick}
-              disabled={currentStylesIndex === 0}
-            />
-            <ViewContainer>
-              <StylesList optionIndex={currentStylesIndex}>
-                {stylesList?.map((option, index) => (
-                  <CoverBox key={index}>
-                    <RoundCover
-                      src={option.style_image_url}
-                      selected={stylesId - 1 === index}
-                      onClick={() => setStylesId(index + 1)}
-                    />
-                    <CoverLabel>{option.style_name}</CoverLabel>
-                  </CoverBox>
-                ))}
-              </StylesList>
-            </ViewContainer>
-            <ArrowFunction
-              onClick={handleStylesNextClick}
-              disabled={currentStylesIndex === stylesList.length - 6}
-              isPrev
+            <StyleSwiperComponent
+              key={`genreSwiper-${step}`}
+              options={stylesList}
+              selectedId={stylesId}
+              onSelect={(id) => setStylesId(id)}
             />
           </GenreContainer>
           <JellyButton onClick={handleNextStep}>다음</JellyButton>
         </StepContainer>
-
-        <StepContainer active={step === 4}>
+        <StepContainer active={step === 4} leaving={previousStep === 4}>
           <TitleStyle1>곡 제목을 입력해주세요</TitleStyle1>
           <TitleStyle2>*필수선택옵션입니다</TitleStyle2>
           <TitleInput
@@ -756,112 +755,60 @@ const Create = () => {
           />
           <JellyButton onClick={handleNextStep}>다음</JellyButton>
         </StepContainer>
-
-        <StepContainer active={step === 5}>
+        <StepContainer active={step === 5} leaving={previousStep === 5}>
           <TitleStyle1>보이스를 선택해주세요</TitleStyle1>
           <TitleStyle2>*필수선택옵션입니다</TitleStyle2>
           <ChooseOption>
-            {['여성 보컬', '남성 보컬'].map((option) => (
-              <Button
-                key={option}
-                clicked={voice === option}
-                onClick={() => setVoice(option)}
-              >
-                {option}
-              </Button>
+            {VoiceArr.map((option) => (
+              <ButtonSetting key={option.label}>
+                <Button
+                  key={option.label}
+                  imageUrl={option.imageUrl}
+                  onClick={() => setVoice(option.label)}
+                  clicked={voice === option.label}
+                ></Button>
+                {option.label}
+              </ButtonSetting>
             ))}
           </ChooseOption>
           <JellyButton onClick={handleNextStep}>다음</JellyButton>
         </StepContainer>
-
-        <StepContainer active={step === 6}>
+        <StepContainer active={step === 6} leaving={previousStep === 6}>
           <TitleStyle1>언어를 선택해주세요</TitleStyle1>
           <TitleStyle2>*필수선택옵션입니다</TitleStyle2>
           <ChooseOption>
-            {['한국어', '영어', '일본어'].map((option) => (
-              <Button
-                key={option}
-                clicked={language === option}
-                onClick={() => setLanguage(option)}
-              >
-                {option}
-              </Button>
+            {CountryArr.map((option) => (
+              <ButtonSetting key={option.label}>
+                <LanguageButton
+                  key={option.label}
+                  imageUrl={option.imageUrl}
+                  onClick={() => setLanguage(option.value)}
+                  clicked={language === option.value}
+                ></LanguageButton>
+                {option.label}
+              </ButtonSetting>
             ))}
           </ChooseOption>
           <JellyButton onClick={handleNextStep}>다음</JellyButton>
         </StepContainer>
-
         <StepContainer active={step === 7}>
           <TitleStyle1>템포를 선택해주세요</TitleStyle1>
           <TitleStyle2>*필수선택옵션입니다</TitleStyle2>
           <ChooseOption>
-            {['느림', '보통', '빠름'].map((option) => (
-              <Button
-                key={option}
-                clicked={tempo === option}
-                onClick={() => setTempo(option)}
-              >
-                {option}
-              </Button>
+            {TempoArr.map((option) => (
+              <ButtonSetting key={option.label}>
+                <Button
+                  key={option.label}
+                  imageUrl={option.imageUrl}
+                  onClick={() => setTempo(option.label)}
+                  clicked={tempo === option.label}
+                ></Button>
+                {option.label}
+              </ButtonSetting>
             ))}
           </ChooseOption>
-          <SubmitButton onClick={handleCreateClick}>완료</SubmitButton>
+          <JellyButton onClick={handleCreateClick}>완료</JellyButton>
         </StepContainer>
-        {isModalOpen && (
-          <>
-            <Overlay />
-            <ModalContainer>
-              <ArrowBackIcon cursor="pointer" onClick={handleCloseModal} />
-              <ModalText>
-                <GroupText>
-                  <ModalItem>Title : </ModalItem>
-                  <ModalValue>{songTitle}</ModalValue>
-                </GroupText>
-                <GroupText>
-                  <ModalItem>Voice :</ModalItem>{' '}
-                  <ModalValue>{voice}</ModalValue>
-                </GroupText>
-                <GroupText>
-                  <ModalItem>Language :</ModalItem>
-                  <ModalValue>{language}</ModalValue>
-                </GroupText>
-                <GroupText>
-                  <ModalItem>Tempo :</ModalItem>{' '}
-                  <ModalValue>{tempo}</ModalValue>
-                </GroupText>
-                <GroupText>
-                  <ModalItem>Genre :</ModalItem>
-                  <ModalValue>{genreList[genreId - 1]?.genre_name}</ModalValue>
-                </GroupText>
-                <GroupText>
-                  <InstrumentItem>Instrument :</InstrumentItem>
-                  <ModalValue>{selectedInstruments.join(', ')}</ModalValue>
-                </GroupText>
-                <GroupText>
-                  <ModalItem>style :</ModalItem>
-                  <ModalValue>
-                    {stylesList[stylesId - 1]?.style_name}
-                  </ModalValue>
-                </GroupText>
-                {shouldShowWarning &&
-                  // 추가 로직이 필요한 경우 여기에 작성
-                  null}
-              </ModalText>
-              <ConfirmButton
-                onClick={() => {
-                  handleSubmit();
-                }}
-                // disabled={!isEnoughCredits} //실제 서비스시
-                disabled={true} // 운영중이 아니라서 임시로 비활성화
-              >
-                {/* 실제 서비스 */}
-                {/* {isEnoughCredits ? 'Submit' : 'Not enough credits'} */}
-                {/* 운영중이 아니라서 임시로 비활성화*/} Not operating
-              </ConfirmButton>
-            </ModalContainer>
-          </>
-        )}
-        {isOpen || instrumentLimitExceeded}
       </BigContainer>
     </CreateContainer>
   );

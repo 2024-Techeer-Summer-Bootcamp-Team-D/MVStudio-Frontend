@@ -32,6 +32,8 @@ function a11yProps(index) {
 const StyledTabs = styled(Tabs)(({ theme }) => ({
   position: 'relative',
   zIndex: 1,
+  fontFamily: 'SUIT sans-serif',
+  fontWeight: 'bold',
   '&::before': {
     content: '""',
     position: 'absolute',
@@ -40,6 +42,8 @@ const StyledTabs = styled(Tabs)(({ theme }) => ({
     width: '100%',
     height: '0.1rem', // Adjust height as needed
     background: '#a4a4a4',
+    fontFamily: 'SUIT',
+    fontWeight: 'bold',
   },
 }));
 
@@ -73,7 +77,7 @@ export default function BasicTabs({ value, handleChange, isOwner }) {
           }}
         >
           {isOwner ? (
-            <Tab label="My Videos" {...a11yProps(0)} />
+            <Tab label="My Videos" {...a11yProps(0)} fontFamily="SUIT" />
           ) : (
             <Tab label="Videos" {...a11yProps(0)} />
           )}
