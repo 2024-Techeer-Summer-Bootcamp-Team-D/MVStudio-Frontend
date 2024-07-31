@@ -121,11 +121,13 @@ const StepContainer = styled.div`
   animation: ${(props) =>
     props.active
       ? css`
-          ${slideIn} 0.6s ease-out
+          ${slideIn} 0.5s ease-out
         `
-      : css`
-          ${fadeOut} 0.6s ease-out
-        `};
+      : props.leaving
+        ? css`
+            ${fadeOut} 0.5s ease-out
+          `
+        : 'none'};
   display: ${(props) => (props.active || props.leaving ? 'flex' : 'none')};
   flex-direction: column;
   align-items: center;
@@ -572,6 +574,8 @@ const Create = () => {
   const [currentStylesIndex, setCurrentStylesIndex] = useState(0);
   const [step, setStep] = useState(1);
   const [isOpen, setIsOpen] = useState(false);
+  const [activeStep, setActiveStep] = useState(1);
+  const [previousStep, setPreviousStep] = useState(null);
 
   const VoiceArr = [
     {
@@ -808,10 +812,20 @@ const Create = () => {
       return;
     }
     setStep((prevStep) => prevStep + 1);
+    setPreviousStep(activeStep);
+    setActiveStep((prevStep) => prevStep + 1);
+    setTimeout(() => {
+      setPreviousStep(null);
+    }, 600);
   };
 
   const handleStepIconClick = (stepNumber) => {
+    setPreviousStep(step);
     setStep(stepNumber);
+    setActiveStep(stepNumber);
+    setTimeout(() => {
+      setPreviousStep(null);
+    }, 600);
   };
 
   return (
@@ -841,7 +855,7 @@ const Create = () => {
       </Stack>
 
       <BigContainer>
-        <StepContainer active={step === 1}>
+        <StepContainer active={step === 1} leaving={previousStep === 1}>
           <TitleStyle1>장르를 선택해주세요</TitleStyle1>
           <TitleStyle2>*필수선택옵션입니다</TitleStyle2>
           <GenreContainer>
@@ -855,7 +869,7 @@ const Create = () => {
           <JellyButton onClick={handleNextStep}>다음</JellyButton>
         </StepContainer>
 
-        <StepContainer active={step === 2}>
+        <StepContainer active={step === 2} leaving={previousStep === 2}>
           <TitleStyle1>악기를 선택해주세요</TitleStyle1>
           <TitleStyle2>*중복선택가능</TitleStyle2>
           <GenreContainer>
@@ -870,7 +884,7 @@ const Create = () => {
           <JellyButton onClick={handleNextStep}>다음</JellyButton>
         </StepContainer>
 
-        <StepContainer active={step === 3}>
+        <StepContainer active={step === 3} leaving={previousStep === 3}>
           <TitleStyle1>스타일을 선택해주세요</TitleStyle1>
           <TitleStyle2>*필수선택옵션입니다</TitleStyle2>
           <GenreContainer>
@@ -884,7 +898,7 @@ const Create = () => {
           <JellyButton onClick={handleNextStep}>다음</JellyButton>
         </StepContainer>
 
-        <StepContainer active={step === 4}>
+        <StepContainer active={step === 4} leaving={previousStep === 4}>
           <TitleStyle1>곡 제목을 입력해주세요</TitleStyle1>
           <TitleStyle2>*필수선택옵션입니다</TitleStyle2>
           <TitleInput
@@ -896,7 +910,7 @@ const Create = () => {
           <JellyButton onClick={handleNextStep}>다음</JellyButton>
         </StepContainer>
 
-        <StepContainer active={step === 5}>
+        <StepContainer active={step === 5} leaving={previousStep === 5}>
           <TitleStyle1>보이스를 선택해주세요</TitleStyle1>
           <TitleStyle2>*필수선택옵션입니다</TitleStyle2>
           <ChooseOption>
@@ -915,7 +929,7 @@ const Create = () => {
           <JellyButton onClick={handleNextStep}>다음</JellyButton>
         </StepContainer>
 
-        <StepContainer active={step === 6}>
+        <StepContainer active={step === 6} leaving={previousStep === 6}>
           <TitleStyle1>언어를 선택해주세요</TitleStyle1>
           <TitleStyle2>*필수선택옵션입니다</TitleStyle2>
           <ChooseOption>
