@@ -558,6 +558,11 @@ const Create = () => {
       imageUrl: 'https://i.ibb.co/hDnty3R/image.jpg',
     },
   ];
+  const credits = useUser((state) => state.credits);
+
+  const isEnoughCredits = credits >= 20;
+
+  console.log('credits:', isEnoughCredits);
 
   useEffect(() => {
     // 장르데이터 호출
@@ -802,7 +807,6 @@ const Create = () => {
           </GenreContainer>
           <JellyButton onClick={handleNextStep}>다음</JellyButton>
         </StepContainer>
-
         <StepContainer active={step === 2} leaving={previousStep === 2}>
           <TitleStyle1>악기를 선택해주세요</TitleStyle1>
           <TitleStyle2>*중복선택가능</TitleStyle2>
@@ -817,7 +821,6 @@ const Create = () => {
           </GenreContainer>
           <JellyButton onClick={handleNextStep}>다음</JellyButton>
         </StepContainer>
-
         <StepContainer active={step === 3} leaving={previousStep === 3}>
           <TitleStyle1>스타일을 선택해주세요</TitleStyle1>
           <TitleStyle2>*필수선택옵션입니다</TitleStyle2>
@@ -831,7 +834,6 @@ const Create = () => {
           </GenreContainer>
           <JellyButton onClick={handleNextStep}>다음</JellyButton>
         </StepContainer>
-
         <StepContainer active={step === 4} leaving={previousStep === 4}>
           <TitleStyle1>곡 제목을 입력해주세요</TitleStyle1>
           <TitleStyle2>*필수선택옵션입니다</TitleStyle2>
@@ -843,7 +845,6 @@ const Create = () => {
           />
           <JellyButton onClick={handleNextStep}>다음</JellyButton>
         </StepContainer>
-
         <StepContainer active={step === 5} leaving={previousStep === 5}>
           <TitleStyle1>보이스를 선택해주세요</TitleStyle1>
           <TitleStyle2>*필수선택옵션입니다</TitleStyle2>
@@ -862,7 +863,6 @@ const Create = () => {
           </ChooseOption>
           <JellyButton onClick={handleNextStep}>다음</JellyButton>
         </StepContainer>
-
         <StepContainer active={step === 6} leaving={previousStep === 6}>
           <TitleStyle1>언어를 선택해주세요</TitleStyle1>
           <TitleStyle2>*필수선택옵션입니다</TitleStyle2>
@@ -881,7 +881,6 @@ const Create = () => {
           </ChooseOption>
           <JellyButton onClick={handleNextStep}>다음</JellyButton>
         </StepContainer>
-
         <StepContainer active={step === 7}>
           <TitleStyle1>템포를 선택해주세요</TitleStyle1>
           <TitleStyle2>*필수선택옵션입니다</TitleStyle2>
@@ -949,6 +948,56 @@ const Create = () => {
               </SubmitButton>
             </ModalContainer>
           </>
+        )}
+        {isOpen || instrumentLimitExceeded}
+        <>
+          <Overlay />
+          <ModalContainer>
+            <ArrowBackIcon cursor="pointer" onClick={handleCloseModal} />
+            <ModalText>
+              <GroupText>
+                <ModalItem>Title : </ModalItem>
+                <ModalValue>{songTitle}</ModalValue>
+              </GroupText>
+              <GroupText>
+                <ModalItem>Voice :</ModalItem> <ModalValue>{voice}</ModalValue>
+              </GroupText>
+              <GroupText>
+                <ModalItem>Language :</ModalItem>
+                <ModalValue>{language}</ModalValue>
+              </GroupText>
+              <GroupText>
+                <ModalItem>Tempo :</ModalItem> <ModalValue>{tempo}</ModalValue>
+              </GroupText>
+              <GroupText>
+                <ModalItem>Genre :</ModalItem>
+                <ModalValue>{genreList[genreId - 1]?.genre_name}</ModalValue>
+              </GroupText>
+              <GroupText>
+                <InstrumentItem>Instrument :</InstrumentItem>
+                <ModalValue>{selectedInstruments.join(', ')}</ModalValue>
+              </GroupText>
+              <GroupText>
+                <ModalItem>style :</ModalItem>
+                <ModalValue>{stylesList[stylesId - 1]?.style_name}</ModalValue>
+              </GroupText>
+              {shouldShowWarning &&
+                // 추가 로직이 필요한 경우 여기에 작성
+                null}
+            </ModalText>
+            <ConfirmButton
+              onClick={() => {
+                handleSubmit();
+              }}
+              // disabled={!isEnoughCredits} //실제 서비스시
+              disabled={true} // 운영중이 아니라서 임시로 비활성화
+            >
+              {/* 실제 서비스 */}
+              {/* {isEnoughCredits ? 'Submit' : 'Not enough credits'} */}
+              {/* 운영중이 아니라서 임시로 비활성화*/} Not operating
+            </ConfirmButton>
+          </ModalContainer>
+        </>
         )}
         {isOpen || instrumentLimitExceeded}
       </BigContainer>

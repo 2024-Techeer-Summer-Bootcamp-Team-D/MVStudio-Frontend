@@ -29,9 +29,8 @@ const NoResultsMessage = styled.p`
   color: #ffffff;
   font-size: 2rem;
   position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  margin-top: 20%;
+  left: 40%;
 `;
 
 const formatTime = (seconds) => {

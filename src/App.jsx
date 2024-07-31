@@ -8,6 +8,7 @@ import Navbar from './components/Navbar';
 import GlobalStyles from './styles/GlobalStyles';
 import Service from './components/Service';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { useLocation } from 'react-router-dom';
 
 const BackLayout = styled.div`
   background-color: #05000a;
@@ -30,12 +31,14 @@ const ChildrenWrapper = styled.div`
   display: flex;
   width: 100%;
   max-width: calc(100% - 15rem);
+  max-width: ${({ ignore }) => (ignore ? '100%' : 'calc(100% - 15rem)')};
   height: 100%;
   min-height: 100%;
   position: relative;
 `;
 
 function App({ children }) {
+  const location = useLocation();
   return (
     <QueryClientProvider client={new QueryClient()}>
       <BackLayout className="back-layout">
@@ -44,7 +47,10 @@ function App({ children }) {
         <ContentArea className="content-area">
           <Sidebar />
           <Service />
-          <ChildrenWrapper className="children-wrapper">{children}</ChildrenWrapper>
+
+          <ChildrenWrapper ignore={location.pathname === '/'}>
+            {children}
+          </ChildrenWrapper>
         </ContentArea>
       </BackLayout>
     </QueryClientProvider>

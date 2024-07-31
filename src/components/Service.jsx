@@ -3,8 +3,6 @@ import { getTask } from '../api/musicVideos';
 import styled, { keyframes } from 'styled-components';
 import CheckIcon from '@mui/icons-material/Check';
 import { green } from '@mui/material/colors';
-import { useUser } from '@/libs/stores/userStore';
-import { useNavigate } from 'react-router-dom';
 
 // Define keyframes for the loading animation
 const loadingAnimation = keyframes`
@@ -72,8 +70,6 @@ function Service() {
   const [showModal, setShowModal] = useState(false);
   const [taskStatuses, setTaskStatuses] = useState([]);
   const gifRef = useRef(null);
-  const navigate = useNavigate();
-  const username = useUser((state) => state.username);
 
   const fetchTaskStatuses = async () => {
     const taskIds = JSON.parse(localStorage.getItem('taskId')) || [];
@@ -108,10 +104,6 @@ function Service() {
   useEffect(() => {
     fetchTaskStatuses(); // 즉시 상태 가져오기
     const intervalId = setInterval(fetchTaskStatuses, 5000); // 5초마다 상태 업데이트
-
-    if (username === undefined) {
-      navigate('/auth');
-    }
 
     return () => clearInterval(intervalId);
   }, []);

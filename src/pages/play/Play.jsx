@@ -6,6 +6,7 @@ import { getPlay } from '@/api/play';
 
 import { defaultProfile } from '@/assets/image';
 import VideoPlayer from './VideoPlayer';
+import { useNavigate } from 'react-router-dom';
 
 const BackLayout = styled.div`
   width: 100%;
@@ -16,41 +17,60 @@ const BackLayout = styled.div`
 
 const PlayBox = styled.div`
   width: 100%;
+  min-width: 34rem;
   max-height: calc(100% - 5rem);
-  margin-top: ${({ expanded }) => (expanded ? '0rem' : '-5rem')};
+  margin-top: ${({ expanded }) => (expanded ? '3rem' : '0rem')};
+  margin-bottom: ${({ expanded }) => (expanded ? '1rem' : '4rem')};
   display: flex;
   flex-direction: row;
-  align-items: center;
   justify-content: center;
-  margin-bottom: 3rem;
   gap: 2%;
 `;
 
 const VideoContainer = styled.div`
   width: ${({ expanded }) => (expanded ? 'calc(94% - 20rem);' : '100%')};
   max-height: calc(100% - 5rem);
+  min-width: 34rem;
   position: relative;
 `;
 
 const LyricsBox = styled.div`
-  width: 20rem;
-  height: 100%;
+  height: calc(100% - 5.375rem);
   display: ${({ expanded }) => (expanded ? 'flex' : 'none')};
-  margin-top: 5rem;
   position: relative;
   overflow: hidden;
+  max-width: 20rem;
   transition:
     width 0.5s ease,
     height 0.5s ease,
     margin 0.5s ease;
+
+  /* 반응형 너비 적용 */
+  @media (max-width: 1600px) {
+    min-width: 18rem;
+  }
+  @media (max-width: 1200px) {
+    min-width: 14rem;
+  }
+  @media (max-width: 992px) {
+    min-width: 10rem;
+  }
+  @media (max-width: 768px) {
+    min-width: 10rem;
+  }
+  @media (max-width: 576px) {
+    min-width: 8rem;
+  }
+  @media (max-width: 400px) {
+    min-width: 6rem;
+  }
 `;
 
 const TextBox = styled.div`
   color: #ffffff;
   display: flex;
   flex-direction: column;
-  width: 100%;
-  margin-left: 2%;
+  margin-left: ${({ expanded }) => (expanded ? '2%' : '0%')};
 `;
 
 const Title = styled.div`
@@ -98,25 +118,55 @@ const LyricsContent = styled.div`
   z-index: 2;
   border: 2px solid #5b5b5b;
   box-sizing: border-box;
-  overflow: hidden;
+  /* overflow: hidden; */
   color: white;
-  font-size: 1.5rem;
   font-weight: 700;
   text-align: left;
-  padding-left: 2.5rem;
-  padding-top: 3rem;
+  padding: 1.5rem;
+  padding-top: 2rem;
+  /* 반응형 폰트 크기 적용 */
+  @media (max-width: 1200px) {
+    font-size: 1.5rem;
+  }
+  @media (max-width: 992px) {
+    font-size: 1.5rem;
+  }
+  @media (max-width: 768px) {
+    font-size: 1rem;
+  }
+  @media (max-width: 576px) {
+    font-size: 1rem;
+  }
+  /* Viewport 단위 사용 */
+  font-size: calc(1rem + 0.7vw);
 `;
 
 const LyricsTitle = styled.div`
   position: relative;
   z-index: 2;
   color: white;
-  font-size: 0.9rem;
   font-weight: 500;
   text-align: left;
   padding-right: 2rem;
   padding-top: 2rem;
   line-height: 2;
+  flex-wrap: wrap;
+
+  /* 반응형 폰트 크기 적용 */
+  @media (max-width: 1200px) {
+    font-size: 0.7rem;
+  }
+  @media (max-width: 992px) {
+    font-size: 0.65rem;
+  }
+  @media (max-width: 768px) {
+    font-size: 0.6rem;
+  }
+  @media (max-width: 576px) {
+    font-size: 0.55rem;
+  }
+  /* Viewport 단위 사용 */
+  font-size: calc(0.5rem + 0.5vw);
 `;
 
 const ViewsCount = styled.div`
@@ -139,6 +189,8 @@ function Play() {
   };
   const id = getQueryParam('id');
 
+  const navigate = useNavigate();
+
   const { data } = useQuery({
     queryKey: ['play', id],
     queryFn: () => getPlay(id),
@@ -151,16 +203,39 @@ function Play() {
           {data?.data?.mv_file ? (
             <VideoPlayerWrapper open={toggleLyrics}>
               <VideoPlayer
-                src={data?.data.mv_file}
+                mvData={data?.data}
                 id={id}
                 toggleLyrics={toggleLyrics}
                 setToggleLyrics={setToggleLyrics}
-                subject={data?.data?.subject}
               />
             </VideoPlayerWrapper>
           ) : (
             <div>No video available</div>
           )}
+          <TextBox>
+            <Title>{data?.data?.subject || 'Loading...'}</Title>
+            <UserInfo>
+              <img
+                src={data?.data?.profile_image || defaultProfile}
+                alt="Profile"
+                style={{
+                  width: '3rem',
+                  height: '3rem',
+                  borderRadius: '100%',
+                  cursor: 'pointer',
+                }}
+                onClick={() => navigate(`/users/${data?.data?.username}`)}
+              />
+              <UserInfo2>
+                <Subtitle>{data?.data?.member_name || 'no name user'}</Subtitle>
+                <ViewsCount>
+                  {data?.data?.views !== null && data?.data?.views !== undefined
+                    ? `${data.data.views.toLocaleString()} Views`
+                    : '0 Views'}
+                </ViewsCount>
+              </UserInfo2>
+            </UserInfo>
+          </TextBox>
         </VideoContainer>
 
         <LyricsBox expanded={toggleLyrics}>
@@ -177,25 +252,6 @@ function Play() {
           </LyricsContent>
         </LyricsBox>
       </PlayBox>
-
-      <TextBox>
-        <Title>{data?.data?.subject || 'Loading...'}</Title>
-        <UserInfo>
-          <img
-            src={data?.data?.profile_image || defaultProfile}
-            alt="Profile"
-            style={{ width: '3rem', height: '3rem', borderRadius: '100%' }}
-          />
-          <UserInfo2>
-            <Subtitle>{data?.data?.member_name || 'no name user'}</Subtitle>
-            <ViewsCount>
-              {data?.data?.views !== null && data?.data?.views !== undefined
-                ? `${data.data.views.toLocaleString()} Views`
-                : '0 Views'}
-            </ViewsCount>
-          </UserInfo2>
-        </UserInfo>
-      </TextBox>
     </BackLayout>
   );
 }

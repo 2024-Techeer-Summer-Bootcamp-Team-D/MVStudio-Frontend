@@ -17,10 +17,10 @@ const WholeContainer = styled.div`
     left: 0;
     width: 100%;
     height: 100%;
-    background: url('https://i.ibb.co/k0wLXnC/Sound-Wave.gif') no-repeat center
-      center fixed;
+    background: url('https://i.ibb.co/QCwvsS4/Sound-Wave-Slow.gif') no-repeat
+      center center fixed;
     background-size: cover;
-    filter: blur(0.7rem) brightness(40%);
+    filter: blur(0.7rem) brightness(25%);
   }
 `;
 
@@ -111,7 +111,7 @@ const Section = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  opacity: 0;
+
   scroll-snap-align: start;
   animation: ${(props) =>
       props.visible ? (props.direction === 'up' ? slideDown : slideUp) : 'none'}
@@ -120,18 +120,18 @@ const Section = styled.div`
 
 const Pagination = styled.div`
   position: fixed;
+
   right: 2%;
   top: 50%;
   transform: translateY(-50%);
   display: flex;
   flex-direction: column;
   gap: 1rem;
-  z-index: 1000;
 `;
 
 const PaginationDot = styled.div`
-  width: 1rem;
-  height: 1rem;
+  width: 0.6rem;
+  height: 0.6rem;
   background-color: ${(props) => (props.active ? '#37006e' : '#999')};
   border-radius: 50%;
   cursor: pointer;
@@ -160,8 +160,12 @@ const GreyText = styled.div`
   color: gray;
 `;
 
-const PurpleText = styled.div`
-  color: #421168;
+const PurpleText = styled.p`
+  color: #7208c3;
+`;
+
+const Redtext = styled.p`
+  color: #941d1d;
 `;
 
 const Mac1 = styled.img`
@@ -265,17 +269,17 @@ const Button = styled.button`
 `;
 
 const MusicVideoListContainer = styled.div`
-  width: 97%;
+  width: 94%;
   height: 100%;
   display: flex;
   flex-direction: column;
   text-align: center;
-  justify-content: flex-end;
+  justify-content: center;
   overflow: hidden;
 `;
 
 const MusicVideoListBox = styled.img`
-  width: 5%;
+  width: 3%;
   height: 80%;
   background-color: white;
   border-radius: 0.4rem;
@@ -345,7 +349,7 @@ const OnBoardingPage = () => {
   const sectionsRef = useRef([]);
   const [currentSection, setCurrentSection] = useState(0);
   const [scrollDirection, setScrollDirection] = useState(null);
-
+  const [scrollLock, setScrollLock] = useState(false);
   const [musicVideos1, setMusicVideos1] = useState([]);
   const [musicVideos2, setMusicVideos2] = useState([]);
   const [musicVideos3, setMusicVideos3] = useState([]);
@@ -386,6 +390,11 @@ const OnBoardingPage = () => {
   };
 
   const handleScroll = (event) => {
+    if (scrollLock) {
+      event.preventDefault();
+      return;
+    }
+
     if (event.deltaY > 0 && currentSection < sectionsRef.current.length - 1) {
       setScrollDirection('down');
       setCurrentSection((prev) => prev + 1);
@@ -393,14 +402,17 @@ const OnBoardingPage = () => {
       setScrollDirection('up');
       setCurrentSection((prev) => prev - 1);
     }
+
+    setScrollLock(true);
+    setTimeout(() => setScrollLock(false), 500);
   };
 
   useEffect(() => {
-    window.addEventListener('wheel', handleScroll);
+    window.addEventListener('wheel', handleScroll, { passive: false });
     return () => {
       window.removeEventListener('wheel', handleScroll);
     };
-  }, [currentSection]);
+  }, [currentSection, scrollLock]);
 
   useEffect(() => {
     scrollToSection(currentSection);
@@ -475,7 +487,7 @@ const OnBoardingPage = () => {
                   <GreyText>나만의 뮤직비디오</GreyText>를
                 </Connect>
                 <Connect>
-                  <PurpleText>소셜 계정</PurpleText>에
+                  <Redtext>소셜 계정</Redtext>에
                 </Connect>
                 손쉽게 공유
               </FourthText>

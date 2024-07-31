@@ -3,7 +3,8 @@
 import React, { useState } from 'react';
 import styled, { createGlobalStyle } from 'styled-components';
 import { useNavigate } from 'react-router-dom';
-import { setCookie } from '@/utils/cookies';
+import { removeCookie, setCookie } from '@/utils/cookies';
+import { useUser } from '@/libs/stores/userStore';
 
 // Material-UI
 import GoogleIcon from '@mui/icons-material/Google';
@@ -12,6 +13,7 @@ import VpnKeyIcon from '@mui/icons-material/VpnKey';
 
 // API
 import { postLogin, postRegister } from '@/api/member';
+import Swal from 'sweetalert2';
 
 const GlobalStyle = createGlobalStyle`
   * {
@@ -295,11 +297,8 @@ const SocialLogin = styled.div`
   color: white;
   cursor: pointer;
 `;
-const handleSocialLogin = () => {
-  window.location.href = `${import.meta.env.VITE_REACT_APP_BASE_URL}/api/v1/oauth/login/google`;
-};
 
-const SignUpForm = ({ successLogin }) => {
+const SignUpForm = ({ successLogin, handleSocialLogin }) => {
   const [idValue, setIdValue] = useState('');
   const [emailValue, setEmailValue] = useState('');
   const [passwordValue, setPasswordValue] = useState('');
@@ -406,6 +405,7 @@ const SignUpForm = ({ successLogin }) => {
         color="purple"
         onClick={() => {
           const validateInputs = () => {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
             if (
               !idValue ||
               !emailValue ||
@@ -426,21 +426,29 @@ const SignUpForm = ({ successLogin }) => {
               return false;
             }
 
+            if (!emailRegex.test(emailValue)) {
+              setLoginError('Email 형식이 올바르지 않습니다.');
+              return false;
+            }
+
             setLoginError(''); // Clear any existing error messages
             return true;
           };
 
           if (validateInputs()) {
             postRegister(idValue, emailValue, passwordValue)
-              .then((resp) => {
-                if (resp.status === 201 && resp.code === 'A001') {
-                  successLogin(resp.id);
-                } else if (resp.status === 200) {
-                  setLoginError('입력하신 id가 이미 있어요!');
+              .then((res) => {
+                console.log('res :', res);
+                if (res.status === 201 && res.code === 'A001') {
+                  successLogin(res.access_token, 'SU');
+                } else if (res.status === 409) {
+                  setLoginError(res.message);
+                } else {
+                  setLoginError('서버 오류입니다.');
                 }
               })
-              .catch((err) => {
-                console.log(err);
+              .catch(() => {
+                setLoginError('서버 오류입니다. (catch)');
               });
           }
         }}
@@ -451,7 +459,7 @@ const SignUpForm = ({ successLogin }) => {
   );
 };
 
-const SignInForm = ({ successLogin }) => {
+const SignInForm = ({ successLogin, handleSocialLogin }) => {
   const [idValue, setIdValue] = useState('');
   const [passwordValue, setPasswordValue] = useState('');
   const [loginError, setLoginError] = useState('');
@@ -529,23 +537,13 @@ const SignInForm = ({ successLogin }) => {
         type="button"
         color="purple"
         onClick={() =>
-          // postLogin(idValue, passwordValue)
-          //   .then((resp) => {
-          //     if ((resp.status === 201) & (resp.code === 'A002')) {
-          //       successLogin(resp.id);
-          //     } else {
-          //       setLoginError('아이디와 비밀번호를 다시한번 확인해주세요!');
-          //     }
-          //   })
-          //   .catch(() => {
-          //     setLoginError('서버 오류입니다.');
-          //   })
           postLogin(idValue, passwordValue)
-            .then((resp) => {
-              if (resp.access_token) {
-                successLogin(resp.access_token);
+            .then((res) => {
+              console.log('res :', res);
+              if (res.access_token) {
+                successLogin(res.access_token, 'SI');
               } else {
-                setLoginError('아이디와 비밀번호를 다시한번 확인해주세요!');
+                setLoginError(`${res.message}`);
               }
             })
             .catch(() => {
@@ -616,28 +614,58 @@ const SignInForm = ({ successLogin }) => {
 const Auth = () => {
   const [panelActive, setPanelActive] = useState('');
   const navigate = useNavigate();
-  const successLogin = (accessToken) => {
-    console.log('함수 실행됌');
-    // localStorage.setItem('memberId', id);
-    setCookie('accessToken', accessToken);
-    navigate('/main');
+  const setUsername = useUser((state) => state.setUsername);
+  const fetchUsername = useUser((state) => state.fetchUser);
+  const successLogin = async (accessToken, type) => {
+    removeCookie('accessToken');
+    setUsername('');
+
+    // 쿠키 설정을 동기적으로 처리
+    await new Promise((resolve) => {
+      setCookie('accessToken', accessToken);
+      resolve();
+    });
+    console.log('type :', type);
+    // 쿠키 설정 후 사용자 이름을 가져오는 fetchUsername 함수 호출
+    fetchUsername();
+
+    // fetchUsername 함수 호출 후 페이지 이동
+    if (type === 'SU') {
+      Swal.fire({
+        icon: 'success',
+        title: 'Welcome!',
+        text: '환영합니다! 원활한 서비스 이용을 위해 몇가지 정보를 입력해주세요.',
+        showConfirmButton: true,
+        timer: 1500,
+      });
+      navigate('/auth/register');
+    } else if (type === 'SI') {
+      navigate('/main');
+    }
+  };
+
+  const handleSocialLogin = () => {
+    removeCookie('accessToken');
+    setUsername('');
+
+    window.location.href = `${import.meta.env.VITE_REACT_APP_BASE_URL}/api/v1/oauth/login/google`;
   };
 
   return (
     <BackLayout>
-      {/* <CircleGlass src="https://i.ibb.co/f2gnqxw/image.png" />
-      <SecondCircleGlass1 src="https://i.ibb.co/f2gnqxw/image.png" />
-      <TwistGlass src="https://i.ibb.co/wLPMNtf/image.png" />
-      <TearGlass1 src="https://i.ibb.co/jL01sDq/image.png" />
-      <TearGlass2 src="https://i.ibb.co/jL01sDq/image.png" />
-      <StampGlass src="https://i.ibb.co/XXzYTfy/image.png" /> */}
       <GlobalStyle />
       <Container>
         <SignUpContainer active={panelActive}>
-          <SignUpForm successLogin={successLogin} />
+          <SignUpForm
+            successLogin={successLogin}
+            handleSocialLogin={handleSocialLogin}
+          />
         </SignUpContainer>
         <SignInContainer active={panelActive}>
-          <SignInForm successLogin={successLogin} />
+          <SignInForm
+            successLogin={successLogin}
+            handleSocialLogin={handleSocialLogin}
+          />
         </SignInContainer>
         <OverlayContainer active={panelActive}>
           <Overlay active={panelActive}>

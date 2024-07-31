@@ -120,7 +120,16 @@ const saveTaskIdToLocalStorage = (taskId) => {
   localStorage.setItem('taskId', JSON.stringify(existingTaskIds));
 };
 
+const loadTasknameFromLocalStorage = (taskname) => {
+  localStorage.setItem('taskname', taskname);
+  return taskname ? JSON.parse(taskname) : [];
+};
 
+const saveTasknameToLocalStorage = (taskname) => {
+  const existingTaskname = loadTasknameFromLocalStorage();
+  existingTaskname.push(taskname);
+  localStorage.setItem('taskname', JSON.stringify(existingTaskname));
+};
 
 function LyricsSelect() {
   const [lyricsList, setLyricsList] = useState([]);
@@ -183,6 +192,7 @@ function LyricsSelect() {
       </OtherContainer>
 
       <Button
+        disabled={true}
         onClick={async () => {
           try {
             const {
@@ -229,6 +239,7 @@ function LyricsSelect() {
                     throw new Error('task_id가 응답에 포함되어 있지 않습니다.');
                   }
                   saveTaskIdToLocalStorage(taskId);
+                  saveTasknameToLocalStorage(subject);
                   navigate('/main');
                 } catch (error) {
                   throw new Error('비디오 생성에 실패했습니다.');

@@ -1,5 +1,43 @@
 import { jsonAxios } from './axios.config';
 
+export const deleteVideo = async (id) => {
+  try {
+    const response = await jsonAxios.delete(`/music-videos/${id}`);
+    return response;
+  } catch (error) {
+    console.error('errorcode:', error);
+  }
+};
+
+export const getGenre = async () => {
+  try {
+    const response = await jsonAxios.get('/music-videos/genres');
+    return response.data;
+  } catch (error) {
+    console.error('errorcode:', error);
+  }
+};
+
+export const getHistory = async (page, size) => {
+  try {
+    const response = await jsonAxios.get(
+      `/music-videos/histories?page=${page}&size=${size}`,
+    );
+    return response.data;
+  } catch (error) {
+    console.error(`error code:`, error);
+  }
+};
+
+export const getInstruments = async () => {
+  try {
+    const response = await jsonAxios.get('/music-videos/instruments');
+    return response.data;
+  } catch (error) {
+    console.error('errorcode:', error);
+  }
+};
+
 export const getList = async (page, size, sort, username) => {
   try {
     const params = new URLSearchParams({
@@ -20,31 +58,19 @@ export const getList = async (page, size, sort, username) => {
   }
 };
 
-export const getHistory = async (page, size) => {
+export const getStyles = async () => {
   try {
-    const response = await jsonAxios.get(
-      `/music-videos/histories?page=${page}&size=${size}`,
-    );
-    console.log('기록 :', response.data);
-    return response.data;
-  } catch (error) {
-    console.error(`error code:`, error);
-  }
-};
-export const getGenre = async () => {
-  try {
-    const response = await jsonAxios.get('/music-videos/genres');
-
+    const response = await jsonAxios.get('/music-videos/styles');
     return response.data;
   } catch (error) {
     console.error('errorcode:', error);
   }
 };
 
-export const getInstruments = async () => {
+export const getTask = async (taskId) => {
   try {
-    const response = await jsonAxios.get('/music-videos/instruments');
-    return response.data;
+    const response = await jsonAxios.get(`/music-videos/status/${taskId}`);
+    return response;
   } catch (error) {
     console.error('errorcode:', error);
   }
@@ -77,19 +103,6 @@ export const postVideos = async (
   lyrics_eng,
 ) => {
   try {
-    // 전달된 파라미터 로그로 확인
-    console.log('Post Video Params:', {
-      subject,
-      genres_ids,
-      instruments_ids,
-      style_id,
-      tempo,
-      language,
-      vocal,
-      lyrics,
-      lyrics_eng,
-    });
-
     const response = await jsonAxios.post('/music-videos', {
       subject,
       genres_ids,
@@ -102,7 +115,6 @@ export const postVideos = async (
       lyrics_eng,
     });
 
-    console.log('response:', response.data);
     return response.data;
   } catch (error) {
     console.error('errorcode:', error);
@@ -110,21 +122,25 @@ export const postVideos = async (
   }
 };
 
-export const getTask = async (taskId) => {
+export const youtubeLogin = async (id) => {
   try {
-    const response = await jsonAxios.get(`/music-videos/status/${taskId}`);
-    console.log('보낸아이디:', taskId, '받은 응답:', response);
+    const response = await jsonAxios.get(`/oauth/youtube/${id}`);
     return response;
   } catch (error) {
     console.error('errorcode:', error);
   }
 };
 
-export const getStyles = async () => {
+export const youtubeUpload = async (id, title, description, privacyStatus) => {
   try {
-    const response = await jsonAxios.get('/music-videos/styles');
-    console.log('response:', response.data);
-    return response.data;
+    const response = await jsonAxios.post(`/oauth/youtube/uploads/${id}`, {
+      title: title,
+      description: description,
+      tags: '',
+      privacyStatus: privacyStatus,
+    });
+
+    return response;
   } catch (error) {
     console.error('errorcode:', error);
   }

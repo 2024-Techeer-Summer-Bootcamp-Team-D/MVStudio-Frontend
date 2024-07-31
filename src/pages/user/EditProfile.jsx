@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-// import { useParams } from 'react-router-dom';
 import { getMemberInfo, getCountries, patchMemberInfo } from '@/api/member';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
