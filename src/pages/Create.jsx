@@ -499,7 +499,7 @@ const Create = () => {
       try {
         const data = await getInstruments();
         const instruments = data.instruments;
-        const doubledInstruments = [...instruments, ...instruments]; // 데이터를 두 번 반복하여 20개로 만듦
+        const doubledInstruments = [...instruments, ...instruments];
         setInstrumentsList(doubledInstruments);
         console.log('response(instrument):', doubledInstruments);
       } catch {
@@ -534,7 +534,8 @@ const Create = () => {
               <strong>Tempo:</strong> ${tempo} <br>
               <strong>Genre:</strong> ${genreList[genreId - 1]?.genre_name} <br>
               <strong>Instrument:</strong> ${selectedInstruments.join(', ')} <br>
-              <strong>Style:</strong> ${stylesList[stylesId - 1]?.style_name}
+              <strong>Style:</strong> ${stylesList[stylesId - 1]?.style_name}<br>
+              <strong>현재 데모버전이라 생성이 불가능합니다</strong>
           </div>
       `,
       icon: 'info', // 선택한 아이콘 (예: success, error, info, warning)
@@ -546,7 +547,7 @@ const Create = () => {
       },
     }).then((result) => {
       if (result.isConfirmed) {
-        handleSubmit(); // 버튼 클릭 시 호출될 함수
+        // handleSubmit();
       }
     });
   };
