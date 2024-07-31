@@ -14,6 +14,14 @@ const SwiperContainer = styled.div`
   width: 100%;
   padding-top: 50px;
   padding-bottom: 50px;
+  .swiper-button-next,
+  .swiper-button-prev {
+    color: white; // 버튼 색상을 검정색으로 변경
+
+    &::after {
+      font-size: 3rem; // 화살표 아이콘 크기 조정
+    }
+  }
 `;
 
 const SwiperSlide = styled.div`

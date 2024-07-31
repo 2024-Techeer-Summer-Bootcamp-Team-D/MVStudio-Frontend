@@ -591,14 +591,31 @@ const Create = () => {
     {
       label: 'English',
       imageUrl: 'https://i.ibb.co/1Qx3LYb/IMG-0952.jpg',
+      value: 'English',
     },
     {
       label: '한국어',
       imageUrl: 'https://i.ibb.co/4VK2ytf/IMG-0955.jpg',
+      value: 'Korean',
     },
     {
       label: '日本語',
       imageUrl: 'https://i.ibb.co/2h58CSp/IMG-0954.jpg',
+      value: 'Japan',
+    },
+  ];
+  const TempoArr = [
+    {
+      label: 'Fast',
+      imageUrl: 'https://i.ibb.co/2MM2pFY/image.jpg',
+    },
+    {
+      label: 'Normal',
+      imageUrl: 'https://i.ibb.co/0KT62d8/image.jpg',
+    },
+    {
+      label: 'Slow',
+      imageUrl: 'https://i.ibb.co/hDnty3R/image.jpg',
     },
   ];
 
@@ -720,29 +737,6 @@ const Create = () => {
   const instrumentsCount = selectedInstruments.length;
   const shouldShowWarning = instrumentsCount >= 3;
 
-  const handleInstrumentPrevClick = () => {
-    if (currentInstrumentIndex > 0) {
-      setCurrentInstrumentIndex(currentInstrumentIndex - 1);
-    }
-  };
-
-  const handleInstrumentNextClick = () => {
-    if (currentInstrumentIndex < instrumentsList.length - 6) {
-      setCurrentInstrumentIndex(currentInstrumentIndex + 1);
-    }
-  };
-
-  const handleStylesPrevClick = () => {
-    if (currentStylesIndex > 0) {
-      setCurrentStylesIndex(currentStylesIndex - 1);
-    }
-  };
-
-  const handleStylesNextClick = () => {
-    if (currentStylesIndex < stylesList.length - 6) {
-      setCurrentStylesIndex(currentStylesIndex + 1);
-    }
-  };
   const handleNextStep = () => {
     if (step === 1 && !genreId) {
       {
@@ -938,8 +932,8 @@ const Create = () => {
                 <LanguageButton
                   key={option.label}
                   imageUrl={option.imageUrl}
-                  onClick={() => setLanguage(option.label)}
-                  clicked={language === option.label}
+                  onClick={() => setLanguage(option.value)}
+                  clicked={language === option.value}
                 ></LanguageButton>
                 {option.label}
               </ButtonSetting>
@@ -952,14 +946,16 @@ const Create = () => {
           <TitleStyle1>템포를 선택해주세요</TitleStyle1>
           <TitleStyle2>*필수선택옵션입니다</TitleStyle2>
           <ChooseOption>
-            {['느림', '보통', '빠름'].map((option) => (
-              <Button
-                key={option}
-                clicked={tempo === option}
-                onClick={() => setTempo(option)}
-              >
-                {option}
-              </Button>
+            {TempoArr.map((option) => (
+              <ButtonSetting key={option.label}>
+                <Button
+                  key={option.label}
+                  imageUrl={option.imageUrl}
+                  onClick={() => setTempo(option.label)}
+                  clicked={tempo === option.label}
+                ></Button>
+                {option.label}
+              </ButtonSetting>
             ))}
           </ChooseOption>
           <JellyButton onClick={handleCreateClick}>완료</JellyButton>

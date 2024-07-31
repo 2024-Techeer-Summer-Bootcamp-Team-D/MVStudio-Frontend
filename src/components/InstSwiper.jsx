@@ -16,7 +16,7 @@ const SwiperContainer = styled.div`
   padding-bottom: 50px;
   .swiper-button-next,
   .swiper-button-prev {
-    color: rgb(124, 107, 221); // 버튼 색상을 검정색으로 변경
+    color: white; // 버튼 색상을 검정색으로 변경
 
     &::after {
       font-size: 3rem; // 화살표 아이콘 크기 조정
