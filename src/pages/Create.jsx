@@ -485,8 +485,7 @@ const Create = () => {
     const fetchGenreData = async () => {
       try {
         const data = await getGenre();
-        console.log('response(genre) : ', data.genres);
-        setGenreList([...data.genres, ...data.genres]); // 같은 데이터를 두 번 담기
+        setGenreList([...data.genres]); // 같은 데이터를 두 번 담기
       } catch {
         console.error('장르 데이터 조회 오류');
       }

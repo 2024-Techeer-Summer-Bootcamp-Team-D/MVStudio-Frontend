@@ -116,6 +116,8 @@ const GenreSwiperComponent = ({ options, selectedId, onSelect }) => {
           </SwiperSlide>
         ))}
       </div>
+      <div className="swiper-button-next"></div>
+      <div className="swiper-button-prev"></div>
     </SwiperContainer>
   );
 };
