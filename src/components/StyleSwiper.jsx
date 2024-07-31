@@ -64,8 +64,6 @@ const StyleSwiperComponent = ({ options, selectedId, onSelect }) => {
   useEffect(() => {
     const initSwiper = () => {
       swiperStlyeRef.current = new Swiper('.mySwiper', {
-        loop: true,
-        loopedSlides: 1, // 이 값을 슬라이드 개수에 따라 조정하세요
         effect: 'coverflow',
         grabCursor: true,
         centeredSlides: true,
@@ -115,6 +113,8 @@ const StyleSwiperComponent = ({ options, selectedId, onSelect }) => {
           </SwiperSlide>
         ))}
       </div>
+      <div className="swiper-button-next"></div>
+      <div className="swiper-button-prev"></div>
     </SwiperContainer>
   );
 };
