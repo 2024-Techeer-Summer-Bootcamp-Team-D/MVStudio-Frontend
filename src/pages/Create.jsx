@@ -37,7 +37,7 @@ const fadeOut = keyframes`
 const slideIn = keyframes`
   from {
     opacity: 0;
-    transform: translateX(0);
+    transform: translateX(100%);
   }
   to {
     opacity: 1;
