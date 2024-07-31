@@ -12,7 +12,6 @@ import StepConnector, {
 } from '@mui/material/StepConnector';
 import { useState, useEffect, useCallback } from 'react'; // React로부터 useState와 useEffect 가져오기
 import styled, { css, keyframes } from 'styled-components';
-import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { getGenre, getInstruments, getStyles } from '../api/musicVideos';
 import { useNavigate } from 'react-router-dom';
@@ -21,7 +20,6 @@ import Swal from 'sweetalert2';
 import GenreSwiperComponent from '@/components/GenreSwiper';
 import StyleSwiperComponent from '@/components/StyleSwiper';
 import InstSwiperComponent from '@/components/InstSwiper';
-import { color } from 'framer-motion';
 
 const fadeOut = keyframes`
   from {
@@ -221,46 +219,6 @@ const ChooseOption = styled.div`
   justify-content: center;
 `;
 
-const CoverBox = styled.div`
-  transition: transform 0.5s ease-in-out;
-  width: 16.7%;
-  flex: 0 0 16.7%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-`;
-
-const RoundCover = styled.button`
-  background-image: url(${(props) => props.src});
-  background-size: cover;
-  background-position: center;
-  border-radius: 50%;
-  width: 6rem;
-  height: 6rem;
-  overflow: hidden;
-  filter: brightness(0.8);
-
-  &:hover {
-    filter: brightness(0.6);
-  }
-
-  ${(props) =>
-    props.selected &&
-    css`
-      border: 0.3rem solid #ffffff;
-      filter: brightness(0.5);
-    `}
-`;
-
-const CoverLabel = styled.span`
-  color: white;
-  font-weight: bold;
-  font-size: 0.875rem;
-  text-align: center;
-  font-family: 'SUIT', sans-serif;
-  margin-top: 0.5rem;
-`;
-
 const GenreContainer = styled.div`
   display: flex;
   flex-direction: row;
@@ -268,22 +226,6 @@ const GenreContainer = styled.div`
   width: 100%;
   justify-content: space-between;
   align-items: center;
-`;
-
-const ArrowFunction = styled(ArrowForwardIosIcon)`
-  display: flex;
-  align-items: center;
-  width: 5%;
-  cursor: pointer;
-  color: ${(props) => (props.disabled ? 'transparent' : '#7b7b7b')};
-  transform: ${(props) => (props.isPrev ? 'rotate(0deg)' : 'rotate(180deg)')};
-  z-index: 2;
-`;
-
-const ViewContainer = styled.div`
-  width: 80%;
-  display: flex;
-  overflow: hidden;
 `;
 
 const SubmitButton = styled.button`
@@ -566,12 +508,10 @@ const Create = () => {
   const [selectedInstruments, setSelectedInstruments] = useState([]);
   const [songTitle, setSongTitle] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [currentInstrumentIndex, setCurrentInstrumentIndex] = useState(0);
   const [genreId, setGenreId] = useState();
   const [instrumentsId, setInstrumentsId] = useState([]);
   const [stylesId, setStylesId] = useState();
   const [stylesList, setStylesList] = useState([]);
-  const [currentStylesIndex, setCurrentStylesIndex] = useState(0);
   const [step, setStep] = useState(1);
   const [isOpen, setIsOpen] = useState(false);
   const [activeStep, setActiveStep] = useState(1);
