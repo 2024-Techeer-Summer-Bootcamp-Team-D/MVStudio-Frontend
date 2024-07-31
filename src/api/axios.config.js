@@ -1,3 +1,4 @@
+/* eslint-disable no-dupe-else-if */
 /* eslint-disable no-undef */
 import axios from 'axios';
 import { getCookie, setCookie } from '@/utils/cookies';
@@ -77,14 +78,14 @@ jsonAxios.interceptors.response.use(
         }
         return Promise.reject(error);
       } catch (reissueError) {
-        if (
-          window.location.pathname !== '/auth' &&
-          error.response.status === 401
-        ) {
-          window.location.href = '/auth';
-        }
         return Promise.reject(reissueError);
       }
+    } else if (
+      error.response &&
+      error.response.status === 401 &&
+      !originalRequest._retry
+    ) {
+      window.location.href = '/auth';
     }
     // 다른 오류는 그대로 반환합니다.
     return Promise.reject(error);
@@ -129,6 +130,14 @@ formAxios.interceptors.response.use(
         const newAccessToken = await reissueToken();
         console.log('newAccessToken:', newAccessToken);
         if (newAccessToken === undefined) {
+          console.log('err:', newAccessToken);
+          return Promise.reject(error);
+        }
+        if (
+          newAccessToken === undefined ||
+          newAccessToken === null ||
+          newAccessToken === '{}'
+        ) {
           return Promise.reject(error);
         }
         if (newAccessToken) {
@@ -140,14 +149,14 @@ formAxios.interceptors.response.use(
         }
         return Promise.reject(error);
       } catch (reissueError) {
-        if (
-          window.location.pathname !== '/auth' &&
-          error.response.status === 401
-        ) {
-          window.location.href = '/auth';
-        }
         return Promise.reject(reissueError);
       }
+    } else if (
+      error.response &&
+      error.response.status === 401 &&
+      !originalRequest._retry
+    ) {
+      window.location.href = '/auth';
     }
     // 다른 오류는 그대로 반환합니다.
     return Promise.reject(error);
