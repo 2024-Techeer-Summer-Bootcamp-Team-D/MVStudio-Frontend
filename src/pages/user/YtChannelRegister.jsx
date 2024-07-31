@@ -12,8 +12,6 @@ function YtChannelRegister() {
   const username = useUser((state) => state.username);
 
   useEffect(() => {
-    console.log('channel url: ', ytChannelURL);
-    console.log('username: ', username);
     if (ytChannelURL && username) {
       patchMemberInfo(
         username,

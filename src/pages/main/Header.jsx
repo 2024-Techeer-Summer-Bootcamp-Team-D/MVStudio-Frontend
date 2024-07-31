@@ -101,8 +101,6 @@ const InfoContainer = styled.div`
   width: 20%;
   top: 15%;
   right: 1.5%;
-  /* opacity: ${({ hover }) => (hover ? 1 : 0)};
-  transition: opacity 5s ease-in-out; */
 `;
 
 const VolumeContainer = styled.div`

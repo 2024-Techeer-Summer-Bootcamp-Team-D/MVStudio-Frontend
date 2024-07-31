@@ -176,7 +176,6 @@ function EditProfile() {
 
   const handleCountryChange = (event) => {
     const countryId = event.target.value;
-    console.log('Selected country ID:', countryId);
     setUserInfo((prevState) => ({
       ...prevState,
       country: countryId,
@@ -204,12 +203,11 @@ function EditProfile() {
         '',
         '',
       );
-      console.log('Successfully patched member info:', response);
+      return response;
     } catch (error) {
       console.error('Error patching member info:', error);
     }
   };
-  console.log('지금은 들ㅇ감?:', userInfo?.country);
 
   return (
     <StyledForm>
