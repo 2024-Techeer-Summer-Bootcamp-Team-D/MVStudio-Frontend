@@ -13,7 +13,6 @@ import CameraAltIcon from '@mui/icons-material/CameraAlt';
 import { useUser } from '@/libs/stores/userStore';
 import Swal from 'sweetalert2';
 import { useNavigate } from 'react-router-dom';
-import { useMemo } from 'react';
 
 const StyledForm = styled.form`
   background-color: #dfd4df;
@@ -121,6 +120,7 @@ function EditProfile() {
   });
   const [countryList, setCountryList] = useState([]);
   const username = useUser((state) => state.username);
+  const [placehol, setPlacehol] = useState('');
 
   useEffect(() => {
     const fetchData = async () => {
@@ -140,7 +140,6 @@ function EditProfile() {
         const response = await getMemberInfo(username);
         setUserInfo({
           nickname: response.data.nickname,
-          country: response.data.country,
           birthday: dayjs(response.data.birthday),
           profile_image: response.data.profile_image,
           comment: response.data.comment,
@@ -148,6 +147,7 @@ function EditProfile() {
           email: response.data.email,
           sex: response.data.sex,
         });
+        setPlacehol(response.data.country);
       } catch (error) {
         console.error('Error fetching member info', error);
       }
@@ -209,10 +209,6 @@ function EditProfile() {
       console.error('Error patching member info:', error);
     }
   };
-  const selectedCountryId = useMemo(() => {
-    const country = countryList.find((c) => c.name === userInfo.country);
-    return country ? country.id : '';
-  }, [countryList, userInfo.country]);
   console.log('지금은 들ㅇ감?:', userInfo?.country);
 
   return (
@@ -276,18 +272,18 @@ function EditProfile() {
           fontSize: '1rem',
         }}
       >
-        <InputLabel id="country-label">Country</InputLabel>
+        <InputLabel id="country-label">{placehol}</InputLabel>
         <Select
           labelId="country-label"
           id="country"
           name="country"
-          value={selectedCountryId}
+          value={userInfo.country}
           onChange={handleCountryChange}
           autoWidth
           label="Country"
         >
           {countryList.map((data) => (
-            <MenuItem key={data.id} value={data.id}>
+            <MenuItem key={data.name} value={data.id}>
               {data.name}
             </MenuItem>
           ))}
