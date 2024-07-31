@@ -83,7 +83,7 @@ jsonAxios.interceptors.response.use(
     } else if (
       error.response &&
       error.response.status === 401 &&
-      !originalRequest._retry
+      originalRequest._retry
     ) {
       window.location.href = '/auth';
     }
@@ -154,7 +154,7 @@ formAxios.interceptors.response.use(
     } else if (
       error.response &&
       error.response.status === 401 &&
-      !originalRequest._retry
+      originalRequest._retry
     ) {
       window.location.href = '/auth';
     }
