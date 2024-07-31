@@ -13,6 +13,7 @@ import CameraAltIcon from '@mui/icons-material/CameraAlt';
 import { useUser } from '@/libs/stores/userStore';
 import Swal from 'sweetalert2';
 import { useNavigate } from 'react-router-dom';
+import { useMemo } from 'react';
 
 const StyledForm = styled.form`
   background-color: #dfd4df;
@@ -208,6 +209,10 @@ function EditProfile() {
       console.error('Error patching member info:', error);
     }
   };
+  const selectedCountryId = useMemo(() => {
+    const country = countryList.find((c) => c.name === userInfo.country);
+    return country ? country.id : '';
+  }, [countryList, userInfo.country]);
   console.log('지금은 들ㅇ감?:', userInfo?.country);
 
   return (
@@ -276,13 +281,13 @@ function EditProfile() {
           labelId="country-label"
           id="country"
           name="country"
-          value={userInfo.country}
+          value={selectedCountryId}
           onChange={handleCountryChange}
           autoWidth
           label="Country"
         >
           {countryList.map((data) => (
-            <MenuItem key={data.name} value={data.id}>
+            <MenuItem key={data.id} value={data.id}>
               {data.name}
             </MenuItem>
           ))}
