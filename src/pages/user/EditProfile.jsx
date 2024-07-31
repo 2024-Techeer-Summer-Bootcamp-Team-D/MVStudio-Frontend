@@ -27,7 +27,7 @@ const StyledForm = styled.form`
   text-align: center;
   min-width: 30%;
   margin-top: 5%;
-  margin-left: 25%;
+  margin-left: 32%;
 `;
 
 const StyledButton = styled.button`
