@@ -118,7 +118,6 @@ const LyricsContent = styled.div`
   z-index: 2;
   border: 2px solid #5b5b5b;
   box-sizing: border-box;
-  /* overflow: hidden; */
   color: white;
   font-weight: 700;
   text-align: left;

@@ -161,9 +161,6 @@ const AlbumCover = ({ data, onClick }) => (
     <AlbumCoverImage src={data.cover_image} alt={data.subject} />
     <Overlay className="overlay">
       <OverlayText>{data.subject}</OverlayText>
-      <OverlayText>
-        {/* 여기에 조회수 등 추가 정보를 넣을 수 있습니다 */}
-      </OverlayText>
     </Overlay>
   </AlbumCoverContainer>
 );
