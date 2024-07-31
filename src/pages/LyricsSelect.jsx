@@ -4,6 +4,13 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import CircularProgress from '@mui/material/CircularProgress';
 import { postLyrics, postVideos } from '../api/musicVideos';
 import Swal from 'sweetalert2';
+const check = import.meta.env.VITE_REACT_APP_IS_OPERATE;
+let isOperate;
+if (check === 'true') {
+  isOperate = true;
+} else {
+  isOperate = false;
+}
 
 const BigContainer = styled.div`
   display: flex;
@@ -221,34 +228,38 @@ function LyricsSelect() {
               confirmButtonText: '생성',
               cancelButtonText: '취소',
             }).then(async (result) => {
-              if (result.isConfirmed) {
-                try {
-                  const data = await postVideos(
-                    subject,
-                    [genres_ids],
-                    instruments_ids,
-                    style_id,
-                    tempo,
-                    language,
-                    vocal,
-                    lyricsList.lyrics_ori[lyricsIndex],
-                    lyricsList.lyrics_eng[lyricsIndex],
-                  );
-                  const taskId = data.task_id;
-                  if (!taskId) {
-                    throw new Error('task_id가 응답에 포함되어 있지 않습니다.');
+              if (isOperate) {
+                if (result.isConfirmed) {
+                  try {
+                    const data = await postVideos(
+                      subject,
+                      [genres_ids],
+                      instruments_ids,
+                      style_id,
+                      tempo,
+                      language,
+                      vocal,
+                      lyricsList.lyrics_ori[lyricsIndex],
+                      lyricsList.lyrics_eng[lyricsIndex],
+                    );
+                    const taskId = data.task_id;
+                    if (!taskId) {
+                      throw new Error(
+                        'task_id가 응답에 포함되어 있지 않습니다.',
+                      );
+                    }
+                    saveTaskIdToLocalStorage(taskId);
+                    saveTasknameToLocalStorage(subject);
+                    navigate('/main');
+                  } catch (error) {
+                    throw new Error('비디오 생성에 실패했습니다.');
                   }
-                  saveTaskIdToLocalStorage(taskId);
-                  saveTasknameToLocalStorage(subject);
-                  navigate('/main');
-                } catch (error) {
-                  throw new Error('비디오 생성에 실패했습니다.');
+                  Swal.fire({
+                    title: '뮤직 비디오 제작 시작!',
+                    text: '뮤직 비디오 제작이 시작되었습니다. 5분 정도 기다려주세요!',
+                    icon: 'success',
+                  });
                 }
-                Swal.fire({
-                  title: '뮤직 비디오 제작 시작!',
-                  text: '뮤직 비디오 제작이 시작되었습니다. 5분 정도 기다려주세요!',
-                  icon: 'success',
-                });
               }
             });
           } catch (error) {
