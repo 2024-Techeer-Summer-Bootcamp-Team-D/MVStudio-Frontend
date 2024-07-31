@@ -12,9 +12,9 @@ import StepConnector, {
 } from '@mui/material/StepConnector';
 import { useState, useEffect, useCallback } from 'react'; // React로부터 useState와 useEffect 가져오기
 import styled, { css, keyframes } from 'styled-components';
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { getGenre, getInstruments, getStyles } from '../api/musicVideos';
 import { useNavigate } from 'react-router-dom';
+import { useUser } from '@/libs/stores/userStore';
 
 import Swal from 'sweetalert2';
 import GenreSwiperComponent from '@/components/GenreSwiper';
@@ -228,90 +228,6 @@ const GenreContainer = styled.div`
   align-items: center;
 `;
 
-const SubmitButton = styled.button`
-  background: #7c6bdd;
-  border-radius: 1rem;
-  width: 8rem;
-  height: 3rem;
-  font-size: 1rem;
-  color: white;
-  font-family: 'SUIT', sans-serif;
-  margin-top: 2.5rem;
-  font-weight: 550;
-`;
-const Overlay = styled.div`
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background: rgba(0, 0, 0, 0.5);
-  backdrop-filter: blur(10px);
-  z-index: 9999;
-`;
-
-const ModalContainer = styled.div`
-  position: absolute;
-  top: 30%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 40rem;
-  height: 30rem;
-  background-color: #240b38;
-  color: white;
-  border-radius: 2rem;
-  padding: 2rem;
-  display: flex;
-  flex-direction: column;
-  align-items: start;
-  z-index: 99999;
-  justify-content: space-between;
-`;
-
-const ModalText = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 2rem;
-  width: 100%;
-  padding: 2rem;
-`;
-
-const GroupText = styled.div`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  gap: 0.5rem;
-`;
-
-const ModalItem = styled.p`
-  font-size: 1rem;
-  color: rgba(205, 112, 238, 0.8);
-  margin-left: 1rem;
-  font-family: 'SUIT', sans-serif;
-  display: flex;
-  align-items: center;
-  justify-content: start;
-  font-weight: 550;
-`;
-
-const InstrumentItem = styled.p`
-  font-size: 1rem;
-  color: rgba(205, 112, 238, 0.8);
-  margin-left: 1rem;
-  font-family: 'SUIT', sans-serif;
-  display: flex;
-  align-items: center;
-  justify-content: start;
-  font-weight: 550;
-`;
-
-const ModalValue = styled.p`
-  font-family: 'SUIT', sans-serif;
-  font-size: 1rem;
-  color: #ffffff;
-  font-weight: 500;
-`;
-
 //프로그래스바 디자인 옵션
 const StyledStepLabel = styled(StepLabel)`
   .MuiStepLabel-label {
@@ -507,7 +423,6 @@ const Create = () => {
   const [instrumentLimitExceeded, setInstrumentLimitExceeded] = useState(false);
   const [selectedInstruments, setSelectedInstruments] = useState([]);
   const [songTitle, setSongTitle] = useState('');
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const [genreId, setGenreId] = useState();
   const [instrumentsId, setInstrumentsId] = useState([]);
   const [stylesId, setStylesId] = useState();
@@ -531,7 +446,7 @@ const Create = () => {
     {
       label: 'English',
       imageUrl: 'https://i.ibb.co/1Qx3LYb/IMG-0952.jpg',
-      value: 'English',
+      value: 'eng',
     },
     {
       label: '한국어',
@@ -541,7 +456,7 @@ const Create = () => {
     {
       label: '日本語',
       imageUrl: 'https://i.ibb.co/2h58CSp/IMG-0954.jpg',
-      value: 'Japan',
+      value: 'Japanese',
     },
   ];
   const TempoArr = [
@@ -563,6 +478,7 @@ const Create = () => {
   const isEnoughCredits = credits >= 20;
 
   console.log('credits:', isEnoughCredits);
+  console.log('언어값 : ', language);
 
   useEffect(() => {
     // 장르데이터 호출
@@ -635,10 +551,6 @@ const Create = () => {
     });
   };
 
-  const handleCloseModal = () => {
-    setIsModalOpen(false);
-  };
-
   const handleInstrumentClick = (label, id) => {
     const isSelected = selectedInstruments.includes(label);
     if (isSelected) {
@@ -678,9 +590,6 @@ const Create = () => {
     navigate('/create/lyrics', { state: userPreferences });
   };
   const navigate = useNavigate();
-
-  const instrumentsCount = selectedInstruments.length;
-  const shouldShowWarning = instrumentsCount >= 3;
 
   const handleNextStep = () => {
     if (step === 1 && !genreId) {
@@ -899,107 +808,6 @@ const Create = () => {
           </ChooseOption>
           <JellyButton onClick={handleCreateClick}>완료</JellyButton>
         </StepContainer>
-        {isModalOpen && (
-          <>
-            <Overlay />
-            <ModalContainer>
-              <ArrowBackIcon cursor="pointer" onClick={handleCloseModal} />
-              <ModalText>
-                <GroupText>
-                  <ModalItem>Title : </ModalItem>
-                  <ModalValue>{songTitle}</ModalValue>
-                </GroupText>
-                <GroupText>
-                  <ModalItem>Voice :</ModalItem>{' '}
-                  <ModalValue>{voice}</ModalValue>
-                </GroupText>
-                <GroupText>
-                  <ModalItem>Language :</ModalItem>
-                  <ModalValue>{language}</ModalValue>
-                </GroupText>
-                <GroupText>
-                  <ModalItem>Tempo :</ModalItem>{' '}
-                  <ModalValue>{tempo}</ModalValue>
-                </GroupText>
-                <GroupText>
-                  <ModalItem>Genre :</ModalItem>
-                  <ModalValue>{genreList[genreId - 1]?.genre_name}</ModalValue>
-                </GroupText>
-                <GroupText>
-                  <InstrumentItem>Instrument :</InstrumentItem>
-                  <ModalValue>{selectedInstruments.join(', ')}</ModalValue>
-                </GroupText>
-                <GroupText>
-                  <ModalItem>style :</ModalItem>
-                  <ModalValue>
-                    {stylesList[stylesId - 1]?.style_name}
-                  </ModalValue>
-                </GroupText>
-                {shouldShowWarning &&
-                  // 추가 로직이 필요한 경우 여기에 작성
-                  null}
-              </ModalText>
-              <SubmitButton
-                onClick={() => {
-                  handleSubmit();
-                }}
-              >
-                Submit
-              </SubmitButton>
-            </ModalContainer>
-          </>
-        )}
-        {isOpen || instrumentLimitExceeded}
-        <>
-          <Overlay />
-          <ModalContainer>
-            <ArrowBackIcon cursor="pointer" onClick={handleCloseModal} />
-            <ModalText>
-              <GroupText>
-                <ModalItem>Title : </ModalItem>
-                <ModalValue>{songTitle}</ModalValue>
-              </GroupText>
-              <GroupText>
-                <ModalItem>Voice :</ModalItem> <ModalValue>{voice}</ModalValue>
-              </GroupText>
-              <GroupText>
-                <ModalItem>Language :</ModalItem>
-                <ModalValue>{language}</ModalValue>
-              </GroupText>
-              <GroupText>
-                <ModalItem>Tempo :</ModalItem> <ModalValue>{tempo}</ModalValue>
-              </GroupText>
-              <GroupText>
-                <ModalItem>Genre :</ModalItem>
-                <ModalValue>{genreList[genreId - 1]?.genre_name}</ModalValue>
-              </GroupText>
-              <GroupText>
-                <InstrumentItem>Instrument :</InstrumentItem>
-                <ModalValue>{selectedInstruments.join(', ')}</ModalValue>
-              </GroupText>
-              <GroupText>
-                <ModalItem>style :</ModalItem>
-                <ModalValue>{stylesList[stylesId - 1]?.style_name}</ModalValue>
-              </GroupText>
-              {shouldShowWarning &&
-                // 추가 로직이 필요한 경우 여기에 작성
-                null}
-            </ModalText>
-            <ConfirmButton
-              onClick={() => {
-                handleSubmit();
-              }}
-              // disabled={!isEnoughCredits} //실제 서비스시
-              disabled={true} // 운영중이 아니라서 임시로 비활성화
-            >
-              {/* 실제 서비스 */}
-              {/* {isEnoughCredits ? 'Submit' : 'Not enough credits'} */}
-              {/* 운영중이 아니라서 임시로 비활성화*/} Not operating
-            </ConfirmButton>
-          </ModalContainer>
-        </>
-        )}
-        {isOpen || instrumentLimitExceeded}
       </BigContainer>
     </CreateContainer>
   );
