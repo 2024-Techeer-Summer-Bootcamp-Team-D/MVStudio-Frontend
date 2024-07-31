@@ -21,6 +21,13 @@ import GenreSwiperComponent from '@/components/GenreSwiper';
 import StyleSwiperComponent from '@/components/StyleSwiper';
 import InstSwiperComponent from '@/components/InstSwiper';
 
+const check = import.meta.env.VITE_REACT_APP_IS_OPERATE;
+let isOperate;
+if (check === 'true') {
+  isOperate = true;
+} else {
+  isOperate = false;
+}
 const fadeOut = keyframes`
   from {
     opacity: 1;
@@ -485,8 +492,7 @@ const Create = () => {
     const fetchGenreData = async () => {
       try {
         const data = await getGenre();
-        console.log('response(genre) : ', data.genres);
-        setGenreList(data.genres);
+        setGenreList([...data.genres]);
       } catch {
         console.error('장르 데이터 조회 오류');
       }
@@ -501,7 +507,6 @@ const Create = () => {
         const instruments = data.instruments;
         const doubledInstruments = [...instruments, ...instruments];
         setInstrumentsList(doubledInstruments);
-        console.log('response(instrument):', doubledInstruments);
       } catch {
         console.error('악기 데이터 조회 오류');
       }
@@ -547,7 +552,9 @@ const Create = () => {
       },
     }).then((result) => {
       if (result.isConfirmed) {
-        // handleSubmit();
+        if (isOperate) {
+          handleSubmit();
+        }
       }
     });
   };

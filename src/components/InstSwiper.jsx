@@ -78,6 +78,7 @@ const InstSwiperComponent = ({
         grabCursor: true,
         centeredSlides: true,
         slidesPerView: 'auto',
+        slideToClickedSlide: false,
         initialSlide: 3, // 시작 슬라이드 위치 설정
         coverflowEffect: {
           rotate: 20,
@@ -124,7 +125,6 @@ const InstSwiperComponent = ({
           </SwiperSlide>
         ))}
       </div>
-      <div className="swiper-pagination"></div>
       <div className="swiper-button-next"></div>
       <div className="swiper-button-prev"></div>
     </SwiperContainer>

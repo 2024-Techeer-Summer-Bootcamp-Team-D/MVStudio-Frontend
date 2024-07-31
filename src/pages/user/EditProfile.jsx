@@ -112,7 +112,7 @@ function EditProfile() {
   const navigate = useNavigate();
   const [userInfo, setUserInfo] = useState({
     nickname: '',
-    country: '',
+    country: 0,
     birthday: dayjs(),
     profile_image: null,
     comment: '',
@@ -120,6 +120,7 @@ function EditProfile() {
   });
   const [countryList, setCountryList] = useState([]);
   const username = useUser((state) => state.username);
+  const [placehol, setPlacehol] = useState('');
 
   useEffect(() => {
     const fetchData = async () => {
@@ -139,7 +140,6 @@ function EditProfile() {
         const response = await getMemberInfo(username);
         setUserInfo({
           nickname: response.data.nickname,
-          country: response.data.country,
           birthday: dayjs(response.data.birthday),
           profile_image: response.data.profile_image,
           comment: response.data.comment,
@@ -147,6 +147,7 @@ function EditProfile() {
           email: response.data.email,
           sex: response.data.sex,
         });
+        setPlacehol(response.data.country);
       } catch (error) {
         console.error('Error fetching member info', error);
       }
@@ -208,6 +209,7 @@ function EditProfile() {
       console.error('Error patching member info:', error);
     }
   };
+  console.log('지금은 들ㅇ감?:', userInfo?.country);
 
   return (
     <StyledForm>
@@ -270,19 +272,18 @@ function EditProfile() {
           fontSize: '1rem',
         }}
       >
-        <InputLabel id="country-label">Country</InputLabel>
+        <InputLabel id="country-label">{placehol}</InputLabel>
         <Select
           labelId="country-label"
           id="country"
           name="country"
-          value={userInfo.id}
+          value={userInfo.country}
           onChange={handleCountryChange}
           autoWidth
           label="Country"
-          sx={{ border: 'none' }}
         >
           {countryList.map((data) => (
-            <MenuItem key={data.id} value={data.id}>
+            <MenuItem key={data.name} value={data.id}>
               {data.name}
             </MenuItem>
           ))}
