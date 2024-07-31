@@ -23,6 +23,28 @@ import StyleSwiperComponent from '@/components/StyleSwiper';
 import InstSwiperComponent from '@/components/InstSwiper';
 import { color } from 'framer-motion';
 
+const fadeOut = keyframes`
+  from {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateX(-100%);
+  }
+`;
+
+const slideIn = keyframes`
+  from {
+    opacity: 0;
+    transform: translateX(0);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+`;
+
 const jellyAnimation = keyframes`
   25% {
     transform: scale(0.9, 1.1);
@@ -45,7 +67,7 @@ const JellyButton = styled.button`
   border-radius: 1rem;
   cursor: pointer;
   transition: background-color 0.3s ease;
-
+  margin-top: 2rem;
   &:hover {
     animation: ${jellyAnimation} 0.5s both;
   }
@@ -90,13 +112,24 @@ const BigContainer = styled.div`
   flex-direction: column;
   align-items: center;
   padding: 1rem;
+  overflow: hidden;
 `;
 
 const StepContainer = styled.div`
   width: 80%;
-  display: ${(props) => (props.active ? 'flex' : 'none')};
+  position: absolute;
+  animation: ${(props) =>
+    props.active
+      ? css`
+          ${slideIn} 0.6s ease-out
+        `
+      : css`
+          ${fadeOut} 0.6s ease-out
+        `};
+  display: ${(props) => (props.active || props.leaving ? 'flex' : 'none')};
   flex-direction: column;
   align-items: center;
+  opacity: ${(props) => (props.active ? 1 : 0)};
 `;
 
 const TitleStyle1 = styled.p`
@@ -115,40 +148,44 @@ const TitleStyle2 = styled.p`
 `;
 
 const Button = styled.button`
-  background-image: url(${(props) => props.imageUrl});
+  background-image: ${(props) =>
+    props.imageUrl ? `url(${props.imageUrl})` : 'none'};
   width: 15rem;
   height: 15rem;
-  font-size: 3rem;
-  font-weight: 500;
-  color: #fff;
   cursor: pointer;
   margin-top: 2rem;
-  margin-bottom: 2rem;
+  margin-bottom: 1rem;
   text-align: center;
-  background-size: 300% 100%;
+  background-size: cover;
   border-radius: 0.7rem;
-  transition: all 0.4s ease-in-out;
-  background-image: linear-gradient(
-    to right,
-    #140421,
-    #2a0650,
-    #7200be,
-    #3b005a
-  );
-
-  &:hover {
-    background-position: 100% 0;
-    transition: all 0.4s ease-in-out;
-  }
-
-  &:focus {
-    outline: #8270db;
-  }
 
   ${(props) =>
     props.clicked &&
     css`
-      border: 0.1rem solid #ffffff;
+      border: 0.2rem solid #ffffff;
+      box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+      transition: all 0.2s ease-in-out;
+    `}
+`;
+const LanguageButton = styled.button`
+  background-image: ${(props) =>
+    props.imageUrl ? `url(${props.imageUrl})` : 'none'};
+  width: 18rem;
+  height: 12rem;
+  cursor: pointer;
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+  text-align: center;
+  background-size: cover;
+  background-position: center;
+  border-radius: 0.7rem;
+
+  ${(props) =>
+    props.clicked &&
+    css`
+      border: 0.2rem solid #ffffff;
+      box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+      transition: all 0.2s ease-in-out;
     `}
 `;
 
@@ -177,7 +214,7 @@ const TitleInput = styled.input`
 const ChooseOption = styled.div`
   display: flex;
   flex-direction: row;
-  gap: 0.8rem;
+  gap: 5rem;
   flex-wrap: wrap;
   justify-content: center;
 `;
@@ -331,38 +368,6 @@ const ModalValue = styled.p`
   font-weight: 500;
 `;
 
-const InstrumentList = styled.div`
-  display: flex;
-  flex-direction: row;
-  width: 100%;
-  height: 8rem;
-  transition: transform 0.5s ease-in-out;
-  transform: ${({ optionIndex }) => `translateX(-${optionIndex * 16.73}%)`};
-  position: relative;
-`;
-
-const StylesList = styled.div`
-  display: flex;
-  flex-direction: row;
-  width: 100%;
-  height: 8rem;
-  transition: transform 0.5s ease-in-out;
-  transform: ${({ optionIndex }) => `translateX(-${optionIndex * 16.73}%)`};
-  position: relative;
-`;
-const ConfirmButton = styled.button`
-  background: linear-gradient(45deg, #b75dfd 30%, #ffa9a9 90%);
-  border-radius: 1rem;
-  width: 8rem;
-  height: 3rem;
-  font-size: 1rem;
-  color: white;
-  font-family: 'SUIT', sans-serif;
-  font-weight: 550;
-  align-self: flex-end;
-  cursor: pointer;
-`;
-
 //프로그래스바 디자인 옵션
 const StyledStepLabel = styled(StepLabel)`
   .MuiStepLabel-label {
@@ -378,6 +383,7 @@ const QontoStepIconRoot = muiStyled('div')(({ theme, ownerState }) => ({
   display: 'flex',
   height: 22,
   alignItems: 'center',
+  transition: 'all 0.6s ease-in-out',
 
   ...(ownerState.active && {
     color: '#784af4',
@@ -430,11 +436,13 @@ const ColorlibConnector = muiStyled(StepConnector)(({ theme }) => ({
   [`&.${stepConnectorClasses.active}`]: {
     [`& .${stepConnectorClasses.line}`]: {
       backgroundColor: 'rgb(124, 107, 221)',
+      transition: 'all 0.3s ease-in-out',
     },
   },
   [`&.${stepConnectorClasses.completed}`]: {
     [`& .${stepConnectorClasses.line}`]: {
       backgroundColor: 'rgb(124, 107, 221)',
+      transition: 'all 0.3s ease-in-out',
     },
   },
   [`& .${stepConnectorClasses.line}`]: {
@@ -443,6 +451,7 @@ const ColorlibConnector = muiStyled(StepConnector)(({ theme }) => ({
     backgroundColor:
       theme.palette.mode === 'dark' ? theme.palette.grey[800] : '#eaeaf0',
     borderRadius: 1,
+    transition: 'all 0.3s ease-in-out',
   },
 }));
 
@@ -458,12 +467,16 @@ const ColorlibStepIconRoot = muiStyled('div')(({ theme, ownerState }) => ({
   justifyContent: 'center',
   alignItems: 'center',
   cursor: 'pointer',
+  transition: 'all 0.3s ease-in-out',
+
   ...(ownerState.active && {
     backgroundColor: 'rgb(124, 107, 221)',
     boxShadow: '0 4px 10px 0 rgba(0,0,0,.25)',
+    transition: 'all 0.3s ease-in-out',
   }),
   ...(ownerState.completed && {
     backgroundColor: 'rgb(124, 107, 221)',
+    transition: 'all 0.6s ease-in-out',
   }),
   '&:hover': {
     backgroundColor:
@@ -528,9 +541,18 @@ const steps = [
   'Style',
   'Title',
   'Vocal',
-  'Lnguage',
+  'Language',
   'Tempo',
 ];
+
+const ButtonSetting = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: #ffffff;
+  font-weight: 550;
+  font-size: 1.1rem;
+`;
 
 const Create = () => {
   const [genreList, setGenreList] = useState([]);
@@ -550,6 +572,31 @@ const Create = () => {
   const [currentStylesIndex, setCurrentStylesIndex] = useState(0);
   const [step, setStep] = useState(1);
   const [isOpen, setIsOpen] = useState(false);
+
+  const VoiceArr = [
+    {
+      label: '남성 보컬',
+      imageUrl: 'https://i.ibb.co/tm2441K/image.png',
+    },
+    {
+      label: '여성 보컬',
+      imageUrl: 'https://i.ibb.co/Lzd8D29/image.png',
+    },
+  ];
+  const CountryArr = [
+    {
+      label: 'English',
+      imageUrl: 'https://i.ibb.co/1Qx3LYb/IMG-0952.jpg',
+    },
+    {
+      label: '한국어',
+      imageUrl: 'https://i.ibb.co/4VK2ytf/IMG-0955.jpg',
+    },
+    {
+      label: '日本語',
+      imageUrl: 'https://i.ibb.co/2h58CSp/IMG-0954.jpg',
+    },
+  ];
 
   useEffect(() => {
     // 장르데이터 호출
@@ -853,15 +900,16 @@ const Create = () => {
           <TitleStyle1>보이스를 선택해주세요</TitleStyle1>
           <TitleStyle2>*필수선택옵션입니다</TitleStyle2>
           <ChooseOption>
-            {['여성 보컬', '남성 보컬'].map((option) => (
-              <Button
-                key={option}
-                imageUrl={`url/to/your/image/${option}.jpg`}
-                clicked={voice === option}
-                onClick={() => setVoice(option)}
-              >
-                {option}
-              </Button>
+            {VoiceArr.map((option) => (
+              <ButtonSetting key={option.label}>
+                <Button
+                  key={option.label}
+                  imageUrl={option.imageUrl}
+                  onClick={() => setVoice(option.label)}
+                  clicked={voice === option.label}
+                ></Button>
+                {option.label}
+              </ButtonSetting>
             ))}
           </ChooseOption>
           <JellyButton onClick={handleNextStep}>다음</JellyButton>
@@ -871,14 +919,16 @@ const Create = () => {
           <TitleStyle1>언어를 선택해주세요</TitleStyle1>
           <TitleStyle2>*필수선택옵션입니다</TitleStyle2>
           <ChooseOption>
-            {['한국어', '영어', '일본어'].map((option) => (
-              <Button
-                key={option}
-                clicked={language === option}
-                onClick={() => setLanguage(option)}
-              >
-                {option}
-              </Button>
+            {CountryArr.map((option) => (
+              <ButtonSetting key={option.label}>
+                <LanguageButton
+                  key={option.label}
+                  imageUrl={option.imageUrl}
+                  onClick={() => setLanguage(option.label)}
+                  clicked={language === option.label}
+                ></LanguageButton>
+                {option.label}
+              </ButtonSetting>
             ))}
           </ChooseOption>
           <JellyButton onClick={handleNextStep}>다음</JellyButton>

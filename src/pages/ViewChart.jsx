@@ -29,6 +29,8 @@ const Statistics = styled.button`
   cursor: pointer;
   display: flex;
   margin-left: 0.5rem;
+  font-family: 'SUIT', sans-serif;
+  font-weight: bold;
 `;
 
 const ChartContainer = styled.div`
@@ -45,6 +47,8 @@ const TotalBox = styled.div`
   margin-left: 1rem;
   margin-top: 0.5rem;
   position: relative;
+  font-family: 'SUIT', sans-serif;
+  font-weight: bold;
 `;
 
 const TotalText = styled.p`
@@ -52,6 +56,8 @@ const TotalText = styled.p`
   font-size: 0.9rem;
   margin-bottom: 1rem;
   position: relative;
+  font-family: 'SUIT', sans-serif;
+  font-weight: bold;
 `;
 
 const StudioText = styled.p`
@@ -60,6 +66,7 @@ const StudioText = styled.p`
   margin-top: 1rem;
   margin-bottom: 1rem;
   position: relative;
+  font-family: 'SUIT', sans-serif;
 `;
 
 const ChartSizeSetting = styled.div`
@@ -78,6 +85,7 @@ const InfoBox = styled.div`
   display: flex;
   flex-direction: row;
   gap: 2.5rem;
+  font-family: 'SUIT', sans-serif;
 `;
 const customCanvasBackgroundColor = {
   id: 'customCanvasBackgroundColor',
@@ -250,7 +258,7 @@ const ViewChart = () => {
         backgroundColor: 'rgba(255, 99, 132, 0.2)',
         borderColor: 'rgba(255, 99, 132, 0.5)',
         borderWidth: 1,
-        tension: 0.3,
+        tension: 0.2,
       },
     ],
   };

@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import Swiper from 'swiper';
 import { EffectCoverflow, Pagination, Navigation } from 'swiper/modules';
@@ -14,6 +14,14 @@ const SwiperContainer = styled.div`
   width: 100%;
   padding-top: 50px;
   padding-bottom: 50px;
+  .swiper-button-next,
+  .swiper-button-prev {
+    color: rgb(124, 107, 221); // 버튼 색상을 검정색으로 변경
+
+    &::after {
+      font-size: 3rem; // 화살표 아이콘 크기 조정
+    }
+  }
 `;
 
 const SwiperSlide = styled.div`
@@ -57,24 +65,25 @@ const InstSwiperComponent = ({
   onInstrumentClick,
 }) => {
   const swiperElRef = useRef(null);
-  const [isVisible, setIsVisible] = useState(false);
-  const [swiper, setSwiper] = useState(null);
+  //   const [isVisible, setIsVisible] = useState(false);
+  //   const [swiper, setSwiper] = useState(null);
 
   useEffect(() => {
-    if (swiperElRef.current && !swiper) {
-      const swiperInstance = new Swiper(swiperElRef.current, {
+    const initSwiper = () => {
+      if (swiperElRef.current) swiperElRef.current.destroy(true, true);
+      swiperElRef.current = new Swiper('.myInstSwiper', {
         loop: true,
-        loopedSlides: 3,
+        loopedSlides: 0, // 이 값을 슬라이드 개수에 따라 조정하세요
         effect: 'coverflow',
         grabCursor: true,
         centeredSlides: true,
         slidesPerView: 'auto',
-        initialSlide: 0,
+        initialSlide: 3, // 시작 슬라이드 위치 설정
         coverflowEffect: {
           rotate: 20,
           stretch: 20,
           depth: 100,
-          modifier: 0,
+          modifier: 1,
           slideShadows: true,
         },
         navigation: {
@@ -82,32 +91,24 @@ const InstSwiperComponent = ({
           prevEl: '.swiper-button-prev',
         },
         modules: [EffectCoverflow, Pagination, Navigation],
+        on: {
+          init: function () {
+            this.update(); // Swiper 초기화 후 업데이트
+          },
+        },
       });
-
-      setSwiper(swiperInstance);
-      setIsVisible(true);
-    }
-
-    return () => {
-      if (swiper) {
-        swiper.destroy();
-        setSwiper(null);
-      }
     };
-  }, []);
 
-  useEffect(() => {
-    if (swiper && options.length > 0) {
-      swiper.update();
-    }
-  }, [swiper, options]);
+    // 약간의 지연 후 Swiper 초기화
+    const timer = setTimeout(() => {
+      initSwiper();
+    }, 100);
+
+    return () => clearTimeout(timer);
+  }, [options]);
 
   return (
-    <SwiperContainer
-      ref={swiperElRef}
-      className="mySwiper"
-      isVisible={isVisible}
-    >
+    <SwiperContainer ref={swiperElRef} className="mySwiper">
       <div className="swiper-wrapper">
         {options?.map((option) => (
           <SwiperSlide key={option.id} className="swiper-slide">
