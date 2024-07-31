@@ -24,64 +24,14 @@ const WholeContainer = styled.div`
   }
 `;
 
-const FirstSection = styled.div`
+const SectionContainer = styled.div`
   height: 100%;
   width: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
   position: relative;
-  gap: 15rem;
-`;
-
-const SecondSection = styled.div`
-  height: 100%;
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: relative;
-  gap: 8rem;
-`;
-
-const ThirdSection = styled.div`
-  height: 100%;
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: relative;
-  gap: 8rem;
-`;
-
-const FourthSection = styled.div`
-  height: 100%;
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: relative;
-  gap: 10rem;
-`;
-
-const FifthSection = styled.div`
-  height: 100%;
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  position: relative;
-`;
-
-const SixthSection = styled.div`
-  height: 100%;
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  position: relative;
+  gap: ${(props) => props.gap || '0'};
 `;
 
 const slideUp = keyframes`
@@ -111,7 +61,6 @@ const Section = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-
   scroll-snap-align: start;
   animation: ${(props) =>
       props.visible ? (props.direction === 'up' ? slideDown : slideUp) : 'none'}
@@ -120,7 +69,6 @@ const Section = styled.div`
 
 const Pagination = styled.div`
   position: fixed;
-
   right: 2%;
   top: 50%;
   transform: translateY(-50%);
@@ -140,20 +88,18 @@ const PaginationDot = styled.div`
 const Title = styled.div`
   color: white;
   font-size: 6rem;
-  position: relative;
   font-weight: 700;
   font-family: 'suit';
   margin-bottom: 17rem;
 `;
 
-const FirstText = styled.div`
+const Text = styled.div`
   color: white;
-  font-size: 4rem;
-  position: relative;
+  font-size: ${(props) => props.fontSize || '4rem'};
   font-weight: 700;
   font-family: 'suit';
-  margin-top: 7rem;
   filter: brightness(150%);
+  ${(props) => props.margin && `margin-top: ${props.margin};`}
 `;
 
 const GreyText = styled.div`
@@ -164,72 +110,18 @@ const PurpleText = styled.p`
   color: #7208c3;
 `;
 
-const Redtext = styled.p`
+const RedText = styled.p`
   color: #941d1d;
 `;
 
-const Mac1 = styled.img`
-  width: 40%;
-  height: 45%;
-  position: relative;
-  filter: brightness(150%);
-`;
-
-const SecondText = styled.div`
-  color: white;
-  font-size: 3.5rem;
-  position: relative;
-  font-weight: 700;
-  font-family: 'suit';
-  filter: brightness(150%);
-`;
-
-const Mac2 = styled.img`
-  width: 40%;
-  height: 45%;
-  position: relative;
-  filter: brightness(150%);
-`;
-
-const ThirdText = styled.div`
-  color: white;
-  font-size: 3.5rem;
-  position: relative;
-  font-weight: 700;
-  font-family: 'suit';
-  filter: brightness(150%);
-`;
-
-const Connect = styled.div`
-  display: flex;
-`;
-
-const Insta = styled.img`
-  width: 35%;
-  height: 70%;
-  position: relative;
-`;
-
-const FourthText = styled.div`
-  color: white;
-  font-size: 3rem;
-  position: relative;
-  font-weight: 700;
-  font-family: 'suit';
-  filter: brightness(150%);
-`;
-
-const FifthText = styled.div`
-  color: white;
-  font-size: 4rem;
-  font-weight: 700;
-  font-family: 'suit';
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  margin-top: 6rem;
+const GifBox = styled.img`
+  border-radius: 0.5rem;
+  border: 2px solid rgba(211, 211, 211, 0.2);
+  width: ${(props) => (props.isHovered ? '60%' : '38%')};
+  height: ${(props) => (props.isHovered ? '65%' : '39%')};
+  transition:
+    width 0.3s ease,
+    height 0.3s ease;
 `;
 
 const ButtonContainer = styled.div`
@@ -244,7 +136,6 @@ const Button = styled.button`
   color: #fff;
   cursor: pointer;
   height: 3.2rem;
-  text-align: center;
   border: none;
   background-size: 300% 100%;
   border-radius: 3rem;
@@ -256,11 +147,10 @@ const Button = styled.button`
     #4600be,
     #32005a
   );
-  box-shadow: 0 4px 15px 0 rgba(81, 39, 139, 0.75);
+  box-shadow: 0 4px 15px rgba(81, 39, 139, 0.75);
 
   &:hover {
     background-position: 100% 0;
-    transition: all 0.4s ease-in-out;
   }
 
   &:focus {
@@ -283,7 +173,6 @@ const MusicVideoListBox = styled.img`
   height: 80%;
   background-color: white;
   border-radius: 0.4rem;
-  flex-shrink: 0;
   margin-left: 2rem;
 `;
 
@@ -333,16 +222,19 @@ const MusicVideoList = ({ direction, urls }) => {
       }}
     >
       <div style={{ display: 'flex', flexShrink: 0 }}>
-        {urls.map((url, idx) => (
+        {urls.concat(urls).map((url, idx) => (
           <MusicVideoListBox key={idx} src={url} />
-        ))}
-        {urls.map((url, idx) => (
-          <MusicVideoListBox key={idx + urls.length} src={url} />
         ))}
       </div>
     </div>
   );
 };
+
+const gifArray = [
+  'https://i.ibb.co/qjV5n4N/image.gif',
+  'https://i.ibb.co/XFSB4gg/jpg.gif',
+  'https://i.ibb.co/X7xMc9D/1.gif',
+];
 
 const OnBoardingPage = () => {
   const navigate = useNavigate();
@@ -353,6 +245,7 @@ const OnBoardingPage = () => {
   const [musicVideos1, setMusicVideos1] = useState([]);
   const [musicVideos2, setMusicVideos2] = useState([]);
   const [musicVideos3, setMusicVideos3] = useState([]);
+  const [isHovered, setIsHovered] = useState(false);
 
   useEffect(() => {
     const fetchMusicVideos = async () => {
@@ -404,7 +297,7 @@ const OnBoardingPage = () => {
     }
 
     setScrollLock(true);
-    setTimeout(() => setScrollLock(false), 500);
+    setTimeout(() => setScrollLock(false), 1000);
   };
 
   useEffect(() => {
@@ -417,6 +310,14 @@ const OnBoardingPage = () => {
   useEffect(() => {
     scrollToSection(currentSection);
   }, [currentSection]);
+
+  const handleMouseEnter = () => {
+    setIsHovered(true);
+  };
+
+  const handleMouseLeave = () => {
+    setIsHovered(false);
+  };
 
   return (
     <WholeContainer>
@@ -440,9 +341,9 @@ const OnBoardingPage = () => {
           direction={scrollDirection}
         >
           {index === 0 && (
-            <FirstSection>
+            <SectionContainer gap="15rem">
               <Title>MVStudio</Title>
-              <FirstText>
+              <Text fontSize="3.5rem" margin="7rem">
                 <GreyText>
                   단
                   <br />
@@ -453,83 +354,79 @@ const OnBoardingPage = () => {
                 <br />
                 뮤직비디오
                 <br />
-              </FirstText>
-            </FirstSection>
+              </Text>
+            </SectionContainer>
           )}
           {index === 1 && (
-            <SecondSection>
-              <SecondText>
+            <SectionContainer gap="8rem">
+              <Text fontSize="3.5rem">
                 <GreyText>당신의 아이디어,</GreyText>
                 모두 여기에.
-              </SecondText>
-              <Mac1 src="https://i.ibb.co/7NqqQkk/Second-Page-Mac-removebg-preview.png" />
-            </SecondSection>
+              </Text>
+              <GifBox
+                src={gifArray[1]}
+                isHovered={isHovered}
+                onMouseEnter={handleMouseEnter}
+                onMouseLeave={handleMouseLeave}
+              />
+            </SectionContainer>
           )}
           {index === 2 && (
-            <ThirdSection>
-              <Mac2 src="https://i.ibb.co/h9R1pCh/qwdwqdqwd-removebg-preview.png" />
-              <ThirdText>
+            <SectionContainer gap="8rem">
+              <GifBox
+                src={gifArray[0]}
+                isHovered={isHovered}
+                onMouseEnter={handleMouseEnter}
+                onMouseLeave={handleMouseLeave}
+              />
+              <Text fontSize="3.5rem">
                 <GreyText>
                   힙합부터
                   <br />
                   재즈까지,
                 </GreyText>
-                <Connect>
-                  <PurpleText>유니크한</PurpleText>&nbsp;뮤직비디오
-                </Connect>
-              </ThirdText>
-            </ThirdSection>
+                <PurpleText>유니크한</PurpleText>뮤직비디오
+              </Text>
+            </SectionContainer>
           )}
           {index === 3 && (
-            <FourthSection>
-              <FourthText>
-                <Connect>
-                  <GreyText>나만의 뮤직비디오</GreyText>를
-                </Connect>
-                <Connect>
-                  <Redtext>소셜 계정</Redtext>에
-                </Connect>
-                손쉽게 공유
-              </FourthText>
-              <Insta src="https://i.ibb.co/WcQcFpM/qqefmqklem-removebg-preview.png" />
-            </FourthSection>
+            <SectionContainer gap="10rem">
+              <Text fontSize="3.5rem">
+                <GreyText>나만의 뮤직비디오를</GreyText>
+                <RedText>소셜 계정</RedText>에 손쉽게 공유
+              </Text>
+              <GifBox
+                src={gifArray[2]}
+                isHovered={isHovered}
+                onMouseEnter={handleMouseEnter}
+                onMouseLeave={handleMouseLeave}
+              />
+            </SectionContainer>
           )}
           {index === 4 && (
-            <FifthSection>
+            <SectionContainer>
               <MusicVideoListContainer>
                 <FifthSectionText>
                   당신을 기다리는
                   <br />
                   수많은 뮤직비디오
                 </FifthSectionText>
-
-                {/* 첫 번째 커버 */}
                 <MusicVideoList direction="left" urls={musicVideos1} />
-
-                {/* 두 번째 커버 */}
                 <MusicVideoList direction="right" urls={musicVideos2} />
-
-                {/* 세 번째 커버 */}
                 <MusicVideoList direction="left" urls={musicVideos3} />
               </MusicVideoListContainer>
-            </FifthSection>
+            </SectionContainer>
           )}
           {index === 5 && (
-            <SixthSection>
-              <FifthText>
+            <SectionContainer>
+              <Text fontSize="3.5rem">
                 모든 기능이 준비되어 있으니,
                 <br /> 지금 한번 시도해 보세요.
                 <ButtonContainer>
-                  <Button
-                    onClick={() => {
-                      navigate('/auth');
-                    }}
-                  >
-                    Start
-                  </Button>
+                  <Button onClick={() => navigate('/auth')}>Start</Button>
                 </ButtonContainer>
-              </FifthText>
-            </SixthSection>
+              </Text>
+            </SectionContainer>
           )}
         </Section>
       ))}
