@@ -112,7 +112,7 @@ function EditProfile() {
   const navigate = useNavigate();
   const [userInfo, setUserInfo] = useState({
     nickname: '',
-    country: '',
+    country: 0,
     birthday: dayjs(),
     profile_image: null,
     comment: '',
@@ -208,6 +208,7 @@ function EditProfile() {
       console.error('Error patching member info:', error);
     }
   };
+  console.log('지금은 들ㅇ감?:', userInfo?.country);
 
   return (
     <StyledForm>
@@ -275,14 +276,13 @@ function EditProfile() {
           labelId="country-label"
           id="country"
           name="country"
-          value={userInfo.id}
+          value={userInfo.country}
           onChange={handleCountryChange}
           autoWidth
           label="Country"
-          sx={{ border: 'none' }}
         >
           {countryList.map((data) => (
-            <MenuItem key={data.id} value={data.id}>
+            <MenuItem key={data.name} value={data.id}>
               {data.name}
             </MenuItem>
           ))}
