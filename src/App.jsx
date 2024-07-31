@@ -39,6 +39,8 @@ const ChildrenWrapper = styled.div`
 
 function App({ children }) {
   const location = useLocation();
+  const ignorePaths = ['/', '/auth/register'];
+  const ignore = ignorePaths.includes(location.pathname);
   return (
     <QueryClientProvider client={new QueryClient()}>
       <BackLayout className="back-layout">
@@ -48,9 +50,7 @@ function App({ children }) {
           <Sidebar />
           <Service />
 
-          <ChildrenWrapper ignore={location.pathname === '/'}>
-            {children}
-          </ChildrenWrapper>
+          <ChildrenWrapper ignore={ignore}>{children}</ChildrenWrapper>
         </ContentArea>
       </BackLayout>
     </QueryClientProvider>
