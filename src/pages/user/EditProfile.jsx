@@ -174,10 +174,12 @@ function EditProfile() {
     }));
   };
 
-  const handleCountrychange = (data) => {
+  const handleCountryChange = (event) => {
+    const countryId = event.target.value;
+    console.log('Selected country ID:', countryId);
     setUserInfo((prevState) => ({
       ...prevState,
-      country: data.id,
+      country: countryId,
     }));
   };
 
@@ -274,18 +276,14 @@ function EditProfile() {
           labelId="country-label"
           id="country"
           name="country"
-          value={userInfo.country}
-          onChange={handleChange}
+          value={userInfo.id}
+          onChange={handleCountryChange}
           autoWidth
           label="Country"
           sx={{ border: 'none' }}
         >
           {countryList.map((data) => (
-            <MenuItem
-              key={data.id}
-              value={data.name}
-              onChange={handleCountrychange}
-            >
+            <MenuItem key={data.id} value={data.id}>
               {data.name}
             </MenuItem>
           ))}

@@ -547,11 +547,11 @@ const Create = () => {
   const TempoArr = [
     {
       label: 'Fast',
-      imageUrl: 'https://i.ibb.co/2MM2pFY/image.jpg',
+      imageUrl: 'https://i.ibb.co/C97QxKg/1.png',
     },
     {
       label: 'Normal',
-      imageUrl: 'https://i.ibb.co/0KT62d8/image.jpg',
+      imageUrl: 'https://i.ibb.co/9bQTV6G/image.png',
     },
     {
       label: 'Slow',
