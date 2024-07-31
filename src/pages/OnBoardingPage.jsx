@@ -274,9 +274,8 @@ const MusicVideoListContainer = styled.div`
   display: flex;
   flex-direction: column;
   text-align: center;
-  justify-content: flex-end;
+  justify-content: center;
   overflow: hidden;
-  z-index: 1000;
 `;
 
 const MusicVideoListBox = styled.img`
