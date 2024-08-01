@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import styled, { css } from 'styled-components';
+import styled, { css, keyframes } from 'styled-components';
 import { useNavigate, useLocation } from 'react-router-dom';
 import CircularProgress from '@mui/material/CircularProgress';
 import { postLyrics, postVideos } from '../api/musicVideos';
@@ -20,6 +20,7 @@ const BigContainer = styled.div`
   height: 100%;
   justify-content: center;
   align-items: center;
+  gap: 5rem;
 `;
 
 const OtherContainer = styled.div`
@@ -39,12 +40,15 @@ const Title = styled.p`
   width: 75%;
   display: flex;
   text-align: start;
-  margin-bottom: 2rem;
+  margin-top: 2.5rem;
 `;
 
 const LyricsContainer = styled.div`
-  width: 25%;
-  height: 100%;
+  width: 21rem;
+  height: 40rem;
+  overflow-y: scroll; // auto 대신 scroll 사용
+  scrollbar-width: none; // Firefox를 위한 설정
+  -ms-overflow-style: none; // IE와 Edge를 위한 설정
   padding: 2rem;
   background-image: linear-gradient(
     to right,
@@ -56,7 +60,6 @@ const LyricsContainer = styled.div`
   border-radius: 1rem;
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
   cursor: pointer;
   box-shadow: 0 4px 15px 0 rgba(81, 39, 139, 0.75);
@@ -77,36 +80,31 @@ const LyricsContainer = styled.div`
     box-shadow: 0 6px 20px 0 rgba(81, 39, 139, 0.85);
   }
 `;
+const jellyAnimation = keyframes`
+  25% {
+    transform: scale(0.9, 1.1);
+  }
+  50% {
+    transform: scale(1.1, 0.9);
+  }
+  75% {
+    transform: scale(0.95, 1.05);
+  }
+`;
 
 const Button = styled.button`
-  width: 15%;
-  height: 5%;
-  font-size: 1.25rem;
-  font-weight: 600;
-  color: #fff;
+  width: 10rem;
+  height: 4rem;
+  font-size: 1.2rem;
+  font-weight: 550;
+  background: #7c6bdd;
+  color: white;
+  border-radius: 1rem;
   cursor: pointer;
-  margin-top: 5rem;
-  text-align: center;
-
-  border: none;
-  border-radius: 3rem;
-  transition: all 0.4s ease-in-out;
-  background-image: linear-gradient(
-    to right,
-    #20004e,
-    #37006e,
-    #4600be,
-    #32005a
-  );
-  box-shadow: 0 4px 15px 0 rgba(81, 39, 139, 0.75);
-
+  transition: background-color 0.3s ease;
+  margin-top: 2rem;
   &:hover {
-    background-position: 100% 0;
-    transition: all 0.4s ease-in-out;
-  }
-
-  &:focus {
-    outline: none;
+    animation: ${jellyAnimation} 0.5s both;
   }
 `;
 
