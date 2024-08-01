@@ -4,7 +4,6 @@ export const getPlay = async (mv_id) => {
   try {
     const response = await jsonAxios.get(`/music-videos/${mv_id}`);
 
-    console.log('response:', response.data);
     return response.data;
   } catch (error) {
     console.error('errorcode:', error);
@@ -41,7 +40,6 @@ export const patchHistoryUpdate = async (history_id, watchedSeconds) => {
 export const postYoutubeUpload = async (mv_id) => {
   try {
     const response = await jsonAxios.post(`/oauth/youtube/${mv_id}`);
-    console.log('redirect url :', response);
     return response.data;
   } catch (error) {
     console.error('patchHistoryUpdate error:', error);
