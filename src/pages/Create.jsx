@@ -439,10 +439,12 @@ const Create = () => {
     {
       label: '남성 보컬',
       imageUrl: 'https://i.ibb.co/tm2441K/image.png',
+      value: 'male',
     },
     {
       label: '여성 보컬',
       imageUrl: 'https://i.ibb.co/Lzd8D29/image.png',
+      value: 'female',
     },
   ];
   const CountryArr = [
@@ -759,8 +761,8 @@ const Create = () => {
                 <Button
                   key={option.label}
                   imageUrl={option.imageUrl}
-                  onClick={() => setVoice(option.label)}
-                  clicked={voice === option.label}
+                  onClick={() => setVoice(option.value)}
+                  clicked={voice === option.value}
                 ></Button>
                 {option.label}
               </ButtonSetting>
