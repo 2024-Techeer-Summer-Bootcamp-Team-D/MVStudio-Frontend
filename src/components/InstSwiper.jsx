@@ -72,8 +72,6 @@ const InstSwiperComponent = ({
     const initSwiper = () => {
       if (swiperElRef.current) swiperElRef.current.destroy(true, true);
       swiperElRef.current = new Swiper('.myInstSwiper', {
-        loop: true,
-        loopedSlides: 0, // 이 값을 슬라이드 개수에 따라 조정하세요
         effect: 'coverflow',
         grabCursor: true,
         centeredSlides: true,

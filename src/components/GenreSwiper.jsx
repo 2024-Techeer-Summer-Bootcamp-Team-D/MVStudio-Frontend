@@ -72,7 +72,7 @@ const GenreSwiperComponent = ({ options, selectedId, onSelect }) => {
         observeParents: true,
         slidesPerView: 'auto',
         slideToClickedSlide: true,
-        initialSlide: -3, // 시작 슬라이드 위치 설정
+        initialSlide: 3, // 시작 슬라이드 위치 설정
         coverflowEffect: {
           rotate: 20,
           stretch: 20,

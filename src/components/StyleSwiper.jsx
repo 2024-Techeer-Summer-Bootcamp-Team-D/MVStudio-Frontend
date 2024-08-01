@@ -68,7 +68,7 @@ const StyleSwiperComponent = ({ options, selectedId, onSelect }) => {
         grabCursor: true,
         centeredSlides: true,
         slidesPerView: 'auto',
-        initialSlide: 8, // 시작 슬라이드 위치 설정
+        initialSlide: 3, // 시작 슬라이드 위치 설정
         slideToClickedSlide: true,
         coverflowEffect: {
           rotate: 20,

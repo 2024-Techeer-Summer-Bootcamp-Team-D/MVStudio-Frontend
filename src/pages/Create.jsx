@@ -501,7 +501,7 @@ const Create = () => {
       try {
         const data = await getInstruments();
         const instruments = data.instruments;
-        const doubledInstruments = [...instruments, ...instruments];
+        const doubledInstruments = [...instruments];
         setInstrumentsList(doubledInstruments);
       } catch {
         console.error('악기 데이터 조회 오류');
@@ -515,7 +515,7 @@ const Create = () => {
       try {
         const data = await getStyles();
         const styles = data.data;
-        const doubledStyles = [...styles, ...styles];
+        const doubledStyles = [...styles];
         setStylesList(doubledStyles);
       } catch {
         console.error('스타일 데이터 조회 오류');
