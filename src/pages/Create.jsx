@@ -480,9 +480,6 @@ const Create = () => {
 
   const isEnoughCredits = credits >= 20;
 
-  console.log('credits:', isEnoughCredits);
-  console.log('언어값 : ', language);
-
   useEffect(() => {
     // 장르데이터 호출
     const fetchGenreData = async () => {

@@ -4,6 +4,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import CircularProgress from '@mui/material/CircularProgress';
 import { postLyrics, postVideos } from '../api/musicVideos';
 import Swal from 'sweetalert2';
+import { useUser } from '@/libs/stores/userStore';
 const check = import.meta.env.VITE_REACT_APP_IS_OPERATE;
 let isOperate;
 if (check === 'true') {
@@ -158,6 +159,9 @@ function LyricsSelect() {
 
     fetchLyrics();
   }, [state]);
+  const credits = useUser((state) => state.credits);
+
+  const isEnoughCredits = credits >= 20;
 
   return (
     <BigContainer>
@@ -201,69 +205,79 @@ function LyricsSelect() {
       <Button
         disabled={!isOperate}
         onClick={async () => {
-          try {
-            const {
-              subject,
-              genres_ids,
-              instruments_ids,
-              style_id,
-              tempo,
-              language,
-              vocal,
-            } = state;
-
-            if (!subject) {
-              throw new Error('Subject is missing');
-            }
+          if (!isEnoughCredits) {
             Swal.fire({
-              title: '뮤직 비디오 생성',
-              text: '뮤직 비디오를 생성하시겠습니까?',
-              icon: 'info',
-              showCancelButton: true,
-              confirmButtonColor: '#3085d6',
-              cancelButtonColor: '#d33',
-              confirmButtonText: '생성',
-              cancelButtonText: '취소',
-            }).then(async (result) => {
-              if (isOperate) {
-                if (result.isConfirmed) {
-                  try {
-                    const data = await postVideos(
-                      subject,
-                      [genres_ids],
-                      instruments_ids,
-                      style_id,
-                      tempo,
-                      language,
-                      vocal,
-                      lyricsList.lyrics_ori[lyricsIndex],
-                      lyricsList.lyrics_eng[lyricsIndex],
-                    );
-                    const taskId = data.task_id;
-                    if (!taskId) {
-                      throw new Error(
-                        'task_id가 응답에 포함되어 있지 않습니다.',
-                      );
-                    }
-                    saveTaskIdToLocalStorage(taskId);
-                    saveTasknameToLocalStorage(subject);
-                    navigate('/main');
-                  } catch (error) {
-                    throw new Error('비디오 생성에 실패했습니다.');
-                  }
-                  Swal.fire({
-                    title: '뮤직 비디오 제작 시작!',
-                    text: '뮤직 비디오 제작이 시작되었습니다. 5분 정도 기다려주세요!',
-                    icon: 'success',
-                  });
-                }
+              title: '오류',
+              text: '크레딧이 부족합니다 !',
+              icon: 'error',
+              confirmButtonColor: '#ff0000',
+              confirmButtonText: '확인',
+            }).then(() => {});
+          } else {
+            try {
+              const {
+                subject,
+                genres_ids,
+                instruments_ids,
+                style_id,
+                tempo,
+                language,
+                vocal,
+              } = state;
+
+              if (!subject) {
+                throw new Error('Subject is missing');
               }
-            });
-          } catch (error) {
-            console.error(
-              'Failed to create video:',
-              error.message ? error.message : error,
-            );
+              Swal.fire({
+                title: '뮤직 비디오 생성',
+                text: '뮤직 비디오를 생성하시겠습니까?',
+                icon: 'info',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: '생성',
+                cancelButtonText: '취소',
+              }).then(async (result) => {
+                if (isOperate) {
+                  if (result.isConfirmed) {
+                    try {
+                      const data = await postVideos(
+                        subject,
+                        [genres_ids],
+                        instruments_ids,
+                        style_id,
+                        tempo,
+                        language,
+                        vocal,
+                        lyricsList.lyrics_ori[lyricsIndex],
+                        lyricsList.lyrics_eng[lyricsIndex],
+                      );
+                      const taskId = data.task_id;
+                      if (!taskId) {
+                        throw new Error(
+                          'task_id가 응답에 포함되어 있지 않습니다.',
+                        );
+                      }
+                      saveTaskIdToLocalStorage(taskId);
+                      saveTasknameToLocalStorage(subject);
+                      navigate('/main');
+                    } catch (error) {
+                      throw new Error('비디오 생성에 실패했습니다.');
+                    }
+                    Swal.fire({
+                      title: '뮤직 비디오 제작 시작!',
+                      text: '뮤직 비디오 제작이 시작되었습니다. 5분 정도 기다려주세요!',
+                      icon: 'success',
+                    });
+                  }
+                }
+              });
+            } catch (error) {
+              console.error(
+                'Failed to create video:',
+                error.message ? error.message : error,
+              );
+            }
           }
         }}
       >
