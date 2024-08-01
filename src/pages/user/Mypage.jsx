@@ -305,7 +305,7 @@ function Mypage() {
 
   const fetchRecent = async (pageNum) => {
     try {
-      const response = await getHistory(pageNum, 9);
+      const response = await getHistory(pageNum, 12);
       const newData = response.music_videos.filter(
         (video) => !fetchedVideoIds.flat().includes(video.id),
       );
