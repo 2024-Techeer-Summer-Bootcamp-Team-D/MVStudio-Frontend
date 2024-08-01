@@ -535,8 +535,7 @@ const Create = () => {
               <strong>Tempo:</strong> ${tempo} <br>
               <strong>Genre:</strong> ${genreList[genreId - 1]?.genre_name} <br>
               <strong>Instrument:</strong> ${selectedInstruments.join(', ')} <br>
-              <strong>Style:</strong> ${stylesList[stylesId - 1]?.style_name}<br>
-              <strong>현재 데모버전이라 생성이 불가능합니다</strong>
+              <strong>Style:</strong> ${stylesList[stylesId - 1]?.style_name}
           </div>
       `,
       icon: 'info', // 선택한 아이콘 (예: success, error, info, warning)
