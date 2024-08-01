@@ -525,9 +525,18 @@ const Create = () => {
   }, []);
 
   const handleCreateClick = () => {
-    Swal.fire({
-      title: 'Song Details',
-      html: `
+    if (!isEnoughCredits) {
+      Swal.fire({
+        title: '오류',
+        text: '크레딧이 부족합니다 !',
+        icon: 'error',
+        confirmButtonColor: '#ff0000',
+        confirmButtonText: '확인',
+      }).then(() => {});
+    } else {
+      Swal.fire({
+        title: 'Song Details',
+        html: `
           <div>
               <strong>Title:</strong> ${songTitle} <br>
               <strong>Voice:</strong> ${voice} <br>
@@ -538,21 +547,22 @@ const Create = () => {
               <strong>Style:</strong> ${stylesList[stylesId - 1]?.style_name}
           </div>
       `,
-      icon: 'info', // 선택한 아이콘 (예: success, error, info, warning)
-      showCancelButton: true, // 취소 버튼을 보여줄지 여부
-      confirmButtonText: 'Submit',
-      cancelButtonText: 'Cancel',
-      customClass: {
-        container: 'custom-swal-container',
-      },
-    }).then((result) => {
-      if (result.isConfirmed) {
-        if (isOperate) {
-          // 이값에 따라 호출 될지 안될지 결정
-          handleSubmit();
+        icon: 'info', // 선택한 아이콘 (예: success, error, info, warning)
+        showCancelButton: true, // 취소 버튼을 보여줄지 여부
+        confirmButtonText: 'Submit',
+        cancelButtonText: 'Cancel',
+        customClass: {
+          container: 'custom-swal-container',
+        },
+      }).then((result) => {
+        if (result.isConfirmed) {
+          if (isOperate) {
+            // 이값에 따라 호출 될지 안될지 결정
+            handleSubmit();
+          }
         }
-      }
-    });
+      });
+    }
   };
 
   const handleInstrumentClick = (label, id) => {
