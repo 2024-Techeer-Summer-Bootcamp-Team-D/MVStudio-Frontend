@@ -90,7 +90,6 @@ function Service() {
         );
 
         setTaskStatuses(statuses);
-        console.log('Task Statuses:', statuses);
 
         // 모든 작업이 완료되었는지 확인
       } catch (error) {

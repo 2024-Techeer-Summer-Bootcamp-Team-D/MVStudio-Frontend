@@ -21,7 +21,6 @@ export const getAgesData = async (username) => {
 export const getGenderData = async (username) => {
   try {
     const response = await jsonAxios.get(`/charts/${username}/genders`);
-    console.log('response:', response.data);
     return response.data;
   } catch (error) {
     console.error('get countries error:', error);
@@ -31,7 +30,6 @@ export const getGenderData = async (username) => {
 export const getCountriesData = async (username) => {
   try {
     const response = await jsonAxios.get(`/charts/${username}/countries`);
-    console.log('response:', response.data);
     return response.data;
   } catch (error) {
     console.error('get countries error:', error);
