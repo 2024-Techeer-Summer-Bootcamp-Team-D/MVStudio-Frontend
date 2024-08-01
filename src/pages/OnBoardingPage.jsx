@@ -10,19 +10,6 @@ const WholeContainer = styled.div`
   width: 100%;
   position: relative;
   overflow: hidden;
-
-  &::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: url('https://i.ibb.co/QCwvsS4/Sound-Wave-Slow.gif') no-repeat
-      center center fixed;
-    background-size: cover;
-    filter: blur(0.7rem) brightness(25%);
-  }
 `;
 
 const SectionContainer = styled.div`
@@ -78,6 +65,15 @@ const Pagination = styled.div`
   gap: 1rem;
 `;
 
+const TextBox = styled.div`
+ display:flex;
+ flex-direction:column;
+ align-items:start;
+ width:100%;
+ height:100%;
+ 
+
+`;
 const PaginationDot = styled.div`
   width: 0.6rem;
   height: 0.6rem;
@@ -86,14 +82,28 @@ const PaginationDot = styled.div`
   cursor: pointer;
 `;
 
-const Title = styled.div`
+const Title1 = styled.div`
   color: white;
-  font-size: 6rem;
-  font-weight: 700;
+  font-size: 1.8rem;
+  font-weight: 500;
   font-family: 'suit';
-  margin-bottom: 17rem;
+  margin-left:2rem;
+  margin-top:2rem;
+
+  
 `;
 
+
+const Text1 = styled.div`
+  color: white;
+  font-size: ${(props) => props.fontSize || '4rem'};
+  font-weight: 700;
+  font-family: 'suit';
+  filter: brightness(150%);
+  ${(props) => props.margin && `margin-top: ${props.margin};`}
+  margin-top:20rem;
+  margin-left:8rem;
+`;
 const Text = styled.div`
   color: white;
   font-size: ${(props) => props.fontSize || '4rem'};
@@ -118,8 +128,8 @@ const RedText = styled.p`
 const GifBox = styled.img`
   border-radius: 0.5rem;
   border: 2px solid rgba(211, 211, 211, 0.2);
-  width: ${(props) => (props.isHovered ? '60%' : '38%')};
-  height: ${(props) => (props.isHovered ? '65%' : '39%')};
+  width: 60rem;
+  height: 35rem;
   transition:
     width 0.3s ease,
     height 0.3s ease;
@@ -246,7 +256,6 @@ const OnBoardingPage = () => {
   const [musicVideos1, setMusicVideos1] = useState([]);
   const [musicVideos2, setMusicVideos2] = useState([]);
   const [musicVideos3, setMusicVideos3] = useState([]);
-  const [isHovered, setIsHovered] = useState(false);
 
   useEffect(() => {
     const fetchMusicVideos = async () => {
@@ -312,14 +321,7 @@ const OnBoardingPage = () => {
     scrollToSection(currentSection);
   }, [currentSection]);
 
-  const handleMouseEnter = () => {
-    setIsHovered(true);
-  };
-
-  const handleMouseLeave = () => {
-    setIsHovered(false);
-  };
-
+ 
   return (
     <WholeContainer>
       <Helmet>
@@ -355,43 +357,110 @@ const OnBoardingPage = () => {
           direction={scrollDirection}
         >
           {index === 0 && (
-            <SectionContainer gap="15rem">
-              <Title>MVStudio</Title>
-              <Text fontSize="3.5rem" margin="7rem">
-                <GreyText>
-                  단
-                  <br />
-                  하나뿐인,
-                  <br />
-                </GreyText>
-                나만의
+            <SectionContainer
+            style={{
+              position: 'relative',
+              overflow: 'hidden',
+            }}
+          >
+            <video
+              autoPlay
+              loop
+              muted
+              style={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                width: '100%',
+                height: '100%',
+                objectFit: 'cover',
+                zIndex: -2,
+              }}
+            >
+              <source src="https://github.com/user-attachments/assets/7da0e178-d210-4012-83de-2d28ce06cc34" type="video/mp4" />
+            </video>
+            <div
+              style={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                width: '100%',
+                height: '100%',
+                background: 'linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,1) 100%)',
+                zIndex: -2,
+              }}
+            />
+            <TextBox>
+            <Title1>MVStudio</Title1>
+            <Text1 fontSize="3rem" margin="7rem">
+              <GreyText>
+                단 하나뿐인,
                 <br />
-                뮤직비디오
-                <br />
-              </Text>
-            </SectionContainer>
+              </GreyText>
+              나만의 뮤직비디오
+              <br />
+            </Text1>
+            </TextBox>
+          </SectionContainer>
+ 
           )}
           {index === 1 && (
-            <SectionContainer gap="8rem">
+            <SectionContainer
+             gap="8rem" 
+             style={{
+              position: 'relative',
+              overflow: 'hidden',
+            }}>
+              <div
+    style={{
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      width: '100%',
+      height: '100%',
+      backgroundImage: 'url(https://i.ibb.co/k0wLXnC/Sound-Wave.gif)',
+      backgroundSize: 'cover',
+      backgroundRepeat: 'no-repeat',
+      backgroundPosition: 'center',
+      filter: 'blur(0.7rem) brightness(25%)',
+      zIndex: -2,
+    }}
+  />
               <Text fontSize="3.5rem">
                 <GreyText>당신의 아이디어,</GreyText>
                 모두 여기에.
               </Text>
               <GifBox
                 src={gifArray[1]}
-                isHovered={isHovered}
-                onMouseEnter={handleMouseEnter}
-                onMouseLeave={handleMouseLeave}
+                
               />
             </SectionContainer>
           )}
           {index === 2 && (
-            <SectionContainer gap="8rem">
+           <SectionContainer
+           gap="8rem" 
+           style={{
+            position: 'relative',
+            overflow: 'hidden',
+          }}>
+            <div
+  style={{
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    width: '100%',
+    height: '100%',
+    backgroundImage: 'url(https://i.ibb.co/k0wLXnC/Sound-Wave.gif)',
+    backgroundSize: 'cover',
+    backgroundRepeat: 'no-repeat',
+    backgroundPosition: 'center',
+    filter: 'blur(0.7rem) brightness(25%)',
+    zIndex: -2,
+  }}
+/>
               <GifBox
                 src={gifArray[0]}
-                isHovered={isHovered}
-                onMouseEnter={handleMouseEnter}
-                onMouseLeave={handleMouseLeave}
+               
               />
               <Text fontSize="3.5rem">
                 <GreyText>
@@ -404,21 +473,59 @@ const OnBoardingPage = () => {
             </SectionContainer>
           )}
           {index === 3 && (
-            <SectionContainer gap="10rem">
+            <SectionContainer
+            gap="8rem" 
+            style={{
+             position: 'relative',
+             overflow: 'hidden',
+           }}>
+             <div
+   style={{
+     position: 'absolute',
+     top: 0,
+     left: 0,
+     width: '100%',
+     height: '100%',
+     backgroundImage: 'url(https://i.ibb.co/k0wLXnC/Sound-Wave.gif)',
+     backgroundSize: 'cover',
+     backgroundRepeat: 'no-repeat',
+     backgroundPosition: 'center',
+     filter: 'blur(0.7rem) brightness(25%)',
+     zIndex: -2,
+   }}
+ />
               <Text fontSize="3.5rem">
                 <GreyText>나만의 뮤직비디오를</GreyText>
                 <RedText>소셜 계정</RedText>에 손쉽게 공유
               </Text>
               <GifBox
                 src={gifArray[2]}
-                isHovered={isHovered}
-                onMouseEnter={handleMouseEnter}
-                onMouseLeave={handleMouseLeave}
+                
               />
             </SectionContainer>
           )}
           {index === 4 && (
-            <SectionContainer>
+            <SectionContainer
+            gap="8rem" 
+            style={{
+             position: 'relative',
+             overflow: 'hidden',
+           }}>
+             <div
+   style={{
+     position: 'absolute',
+     top: 0,
+     left: 0,
+     width: '100%',
+     height: '100%',
+     backgroundImage: 'url(https://i.ibb.co/k0wLXnC/Sound-Wave.gif)',
+     backgroundSize: 'cover',
+     backgroundRepeat: 'no-repeat',
+     backgroundPosition: 'center',
+     filter: 'blur(0.7rem) brightness(25%)',
+     zIndex: -2,
+   }}
+ />ㄴㄴ
               <MusicVideoListContainer>
                 <FifthSectionText>
                   당신을 기다리는
@@ -432,7 +539,26 @@ const OnBoardingPage = () => {
             </SectionContainer>
           )}
           {index === 5 && (
-            <SectionContainer>
+            <SectionContainer
+            style={{
+             position: 'relative',
+             overflow: 'hidden',
+           }}>
+             <div
+   style={{
+     position: 'absolute',
+     top: 0,
+     left: 0,
+     width: '100%',
+     height: '100%',
+     backgroundImage: 'url(https://i.ibb.co/k0wLXnC/Sound-Wave.gif)',
+     backgroundSize: 'cover',
+     backgroundRepeat: 'no-repeat',
+     backgroundPosition: 'center',
+     filter: 'blur(0.7rem) brightness(25%)',
+     zIndex: -2,
+   }}
+ />
               <Text fontSize="3.5rem">
                 모든 기능이 준비되어 있으니,
                 <br /> 지금 한번 시도해 보세요.
