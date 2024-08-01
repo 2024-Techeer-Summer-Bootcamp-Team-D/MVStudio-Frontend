@@ -3,6 +3,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import styled, { keyframes } from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 import { getOnboarding } from '@/api/onboarding';
+import { Helmet } from 'react-helmet';
 
 const WholeContainer = styled.div`
   height: 100%;
@@ -321,6 +322,19 @@ const OnBoardingPage = () => {
 
   return (
     <WholeContainer>
+      <Helmet>
+        <meta property="og:title" content="MVStudio" />
+        <meta property="og:url" content="https://mvstudio.pro" />
+        <meta
+          property="og:image"
+          content="https://i.ibb.co/2Sdtxhh/MVStudio.png"
+        />
+        <meta property="og:image:alt" content="MVStudio" />
+        <meta
+          property="og:description"
+          content="Let's Create Music videos and Share them Together!"
+        />
+      </Helmet>
       <Pagination>
         {[...Array(6)].map((_, index) => (
           <PaginationDot
