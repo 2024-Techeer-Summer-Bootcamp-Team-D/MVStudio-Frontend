@@ -571,7 +571,7 @@ const Create = () => {
       } else {
         Swal.fire({
           icon: 'error',
-          title: '악기는 두개이상 선택불가합니다.',
+          title: '악기는 두개초과 선택불가합니다.',
         }).then(() => {});
       }
       return;
