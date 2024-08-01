@@ -261,8 +261,7 @@ function Mypage() {
 
   const fetchData = async (pageNum) => {
     try {
-      setIsLoading(true);
-      const response = await getList(pageNum, 9, '', username);
+      const response = await getList(pageNum, 12, '', username);
       const newData = response.music_videos.filter(
         (video) => !fetchedVideoIds.flat().includes(video.id),
       );
@@ -306,7 +305,6 @@ function Mypage() {
 
   const fetchRecent = async (pageNum) => {
     try {
-      setIsLoading(true);
       const response = await getHistory(pageNum, 9);
       const newData = response.music_videos.filter(
         (video) => !fetchedVideoIds.flat().includes(video.id),
