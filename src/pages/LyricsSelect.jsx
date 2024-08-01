@@ -199,7 +199,7 @@ function LyricsSelect() {
       </OtherContainer>
 
       <Button
-        disabled={true}
+        disabled={!isOperate}
         onClick={async () => {
           try {
             const {
