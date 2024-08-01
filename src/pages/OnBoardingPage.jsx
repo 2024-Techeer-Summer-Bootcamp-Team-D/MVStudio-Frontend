@@ -377,7 +377,7 @@ const OnBoardingPage = () => {
                 zIndex: -2,
               }}
             >
-              <source src="https://github.com/user-attachments/assets/7da0e178-d210-4012-83de-2d28ce06cc34" type="video/mp4" />
+              <source src="https://github.com/user-attachments/assets/bc2ca5cf-1fb4-42c5-bf39-7c6ac0942101" type="video/mp4" />
             </video>
             <div
               style={{
