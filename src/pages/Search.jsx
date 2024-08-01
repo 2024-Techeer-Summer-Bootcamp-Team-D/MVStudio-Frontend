@@ -34,8 +34,9 @@ const NoResultsMessage = styled.p`
 `;
 
 const formatTime = (seconds) => {
-  const minutes = Math.floor(seconds / 60);
-  const remainingSeconds = seconds % 60;
+  const roundedSeconds = Math.floor(seconds); // 소수점을 제거합니다.
+  const minutes = Math.floor(roundedSeconds / 60);
+  const remainingSeconds = roundedSeconds % 60;
   return `${minutes}:${remainingSeconds < 10 ? '0' : ''}${remainingSeconds}`;
 };
 
