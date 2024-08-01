@@ -8,6 +8,7 @@ import { useInfiniteQuery } from '@tanstack/react-query';
 import { IconButton } from '@mui/material';
 import Header from './Header';
 import VideoItem from './VideoItem';
+import { Helmet } from 'react-helmet';
 
 const BackLayout = styled.div`
   display: flex;
@@ -110,6 +111,19 @@ function VideoList({ title }) {
 
   return (
     <VideoLayout>
+      <Helmet>
+        <meta property="og:title" content="MVStudio" />
+        <meta property="og:url" content="https://mvstudio.pro" />
+        <meta
+          property="og:image"
+          content="https://i.ibb.co/2Sdtxhh/MVStudio.png"
+        />
+        <meta property="og:image:alt" content="MVStudio" />
+        <meta
+          property="og:description"
+          content="Let's Create Music videos and Share them Together!"
+        />
+      </Helmet>
       <Title>{title}</Title>
       {/* 뮤직 비디오 */}
       <VideoItemList>

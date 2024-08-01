@@ -7,6 +7,7 @@ import { getPlay } from '@/api/play';
 import { defaultProfile } from '@/assets/image';
 import VideoPlayer from './VideoPlayer';
 import { useNavigate } from 'react-router-dom';
+import { Helmet } from 'react-helmet';
 
 const BackLayout = styled.div`
   width: 100%;
@@ -197,6 +198,20 @@ function Play() {
 
   return (
     <BackLayout>
+      {data && (
+        <Helmet>
+          <meta property="og:title" content={data.data.subject} />
+          <meta
+            property="og:url"
+            content={`https://mvstudio.pro/play?id=${data.data.id}`}
+          />
+          <meta property="og:image" content={data.data.cover_image} />
+          <meta
+            property="og:description"
+            content="Let's Create Music videos and Share them Together!"
+          />
+        </Helmet>
+      )}
       <PlayBox expanded={toggleLyrics}>
         <VideoContainer expanded={toggleLyrics}>
           {data?.data?.mv_file ? (
