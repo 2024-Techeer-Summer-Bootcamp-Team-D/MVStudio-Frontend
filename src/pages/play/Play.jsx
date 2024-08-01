@@ -203,11 +203,13 @@ function Play() {
           <meta property="og:title" content={data.data.subject} />
           <meta
             property="og:url"
-            content={`https://mvstudio.pro/video/${data.data.id}`}
+            content={`https://mvstudio.pro/play?id=${data.data.id}`}
           />
           <meta property="og:image" content={data.data.cover_image} />
-          <meta property="og:description" content={data.data.description} />
-          <title>{data.data.subject}</title>
+          <meta
+            property="og:description"
+            content="Let's Create Music videos and Share them Together!"
+          />
         </Helmet>
       )}
       <PlayBox expanded={toggleLyrics}>
