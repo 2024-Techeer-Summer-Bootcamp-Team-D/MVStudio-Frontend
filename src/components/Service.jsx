@@ -73,7 +73,7 @@ function Service() {
 
   const fetchTaskStatuses = async () => {
     const taskIds = JSON.parse(localStorage.getItem('taskId')) || [];
-    const mvSubjects = JSON.parse(localStorage.getItem('mvSubject')) || [];
+    const mvSubjects = JSON.parse(localStorage.getItem('taskname')) || [];
     if (taskIds.length > 0) {
       setShowGif(true);
       try {
