@@ -80,9 +80,9 @@ function Service() {
     const mvSubjects = JSON.parse(localStorage.getItem('taskname')) || [];
     if (taskIds.length > 0) {
       setShowGif(true);
-      try {
-        const statuses = await Promise.all(
-          taskIds.map(async (taskId, index) => {
+      const statuses = await Promise.all(
+        taskIds.map(async (taskId, index) => {
+          try {
             const response = await getTask(taskId);
             return {
               taskId,
@@ -90,15 +90,19 @@ function Service() {
               status: response.data.HTTPstatus,
               message: response.data.message,
             };
-          }),
-        );
+          } catch (error) {
+            console.error(`Error fetching task ${taskId}:`, error);
+            return {
+              taskId,
+              mvSubject: mvSubjects[index],
+              status: 500,
+              message: '제작에 실패했습니다',
+            };
+          }
+        }),
+      );
 
-        setTaskStatuses(statuses);
-
-        // 모든 작업이 완료되었는지 확인
-      } catch (error) {
-        console.error('API call error:', error);
-      }
+      setTaskStatuses(statuses);
     } else {
       setShowGif(false);
     }
