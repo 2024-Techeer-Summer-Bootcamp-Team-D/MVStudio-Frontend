@@ -562,7 +562,7 @@ const OnBoardingPage = () => {
                 모든 기능이 준비되어 있으니,
                 <br /> 지금 한번 시도해 보세요.
                 <ButtonContainer>
-                  <Button onClick={() => navigate('/auth')}>Start</Button>
+                  <Button onClick={() => navigate('/main')}>Start</Button>
                 </ButtonContainer>
               </Text>
             </SectionContainer>
