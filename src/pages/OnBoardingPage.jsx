@@ -63,6 +63,7 @@ const Pagination = styled.div`
   display: flex;
   flex-direction: column;
   gap: 1rem;
+  z-index: 99;
 `;
 
 const TextBox = styled.div`
@@ -107,6 +108,15 @@ const Text = styled.div`
   filter: brightness(150%);
   ${(props) => props.margin && `margin-top: ${props.margin};`}
 `;
+const PlayText = styled.div`
+  margin-left: 8rem;
+  color: white;
+  font-size: ${(props) => props.fontSize || '4rem'};
+  font-weight: 700;
+  font-family: 'suit';
+  filter: brightness(150%);
+  ${(props) => props.margin && `margin-top: ${props.margin};`}
+`;
 
 const GreyText = styled.div`
   color: gray;
@@ -120,14 +130,25 @@ const RedText = styled.p`
   color: #941d1d;
 `;
 
-const GifBox = styled.img`
+const VideoBox = styled.video`
   border-radius: 0.5rem;
   border: 2px solid rgba(211, 211, 211, 0.2);
-  width: 60rem;
+  width: 66rem;
   height: 35rem;
   transition:
     width 0.3s ease,
     height 0.3s ease;
+  object-fit: cover;
+`;
+const UploadeBox = styled.video`
+  border-radius: 0.5rem;
+  border: 2px solid rgba(211, 211, 211, 0.2);
+  width: 68rem;
+  height: 35rem;
+  transition:
+    width 0.3s ease,
+    height 0.3s ease;
+  object-fit: cover;
 `;
 
 const ButtonContainer = styled.div`
@@ -236,10 +257,10 @@ const MusicVideoList = ({ direction, urls }) => {
   );
 };
 
-const gifArray = [
-  'https://i.ibb.co/qjV5n4N/image.gif',
-  'https://i.ibb.co/XFSB4gg/jpg.gif',
-  'https://i.ibb.co/X7xMc9D/1.gif',
+const videoArray = [
+  'https://mvstudio-bucket.s3.ap-northeast-2.amazonaws.com/mv_videos/1%E1%84%87%E1%85%A5%E1%86%AB+%E1%84%8B%E1%85%A9%E1%86%AB%E1%84%87%E1%85%A9%E1%84%83%E1%85%B5%E1%86%BC.mp4',
+  'https://mvstudio-bucket.s3.ap-northeast-2.amazonaws.com/mv_videos/2%E1%84%87%E1%85%A5%E1%86%AB+%E1%84%8B%E1%85%A9%E1%86%AB%E1%84%87%E1%85%A9%E1%84%83%E1%85%B5%E1%86%BC.mp4',
+  'https://mvstudio-bucket.s3.ap-northeast-2.amazonaws.com/mv_videos/3%E1%84%87%E1%85%A5%E1%86%AB-%E1%84%8B%E1%85%A9%E1%86%AB%E1%84%87%E1%85%A9%E1%84%83%E1%85%B5%E1%86%BC.mp4',
 ];
 
 const OnBoardingPage = () => {
@@ -429,7 +450,13 @@ const OnBoardingPage = () => {
                 <GreyText>당신의 아이디어,</GreyText>
                 모두 여기에.
               </Text>
-              <GifBox src={gifArray[1]} />
+              <VideoBox
+                src={videoArray[0]}
+                type="video/mp4"
+                autoPlay
+                muted
+                loop
+              />
             </SectionContainer>
           )}
           {index === 2 && (
@@ -456,15 +483,21 @@ const OnBoardingPage = () => {
                   zIndex: -2,
                 }}
               />
-              <GifBox src={gifArray[0]} />
-              <Text fontSize="3.5rem">
+              <VideoBox
+                src={videoArray[1]}
+                type="video/mp4"
+                autoPlay
+                muted
+                loop
+              />
+              <PlayText fontSize="3.5rem">
                 <GreyText>
                   힙합부터
                   <br />
                   재즈까지,
                 </GreyText>
                 <PurpleText>유니크한</PurpleText>뮤직비디오
-              </Text>
+              </PlayText>
             </SectionContainer>
           )}
           {index === 3 && (
@@ -495,7 +528,13 @@ const OnBoardingPage = () => {
                 <GreyText>나만의 뮤직비디오를</GreyText>
                 <RedText>소셜 계정</RedText>에 손쉽게 공유
               </Text>
-              <GifBox src={gifArray[2]} />
+              <UploadeBox
+                src={videoArray[2]}
+                type="video/mp4"
+                autoPlay
+                muted
+                loop
+              />
             </SectionContainer>
           )}
           {index === 4 && (
@@ -522,7 +561,7 @@ const OnBoardingPage = () => {
                   zIndex: -2,
                 }}
               />
-              ㄴㄴ
+
               <MusicVideoListContainer>
                 <FifthSectionText>
                   당신을 기다리는
