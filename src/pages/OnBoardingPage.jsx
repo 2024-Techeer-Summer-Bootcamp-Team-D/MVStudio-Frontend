@@ -10,8 +10,6 @@ const WholeContainer = styled.div`
   width: 100%;
   position: relative;
   overflow: hidden;
-  margin-left: 2rem;
-  margin-right: 2rem;
 `;
 
 const SectionContainer = styled.div`
@@ -430,6 +428,8 @@ const OnBoardingPage = () => {
               style={{
                 position: 'relative',
                 overflow: 'hidden',
+                marginLeft: '2rem',
+                marginRight: '2rem',
               }}
             >
               <div
@@ -468,6 +468,7 @@ const OnBoardingPage = () => {
                 position: 'relative',
                 overflow: 'hidden',
                 marginLeft: '-2rem',
+                marginRight: '2rem',
               }}
             >
               <div
@@ -512,6 +513,8 @@ const OnBoardingPage = () => {
               style={{
                 position: 'relative',
                 overflow: 'hidden',
+                marginLeft: '2rem',
+                marginRight: '2rem',
               }}
             >
               <div
@@ -549,6 +552,8 @@ const OnBoardingPage = () => {
               style={{
                 position: 'relative',
                 overflow: 'hidden',
+                marginLeft: '2rem',
+                marginRight: '2rem',
               }}
             >
               <div
