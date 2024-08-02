@@ -120,6 +120,7 @@ function Service() {
       window.location.pathname !== '/play' &&
       window.location.pathname !== '/auth' &&
       window.location.pathname !== '/main' &&
+      window.location.pathname !== '/auth/register' &&
       !/^\/users\/[^\/]+$/.test(window.location.pathname)
     ) {
       Swal.fire({
