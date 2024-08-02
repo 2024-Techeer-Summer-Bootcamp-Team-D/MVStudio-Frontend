@@ -2,7 +2,8 @@ import React, { useState, useEffect, useRef } from 'react';
 import { getTask } from '../api/musicVideos';
 import styled, { keyframes } from 'styled-components';
 import CheckIcon from '@mui/icons-material/Check';
-import { green } from '@mui/material/colors';
+import CancelIcon from '@mui/icons-material/Cancel';
+import { green, red } from '@mui/material/colors';
 
 // Define keyframes for the loading animation
 const loadingAnimation = keyframes`
@@ -24,8 +25,6 @@ const Modal = styled.div`
   padding: 1rem;
   padding-top: 1.5rem;
   padding-bottom: 1.5rem;
-  /* justify-content: center; */
-  /* padding-top: 0.5rem; */
 `;
 
 // Task status item styling
@@ -42,7 +41,6 @@ const TaskStatusItem = styled.li`
   color: white;
 `;
 
-// Loading spinner component
 const LoadingSpinner = styled.div`
   border: 4px solid rgba(0, 0, 0, 0.3);
   border-top: 4px solid #fff;
@@ -62,8 +60,14 @@ const StyledCheckIcon = styled(CheckIcon)`
     transform: scale(1.5);
   }
 `;
-
-// ... (이전 스타일 컴포넌트들은 그대로 유지)
+const StyledCancelIcon = styled(CancelIcon)`
+  color: ${red[500]};
+  cursor: pointer;
+  &:hover {
+    transition: transform 0.3s ease;
+    transform: scale(1.5);
+  }
+`;
 
 function Service() {
   const [showGif, setShowGif] = useState(false);
@@ -187,9 +191,12 @@ function Service() {
                     </div>
                     {status === 200 ? (
                       <LoadingSpinner />
-                    ) : (
+                    ) : status === 201 ? (
                       <StyledCheckIcon
-                        sx={{ color: green[500] }}
+                        onClick={() => handleTaskClick(taskId)}
+                      />
+                    ) : (
+                      <StyledCancelIcon
                         onClick={() => handleTaskClick(taskId)}
                       />
                     )}
