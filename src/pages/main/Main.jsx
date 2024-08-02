@@ -104,8 +104,7 @@ function VideoList({ title }) {
       }
     },
   });
-
-  if (isLoading) {
+  if (isLoading || data?.pages[0] === undefined) {
     return <div></div>;
   }
 

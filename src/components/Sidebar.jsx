@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import ignorePath from '../utils/igonerePath';
@@ -61,11 +61,20 @@ const MenuContainer = styled.div`
 
 function Sidebar() {
   const navigate = useNavigate();
-  const username = useUser((state) => state.username);
-  const setUsername = useUser((state) => state.setUsername);
-  const setCredits = useUser((state) => state.setCredits);
+  const { username, setUsername, setCredits, fetchUser } = useUser((state) => ({
+    username: state.username,
+    setUsername: state.setUsername,
+    setCredits: state.setCredits,
+    fetchUser: state.fetchUser,
+  }));
 
-  console.log('username :', username);
+  useEffect(() => {
+    // username이 빈 문자열이고, fetchUser가 아직 호출되지 않은 경우
+
+    fetchUser().then(() => {
+      console.log('fetchUser sidebar');
+    });
+  }, [username, fetchUser]);
 
   if (ignorePath().includes(location.pathname)) {
     return null;
@@ -106,36 +115,47 @@ function Sidebar() {
           </MenuItem>
         </MenuContainer>
 
-        <MenuItem
-          onClick={() => {
-            Swal.fire({
-              title: '로그아웃',
-              text: '로그아웃하시겠습니까?',
-              icon: 'warning',
-              showCancelButton: true,
-              confirmButtonColor: '#3085d6',
-              cancelButtonColor: '#d33',
-              confirmButtonText: 'logout',
-            }).then((result) => {
-              if (result.isConfirmed) {
-                Swal.fire({
-                  title: '로그아웃 완료!',
-                  text: '로그아웃 되었습니다.',
-                  icon: 'success',
-                });
-                postLogout().then(() => {
-                  removeCookie('accessToken');
-                  setUsername('');
-                  setCredits(0);
-                  navigate('/auth');
-                });
-              }
-            });
-          }}
-        >
-          <LogoutIcon fontSize="small" />
-          <MenuTitle>Logout</MenuTitle>
-        </MenuItem>
+        {username ? (
+          <MenuItem
+            onClick={() => {
+              Swal.fire({
+                title: '로그아웃',
+                text: '로그아웃하시겠습니까?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'logout',
+              }).then((result) => {
+                if (result.isConfirmed) {
+                  Swal.fire({
+                    title: '로그아웃 완료!',
+                    text: '로그아웃 되었습니다.',
+                    icon: 'success',
+                  });
+                  postLogout().then(() => {
+                    removeCookie('accessToken');
+                    setUsername('');
+                    setCredits(0);
+                    navigate('/auth');
+                  });
+                }
+              });
+            }}
+          >
+            <LogoutIcon fontSize="small" />
+            <MenuTitle>Logout</MenuTitle>
+          </MenuItem>
+        ) : (
+          <MenuItem
+            onClick={() => {
+              navigate('/auth');
+            }}
+          >
+            <LogoutIcon fontSize="small" />
+            <MenuTitle>Login</MenuTitle>
+          </MenuItem>
+        )}
       </BackLayout>
     </>
   );

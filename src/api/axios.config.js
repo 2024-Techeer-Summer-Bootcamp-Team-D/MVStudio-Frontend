@@ -57,16 +57,8 @@ jsonAxios.interceptors.response.use(
       originalRequest._retry = true;
       try {
         const newAccessToken = await reissueToken();
-        console.log('newAccessToken:', newAccessToken);
+        console.log('newAccessToken');
         if (newAccessToken === undefined) {
-          console.log('err:', newAccessToken);
-          return Promise.reject(error);
-        }
-        if (
-          newAccessToken === undefined ||
-          newAccessToken === null ||
-          newAccessToken === '{}'
-        ) {
           return Promise.reject(error);
         }
         if (newAccessToken) {
@@ -80,12 +72,6 @@ jsonAxios.interceptors.response.use(
       } catch (reissueError) {
         return Promise.reject(reissueError);
       }
-    } else if (
-      error.response &&
-      error.response.status === 401 &&
-      originalRequest._retry
-    ) {
-      window.location.href = '/auth';
     }
     // 다른 오류는 그대로 반환합니다.
     return Promise.reject(error);
@@ -128,16 +114,8 @@ formAxios.interceptors.response.use(
       originalRequest._retry = true;
       try {
         const newAccessToken = await reissueToken();
-        console.log('newAccessToken:', newAccessToken);
+        console.log('newAccessToken');
         if (newAccessToken === undefined) {
-          console.log('err:', newAccessToken);
-          return Promise.reject(error);
-        }
-        if (
-          newAccessToken === undefined ||
-          newAccessToken === null ||
-          newAccessToken === '{}'
-        ) {
           return Promise.reject(error);
         }
         if (newAccessToken) {
@@ -151,12 +129,6 @@ formAxios.interceptors.response.use(
       } catch (reissueError) {
         return Promise.reject(reissueError);
       }
-    } else if (
-      error.response &&
-      error.response.status === 401 &&
-      originalRequest._retry
-    ) {
-      window.location.href = '/auth';
     }
     // 다른 오류는 그대로 반환합니다.
     return Promise.reject(error);

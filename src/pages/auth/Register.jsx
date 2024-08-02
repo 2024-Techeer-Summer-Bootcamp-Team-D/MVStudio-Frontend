@@ -361,7 +361,6 @@ const RegisterForm = () => {
             setLoginError('입력하지 않은 칸이 있어요!');
           } else {
             setLoginError('');
-            console.log('country:', country);
             patchMemberInfo(
               username,
               nickname,

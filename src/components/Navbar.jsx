@@ -139,27 +139,31 @@ function Navbar() {
             onKeyDown={handleSearch} // 검색어 입력 시 이벤트 핸들러 추가
           />
         </Searchbar>
-        <Profile>
-          <img
-            src="https://i.ibb.co/bLBN9sb/credit.png"
-            alt="credit"
-            style={{
-              height: '1.25rem',
-              marginRight: '0.5rem',
-              marginBottom: '0.2rem',
-            }}
-          />
-          <span style={{ color: 'white', fontSize: '1.25rem' }}>{credits}</span>
-          <IconButton>
-            <AddIcon
-              sx={{
-                color: 'white',
-                fontSize: '1rem',
+        {username && (
+          <Profile>
+            <img
+              src="https://i.ibb.co/bLBN9sb/credit.png"
+              alt="credit"
+              style={{
+                height: '1.25rem',
+                marginRight: '0.5rem',
+                marginBottom: '0.2rem',
               }}
-              onClick={() => navigate('/payment')}
             />
-          </IconButton>
-        </Profile>
+            <span style={{ color: 'white', fontSize: '1.25rem' }}>
+              {credits}
+            </span>
+            <IconButton>
+              <AddIcon
+                sx={{
+                  color: 'white',
+                  fontSize: '1rem',
+                }}
+                onClick={() => navigate('/payment')}
+              />
+            </IconButton>
+          </Profile>
+        )}
       </BackLayout>
     </>
   );

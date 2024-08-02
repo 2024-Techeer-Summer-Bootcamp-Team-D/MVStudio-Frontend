@@ -1,8 +1,11 @@
+/* eslint-disable no-useless-escape */
 import React, { useState, useEffect, useRef } from 'react';
 import { getTask } from '../api/musicVideos';
 import styled, { keyframes } from 'styled-components';
 import CheckIcon from '@mui/icons-material/Check';
 import { green } from '@mui/material/colors';
+import { getCookie } from '@/utils/cookies';
+import Swal from 'sweetalert2';
 
 // Define keyframes for the loading animation
 const loadingAnimation = keyframes`
@@ -101,11 +104,28 @@ function Service() {
   };
 
   useEffect(() => {
+    if (
+      !getCookie('accessToken') &&
+      window.location.pathname !== '/play' &&
+      window.location.pathname !== '/auth' &&
+      window.location.pathname !== '/main' &&
+      !/^\/users\/[^\/]+$/.test(window.location.pathname)
+    ) {
+      Swal.fire({
+        title: '로그인이 필요합니다!',
+        text: '로그인 페이지로 이동합니다.',
+        icon: 'warning',
+        confirmButtonText: '확인',
+        confirmButtonColor: '#7c6bdd',
+      }).then(() => {
+        window.location.href = '/auth';
+      });
+    }
     fetchTaskStatuses(); // 즉시 상태 가져오기
     const intervalId = setInterval(fetchTaskStatuses, 5000); // 5초마다 상태 업데이트
 
     return () => clearInterval(intervalId);
-  }, []);
+  }, [window.location.href]);
 
   const handleGifClick = () => {
     setShowModal((prevShowModal) => !prevShowModal);
