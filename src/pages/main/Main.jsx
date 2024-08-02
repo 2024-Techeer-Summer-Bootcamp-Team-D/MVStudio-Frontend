@@ -112,7 +112,7 @@ function VideoList({ title }) {
     <VideoLayout>
       <Helmet>
         <meta property="og:title" content="MVStudio" />
-        <meta property="og:url" content="https://mvstudio.pro" />
+        <meta property="og:url" content="https://mvstudio.zapto.org" />
         <meta
           property="og:image"
           content="https://i.ibb.co/2Sdtxhh/MVStudio.png"

@@ -3,9 +3,10 @@ import React, { useState, useEffect, useRef } from 'react';
 import { getTask } from '../api/musicVideos';
 import styled, { keyframes } from 'styled-components';
 import CheckIcon from '@mui/icons-material/Check';
-import { green } from '@mui/material/colors';
 import { getCookie } from '@/utils/cookies';
 import Swal from 'sweetalert2';
+import CancelIcon from '@mui/icons-material/Cancel';
+import { green, red } from '@mui/material/colors';
 
 // Define keyframes for the loading animation
 const loadingAnimation = keyframes`
@@ -27,8 +28,6 @@ const Modal = styled.div`
   padding: 1rem;
   padding-top: 1.5rem;
   padding-bottom: 1.5rem;
-  /* justify-content: center; */
-  /* padding-top: 0.5rem; */
 `;
 
 // Task status item styling
@@ -45,7 +44,6 @@ const TaskStatusItem = styled.li`
   color: white;
 `;
 
-// Loading spinner component
 const LoadingSpinner = styled.div`
   border: 4px solid rgba(0, 0, 0, 0.3);
   border-top: 4px solid #fff;
@@ -65,8 +63,14 @@ const StyledCheckIcon = styled(CheckIcon)`
     transform: scale(1.5);
   }
 `;
-
-// ... (이전 스타일 컴포넌트들은 그대로 유지)
+const StyledCancelIcon = styled(CancelIcon)`
+  color: ${red[500]};
+  cursor: pointer;
+  &:hover {
+    transition: transform 0.3s ease;
+    transform: scale(1.5);
+  }
+`;
 
 function Service() {
   const [showGif, setShowGif] = useState(false);
@@ -79,9 +83,9 @@ function Service() {
     const mvSubjects = JSON.parse(localStorage.getItem('taskname')) || [];
     if (taskIds.length > 0) {
       setShowGif(true);
-      try {
-        const statuses = await Promise.all(
-          taskIds.map(async (taskId, index) => {
+      const statuses = await Promise.all(
+        taskIds.map(async (taskId, index) => {
+          try {
             const response = await getTask(taskId);
             return {
               taskId,
@@ -89,15 +93,22 @@ function Service() {
               status: response.data.HTTPstatus,
               message: response.data.message,
             };
-          }),
-        );
+          } catch (error) {
+            console.error(`Error fetching task ${taskId}:`, error);
+            const updatedTaskIds =
+              JSON.parse(localStorage.getItem('taskId')) || [];
+            updatedTaskIds.splice(index, 1);
+            localStorage.setItem('taskId', JSON.stringify(updatedTaskIds));
+            return {
+              mmvSubject: mvSubjects[index],
+              status: 500,
+              message: '제작에 실패했습니다',
+            };
+          }
+        }),
+      );
 
-        setTaskStatuses(statuses);
-
-        // 모든 작업이 완료되었는지 확인
-      } catch (error) {
-        console.error('API call error:', error);
-      }
+      setTaskStatuses(statuses);
     } else {
       setShowGif(false);
     }
@@ -131,19 +142,19 @@ function Service() {
     setShowModal((prevShowModal) => !prevShowModal);
   };
 
-  const handleTaskClick = (taskId) => {
+  const handleTaskClick = (mvSubject) => {
     const updatedTaskIds = JSON.parse(localStorage.getItem('taskId')) || [];
     const updatedMvSubjects =
-      JSON.parse(localStorage.getItem('mvSubject')) || [];
-    const index = updatedTaskIds.indexOf(taskId);
+      JSON.parse(localStorage.getItem('taskname')) || [];
+    const index = updatedMvSubjects.indexOf(mvSubject);
     if (index > -1) {
       updatedTaskIds.splice(index, 1);
       updatedMvSubjects.splice(index, 1);
     }
     localStorage.setItem('taskId', JSON.stringify(updatedTaskIds));
-    localStorage.setItem('mvSubject', JSON.stringify(updatedMvSubjects));
+    localStorage.setItem('taskname', JSON.stringify(updatedMvSubjects));
     setTaskStatuses((prevStatuses) =>
-      prevStatuses.filter((task) => task.taskId !== taskId),
+      prevStatuses.filter((task) => task.mvSubject !== mvSubject),
     );
   };
 
@@ -192,8 +203,8 @@ function Service() {
             />
             {showModal && (
               <Modal>
-                {taskStatuses.map(({ taskId, mvSubject, message, status }) => (
-                  <TaskStatusItem key={taskId}>
+                {taskStatuses.map(({ mvSubject, message, status }) => (
+                  <TaskStatusItem key={mvSubject}>
                     <div
                       style={{
                         display: 'flex',
@@ -207,10 +218,13 @@ function Service() {
                     </div>
                     {status === 200 ? (
                       <LoadingSpinner />
-                    ) : (
+                    ) : status === 201 ? (
                       <StyledCheckIcon
-                        sx={{ color: green[500] }}
-                        onClick={() => handleTaskClick(taskId)}
+                        onClick={() => handleTaskClick(mvSubject)}
+                      />
+                    ) : (
+                      <StyledCancelIcon
+                        onClick={() => handleTaskClick(mvSubject)}
                       />
                     )}
                   </TaskStatusItem>
