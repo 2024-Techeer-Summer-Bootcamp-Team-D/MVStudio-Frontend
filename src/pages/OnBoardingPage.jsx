@@ -109,7 +109,7 @@ const Text = styled.div`
   ${(props) => props.margin && `margin-top: ${props.margin};`}
 `;
 const PlayText = styled.div`
-  margin-left: 8rem;
+  margin-left: 3rem;
   color: white;
   font-size: ${(props) => props.fontSize || '4rem'};
   font-weight: 700;
