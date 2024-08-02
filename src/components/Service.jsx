@@ -92,9 +92,12 @@ function Service() {
             };
           } catch (error) {
             console.error(`Error fetching task ${taskId}:`, error);
+            const updatedTaskIds =
+              JSON.parse(localStorage.getItem('taskId')) || [];
+            updatedTaskIds.splice(index, 1);
+            localStorage.setItem('taskId', JSON.stringify(updatedTaskIds));
             return {
-              taskId,
-              mvSubject: mvSubjects[index],
+              mmvSubject: mvSubjects[index],
               status: 500,
               message: '제작에 실패했습니다',
             };
@@ -119,19 +122,19 @@ function Service() {
     setShowModal((prevShowModal) => !prevShowModal);
   };
 
-  const handleTaskClick = (taskId) => {
+  const handleTaskClick = (mvSubject) => {
     const updatedTaskIds = JSON.parse(localStorage.getItem('taskId')) || [];
     const updatedMvSubjects =
-      JSON.parse(localStorage.getItem('mvSubject')) || [];
-    const index = updatedTaskIds.indexOf(taskId);
+      JSON.parse(localStorage.getItem('taskname')) || [];
+    const index = updatedMvSubjects.indexOf(mvSubject);
     if (index > -1) {
       updatedTaskIds.splice(index, 1);
       updatedMvSubjects.splice(index, 1);
     }
     localStorage.setItem('taskId', JSON.stringify(updatedTaskIds));
-    localStorage.setItem('mvSubject', JSON.stringify(updatedMvSubjects));
+    localStorage.setItem('taskname', JSON.stringify(updatedMvSubjects));
     setTaskStatuses((prevStatuses) =>
-      prevStatuses.filter((task) => task.taskId !== taskId),
+      prevStatuses.filter((task) => task.mvSubject !== mvSubject),
     );
   };
 
@@ -180,8 +183,8 @@ function Service() {
             />
             {showModal && (
               <Modal>
-                {taskStatuses.map(({ taskId, mvSubject, message, status }) => (
-                  <TaskStatusItem key={taskId}>
+                {taskStatuses.map(({ mvSubject, message, status }) => (
+                  <TaskStatusItem key={mvSubject}>
                     <div
                       style={{
                         display: 'flex',
@@ -197,11 +200,11 @@ function Service() {
                       <LoadingSpinner />
                     ) : status === 201 ? (
                       <StyledCheckIcon
-                        onClick={() => handleTaskClick(taskId)}
+                        onClick={() => handleTaskClick(mvSubject)}
                       />
                     ) : (
                       <StyledCancelIcon
-                        onClick={() => handleTaskClick(taskId)}
+                        onClick={() => handleTaskClick(mvSubject)}
                       />
                     )}
                   </TaskStatusItem>
