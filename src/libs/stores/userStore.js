@@ -1,6 +1,8 @@
+/* eslint-disable no-undef */
 import create from 'zustand';
 import { getUsername } from '@/api/member';
 import { reissueToken } from '@/api/axios.config';
+import { setCookie } from '@/utils/cookies';
 
 export const useUser = create((set) => ({
   username: '',
@@ -16,7 +18,7 @@ export const useUser = create((set) => ({
       } else {
         await reissueToken().then((newAccessToken) => {
           if (newAccessToken) {
-            set({ tokenReissued: true });
+            setCookie('accessToken', newAccessToken);
             window.location.reload();
           }
         });
