@@ -203,7 +203,7 @@ function Play() {
           <meta property="og:title" content={data.data.subject} />
           <meta
             property="og:url"
-            content={`https://mvstudio.pro/play?id=${data.data.id}`}
+            content={`https://mvstudio.zapto.org/play?id=${data.data.id}`}
           />
           <meta property="og:image" content={data.data.cover_image} />
           <meta
